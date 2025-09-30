@@ -18,15 +18,10 @@ import {
 } from '../build/page';
 import { stored_season } from '../build/seasonal';
 import { sponsor_list } from '../build/sponsor';
-import { clamp_sat, hex_to_hsl } from '../build/tools';
+import { clamp_sat, hex_to_hsl, time } from '../build/tools';
 import { lang, lang_info, tl, trans, trans_legacy } from '../build/trans';
 import { load_badges } from '../components/badge';
 import { dialog, dialog_rm } from '../components/dialog';
-import {
-    correct_artist,
-    correct_item_by_artist,
-    name_includes
-} from '../components/lotus';
 import { markdown } from '../components/markdown';
 import { notify } from '../components/notify';
 import { load_settings, refresh_all, update_colour_swatches } from '../config';
@@ -45,15 +40,15 @@ import { input } from '../components/input.js';
 import { share } from '../components/share.js';
 import { force_refresh_style, start_update, update_check } from '../style.js';
 import tippy from 'tippy.js';
-import moment from 'moment';
 import {
     checkup_friend_cache,
     load_profile_cache_externally
 } from './profile.js';
 import { select_prepare_list } from '../components/select.js';
-import { status } from '../components/status.js';
 import { match } from '../components/dynamic_theming.js';
 import { oracle_data } from '../components/oracle.js';
+import { render_activity } from '../activity.js';
+import { DateTime } from 'luxon';
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -269,7 +264,7 @@ export async function render_setting_page(page_id) {
                     </div>
                     <div class="update-center-details">
                         <h2>${tl(trans.updates_paused)}</h2>
-                        <p class="last-checked">${tl(trans.paused_until_date).replace('{d}', moment(paused_until).fromNow())}</p>
+                        <p class="last-checked">${tl(trans.paused_until_date).replace('{d}', DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
                     </div>
                     <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} disabled>${tl(trans.check)}</button>
                     `
@@ -294,7 +289,7 @@ export async function render_setting_page(page_id) {
                             last_checked ?
                                 html.node`
                         <h2>${tl(trans.you_are_up_to_date)}</h2>
-                        <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', moment(last_checked).fromNow())}</p>
+                        <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
                         `
                             :   html.node`
                         <h2>${tl(trans.missing_updates)}</h2>
@@ -324,7 +319,7 @@ export async function render_setting_page(page_id) {
                         ${
                             last_checked ?
                                 html.node`
-                        <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', moment(last_checked).fromNow())}</p>
+                        <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
                         `
                             :   html.node`
                         <p class="last-checked">${tl(trans.never_checked)}</p>
@@ -554,14 +549,16 @@ export async function render_setting_page(page_id) {
                                         :   html.node`<div class="badges"></div>`
                                     }
                                     <div class="date" ref=${(el) => (date = el)}>
-                                        <p>${language.last_updated != 'latest' ? moment(language.last_updated).fromNow() : language.last_updated}</p>
+                                        <p>${language.last_updated != 'latest' ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
                                     </div>
                                 </div>
                             `;
 
                                     if (language.last_updated != 'latest') {
                                         tippy(date, {
-                                            content: language.last_updated
+                                            content: DateTime.fromISO(
+                                                language.last_updated
+                                            ).toLocaleString(DateTime.DATE_MED)
                                         });
                                     }
 
@@ -1414,7 +1411,9 @@ export async function render_setting_page(page_id) {
                             ${tl(trans.seasonal_timeline)}
                         </div>
                         <h4>
-                            ${moment(stored_season.now).format('MMMM Do YYYY')}
+                            ${DateTime.fromJSDate(
+                                new Date(stored_season.now)
+                            ).toLocaleString(DateTime.DATE_FULL)}
                         </h4>
                     </div>
                     <div class="setting-group">
@@ -1452,7 +1451,7 @@ export async function render_setting_page(page_id) {
                             <h5>${tl(trans.started)}</h5>
                         </div>
                         <div class="info">
-                            <p id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</p>
+                            <p id="current_season_start">${DateTime.fromISO(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
                         </div>
                     </div>
                     <div class="setting" data-type="info">
@@ -1460,7 +1459,7 @@ export async function render_setting_page(page_id) {
                             <h5>${tl(trans.ends_in)}</h5>
                         </div>
                         <div class="info">
-                            <p id="current_season">${moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</p>
+                            <p id="current_season">${DateTime.fromISO(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
                         </div>
                     </div>
                     `
@@ -1471,7 +1470,7 @@ export async function render_setting_page(page_id) {
                             <h5>${tl(trans.next_in)}</h5>
                         </div>
                         <div class="info">
-                            <p id="next_season_start">${moment(stored_season.next_start.replace('y0', stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</p>
+                            <p id="next_season_start">${DateTime.fromISO(stored_season.next_start.replace('y0', stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace('{offset}', stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
                         </div>
                     </div>
                     `
@@ -1618,11 +1617,11 @@ export async function render_setting_page(page_id) {
                         <li>
                             Theme will expire at
                             <span class="time"
-                                >${moment(
+                                >${time(
                                     localStorage.getItem(
                                         'bleh_cached_style_timeout'
                                     )
-                                ).format('HH:mm:ss Z')}</span
+                                )}</span
                             >
                         </li>
                         <li>
@@ -1631,9 +1630,9 @@ export async function render_setting_page(page_id) {
                             >
                             (artist) will expire at
                             <span class="time"
-                                >${moment(
+                                >${time(
                                     localStorage.getItem('lotus_artist_expire')
-                                ).format('HH:mm:ss Z')}</span
+                                )}</span
                             >
                         </li>
                         <li>
@@ -1642,19 +1641,17 @@ export async function render_setting_page(page_id) {
                             >
                             (album_track) will expire at
                             <span class="time"
-                                >${moment(
+                                >${time(
                                     localStorage.getItem(
                                         'lotus_album_track_expire'
                                     )
-                                ).format('HH:mm:ss Z')}</span
+                                )}</span
                             >
                         </li>
                         <br />
                         <li>
                             It is currently
-                            <span class="time"
-                                >${moment().format('HH:mm:ss Z')}</span
-                            >
+                            <span class="time">${time()}</span>
                         </li>
                         <br />
                         <li>
@@ -3134,63 +3131,7 @@ function make_random_activity(preview, random_types, random_involved) {
 }
 
 function activity_preview_new(parent, activity) {
-    let activity_item = document.createElement('a');
-    activity_item.classList.add('activity-item', `activity--${activity.type}`);
-
-    let involved_text = '';
-
-    activity.involved.forEach((involved) => {
-        let name = involved.name;
-        let sister = involved.sister;
-
-        if (involved.type == 'track' && settings.format_guest_features) {
-            let formatted_title = name_includes(name, sister);
-
-            let song_title;
-            let song_tags = {};
-            if (formatted_title) {
-                song_title = formatted_title[0];
-                song_tags = formatted_title[1];
-                sister = formatted_title[2];
-            }
-
-            // combine
-            name = html.node`
-                <div class="title">${song_title.trim()}</div>
-                ${song_tags.map(
-                    (tag) => html.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-                `
-                )}
-            `;
-        } else if (
-            (involved.type == 'album' || involved.type == 'track') &&
-            settings.corrections
-        ) {
-            name = html.node`${correct_item_by_artist(name, sister)}`;
-            sister = correct_artist(sister);
-        } else if (involved.type == 'artist' && settings.corrections) {
-            sister = correct_artist(sister);
-        }
-
-        if (involved_text != '')
-            involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
-        else
-            involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
-    });
-
-    render(
-        activity_item,
-        html`
-            <div class="type">
-                ${tl(trans.activity.listing[activity.type])}
-                <div class="date">${moment(activity.date).fromNow(true)}</div>
-            </div>
-            <div class="name">${involved_text}</div>
-        `
-    );
-
-    parent.insertBefore(activity_item, parent.firstElementChild);
+    parent.insertBefore(render_activity(activity), parent.firstElementChild);
 
     if (parent.childElementCount > 3)
         parent.removeChild(parent.lastElementChild);

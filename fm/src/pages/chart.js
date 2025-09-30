@@ -4,31 +4,31 @@
 // Licensed under GPLv3
 //
 
-import moment from 'moment';
-import {settings} from "../build/config";
-import {page} from "../build/page";
-import {tl, trans, trans_legacy} from "../build/trans";
-import {correct_artist, correct_item_by_artist} from "../components/lotus";
-import {refresh_all} from "../config";
-import {html} from "lighterhtml";
-import tippy from "tippy.js";
+import { settings } from '../build/config';
+import { page } from '../build/page';
+import { tl, trans, trans_legacy } from '../build/trans';
+import { correct_artist, correct_item_by_artist } from '../components/lotus';
+import { refresh_all } from '../config';
+import { html } from 'lighterhtml';
+import tippy from 'tippy.js';
+import { DateTime } from 'luxon';
 
 export function bleh_charts() {
-    if (page.subpage != 'overview')
-        return;
-
+    if (page.subpage != 'overview') return;
 
     let charts = page.structure.main.querySelector('.charts');
     charts.classList.add('legacy-charts');
-    let chart_rows = charts.querySelectorAll('.charts-col:not(.charts-col--mobile-ad)');
-
+    let chart_rows = charts.querySelectorAll(
+        '.charts-col:not(.charts-col--mobile-ad)'
+    );
 
     let new_panel = document.createElement('section');
     new_panel.classList.add('charts-panel');
 
-    let out_now = page.structure.side.querySelector('.more-link-fullwidth-right a');
-    if (out_now)
-        out_now.classList.add('btn', 'out-now-btn');
+    let out_now = page.structure.side.querySelector(
+        '.more-link-fullwidth-right a'
+    );
+    if (out_now) out_now.classList.add('btn', 'out-now-btn');
 
     let header = html.node`
         <div class="charts-header top-header">
@@ -36,7 +36,7 @@ export function bleh_charts() {
 
             </div>
             <div class="middle">
-                <div class="sub-text">${moment(new Date()).format('MMMM Do YYYY')}</div>
+                <div class="sub-text">${DateTime.now().toLocaleString(DateTime.DATE_FULL)}</div>
                 <h2>${tl(trans.charts)}</h2>
             </div>
             <div class="right">
@@ -123,7 +123,10 @@ export function bleh_charts() {
 
             let link = name.getAttribute('href');
 
-            image.setAttribute('src', image.getAttribute('src').replace('/avatar70s/', '/avatar300s/'));
+            image.setAttribute(
+                'src',
+                image.getAttribute('src').replace('/avatar70s/', '/avatar300s/')
+            );
 
             if (index == 1) {
                 name.textContent = correct_artist(name.textContent);
@@ -148,9 +151,14 @@ export function bleh_charts() {
                     </li>
                 `;
             } else {
-                let artist = item.querySelector('.globalchart-track-artist-name a');
+                let artist = item.querySelector(
+                    '.globalchart-track-artist-name a'
+                );
                 artist.textContent = correct_artist(artist.textContent);
-                name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
+                name.textContent = correct_item_by_artist(
+                    name.textContent,
+                    artist.textContent
+                );
 
                 list_item = html.node`
                     <li class="music-bookmarks-albums-item-wrap charts-list-item">
@@ -184,5 +192,8 @@ export function bleh_charts() {
         new_panel.appendChild(chart_row);
     });
 
-    page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
+    page.structure.main.insertBefore(
+        new_panel,
+        page.structure.main.firstElementChild
+    );
 }

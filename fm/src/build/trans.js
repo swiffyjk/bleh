@@ -4,7 +4,6 @@
 // Licensed under GPLv3
 //
 
-import moment from 'moment';
 import { handle_error_500 } from '../page';
 import { log } from './log';
 import { auth, auth_link, setRoot } from './page';
@@ -7754,46 +7753,6 @@ export const trans_legacy = {
         }
     }
 };
-moment.updateLocale('de', {
-    relativeTime: {
-        future: 'in %s',
-        past: 'vor %s',
-        s: 'ein paar Sekunden',
-        ss: '%d Sekunden',
-        m: 'eine Minute',
-        mm: '%d Minuten',
-        h: 'eine Stunde',
-        hh: '%d Stunden',
-        d: 'ein Tag',
-        dd: '%d Tagen',
-        w: 'eine Woche',
-        ww: '%d Wochen',
-        M: 'im Monat',
-        MM: '%d Monate',
-        y: 'ein Jahr',
-        yy: '%d Jahre'
-    }
-});
-moment.updateLocale('pt', {
-    relativeTime: {
-        future: 'em %s',
-        past: 'há %s',
-        s: 'alguns segundos',
-        ss: '%d segundos',
-        m: 'um minuto',
-        mm: '%d minutos',
-        h: 'uma hora',
-        hh: '%d horas',
-        d: 'um dia',
-        dd: '%d dias',
-        w: 'uma semana',
-        ww: '%d semanas',
-        M: 'um mês',
-        MM: '%d meses',
-        y: 'um ano',
-        yy: '%d anos'
-    }
-});
 
 export function tl(key, replacements = {}) {
     if (!key) {
@@ -7861,6 +7820,4 @@ export function lookup_lang() {
     lang = document.documentElement.getAttribute('lang');
 
     Settings.defaultLocale = lang;
-
-    moment.locale(lang);
 }

@@ -20,17 +20,16 @@ import { log } from './build/log.js';
 import { correct_artist, correct_item_by_artist } from './components/lotus.js';
 import { bleh_notification_list } from './components/notifications.js';
 import tippy from 'tippy.js';
-import { chart_reflow } from './chart.js';
 import {
     load_profile_cache_externally,
     open_starred_friend_window
 } from './pages/profile.js';
 import { sponsor } from './sponsor.js';
-import moment from 'moment';
 import { register_menu } from './components/menu.js';
 import { copy, romanise } from './build/tools.js';
 import { submit_scrobble } from './components/scrobble.js';
 import { match } from './components/dynamic_theming.js';
+import { DateTime } from 'luxon';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -97,13 +96,13 @@ export function update_masthead(
                 <div class="new-badge sku spacing">
                     ${version.sku}
                     ${
-                        settings.dev
-                            ? html.node`
+                        settings.dev ?
+                            html.node`
                     <span class="bleh-icon-container">
                         <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
                     </span>
                     `
-                            : ''
+                        :   ''
                     }
                 </div>
             </a>
@@ -118,13 +117,13 @@ export function update_masthead(
                 <div class="new-badge sku spacing">
                     ${version.sku}
                     ${
-                        settings.dev
-                            ? html.node`
+                        settings.dev ?
+                            html.node`
                     <span class="bleh-icon-container">
                         <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
                     </span>
                     `
-                            : ''
+                        :   ''
                     }
                 </div>
             </a>
@@ -142,12 +141,14 @@ export function update_masthead(
         content: html.node`
             <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
                 ${
-                    last_checked
-                        ? tl(trans.last_checked_date).replace(
-                              '{d}',
-                              moment(last_checked).fromNow()
-                          )
-                        : tl(trans.never_checked)
+                    last_checked ?
+                        tl(trans.last_checked_date).replace(
+                            '{d}',
+                            DateTime.fromJSDate(
+                                new Date(last_checked)
+                            ).toRelative()
+                        )
+                    :   tl(trans.never_checked)
                 }
             </a>
         `,
@@ -354,7 +355,7 @@ export function append_nav() {
     let bleh_container = html.node`
         <li class="masthead-nav-item">
             <a class="masthead-nav-control" href="${root}bleh${stored_season.id != 'none' ? '/seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != 'none' ? 'true' : 'false'}">
-                ${stored_season.id == 'none' ? tl(trans.bleh_settings) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
+                ${stored_season.id == 'none' ? tl(trans.bleh_settings) : DateTime.fromISO(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}
             </a>
         </li>
     `;
@@ -732,49 +733,51 @@ export function append_nav() {
                                 <img src="${auth.avatar.replace('avatar42s', 'avatar170s')}" alt="${auth.name}" />
                             </div>
                             ${
-                                cache.banner
-                                    ? html.node`
+                                cache.banner ?
+                                    html.node`
                             <div class="bg" style="background-image: url(${cache.banner})" />
                             `
-                                    : !auth.avatar.endsWith(
-                                            '818148bf682d429dc215c1705eb27b98.png'
-                                        )
-                                      ? html.node`
+                                : (
+                                    !auth.avatar.endsWith(
+                                        '818148bf682d429dc215c1705eb27b98.png'
+                                    )
+                                ) ?
+                                    html.node`
                             <div class="bg" style="background-image: url(${auth.avatar.replace('avatar42s', 'avatar170s')})" />
                             `
-                                      : ''
+                                :   ''
                             }
                             <div class="name">${auth.name}</div>
                             ${
-                                badges || auth.pro
-                                    ? html.node`
+                                badges || auth.pro ?
+                                    html.node`
                                 <div class="badges">
                                     ${badges ? badges.map((badge) => create_badge(badge)) : ''}
                                     ${
-                                        auth.pro
-                                            ? () => {
-                                                  let el = html.node`
+                                        auth.pro ?
+                                            () => {
+                                                let el = html.node`
                                             <span class="label user-status-subscriber no-hover">
                                                 ${tl(trans.badges['user-status-subscriber'].name)}
                                             </span>
                                         `;
 
-                                                  tippy(el, {
-                                                      theme: 'badge',
-                                                      placement: 'bottom',
-                                                      content: html.node`
+                                                tippy(el, {
+                                                    theme: 'badge',
+                                                    placement: 'bottom',
+                                                    content: html.node`
                                                 <div class="badge-name">${tl(trans.badges['user-status-subscriber'].name)}</div>
                                                 <div class="badge-reason">${tl(trans.badges['user-status-subscriber'].reason)}</div>
                                             `
-                                                  });
+                                                });
 
-                                                  return el;
-                                              }
-                                            : ''
+                                                return el;
+                                            }
+                                        :   ''
                                     }
                                 </div>
                             `
-                                    : ''
+                                :   ''
                             }
                             <a class="link-block-cover-link" href="${root}user/${auth.name}" />
                         </div>
@@ -797,31 +800,31 @@ export function append_nav() {
                                 return form;
                             }}
                             ${
-                                settings.starred_friend != ''
-                                    ? () => {
-                                          let button = html.node`
+                                settings.starred_friend != '' ?
+                                    () => {
+                                        let button = html.node`
                                     <a class="dropdown-menu-clickable-item chibi" data-type="starred_friend" data-is-shortcut="true" href="${root}user/${settings.starred_friend}">${settings.starred_friend}</a>
                                 `;
 
-                                          tippy(button, {
-                                              content: settings.starred_friend
-                                          });
+                                        tippy(button, {
+                                            content: settings.starred_friend
+                                        });
 
-                                          return button;
-                                      }
-                                    : () => {
-                                          let button = html.node`
+                                        return button;
+                                    }
+                                :   () => {
+                                        let button = html.node`
                                     <button class="dropdown-menu-clickable-item chibi" data-type="starred_friend" data-is-shortcut="false" onclick=${() => open_starred_friend_window()}>${tl(trans.starred_friend.name)}</button>
                                 `;
 
-                                          tippy(button, {
-                                              content: tl(
-                                                  trans.starred_friend.name
-                                              )
-                                          });
+                                        tippy(button, {
+                                            content: tl(
+                                                trans.starred_friend.name
+                                            )
+                                        });
 
-                                          return button;
-                                      }
+                                        return button;
+                                    }
                             }
                         </div>
                     </div>
@@ -969,8 +972,8 @@ export function append_nav() {
                                 </button>
                             </div>
                             ${
-                                show_language
-                                    ? html.node`
+                                show_language ?
+                                    html.node`
                             <div class="button-combo">
                                 <button class="dropdown-menu-clickable-item" data-menu-item="language" onclick=${() => {
                                     render(
@@ -1021,7 +1024,7 @@ export function append_nav() {
                                 </button>
                             </div>
                             `
-                                    : ''
+                                :   ''
                             }
                             <div class="button-combo">
                                 <a class="dropdown-menu-clickable-item" data-type="mini" href="${root}bleh/minis">
@@ -1050,8 +1053,8 @@ export function append_nav() {
                     </div>
                 </div>
                 ${
-                    ff('status_in_menu') && auth.pro
-                        ? html.node`
+                    ff('status_in_menu') && auth.pro ?
+                        html.node`
                 <div class="auth-menu-status" ref=${(el) => (status_container = el)}>
                     <div class="status">
                         <div class="loading-data-container">
@@ -1060,7 +1063,7 @@ export function append_nav() {
                     </div>
                 </div>
                 `
-                        : ''
+                    :   ''
                 }
             `);
 

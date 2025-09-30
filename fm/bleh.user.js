@@ -18,13 +18,7 @@
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-  }) : x)(function(x) {
-    if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw Error('Dynamic require of "' + x + '" is not supported');
-  });
-  var __commonJS = (cb, mod) => function __require2() {
+  var __commonJS = (cb, mod) => function __require() {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
   var __copyProps = (to2, from2, except, desc) => {
@@ -43,4006 +37,6 @@
     isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
     mod
   ));
-
-  // node_modules/moment/moment.js
-  var require_moment = __commonJS({
-    "node_modules/moment/moment.js"(exports, module) {
-      (function(global, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : global.moment = factory();
-      })(exports, function() {
-        "use strict";
-        var hookCallback;
-        function hooks() {
-          return hookCallback.apply(null, arguments);
-        }
-        function setHookCallback(callback2) {
-          hookCallback = callback2;
-        }
-        function isArray3(input2) {
-          return input2 instanceof Array || Object.prototype.toString.call(input2) === "[object Array]";
-        }
-        function isObject2(input2) {
-          return input2 != null && Object.prototype.toString.call(input2) === "[object Object]";
-        }
-        function hasOwnProp(a, b) {
-          return Object.prototype.hasOwnProperty.call(a, b);
-        }
-        function isObjectEmpty(obj) {
-          if (Object.getOwnPropertyNames) {
-            return Object.getOwnPropertyNames(obj).length === 0;
-          } else {
-            var k;
-            for (k in obj) {
-              if (hasOwnProp(obj, k)) {
-                return false;
-              }
-            }
-            return true;
-          }
-        }
-        function isUndefined2(input2) {
-          return input2 === void 0;
-        }
-        function isNumber3(input2) {
-          return typeof input2 === "number" || Object.prototype.toString.call(input2) === "[object Number]";
-        }
-        function isDate2(input2) {
-          return input2 instanceof Date || Object.prototype.toString.call(input2) === "[object Date]";
-        }
-        function map3(arr, fn2) {
-          var res = [], i, arrLen = arr.length;
-          for (i = 0; i < arrLen; ++i) {
-            res.push(fn2(arr[i], i));
-          }
-          return res;
-        }
-        function extend(a, b) {
-          for (var i in b) {
-            if (hasOwnProp(b, i)) {
-              a[i] = b[i];
-            }
-          }
-          if (hasOwnProp(b, "toString")) {
-            a.toString = b.toString;
-          }
-          if (hasOwnProp(b, "valueOf")) {
-            a.valueOf = b.valueOf;
-          }
-          return a;
-        }
-        function createUTC(input2, format2, locale2, strict) {
-          return createLocalOrUTC(input2, format2, locale2, strict, true).utc();
-        }
-        function defaultParsingFlags() {
-          return {
-            empty: false,
-            unusedTokens: [],
-            unusedInput: [],
-            overflow: -2,
-            charsLeftOver: 0,
-            nullInput: false,
-            invalidEra: null,
-            invalidMonth: null,
-            invalidFormat: false,
-            userInvalidated: false,
-            iso: false,
-            parsedDateParts: [],
-            era: null,
-            meridiem: null,
-            rfc2822: false,
-            weekdayMismatch: false
-          };
-        }
-        function getParsingFlags(m) {
-          if (m._pf == null) {
-            m._pf = defaultParsingFlags();
-          }
-          return m._pf;
-        }
-        var some;
-        if (Array.prototype.some) {
-          some = Array.prototype.some;
-        } else {
-          some = function(fun) {
-            var t = Object(this), len = t.length >>> 0, i;
-            for (i = 0; i < len; i++) {
-              if (i in t && fun.call(this, t[i], i, t)) {
-                return true;
-              }
-            }
-            return false;
-          };
-        }
-        function isValid(m) {
-          var flags = null, parsedParts = false, isNowValid = m._d && !isNaN(m._d.getTime());
-          if (isNowValid) {
-            flags = getParsingFlags(m);
-            parsedParts = some.call(flags.parsedDateParts, function(i) {
-              return i != null;
-            });
-            isNowValid = flags.overflow < 0 && !flags.empty && !flags.invalidEra && !flags.invalidMonth && !flags.invalidWeekday && !flags.weekdayMismatch && !flags.nullInput && !flags.invalidFormat && !flags.userInvalidated && (!flags.meridiem || flags.meridiem && parsedParts);
-            if (m._strict) {
-              isNowValid = isNowValid && flags.charsLeftOver === 0 && flags.unusedTokens.length === 0 && flags.bigHour === void 0;
-            }
-          }
-          if (Object.isFrozen == null || !Object.isFrozen(m)) {
-            m._isValid = isNowValid;
-          } else {
-            return isNowValid;
-          }
-          return m._isValid;
-        }
-        function createInvalid(flags) {
-          var m = createUTC(NaN);
-          if (flags != null) {
-            extend(getParsingFlags(m), flags);
-          } else {
-            getParsingFlags(m).userInvalidated = true;
-          }
-          return m;
-        }
-        var momentProperties = hooks.momentProperties = [], updateInProgress = false;
-        function copyConfig(to3, from3) {
-          var i, prop, val, momentPropertiesLen = momentProperties.length;
-          if (!isUndefined2(from3._isAMomentObject)) {
-            to3._isAMomentObject = from3._isAMomentObject;
-          }
-          if (!isUndefined2(from3._i)) {
-            to3._i = from3._i;
-          }
-          if (!isUndefined2(from3._f)) {
-            to3._f = from3._f;
-          }
-          if (!isUndefined2(from3._l)) {
-            to3._l = from3._l;
-          }
-          if (!isUndefined2(from3._strict)) {
-            to3._strict = from3._strict;
-          }
-          if (!isUndefined2(from3._tzm)) {
-            to3._tzm = from3._tzm;
-          }
-          if (!isUndefined2(from3._isUTC)) {
-            to3._isUTC = from3._isUTC;
-          }
-          if (!isUndefined2(from3._offset)) {
-            to3._offset = from3._offset;
-          }
-          if (!isUndefined2(from3._pf)) {
-            to3._pf = getParsingFlags(from3);
-          }
-          if (!isUndefined2(from3._locale)) {
-            to3._locale = from3._locale;
-          }
-          if (momentPropertiesLen > 0) {
-            for (i = 0; i < momentPropertiesLen; i++) {
-              prop = momentProperties[i];
-              val = from3[prop];
-              if (!isUndefined2(val)) {
-                to3[prop] = val;
-              }
-            }
-          }
-          return to3;
-        }
-        function Moment(config) {
-          copyConfig(this, config);
-          this._d = new Date(config._d != null ? config._d.getTime() : NaN);
-          if (!this.isValid()) {
-            this._d = /* @__PURE__ */ new Date(NaN);
-          }
-          if (updateInProgress === false) {
-            updateInProgress = true;
-            hooks.updateOffset(this);
-            updateInProgress = false;
-          }
-        }
-        function isMoment(obj) {
-          return obj instanceof Moment || obj != null && obj._isAMomentObject != null;
-        }
-        function warn(msg) {
-          if (hooks.suppressDeprecationWarnings === false && typeof console !== "undefined" && console.warn) {
-            console.warn("Deprecation warning: " + msg);
-          }
-        }
-        function deprecate(msg, fn2) {
-          var firstTime = true;
-          return extend(function() {
-            if (hooks.deprecationHandler != null) {
-              hooks.deprecationHandler(null, msg);
-            }
-            if (firstTime) {
-              var args = [], arg, i, key, argLen = arguments.length;
-              for (i = 0; i < argLen; i++) {
-                arg = "";
-                if (typeof arguments[i] === "object") {
-                  arg += "\n[" + i + "] ";
-                  for (key in arguments[0]) {
-                    if (hasOwnProp(arguments[0], key)) {
-                      arg += key + ": " + arguments[0][key] + ", ";
-                    }
-                  }
-                  arg = arg.slice(0, -2);
-                } else {
-                  arg = arguments[i];
-                }
-                args.push(arg);
-              }
-              warn(
-                msg + "\nArguments: " + Array.prototype.slice.call(args).join("") + "\n" + new Error().stack
-              );
-              firstTime = false;
-            }
-            return fn2.apply(this, arguments);
-          }, fn2);
-        }
-        var deprecations = {};
-        function deprecateSimple(name, msg) {
-          if (hooks.deprecationHandler != null) {
-            hooks.deprecationHandler(name, msg);
-          }
-          if (!deprecations[name]) {
-            warn(msg);
-            deprecations[name] = true;
-          }
-        }
-        hooks.suppressDeprecationWarnings = false;
-        hooks.deprecationHandler = null;
-        function isFunction2(input2) {
-          return typeof Function !== "undefined" && input2 instanceof Function || Object.prototype.toString.call(input2) === "[object Function]";
-        }
-        function set2(config) {
-          var prop, i;
-          for (i in config) {
-            if (hasOwnProp(config, i)) {
-              prop = config[i];
-              if (isFunction2(prop)) {
-                this[i] = prop;
-              } else {
-                this["_" + i] = prop;
-              }
-            }
-          }
-          this._config = config;
-          this._dayOfMonthOrdinalParseLenient = new RegExp(
-            (this._dayOfMonthOrdinalParse.source || this._ordinalParse.source) + "|" + /\d{1,2}/.source
-          );
-        }
-        function mergeConfigs(parentConfig, childConfig) {
-          var res = extend({}, parentConfig), prop;
-          for (prop in childConfig) {
-            if (hasOwnProp(childConfig, prop)) {
-              if (isObject2(parentConfig[prop]) && isObject2(childConfig[prop])) {
-                res[prop] = {};
-                extend(res[prop], parentConfig[prop]);
-                extend(res[prop], childConfig[prop]);
-              } else if (childConfig[prop] != null) {
-                res[prop] = childConfig[prop];
-              } else {
-                delete res[prop];
-              }
-            }
-          }
-          for (prop in parentConfig) {
-            if (hasOwnProp(parentConfig, prop) && !hasOwnProp(childConfig, prop) && isObject2(parentConfig[prop])) {
-              res[prop] = extend({}, res[prop]);
-            }
-          }
-          return res;
-        }
-        function Locale2(config) {
-          if (config != null) {
-            this.set(config);
-          }
-        }
-        var keys2;
-        if (Object.keys) {
-          keys2 = Object.keys;
-        } else {
-          keys2 = function(obj) {
-            var i, res = [];
-            for (i in obj) {
-              if (hasOwnProp(obj, i)) {
-                res.push(i);
-              }
-            }
-            return res;
-          };
-        }
-        var defaultCalendar = {
-          sameDay: "[Today at] LT",
-          nextDay: "[Tomorrow at] LT",
-          nextWeek: "dddd [at] LT",
-          lastDay: "[Yesterday at] LT",
-          lastWeek: "[Last] dddd [at] LT",
-          sameElse: "L"
-        };
-        function calendar2(key, mom, now3) {
-          var output = this._calendar[key] || this._calendar["sameElse"];
-          return isFunction2(output) ? output.call(mom, now3) : output;
-        }
-        function zeroFill(number, targetLength, forceSign) {
-          var absNumber = "" + Math.abs(number), zerosToFill = targetLength - absNumber.length, sign3 = number >= 0;
-          return (sign3 ? forceSign ? "+" : "" : "-") + Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
-        }
-        var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g, localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, formatFunctions = {}, formatTokenFunctions = {};
-        function addFormatToken(token2, padded, ordinal2, callback2) {
-          var func = callback2;
-          if (typeof callback2 === "string") {
-            func = function() {
-              return this[callback2]();
-            };
-          }
-          if (token2) {
-            formatTokenFunctions[token2] = func;
-          }
-          if (padded) {
-            formatTokenFunctions[padded[0]] = function() {
-              return zeroFill(func.apply(this, arguments), padded[1], padded[2]);
-            };
-          }
-          if (ordinal2) {
-            formatTokenFunctions[ordinal2] = function() {
-              return this.localeData().ordinal(
-                func.apply(this, arguments),
-                token2
-              );
-            };
-          }
-        }
-        function removeFormattingTokens(input2) {
-          if (input2.match(/\[[\s\S]/)) {
-            return input2.replace(/^\[|\]$/g, "");
-          }
-          return input2.replace(/\\/g, "");
-        }
-        function makeFormatFunction(format2) {
-          var array = format2.match(formattingTokens), i, length;
-          for (i = 0, length = array.length; i < length; i++) {
-            if (formatTokenFunctions[array[i]]) {
-              array[i] = formatTokenFunctions[array[i]];
-            } else {
-              array[i] = removeFormattingTokens(array[i]);
-            }
-          }
-          return function(mom) {
-            var output = "", i2;
-            for (i2 = 0; i2 < length; i2++) {
-              output += isFunction2(array[i2]) ? array[i2].call(mom, format2) : array[i2];
-            }
-            return output;
-          };
-        }
-        function formatMoment(m, format2) {
-          if (!m.isValid()) {
-            return m.localeData().invalidDate();
-          }
-          format2 = expandFormat(format2, m.localeData());
-          formatFunctions[format2] = formatFunctions[format2] || makeFormatFunction(format2);
-          return formatFunctions[format2](m);
-        }
-        function expandFormat(format2, locale2) {
-          var i = 5;
-          function replaceLongDateFormatTokens(input2) {
-            return locale2.longDateFormat(input2) || input2;
-          }
-          localFormattingTokens.lastIndex = 0;
-          while (i >= 0 && localFormattingTokens.test(format2)) {
-            format2 = format2.replace(
-              localFormattingTokens,
-              replaceLongDateFormatTokens
-            );
-            localFormattingTokens.lastIndex = 0;
-            i -= 1;
-          }
-          return format2;
-        }
-        var defaultLongDateFormat = {
-          LTS: "h:mm:ss A",
-          LT: "h:mm A",
-          L: "MM/DD/YYYY",
-          LL: "MMMM D, YYYY",
-          LLL: "MMMM D, YYYY h:mm A",
-          LLLL: "dddd, MMMM D, YYYY h:mm A"
-        };
-        function longDateFormat(key) {
-          var format2 = this._longDateFormat[key], formatUpper = this._longDateFormat[key.toUpperCase()];
-          if (format2 || !formatUpper) {
-            return format2;
-          }
-          this._longDateFormat[key] = formatUpper.match(formattingTokens).map(function(tok) {
-            if (tok === "MMMM" || tok === "MM" || tok === "DD" || tok === "dddd") {
-              return tok.slice(1);
-            }
-            return tok;
-          }).join("");
-          return this._longDateFormat[key];
-        }
-        var defaultInvalidDate = "Invalid date";
-        function invalidDate() {
-          return this._invalidDate;
-        }
-        var defaultOrdinal = "%d", defaultDayOfMonthOrdinalParse = /\d{1,2}/;
-        function ordinal(number) {
-          return this._ordinal.replace("%d", number);
-        }
-        var defaultRelativeTime = {
-          future: "in %s",
-          past: "%s ago",
-          s: "a few seconds",
-          ss: "%d seconds",
-          m: "a minute",
-          mm: "%d minutes",
-          h: "an hour",
-          hh: "%d hours",
-          d: "a day",
-          dd: "%d days",
-          w: "a week",
-          ww: "%d weeks",
-          M: "a month",
-          MM: "%d months",
-          y: "a year",
-          yy: "%d years"
-        };
-        function relativeTime(number, withoutSuffix, string, isFuture) {
-          var output = this._relativeTime[string];
-          return isFunction2(output) ? output(number, withoutSuffix, string, isFuture) : output.replace(/%d/i, number);
-        }
-        function pastFuture(diff2, output) {
-          var format2 = this._relativeTime[diff2 > 0 ? "future" : "past"];
-          return isFunction2(format2) ? format2(output) : format2.replace(/%s/i, output);
-        }
-        var aliases = {
-          D: "date",
-          dates: "date",
-          date: "date",
-          d: "day",
-          days: "day",
-          day: "day",
-          e: "weekday",
-          weekdays: "weekday",
-          weekday: "weekday",
-          E: "isoWeekday",
-          isoweekdays: "isoWeekday",
-          isoweekday: "isoWeekday",
-          DDD: "dayOfYear",
-          dayofyears: "dayOfYear",
-          dayofyear: "dayOfYear",
-          h: "hour",
-          hours: "hour",
-          hour: "hour",
-          ms: "millisecond",
-          milliseconds: "millisecond",
-          millisecond: "millisecond",
-          m: "minute",
-          minutes: "minute",
-          minute: "minute",
-          M: "month",
-          months: "month",
-          month: "month",
-          Q: "quarter",
-          quarters: "quarter",
-          quarter: "quarter",
-          s: "second",
-          seconds: "second",
-          second: "second",
-          gg: "weekYear",
-          weekyears: "weekYear",
-          weekyear: "weekYear",
-          GG: "isoWeekYear",
-          isoweekyears: "isoWeekYear",
-          isoweekyear: "isoWeekYear",
-          w: "week",
-          weeks: "week",
-          week: "week",
-          W: "isoWeek",
-          isoweeks: "isoWeek",
-          isoweek: "isoWeek",
-          y: "year",
-          years: "year",
-          year: "year"
-        };
-        function normalizeUnits(units) {
-          return typeof units === "string" ? aliases[units] || aliases[units.toLowerCase()] : void 0;
-        }
-        function normalizeObjectUnits(inputObject) {
-          var normalizedInput = {}, normalizedProp, prop;
-          for (prop in inputObject) {
-            if (hasOwnProp(inputObject, prop)) {
-              normalizedProp = normalizeUnits(prop);
-              if (normalizedProp) {
-                normalizedInput[normalizedProp] = inputObject[prop];
-              }
-            }
-          }
-          return normalizedInput;
-        }
-        var priorities = {
-          date: 9,
-          day: 11,
-          weekday: 11,
-          isoWeekday: 11,
-          dayOfYear: 4,
-          hour: 13,
-          millisecond: 16,
-          minute: 14,
-          month: 8,
-          quarter: 7,
-          second: 15,
-          weekYear: 1,
-          isoWeekYear: 1,
-          week: 5,
-          isoWeek: 5,
-          year: 1
-        };
-        function getPrioritizedUnits(unitsObj) {
-          var units = [], u;
-          for (u in unitsObj) {
-            if (hasOwnProp(unitsObj, u)) {
-              units.push({ unit: u, priority: priorities[u] });
-            }
-          }
-          units.sort(function(a, b) {
-            return a.priority - b.priority;
-          });
-          return units;
-        }
-        var match1 = /\d/, match22 = /\d\d/, match3 = /\d{3}/, match4 = /\d{4}/, match6 = /[+-]?\d{6}/, match1to2 = /\d\d?/, match3to4 = /\d\d\d\d?/, match5to6 = /\d\d\d\d\d\d?/, match1to3 = /\d{1,3}/, match1to4 = /\d{1,4}/, match1to6 = /[+-]?\d{1,6}/, matchUnsigned = /\d+/, matchSigned = /[+-]?\d+/, matchOffset = /Z|[+-]\d\d:?\d\d/gi, matchShortOffset = /Z|[+-]\d\d(?::?\d\d)?/gi, matchTimestamp = /[+-]?\d+(\.\d{1,3})?/, matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i, match1to2NoLeadingZero = /^[1-9]\d?/, match1to2HasZero = /^([1-9]\d|\d)/, regexes;
-        regexes = {};
-        function addRegexToken(token2, regex, strictRegex) {
-          regexes[token2] = isFunction2(regex) ? regex : function(isStrict, localeData2) {
-            return isStrict && strictRegex ? strictRegex : regex;
-          };
-        }
-        function getParseRegexForToken(token2, config) {
-          if (!hasOwnProp(regexes, token2)) {
-            return new RegExp(unescapeFormat(token2));
-          }
-          return regexes[token2](config._strict, config._locale);
-        }
-        function unescapeFormat(s2) {
-          return regexEscape(
-            s2.replace("\\", "").replace(
-              /\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g,
-              function(matched, p1, p2, p3, p4) {
-                return p1 || p2 || p3 || p4;
-              }
-            )
-          );
-        }
-        function regexEscape(s2) {
-          return s2.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-        }
-        function absFloor(number) {
-          if (number < 0) {
-            return Math.ceil(number) || 0;
-          } else {
-            return Math.floor(number);
-          }
-        }
-        function toInt(argumentForCoercion) {
-          var coercedNumber = +argumentForCoercion, value = 0;
-          if (coercedNumber !== 0 && isFinite(coercedNumber)) {
-            value = absFloor(coercedNumber);
-          }
-          return value;
-        }
-        var tokens = {};
-        function addParseToken(token2, callback2) {
-          var i, func = callback2, tokenLen;
-          if (typeof token2 === "string") {
-            token2 = [token2];
-          }
-          if (isNumber3(callback2)) {
-            func = function(input2, array) {
-              array[callback2] = toInt(input2);
-            };
-          }
-          tokenLen = token2.length;
-          for (i = 0; i < tokenLen; i++) {
-            tokens[token2[i]] = func;
-          }
-        }
-        function addWeekParseToken(token2, callback2) {
-          addParseToken(token2, function(input2, array, config, token3) {
-            config._w = config._w || {};
-            callback2(input2, config._w, config, token3);
-          });
-        }
-        function addTimeToArrayFromToken(token2, input2, config) {
-          if (input2 != null && hasOwnProp(tokens, token2)) {
-            tokens[token2](input2, config._a, config, token2);
-          }
-        }
-        function isLeapYear2(year) {
-          return year % 4 === 0 && year % 100 !== 0 || year % 400 === 0;
-        }
-        var YEAR = 0, MONTH = 1, DATE = 2, HOUR = 3, MINUTE = 4, SECOND = 5, MILLISECOND = 6, WEEK = 7, WEEKDAY = 8;
-        addFormatToken("Y", 0, 0, function() {
-          var y = this.year();
-          return y <= 9999 ? zeroFill(y, 4) : "+" + y;
-        });
-        addFormatToken(0, ["YY", 2], 0, function() {
-          return this.year() % 100;
-        });
-        addFormatToken(0, ["YYYY", 4], 0, "year");
-        addFormatToken(0, ["YYYYY", 5], 0, "year");
-        addFormatToken(0, ["YYYYYY", 6, true], 0, "year");
-        addRegexToken("Y", matchSigned);
-        addRegexToken("YY", match1to2, match22);
-        addRegexToken("YYYY", match1to4, match4);
-        addRegexToken("YYYYY", match1to6, match6);
-        addRegexToken("YYYYYY", match1to6, match6);
-        addParseToken(["YYYYY", "YYYYYY"], YEAR);
-        addParseToken("YYYY", function(input2, array) {
-          array[YEAR] = input2.length === 2 ? hooks.parseTwoDigitYear(input2) : toInt(input2);
-        });
-        addParseToken("YY", function(input2, array) {
-          array[YEAR] = hooks.parseTwoDigitYear(input2);
-        });
-        addParseToken("Y", function(input2, array) {
-          array[YEAR] = parseInt(input2, 10);
-        });
-        function daysInYear2(year) {
-          return isLeapYear2(year) ? 366 : 365;
-        }
-        hooks.parseTwoDigitYear = function(input2) {
-          return toInt(input2) + (toInt(input2) > 68 ? 1900 : 2e3);
-        };
-        var getSetYear = makeGetSet("FullYear", true);
-        function getIsLeapYear() {
-          return isLeapYear2(this.year());
-        }
-        function makeGetSet(unit, keepTime) {
-          return function(value) {
-            if (value != null) {
-              set$1(this, unit, value);
-              hooks.updateOffset(this, keepTime);
-              return this;
-            } else {
-              return get(this, unit);
-            }
-          };
-        }
-        function get(mom, unit) {
-          if (!mom.isValid()) {
-            return NaN;
-          }
-          var d = mom._d, isUTC = mom._isUTC;
-          switch (unit) {
-            case "Milliseconds":
-              return isUTC ? d.getUTCMilliseconds() : d.getMilliseconds();
-            case "Seconds":
-              return isUTC ? d.getUTCSeconds() : d.getSeconds();
-            case "Minutes":
-              return isUTC ? d.getUTCMinutes() : d.getMinutes();
-            case "Hours":
-              return isUTC ? d.getUTCHours() : d.getHours();
-            case "Date":
-              return isUTC ? d.getUTCDate() : d.getDate();
-            case "Day":
-              return isUTC ? d.getUTCDay() : d.getDay();
-            case "Month":
-              return isUTC ? d.getUTCMonth() : d.getMonth();
-            case "FullYear":
-              return isUTC ? d.getUTCFullYear() : d.getFullYear();
-            default:
-              return NaN;
-          }
-        }
-        function set$1(mom, unit, value) {
-          var d, isUTC, year, month, date;
-          if (!mom.isValid() || isNaN(value)) {
-            return;
-          }
-          d = mom._d;
-          isUTC = mom._isUTC;
-          switch (unit) {
-            case "Milliseconds":
-              return void (isUTC ? d.setUTCMilliseconds(value) : d.setMilliseconds(value));
-            case "Seconds":
-              return void (isUTC ? d.setUTCSeconds(value) : d.setSeconds(value));
-            case "Minutes":
-              return void (isUTC ? d.setUTCMinutes(value) : d.setMinutes(value));
-            case "Hours":
-              return void (isUTC ? d.setUTCHours(value) : d.setHours(value));
-            case "Date":
-              return void (isUTC ? d.setUTCDate(value) : d.setDate(value));
-            // case 'Day': // Not real
-            //    return void (isUTC ? d.setUTCDay(value) : d.setDay(value));
-            // case 'Month': // Not used because we need to pass two variables
-            //     return void (isUTC ? d.setUTCMonth(value) : d.setMonth(value));
-            case "FullYear":
-              break;
-            // See below ...
-            default:
-              return;
-          }
-          year = value;
-          month = mom.month();
-          date = mom.date();
-          date = date === 29 && month === 1 && !isLeapYear2(year) ? 28 : date;
-          void (isUTC ? d.setUTCFullYear(year, month, date) : d.setFullYear(year, month, date));
-        }
-        function stringGet(units) {
-          units = normalizeUnits(units);
-          if (isFunction2(this[units])) {
-            return this[units]();
-          }
-          return this;
-        }
-        function stringSet(units, value) {
-          if (typeof units === "object") {
-            units = normalizeObjectUnits(units);
-            var prioritized = getPrioritizedUnits(units), i, prioritizedLen = prioritized.length;
-            for (i = 0; i < prioritizedLen; i++) {
-              this[prioritized[i].unit](units[prioritized[i].unit]);
-            }
-          } else {
-            units = normalizeUnits(units);
-            if (isFunction2(this[units])) {
-              return this[units](value);
-            }
-          }
-          return this;
-        }
-        function mod(n2, x) {
-          return (n2 % x + x) % x;
-        }
-        var indexOf2;
-        if (Array.prototype.indexOf) {
-          indexOf2 = Array.prototype.indexOf;
-        } else {
-          indexOf2 = function(o) {
-            var i;
-            for (i = 0; i < this.length; ++i) {
-              if (this[i] === o) {
-                return i;
-              }
-            }
-            return -1;
-          };
-        }
-        function daysInMonth2(year, month) {
-          if (isNaN(year) || isNaN(month)) {
-            return NaN;
-          }
-          var modMonth = mod(month, 12);
-          year += (month - modMonth) / 12;
-          return modMonth === 1 ? isLeapYear2(year) ? 29 : 28 : 31 - modMonth % 7 % 2;
-        }
-        addFormatToken("M", ["MM", 2], "Mo", function() {
-          return this.month() + 1;
-        });
-        addFormatToken("MMM", 0, 0, function(format2) {
-          return this.localeData().monthsShort(this, format2);
-        });
-        addFormatToken("MMMM", 0, 0, function(format2) {
-          return this.localeData().months(this, format2);
-        });
-        addRegexToken("M", match1to2, match1to2NoLeadingZero);
-        addRegexToken("MM", match1to2, match22);
-        addRegexToken("MMM", function(isStrict, locale2) {
-          return locale2.monthsShortRegex(isStrict);
-        });
-        addRegexToken("MMMM", function(isStrict, locale2) {
-          return locale2.monthsRegex(isStrict);
-        });
-        addParseToken(["M", "MM"], function(input2, array) {
-          array[MONTH] = toInt(input2) - 1;
-        });
-        addParseToken(["MMM", "MMMM"], function(input2, array, config, token2) {
-          var month = config._locale.monthsParse(input2, token2, config._strict);
-          if (month != null) {
-            array[MONTH] = month;
-          } else {
-            getParsingFlags(config).invalidMonth = input2;
-          }
-        });
-        var defaultLocaleMonths = "January_February_March_April_May_June_July_August_September_October_November_December".split(
-          "_"
-        ), defaultLocaleMonthsShort = "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"), MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/, defaultMonthsShortRegex = matchWord, defaultMonthsRegex = matchWord;
-        function localeMonths(m, format2) {
-          if (!m) {
-            return isArray3(this._months) ? this._months : this._months["standalone"];
-          }
-          return isArray3(this._months) ? this._months[m.month()] : this._months[(this._months.isFormat || MONTHS_IN_FORMAT).test(format2) ? "format" : "standalone"][m.month()];
-        }
-        function localeMonthsShort(m, format2) {
-          if (!m) {
-            return isArray3(this._monthsShort) ? this._monthsShort : this._monthsShort["standalone"];
-          }
-          return isArray3(this._monthsShort) ? this._monthsShort[m.month()] : this._monthsShort[MONTHS_IN_FORMAT.test(format2) ? "format" : "standalone"][m.month()];
-        }
-        function handleStrictParse(monthName, format2, strict) {
-          var i, ii, mom, llc = monthName.toLocaleLowerCase();
-          if (!this._monthsParse) {
-            this._monthsParse = [];
-            this._longMonthsParse = [];
-            this._shortMonthsParse = [];
-            for (i = 0; i < 12; ++i) {
-              mom = createUTC([2e3, i]);
-              this._shortMonthsParse[i] = this.monthsShort(
-                mom,
-                ""
-              ).toLocaleLowerCase();
-              this._longMonthsParse[i] = this.months(mom, "").toLocaleLowerCase();
-            }
-          }
-          if (strict) {
-            if (format2 === "MMM") {
-              ii = indexOf2.call(this._shortMonthsParse, llc);
-              return ii !== -1 ? ii : null;
-            } else {
-              ii = indexOf2.call(this._longMonthsParse, llc);
-              return ii !== -1 ? ii : null;
-            }
-          } else {
-            if (format2 === "MMM") {
-              ii = indexOf2.call(this._shortMonthsParse, llc);
-              if (ii !== -1) {
-                return ii;
-              }
-              ii = indexOf2.call(this._longMonthsParse, llc);
-              return ii !== -1 ? ii : null;
-            } else {
-              ii = indexOf2.call(this._longMonthsParse, llc);
-              if (ii !== -1) {
-                return ii;
-              }
-              ii = indexOf2.call(this._shortMonthsParse, llc);
-              return ii !== -1 ? ii : null;
-            }
-          }
-        }
-        function localeMonthsParse(monthName, format2, strict) {
-          var i, mom, regex;
-          if (this._monthsParseExact) {
-            return handleStrictParse.call(this, monthName, format2, strict);
-          }
-          if (!this._monthsParse) {
-            this._monthsParse = [];
-            this._longMonthsParse = [];
-            this._shortMonthsParse = [];
-          }
-          for (i = 0; i < 12; i++) {
-            mom = createUTC([2e3, i]);
-            if (strict && !this._longMonthsParse[i]) {
-              this._longMonthsParse[i] = new RegExp(
-                "^" + this.months(mom, "").replace(".", "") + "$",
-                "i"
-              );
-              this._shortMonthsParse[i] = new RegExp(
-                "^" + this.monthsShort(mom, "").replace(".", "") + "$",
-                "i"
-              );
-            }
-            if (!strict && !this._monthsParse[i]) {
-              regex = "^" + this.months(mom, "") + "|^" + this.monthsShort(mom, "");
-              this._monthsParse[i] = new RegExp(regex.replace(".", ""), "i");
-            }
-            if (strict && format2 === "MMMM" && this._longMonthsParse[i].test(monthName)) {
-              return i;
-            } else if (strict && format2 === "MMM" && this._shortMonthsParse[i].test(monthName)) {
-              return i;
-            } else if (!strict && this._monthsParse[i].test(monthName)) {
-              return i;
-            }
-          }
-        }
-        function setMonth(mom, value) {
-          if (!mom.isValid()) {
-            return mom;
-          }
-          if (typeof value === "string") {
-            if (/^\d+$/.test(value)) {
-              value = toInt(value);
-            } else {
-              value = mom.localeData().monthsParse(value);
-              if (!isNumber3(value)) {
-                return mom;
-              }
-            }
-          }
-          var month = value, date = mom.date();
-          date = date < 29 ? date : Math.min(date, daysInMonth2(mom.year(), month));
-          void (mom._isUTC ? mom._d.setUTCMonth(month, date) : mom._d.setMonth(month, date));
-          return mom;
-        }
-        function getSetMonth(value) {
-          if (value != null) {
-            setMonth(this, value);
-            hooks.updateOffset(this, true);
-            return this;
-          } else {
-            return get(this, "Month");
-          }
-        }
-        function getDaysInMonth() {
-          return daysInMonth2(this.year(), this.month());
-        }
-        function monthsShortRegex(isStrict) {
-          if (this._monthsParseExact) {
-            if (!hasOwnProp(this, "_monthsRegex")) {
-              computeMonthsParse.call(this);
-            }
-            if (isStrict) {
-              return this._monthsShortStrictRegex;
-            } else {
-              return this._monthsShortRegex;
-            }
-          } else {
-            if (!hasOwnProp(this, "_monthsShortRegex")) {
-              this._monthsShortRegex = defaultMonthsShortRegex;
-            }
-            return this._monthsShortStrictRegex && isStrict ? this._monthsShortStrictRegex : this._monthsShortRegex;
-          }
-        }
-        function monthsRegex(isStrict) {
-          if (this._monthsParseExact) {
-            if (!hasOwnProp(this, "_monthsRegex")) {
-              computeMonthsParse.call(this);
-            }
-            if (isStrict) {
-              return this._monthsStrictRegex;
-            } else {
-              return this._monthsRegex;
-            }
-          } else {
-            if (!hasOwnProp(this, "_monthsRegex")) {
-              this._monthsRegex = defaultMonthsRegex;
-            }
-            return this._monthsStrictRegex && isStrict ? this._monthsStrictRegex : this._monthsRegex;
-          }
-        }
-        function computeMonthsParse() {
-          function cmpLenRev(a, b) {
-            return b.length - a.length;
-          }
-          var shortPieces = [], longPieces = [], mixedPieces = [], i, mom, shortP, longP;
-          for (i = 0; i < 12; i++) {
-            mom = createUTC([2e3, i]);
-            shortP = regexEscape(this.monthsShort(mom, ""));
-            longP = regexEscape(this.months(mom, ""));
-            shortPieces.push(shortP);
-            longPieces.push(longP);
-            mixedPieces.push(longP);
-            mixedPieces.push(shortP);
-          }
-          shortPieces.sort(cmpLenRev);
-          longPieces.sort(cmpLenRev);
-          mixedPieces.sort(cmpLenRev);
-          this._monthsRegex = new RegExp("^(" + mixedPieces.join("|") + ")", "i");
-          this._monthsShortRegex = this._monthsRegex;
-          this._monthsStrictRegex = new RegExp(
-            "^(" + longPieces.join("|") + ")",
-            "i"
-          );
-          this._monthsShortStrictRegex = new RegExp(
-            "^(" + shortPieces.join("|") + ")",
-            "i"
-          );
-        }
-        function createDate(y, m, d, h, M, s2, ms) {
-          var date;
-          if (y < 100 && y >= 0) {
-            date = new Date(y + 400, m, d, h, M, s2, ms);
-            if (isFinite(date.getFullYear())) {
-              date.setFullYear(y);
-            }
-          } else {
-            date = new Date(y, m, d, h, M, s2, ms);
-          }
-          return date;
-        }
-        function createUTCDate(y) {
-          var date, args;
-          if (y < 100 && y >= 0) {
-            args = Array.prototype.slice.call(arguments);
-            args[0] = y + 400;
-            date = new Date(Date.UTC.apply(null, args));
-            if (isFinite(date.getUTCFullYear())) {
-              date.setUTCFullYear(y);
-            }
-          } else {
-            date = new Date(Date.UTC.apply(null, arguments));
-          }
-          return date;
-        }
-        function firstWeekOffset2(year, dow, doy) {
-          var fwd = 7 + dow - doy, fwdlw = (7 + createUTCDate(year, 0, fwd).getUTCDay() - dow) % 7;
-          return -fwdlw + fwd - 1;
-        }
-        function dayOfYearFromWeeks(year, week, weekday, dow, doy) {
-          var localWeekday = (7 + weekday - dow) % 7, weekOffset = firstWeekOffset2(year, dow, doy), dayOfYear = 1 + 7 * (week - 1) + localWeekday + weekOffset, resYear, resDayOfYear;
-          if (dayOfYear <= 0) {
-            resYear = year - 1;
-            resDayOfYear = daysInYear2(resYear) + dayOfYear;
-          } else if (dayOfYear > daysInYear2(year)) {
-            resYear = year + 1;
-            resDayOfYear = dayOfYear - daysInYear2(year);
-          } else {
-            resYear = year;
-            resDayOfYear = dayOfYear;
-          }
-          return {
-            year: resYear,
-            dayOfYear: resDayOfYear
-          };
-        }
-        function weekOfYear(mom, dow, doy) {
-          var weekOffset = firstWeekOffset2(mom.year(), dow, doy), week = Math.floor((mom.dayOfYear() - weekOffset - 1) / 7) + 1, resWeek, resYear;
-          if (week < 1) {
-            resYear = mom.year() - 1;
-            resWeek = week + weeksInYear(resYear, dow, doy);
-          } else if (week > weeksInYear(mom.year(), dow, doy)) {
-            resWeek = week - weeksInYear(mom.year(), dow, doy);
-            resYear = mom.year() + 1;
-          } else {
-            resYear = mom.year();
-            resWeek = week;
-          }
-          return {
-            week: resWeek,
-            year: resYear
-          };
-        }
-        function weeksInYear(year, dow, doy) {
-          var weekOffset = firstWeekOffset2(year, dow, doy), weekOffsetNext = firstWeekOffset2(year + 1, dow, doy);
-          return (daysInYear2(year) - weekOffset + weekOffsetNext) / 7;
-        }
-        addFormatToken("w", ["ww", 2], "wo", "week");
-        addFormatToken("W", ["WW", 2], "Wo", "isoWeek");
-        addRegexToken("w", match1to2, match1to2NoLeadingZero);
-        addRegexToken("ww", match1to2, match22);
-        addRegexToken("W", match1to2, match1to2NoLeadingZero);
-        addRegexToken("WW", match1to2, match22);
-        addWeekParseToken(
-          ["w", "ww", "W", "WW"],
-          function(input2, week, config, token2) {
-            week[token2.substr(0, 1)] = toInt(input2);
-          }
-        );
-        function localeWeek(mom) {
-          return weekOfYear(mom, this._week.dow, this._week.doy).week;
-        }
-        var defaultLocaleWeek = {
-          dow: 0,
-          // Sunday is the first day of the week.
-          doy: 6
-          // The week that contains Jan 6th is the first week of the year.
-        };
-        function localeFirstDayOfWeek() {
-          return this._week.dow;
-        }
-        function localeFirstDayOfYear() {
-          return this._week.doy;
-        }
-        function getSetWeek(input2) {
-          var week = this.localeData().week(this);
-          return input2 == null ? week : this.add((input2 - week) * 7, "d");
-        }
-        function getSetISOWeek(input2) {
-          var week = weekOfYear(this, 1, 4).week;
-          return input2 == null ? week : this.add((input2 - week) * 7, "d");
-        }
-        addFormatToken("d", 0, "do", "day");
-        addFormatToken("dd", 0, 0, function(format2) {
-          return this.localeData().weekdaysMin(this, format2);
-        });
-        addFormatToken("ddd", 0, 0, function(format2) {
-          return this.localeData().weekdaysShort(this, format2);
-        });
-        addFormatToken("dddd", 0, 0, function(format2) {
-          return this.localeData().weekdays(this, format2);
-        });
-        addFormatToken("e", 0, 0, "weekday");
-        addFormatToken("E", 0, 0, "isoWeekday");
-        addRegexToken("d", match1to2);
-        addRegexToken("e", match1to2);
-        addRegexToken("E", match1to2);
-        addRegexToken("dd", function(isStrict, locale2) {
-          return locale2.weekdaysMinRegex(isStrict);
-        });
-        addRegexToken("ddd", function(isStrict, locale2) {
-          return locale2.weekdaysShortRegex(isStrict);
-        });
-        addRegexToken("dddd", function(isStrict, locale2) {
-          return locale2.weekdaysRegex(isStrict);
-        });
-        addWeekParseToken(["dd", "ddd", "dddd"], function(input2, week, config, token2) {
-          var weekday = config._locale.weekdaysParse(input2, token2, config._strict);
-          if (weekday != null) {
-            week.d = weekday;
-          } else {
-            getParsingFlags(config).invalidWeekday = input2;
-          }
-        });
-        addWeekParseToken(["d", "e", "E"], function(input2, week, config, token2) {
-          week[token2] = toInt(input2);
-        });
-        function parseWeekday(input2, locale2) {
-          if (typeof input2 !== "string") {
-            return input2;
-          }
-          if (!isNaN(input2)) {
-            return parseInt(input2, 10);
-          }
-          input2 = locale2.weekdaysParse(input2);
-          if (typeof input2 === "number") {
-            return input2;
-          }
-          return null;
-        }
-        function parseIsoWeekday(input2, locale2) {
-          if (typeof input2 === "string") {
-            return locale2.weekdaysParse(input2) % 7 || 7;
-          }
-          return isNaN(input2) ? null : input2;
-        }
-        function shiftWeekdays(ws, n2) {
-          return ws.slice(n2, 7).concat(ws.slice(0, n2));
-        }
-        var defaultLocaleWeekdays = "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), defaultLocaleWeekdaysShort = "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"), defaultLocaleWeekdaysMin = "Su_Mo_Tu_We_Th_Fr_Sa".split("_"), defaultWeekdaysRegex = matchWord, defaultWeekdaysShortRegex = matchWord, defaultWeekdaysMinRegex = matchWord;
-        function localeWeekdays(m, format2) {
-          var weekdays2 = isArray3(this._weekdays) ? this._weekdays : this._weekdays[m && m !== true && this._weekdays.isFormat.test(format2) ? "format" : "standalone"];
-          return m === true ? shiftWeekdays(weekdays2, this._week.dow) : m ? weekdays2[m.day()] : weekdays2;
-        }
-        function localeWeekdaysShort(m) {
-          return m === true ? shiftWeekdays(this._weekdaysShort, this._week.dow) : m ? this._weekdaysShort[m.day()] : this._weekdaysShort;
-        }
-        function localeWeekdaysMin(m) {
-          return m === true ? shiftWeekdays(this._weekdaysMin, this._week.dow) : m ? this._weekdaysMin[m.day()] : this._weekdaysMin;
-        }
-        function handleStrictParse$1(weekdayName, format2, strict) {
-          var i, ii, mom, llc = weekdayName.toLocaleLowerCase();
-          if (!this._weekdaysParse) {
-            this._weekdaysParse = [];
-            this._shortWeekdaysParse = [];
-            this._minWeekdaysParse = [];
-            for (i = 0; i < 7; ++i) {
-              mom = createUTC([2e3, 1]).day(i);
-              this._minWeekdaysParse[i] = this.weekdaysMin(
-                mom,
-                ""
-              ).toLocaleLowerCase();
-              this._shortWeekdaysParse[i] = this.weekdaysShort(
-                mom,
-                ""
-              ).toLocaleLowerCase();
-              this._weekdaysParse[i] = this.weekdays(mom, "").toLocaleLowerCase();
-            }
-          }
-          if (strict) {
-            if (format2 === "dddd") {
-              ii = indexOf2.call(this._weekdaysParse, llc);
-              return ii !== -1 ? ii : null;
-            } else if (format2 === "ddd") {
-              ii = indexOf2.call(this._shortWeekdaysParse, llc);
-              return ii !== -1 ? ii : null;
-            } else {
-              ii = indexOf2.call(this._minWeekdaysParse, llc);
-              return ii !== -1 ? ii : null;
-            }
-          } else {
-            if (format2 === "dddd") {
-              ii = indexOf2.call(this._weekdaysParse, llc);
-              if (ii !== -1) {
-                return ii;
-              }
-              ii = indexOf2.call(this._shortWeekdaysParse, llc);
-              if (ii !== -1) {
-                return ii;
-              }
-              ii = indexOf2.call(this._minWeekdaysParse, llc);
-              return ii !== -1 ? ii : null;
-            } else if (format2 === "ddd") {
-              ii = indexOf2.call(this._shortWeekdaysParse, llc);
-              if (ii !== -1) {
-                return ii;
-              }
-              ii = indexOf2.call(this._weekdaysParse, llc);
-              if (ii !== -1) {
-                return ii;
-              }
-              ii = indexOf2.call(this._minWeekdaysParse, llc);
-              return ii !== -1 ? ii : null;
-            } else {
-              ii = indexOf2.call(this._minWeekdaysParse, llc);
-              if (ii !== -1) {
-                return ii;
-              }
-              ii = indexOf2.call(this._weekdaysParse, llc);
-              if (ii !== -1) {
-                return ii;
-              }
-              ii = indexOf2.call(this._shortWeekdaysParse, llc);
-              return ii !== -1 ? ii : null;
-            }
-          }
-        }
-        function localeWeekdaysParse(weekdayName, format2, strict) {
-          var i, mom, regex;
-          if (this._weekdaysParseExact) {
-            return handleStrictParse$1.call(this, weekdayName, format2, strict);
-          }
-          if (!this._weekdaysParse) {
-            this._weekdaysParse = [];
-            this._minWeekdaysParse = [];
-            this._shortWeekdaysParse = [];
-            this._fullWeekdaysParse = [];
-          }
-          for (i = 0; i < 7; i++) {
-            mom = createUTC([2e3, 1]).day(i);
-            if (strict && !this._fullWeekdaysParse[i]) {
-              this._fullWeekdaysParse[i] = new RegExp(
-                "^" + this.weekdays(mom, "").replace(".", "\\.?") + "$",
-                "i"
-              );
-              this._shortWeekdaysParse[i] = new RegExp(
-                "^" + this.weekdaysShort(mom, "").replace(".", "\\.?") + "$",
-                "i"
-              );
-              this._minWeekdaysParse[i] = new RegExp(
-                "^" + this.weekdaysMin(mom, "").replace(".", "\\.?") + "$",
-                "i"
-              );
-            }
-            if (!this._weekdaysParse[i]) {
-              regex = "^" + this.weekdays(mom, "") + "|^" + this.weekdaysShort(mom, "") + "|^" + this.weekdaysMin(mom, "");
-              this._weekdaysParse[i] = new RegExp(regex.replace(".", ""), "i");
-            }
-            if (strict && format2 === "dddd" && this._fullWeekdaysParse[i].test(weekdayName)) {
-              return i;
-            } else if (strict && format2 === "ddd" && this._shortWeekdaysParse[i].test(weekdayName)) {
-              return i;
-            } else if (strict && format2 === "dd" && this._minWeekdaysParse[i].test(weekdayName)) {
-              return i;
-            } else if (!strict && this._weekdaysParse[i].test(weekdayName)) {
-              return i;
-            }
-          }
-        }
-        function getSetDayOfWeek(input2) {
-          if (!this.isValid()) {
-            return input2 != null ? this : NaN;
-          }
-          var day = get(this, "Day");
-          if (input2 != null) {
-            input2 = parseWeekday(input2, this.localeData());
-            return this.add(input2 - day, "d");
-          } else {
-            return day;
-          }
-        }
-        function getSetLocaleDayOfWeek(input2) {
-          if (!this.isValid()) {
-            return input2 != null ? this : NaN;
-          }
-          var weekday = (this.day() + 7 - this.localeData()._week.dow) % 7;
-          return input2 == null ? weekday : this.add(input2 - weekday, "d");
-        }
-        function getSetISODayOfWeek(input2) {
-          if (!this.isValid()) {
-            return input2 != null ? this : NaN;
-          }
-          if (input2 != null) {
-            var weekday = parseIsoWeekday(input2, this.localeData());
-            return this.day(this.day() % 7 ? weekday : weekday - 7);
-          } else {
-            return this.day() || 7;
-          }
-        }
-        function weekdaysRegex(isStrict) {
-          if (this._weekdaysParseExact) {
-            if (!hasOwnProp(this, "_weekdaysRegex")) {
-              computeWeekdaysParse.call(this);
-            }
-            if (isStrict) {
-              return this._weekdaysStrictRegex;
-            } else {
-              return this._weekdaysRegex;
-            }
-          } else {
-            if (!hasOwnProp(this, "_weekdaysRegex")) {
-              this._weekdaysRegex = defaultWeekdaysRegex;
-            }
-            return this._weekdaysStrictRegex && isStrict ? this._weekdaysStrictRegex : this._weekdaysRegex;
-          }
-        }
-        function weekdaysShortRegex(isStrict) {
-          if (this._weekdaysParseExact) {
-            if (!hasOwnProp(this, "_weekdaysRegex")) {
-              computeWeekdaysParse.call(this);
-            }
-            if (isStrict) {
-              return this._weekdaysShortStrictRegex;
-            } else {
-              return this._weekdaysShortRegex;
-            }
-          } else {
-            if (!hasOwnProp(this, "_weekdaysShortRegex")) {
-              this._weekdaysShortRegex = defaultWeekdaysShortRegex;
-            }
-            return this._weekdaysShortStrictRegex && isStrict ? this._weekdaysShortStrictRegex : this._weekdaysShortRegex;
-          }
-        }
-        function weekdaysMinRegex(isStrict) {
-          if (this._weekdaysParseExact) {
-            if (!hasOwnProp(this, "_weekdaysRegex")) {
-              computeWeekdaysParse.call(this);
-            }
-            if (isStrict) {
-              return this._weekdaysMinStrictRegex;
-            } else {
-              return this._weekdaysMinRegex;
-            }
-          } else {
-            if (!hasOwnProp(this, "_weekdaysMinRegex")) {
-              this._weekdaysMinRegex = defaultWeekdaysMinRegex;
-            }
-            return this._weekdaysMinStrictRegex && isStrict ? this._weekdaysMinStrictRegex : this._weekdaysMinRegex;
-          }
-        }
-        function computeWeekdaysParse() {
-          function cmpLenRev(a, b) {
-            return b.length - a.length;
-          }
-          var minPieces = [], shortPieces = [], longPieces = [], mixedPieces = [], i, mom, minp, shortp, longp;
-          for (i = 0; i < 7; i++) {
-            mom = createUTC([2e3, 1]).day(i);
-            minp = regexEscape(this.weekdaysMin(mom, ""));
-            shortp = regexEscape(this.weekdaysShort(mom, ""));
-            longp = regexEscape(this.weekdays(mom, ""));
-            minPieces.push(minp);
-            shortPieces.push(shortp);
-            longPieces.push(longp);
-            mixedPieces.push(minp);
-            mixedPieces.push(shortp);
-            mixedPieces.push(longp);
-          }
-          minPieces.sort(cmpLenRev);
-          shortPieces.sort(cmpLenRev);
-          longPieces.sort(cmpLenRev);
-          mixedPieces.sort(cmpLenRev);
-          this._weekdaysRegex = new RegExp("^(" + mixedPieces.join("|") + ")", "i");
-          this._weekdaysShortRegex = this._weekdaysRegex;
-          this._weekdaysMinRegex = this._weekdaysRegex;
-          this._weekdaysStrictRegex = new RegExp(
-            "^(" + longPieces.join("|") + ")",
-            "i"
-          );
-          this._weekdaysShortStrictRegex = new RegExp(
-            "^(" + shortPieces.join("|") + ")",
-            "i"
-          );
-          this._weekdaysMinStrictRegex = new RegExp(
-            "^(" + minPieces.join("|") + ")",
-            "i"
-          );
-        }
-        function hFormat() {
-          return this.hours() % 12 || 12;
-        }
-        function kFormat() {
-          return this.hours() || 24;
-        }
-        addFormatToken("H", ["HH", 2], 0, "hour");
-        addFormatToken("h", ["hh", 2], 0, hFormat);
-        addFormatToken("k", ["kk", 2], 0, kFormat);
-        addFormatToken("hmm", 0, 0, function() {
-          return "" + hFormat.apply(this) + zeroFill(this.minutes(), 2);
-        });
-        addFormatToken("hmmss", 0, 0, function() {
-          return "" + hFormat.apply(this) + zeroFill(this.minutes(), 2) + zeroFill(this.seconds(), 2);
-        });
-        addFormatToken("Hmm", 0, 0, function() {
-          return "" + this.hours() + zeroFill(this.minutes(), 2);
-        });
-        addFormatToken("Hmmss", 0, 0, function() {
-          return "" + this.hours() + zeroFill(this.minutes(), 2) + zeroFill(this.seconds(), 2);
-        });
-        function meridiem(token2, lowercase) {
-          addFormatToken(token2, 0, 0, function() {
-            return this.localeData().meridiem(
-              this.hours(),
-              this.minutes(),
-              lowercase
-            );
-          });
-        }
-        meridiem("a", true);
-        meridiem("A", false);
-        function matchMeridiem(isStrict, locale2) {
-          return locale2._meridiemParse;
-        }
-        addRegexToken("a", matchMeridiem);
-        addRegexToken("A", matchMeridiem);
-        addRegexToken("H", match1to2, match1to2HasZero);
-        addRegexToken("h", match1to2, match1to2NoLeadingZero);
-        addRegexToken("k", match1to2, match1to2NoLeadingZero);
-        addRegexToken("HH", match1to2, match22);
-        addRegexToken("hh", match1to2, match22);
-        addRegexToken("kk", match1to2, match22);
-        addRegexToken("hmm", match3to4);
-        addRegexToken("hmmss", match5to6);
-        addRegexToken("Hmm", match3to4);
-        addRegexToken("Hmmss", match5to6);
-        addParseToken(["H", "HH"], HOUR);
-        addParseToken(["k", "kk"], function(input2, array, config) {
-          var kInput = toInt(input2);
-          array[HOUR] = kInput === 24 ? 0 : kInput;
-        });
-        addParseToken(["a", "A"], function(input2, array, config) {
-          config._isPm = config._locale.isPM(input2);
-          config._meridiem = input2;
-        });
-        addParseToken(["h", "hh"], function(input2, array, config) {
-          array[HOUR] = toInt(input2);
-          getParsingFlags(config).bigHour = true;
-        });
-        addParseToken("hmm", function(input2, array, config) {
-          var pos = input2.length - 2;
-          array[HOUR] = toInt(input2.substr(0, pos));
-          array[MINUTE] = toInt(input2.substr(pos));
-          getParsingFlags(config).bigHour = true;
-        });
-        addParseToken("hmmss", function(input2, array, config) {
-          var pos1 = input2.length - 4, pos2 = input2.length - 2;
-          array[HOUR] = toInt(input2.substr(0, pos1));
-          array[MINUTE] = toInt(input2.substr(pos1, 2));
-          array[SECOND] = toInt(input2.substr(pos2));
-          getParsingFlags(config).bigHour = true;
-        });
-        addParseToken("Hmm", function(input2, array, config) {
-          var pos = input2.length - 2;
-          array[HOUR] = toInt(input2.substr(0, pos));
-          array[MINUTE] = toInt(input2.substr(pos));
-        });
-        addParseToken("Hmmss", function(input2, array, config) {
-          var pos1 = input2.length - 4, pos2 = input2.length - 2;
-          array[HOUR] = toInt(input2.substr(0, pos1));
-          array[MINUTE] = toInt(input2.substr(pos1, 2));
-          array[SECOND] = toInt(input2.substr(pos2));
-        });
-        function localeIsPM(input2) {
-          return (input2 + "").toLowerCase().charAt(0) === "p";
-        }
-        var defaultLocaleMeridiemParse = /[ap]\.?m?\.?/i, getSetHour = makeGetSet("Hours", true);
-        function localeMeridiem(hours2, minutes2, isLower) {
-          if (hours2 > 11) {
-            return isLower ? "pm" : "PM";
-          } else {
-            return isLower ? "am" : "AM";
-          }
-        }
-        var baseConfig = {
-          calendar: defaultCalendar,
-          longDateFormat: defaultLongDateFormat,
-          invalidDate: defaultInvalidDate,
-          ordinal: defaultOrdinal,
-          dayOfMonthOrdinalParse: defaultDayOfMonthOrdinalParse,
-          relativeTime: defaultRelativeTime,
-          months: defaultLocaleMonths,
-          monthsShort: defaultLocaleMonthsShort,
-          week: defaultLocaleWeek,
-          weekdays: defaultLocaleWeekdays,
-          weekdaysMin: defaultLocaleWeekdaysMin,
-          weekdaysShort: defaultLocaleWeekdaysShort,
-          meridiemParse: defaultLocaleMeridiemParse
-        };
-        var locales = {}, localeFamilies = {}, globalLocale;
-        function commonPrefix(arr1, arr2) {
-          var i, minl = Math.min(arr1.length, arr2.length);
-          for (i = 0; i < minl; i += 1) {
-            if (arr1[i] !== arr2[i]) {
-              return i;
-            }
-          }
-          return minl;
-        }
-        function normalizeLocale(key) {
-          return key ? key.toLowerCase().replace("_", "-") : key;
-        }
-        function chooseLocale(names2) {
-          var i = 0, j, next, locale2, split;
-          while (i < names2.length) {
-            split = normalizeLocale(names2[i]).split("-");
-            j = split.length;
-            next = normalizeLocale(names2[i + 1]);
-            next = next ? next.split("-") : null;
-            while (j > 0) {
-              locale2 = loadLocale(split.slice(0, j).join("-"));
-              if (locale2) {
-                return locale2;
-              }
-              if (next && next.length >= j && commonPrefix(split, next) >= j - 1) {
-                break;
-              }
-              j--;
-            }
-            i++;
-          }
-          return globalLocale;
-        }
-        function isLocaleNameSane(name) {
-          return !!(name && name.match("^[^/\\\\]*$"));
-        }
-        function loadLocale(name) {
-          var oldLocale = null, aliasedRequire;
-          if (locales[name] === void 0 && typeof module !== "undefined" && module && module.exports && isLocaleNameSane(name)) {
-            try {
-              oldLocale = globalLocale._abbr;
-              aliasedRequire = __require;
-              aliasedRequire("./locale/" + name);
-              getSetGlobalLocale(oldLocale);
-            } catch (e) {
-              locales[name] = null;
-            }
-          }
-          return locales[name];
-        }
-        function getSetGlobalLocale(key, values) {
-          var data2;
-          if (key) {
-            if (isUndefined2(values)) {
-              data2 = getLocale(key);
-            } else {
-              data2 = defineLocale(key, values);
-            }
-            if (data2) {
-              globalLocale = data2;
-            } else {
-              if (typeof console !== "undefined" && console.warn) {
-                console.warn(
-                  "Locale " + key + " not found. Did you forget to load it?"
-                );
-              }
-            }
-          }
-          return globalLocale._abbr;
-        }
-        function defineLocale(name, config) {
-          if (config !== null) {
-            var locale2, parentConfig = baseConfig;
-            config.abbr = name;
-            if (locales[name] != null) {
-              deprecateSimple(
-                "defineLocaleOverride",
-                "use moment.updateLocale(localeName, config) to change an existing locale. moment.defineLocale(localeName, config) should only be used for creating a new locale See http://momentjs.com/guides/#/warnings/define-locale/ for more info."
-              );
-              parentConfig = locales[name]._config;
-            } else if (config.parentLocale != null) {
-              if (locales[config.parentLocale] != null) {
-                parentConfig = locales[config.parentLocale]._config;
-              } else {
-                locale2 = loadLocale(config.parentLocale);
-                if (locale2 != null) {
-                  parentConfig = locale2._config;
-                } else {
-                  if (!localeFamilies[config.parentLocale]) {
-                    localeFamilies[config.parentLocale] = [];
-                  }
-                  localeFamilies[config.parentLocale].push({
-                    name,
-                    config
-                  });
-                  return null;
-                }
-              }
-            }
-            locales[name] = new Locale2(mergeConfigs(parentConfig, config));
-            if (localeFamilies[name]) {
-              localeFamilies[name].forEach(function(x) {
-                defineLocale(x.name, x.config);
-              });
-            }
-            getSetGlobalLocale(name);
-            return locales[name];
-          } else {
-            delete locales[name];
-            return null;
-          }
-        }
-        function updateLocale(name, config) {
-          if (config != null) {
-            var locale2, tmpLocale, parentConfig = baseConfig;
-            if (locales[name] != null && locales[name].parentLocale != null) {
-              locales[name].set(mergeConfigs(locales[name]._config, config));
-            } else {
-              tmpLocale = loadLocale(name);
-              if (tmpLocale != null) {
-                parentConfig = tmpLocale._config;
-              }
-              config = mergeConfigs(parentConfig, config);
-              if (tmpLocale == null) {
-                config.abbr = name;
-              }
-              locale2 = new Locale2(config);
-              locale2.parentLocale = locales[name];
-              locales[name] = locale2;
-            }
-            getSetGlobalLocale(name);
-          } else {
-            if (locales[name] != null) {
-              if (locales[name].parentLocale != null) {
-                locales[name] = locales[name].parentLocale;
-                if (name === getSetGlobalLocale()) {
-                  getSetGlobalLocale(name);
-                }
-              } else if (locales[name] != null) {
-                delete locales[name];
-              }
-            }
-          }
-          return locales[name];
-        }
-        function getLocale(key) {
-          var locale2;
-          if (key && key._locale && key._locale._abbr) {
-            key = key._locale._abbr;
-          }
-          if (!key) {
-            return globalLocale;
-          }
-          if (!isArray3(key)) {
-            locale2 = loadLocale(key);
-            if (locale2) {
-              return locale2;
-            }
-            key = [key];
-          }
-          return chooseLocale(key);
-        }
-        function listLocales() {
-          return keys2(locales);
-        }
-        function checkOverflow(m) {
-          var overflow, a = m._a;
-          if (a && getParsingFlags(m).overflow === -2) {
-            overflow = a[MONTH] < 0 || a[MONTH] > 11 ? MONTH : a[DATE] < 1 || a[DATE] > daysInMonth2(a[YEAR], a[MONTH]) ? DATE : a[HOUR] < 0 || a[HOUR] > 24 || a[HOUR] === 24 && (a[MINUTE] !== 0 || a[SECOND] !== 0 || a[MILLISECOND] !== 0) ? HOUR : a[MINUTE] < 0 || a[MINUTE] > 59 ? MINUTE : a[SECOND] < 0 || a[SECOND] > 59 ? SECOND : a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND : -1;
-            if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
-              overflow = DATE;
-            }
-            if (getParsingFlags(m)._overflowWeeks && overflow === -1) {
-              overflow = WEEK;
-            }
-            if (getParsingFlags(m)._overflowWeekday && overflow === -1) {
-              overflow = WEEKDAY;
-            }
-            getParsingFlags(m).overflow = overflow;
-          }
-          return m;
-        }
-        var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/, basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/, tzRegex = /Z|[+-]\d\d(?::?\d\d)?/, isoDates = [
-          ["YYYYYY-MM-DD", /[+-]\d{6}-\d\d-\d\d/],
-          ["YYYY-MM-DD", /\d{4}-\d\d-\d\d/],
-          ["GGGG-[W]WW-E", /\d{4}-W\d\d-\d/],
-          ["GGGG-[W]WW", /\d{4}-W\d\d/, false],
-          ["YYYY-DDD", /\d{4}-\d{3}/],
-          ["YYYY-MM", /\d{4}-\d\d/, false],
-          ["YYYYYYMMDD", /[+-]\d{10}/],
-          ["YYYYMMDD", /\d{8}/],
-          ["GGGG[W]WWE", /\d{4}W\d{3}/],
-          ["GGGG[W]WW", /\d{4}W\d{2}/, false],
-          ["YYYYDDD", /\d{7}/],
-          ["YYYYMM", /\d{6}/, false],
-          ["YYYY", /\d{4}/, false]
-        ], isoTimes = [
-          ["HH:mm:ss.SSSS", /\d\d:\d\d:\d\d\.\d+/],
-          ["HH:mm:ss,SSSS", /\d\d:\d\d:\d\d,\d+/],
-          ["HH:mm:ss", /\d\d:\d\d:\d\d/],
-          ["HH:mm", /\d\d:\d\d/],
-          ["HHmmss.SSSS", /\d\d\d\d\d\d\.\d+/],
-          ["HHmmss,SSSS", /\d\d\d\d\d\d,\d+/],
-          ["HHmmss", /\d\d\d\d\d\d/],
-          ["HHmm", /\d\d\d\d/],
-          ["HH", /\d\d/]
-        ], aspNetJsonRegex = /^\/?Date\((-?\d+)/i, rfc28222 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/, obsOffsets2 = {
-          UT: 0,
-          GMT: 0,
-          EDT: -4 * 60,
-          EST: -5 * 60,
-          CDT: -5 * 60,
-          CST: -6 * 60,
-          MDT: -6 * 60,
-          MST: -7 * 60,
-          PDT: -7 * 60,
-          PST: -8 * 60
-        };
-        function configFromISO(config) {
-          var i, l2, string = config._i, match5 = extendedIsoRegex.exec(string) || basicIsoRegex.exec(string), allowTime, dateFormat, timeFormat, tzFormat, isoDatesLen = isoDates.length, isoTimesLen = isoTimes.length;
-          if (match5) {
-            getParsingFlags(config).iso = true;
-            for (i = 0, l2 = isoDatesLen; i < l2; i++) {
-              if (isoDates[i][1].exec(match5[1])) {
-                dateFormat = isoDates[i][0];
-                allowTime = isoDates[i][2] !== false;
-                break;
-              }
-            }
-            if (dateFormat == null) {
-              config._isValid = false;
-              return;
-            }
-            if (match5[3]) {
-              for (i = 0, l2 = isoTimesLen; i < l2; i++) {
-                if (isoTimes[i][1].exec(match5[3])) {
-                  timeFormat = (match5[2] || " ") + isoTimes[i][0];
-                  break;
-                }
-              }
-              if (timeFormat == null) {
-                config._isValid = false;
-                return;
-              }
-            }
-            if (!allowTime && timeFormat != null) {
-              config._isValid = false;
-              return;
-            }
-            if (match5[4]) {
-              if (tzRegex.exec(match5[4])) {
-                tzFormat = "Z";
-              } else {
-                config._isValid = false;
-                return;
-              }
-            }
-            config._f = dateFormat + (timeFormat || "") + (tzFormat || "");
-            configFromStringAndFormat(config);
-          } else {
-            config._isValid = false;
-          }
-        }
-        function extractFromRFC2822Strings(yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr) {
-          var result = [
-            untruncateYear2(yearStr),
-            defaultLocaleMonthsShort.indexOf(monthStr),
-            parseInt(dayStr, 10),
-            parseInt(hourStr, 10),
-            parseInt(minuteStr, 10)
-          ];
-          if (secondStr) {
-            result.push(parseInt(secondStr, 10));
-          }
-          return result;
-        }
-        function untruncateYear2(yearStr) {
-          var year = parseInt(yearStr, 10);
-          if (year <= 49) {
-            return 2e3 + year;
-          } else if (year <= 999) {
-            return 1900 + year;
-          }
-          return year;
-        }
-        function preprocessRFC28222(s2) {
-          return s2.replace(/\([^()]*\)|[\n\t]/g, " ").replace(/(\s\s+)/g, " ").replace(/^\s\s*/, "").replace(/\s\s*$/, "");
-        }
-        function checkWeekday(weekdayStr, parsedInput, config) {
-          if (weekdayStr) {
-            var weekdayProvided = defaultLocaleWeekdaysShort.indexOf(weekdayStr), weekdayActual = new Date(
-              parsedInput[0],
-              parsedInput[1],
-              parsedInput[2]
-            ).getDay();
-            if (weekdayProvided !== weekdayActual) {
-              getParsingFlags(config).weekdayMismatch = true;
-              config._isValid = false;
-              return false;
-            }
-          }
-          return true;
-        }
-        function calculateOffset(obsOffset, militaryOffset, numOffset) {
-          if (obsOffset) {
-            return obsOffsets2[obsOffset];
-          } else if (militaryOffset) {
-            return 0;
-          } else {
-            var hm = parseInt(numOffset, 10), m = hm % 100, h = (hm - m) / 100;
-            return h * 60 + m;
-          }
-        }
-        function configFromRFC2822(config) {
-          var match5 = rfc28222.exec(preprocessRFC28222(config._i)), parsedArray;
-          if (match5) {
-            parsedArray = extractFromRFC2822Strings(
-              match5[4],
-              match5[3],
-              match5[2],
-              match5[5],
-              match5[6],
-              match5[7]
-            );
-            if (!checkWeekday(match5[1], parsedArray, config)) {
-              return;
-            }
-            config._a = parsedArray;
-            config._tzm = calculateOffset(match5[8], match5[9], match5[10]);
-            config._d = createUTCDate.apply(null, config._a);
-            config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
-            getParsingFlags(config).rfc2822 = true;
-          } else {
-            config._isValid = false;
-          }
-        }
-        function configFromString(config) {
-          var matched = aspNetJsonRegex.exec(config._i);
-          if (matched !== null) {
-            config._d = /* @__PURE__ */ new Date(+matched[1]);
-            return;
-          }
-          configFromISO(config);
-          if (config._isValid === false) {
-            delete config._isValid;
-          } else {
-            return;
-          }
-          configFromRFC2822(config);
-          if (config._isValid === false) {
-            delete config._isValid;
-          } else {
-            return;
-          }
-          if (config._strict) {
-            config._isValid = false;
-          } else {
-            hooks.createFromInputFallback(config);
-          }
-        }
-        hooks.createFromInputFallback = deprecate(
-          "value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are discouraged. Please refer to http://momentjs.com/guides/#/warnings/js-date/ for more info.",
-          function(config) {
-            config._d = /* @__PURE__ */ new Date(config._i + (config._useUTC ? " UTC" : ""));
-          }
-        );
-        function defaults2(a, b, c) {
-          if (a != null) {
-            return a;
-          }
-          if (b != null) {
-            return b;
-          }
-          return c;
-        }
-        function currentDateArray(config) {
-          var nowValue = new Date(hooks.now());
-          if (config._useUTC) {
-            return [
-              nowValue.getUTCFullYear(),
-              nowValue.getUTCMonth(),
-              nowValue.getUTCDate()
-            ];
-          }
-          return [nowValue.getFullYear(), nowValue.getMonth(), nowValue.getDate()];
-        }
-        function configFromArray(config) {
-          var i, date, input2 = [], currentDate, expectedWeekday, yearToUse;
-          if (config._d) {
-            return;
-          }
-          currentDate = currentDateArray(config);
-          if (config._w && config._a[DATE] == null && config._a[MONTH] == null) {
-            dayOfYearFromWeekInfo(config);
-          }
-          if (config._dayOfYear != null) {
-            yearToUse = defaults2(config._a[YEAR], currentDate[YEAR]);
-            if (config._dayOfYear > daysInYear2(yearToUse) || config._dayOfYear === 0) {
-              getParsingFlags(config)._overflowDayOfYear = true;
-            }
-            date = createUTCDate(yearToUse, 0, config._dayOfYear);
-            config._a[MONTH] = date.getUTCMonth();
-            config._a[DATE] = date.getUTCDate();
-          }
-          for (i = 0; i < 3 && config._a[i] == null; ++i) {
-            config._a[i] = input2[i] = currentDate[i];
-          }
-          for (; i < 7; i++) {
-            config._a[i] = input2[i] = config._a[i] == null ? i === 2 ? 1 : 0 : config._a[i];
-          }
-          if (config._a[HOUR] === 24 && config._a[MINUTE] === 0 && config._a[SECOND] === 0 && config._a[MILLISECOND] === 0) {
-            config._nextDay = true;
-            config._a[HOUR] = 0;
-          }
-          config._d = (config._useUTC ? createUTCDate : createDate).apply(
-            null,
-            input2
-          );
-          expectedWeekday = config._useUTC ? config._d.getUTCDay() : config._d.getDay();
-          if (config._tzm != null) {
-            config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
-          }
-          if (config._nextDay) {
-            config._a[HOUR] = 24;
-          }
-          if (config._w && typeof config._w.d !== "undefined" && config._w.d !== expectedWeekday) {
-            getParsingFlags(config).weekdayMismatch = true;
-          }
-        }
-        function dayOfYearFromWeekInfo(config) {
-          var w, weekYear, week, weekday, dow, doy, temp, weekdayOverflow, curWeek;
-          w = config._w;
-          if (w.GG != null || w.W != null || w.E != null) {
-            dow = 1;
-            doy = 4;
-            weekYear = defaults2(
-              w.GG,
-              config._a[YEAR],
-              weekOfYear(createLocal(), 1, 4).year
-            );
-            week = defaults2(w.W, 1);
-            weekday = defaults2(w.E, 1);
-            if (weekday < 1 || weekday > 7) {
-              weekdayOverflow = true;
-            }
-          } else {
-            dow = config._locale._week.dow;
-            doy = config._locale._week.doy;
-            curWeek = weekOfYear(createLocal(), dow, doy);
-            weekYear = defaults2(w.gg, config._a[YEAR], curWeek.year);
-            week = defaults2(w.w, curWeek.week);
-            if (w.d != null) {
-              weekday = w.d;
-              if (weekday < 0 || weekday > 6) {
-                weekdayOverflow = true;
-              }
-            } else if (w.e != null) {
-              weekday = w.e + dow;
-              if (w.e < 0 || w.e > 6) {
-                weekdayOverflow = true;
-              }
-            } else {
-              weekday = dow;
-            }
-          }
-          if (week < 1 || week > weeksInYear(weekYear, dow, doy)) {
-            getParsingFlags(config)._overflowWeeks = true;
-          } else if (weekdayOverflow != null) {
-            getParsingFlags(config)._overflowWeekday = true;
-          } else {
-            temp = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy);
-            config._a[YEAR] = temp.year;
-            config._dayOfYear = temp.dayOfYear;
-          }
-        }
-        hooks.ISO_8601 = function() {
-        };
-        hooks.RFC_2822 = function() {
-        };
-        function configFromStringAndFormat(config) {
-          if (config._f === hooks.ISO_8601) {
-            configFromISO(config);
-            return;
-          }
-          if (config._f === hooks.RFC_2822) {
-            configFromRFC2822(config);
-            return;
-          }
-          config._a = [];
-          getParsingFlags(config).empty = true;
-          var string = "" + config._i, i, parsedInput, tokens2, token2, skipped, stringLength = string.length, totalParsedInputLength = 0, era, tokenLen;
-          tokens2 = expandFormat(config._f, config._locale).match(formattingTokens) || [];
-          tokenLen = tokens2.length;
-          for (i = 0; i < tokenLen; i++) {
-            token2 = tokens2[i];
-            parsedInput = (string.match(getParseRegexForToken(token2, config)) || [])[0];
-            if (parsedInput) {
-              skipped = string.substr(0, string.indexOf(parsedInput));
-              if (skipped.length > 0) {
-                getParsingFlags(config).unusedInput.push(skipped);
-              }
-              string = string.slice(
-                string.indexOf(parsedInput) + parsedInput.length
-              );
-              totalParsedInputLength += parsedInput.length;
-            }
-            if (formatTokenFunctions[token2]) {
-              if (parsedInput) {
-                getParsingFlags(config).empty = false;
-              } else {
-                getParsingFlags(config).unusedTokens.push(token2);
-              }
-              addTimeToArrayFromToken(token2, parsedInput, config);
-            } else if (config._strict && !parsedInput) {
-              getParsingFlags(config).unusedTokens.push(token2);
-            }
-          }
-          getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
-          if (string.length > 0) {
-            getParsingFlags(config).unusedInput.push(string);
-          }
-          if (config._a[HOUR] <= 12 && getParsingFlags(config).bigHour === true && config._a[HOUR] > 0) {
-            getParsingFlags(config).bigHour = void 0;
-          }
-          getParsingFlags(config).parsedDateParts = config._a.slice(0);
-          getParsingFlags(config).meridiem = config._meridiem;
-          config._a[HOUR] = meridiemFixWrap(
-            config._locale,
-            config._a[HOUR],
-            config._meridiem
-          );
-          era = getParsingFlags(config).era;
-          if (era !== null) {
-            config._a[YEAR] = config._locale.erasConvertYear(era, config._a[YEAR]);
-          }
-          configFromArray(config);
-          checkOverflow(config);
-        }
-        function meridiemFixWrap(locale2, hour, meridiem2) {
-          var isPm;
-          if (meridiem2 == null) {
-            return hour;
-          }
-          if (locale2.meridiemHour != null) {
-            return locale2.meridiemHour(hour, meridiem2);
-          } else if (locale2.isPM != null) {
-            isPm = locale2.isPM(meridiem2);
-            if (isPm && hour < 12) {
-              hour += 12;
-            }
-            if (!isPm && hour === 12) {
-              hour = 0;
-            }
-            return hour;
-          } else {
-            return hour;
-          }
-        }
-        function configFromStringAndArray(config) {
-          var tempConfig, bestMoment, scoreToBeat, i, currentScore, validFormatFound, bestFormatIsValid = false, configfLen = config._f.length;
-          if (configfLen === 0) {
-            getParsingFlags(config).invalidFormat = true;
-            config._d = /* @__PURE__ */ new Date(NaN);
-            return;
-          }
-          for (i = 0; i < configfLen; i++) {
-            currentScore = 0;
-            validFormatFound = false;
-            tempConfig = copyConfig({}, config);
-            if (config._useUTC != null) {
-              tempConfig._useUTC = config._useUTC;
-            }
-            tempConfig._f = config._f[i];
-            configFromStringAndFormat(tempConfig);
-            if (isValid(tempConfig)) {
-              validFormatFound = true;
-            }
-            currentScore += getParsingFlags(tempConfig).charsLeftOver;
-            currentScore += getParsingFlags(tempConfig).unusedTokens.length * 10;
-            getParsingFlags(tempConfig).score = currentScore;
-            if (!bestFormatIsValid) {
-              if (scoreToBeat == null || currentScore < scoreToBeat || validFormatFound) {
-                scoreToBeat = currentScore;
-                bestMoment = tempConfig;
-                if (validFormatFound) {
-                  bestFormatIsValid = true;
-                }
-              }
-            } else {
-              if (currentScore < scoreToBeat) {
-                scoreToBeat = currentScore;
-                bestMoment = tempConfig;
-              }
-            }
-          }
-          extend(config, bestMoment || tempConfig);
-        }
-        function configFromObject(config) {
-          if (config._d) {
-            return;
-          }
-          var i = normalizeObjectUnits(config._i), dayOrDate = i.day === void 0 ? i.date : i.day;
-          config._a = map3(
-            [i.year, i.month, dayOrDate, i.hour, i.minute, i.second, i.millisecond],
-            function(obj) {
-              return obj && parseInt(obj, 10);
-            }
-          );
-          configFromArray(config);
-        }
-        function createFromConfig(config) {
-          var res = new Moment(checkOverflow(prepareConfig(config)));
-          if (res._nextDay) {
-            res.add(1, "d");
-            res._nextDay = void 0;
-          }
-          return res;
-        }
-        function prepareConfig(config) {
-          var input2 = config._i, format2 = config._f;
-          config._locale = config._locale || getLocale(config._l);
-          if (input2 === null || format2 === void 0 && input2 === "") {
-            return createInvalid({ nullInput: true });
-          }
-          if (typeof input2 === "string") {
-            config._i = input2 = config._locale.preparse(input2);
-          }
-          if (isMoment(input2)) {
-            return new Moment(checkOverflow(input2));
-          } else if (isDate2(input2)) {
-            config._d = input2;
-          } else if (isArray3(format2)) {
-            configFromStringAndArray(config);
-          } else if (format2) {
-            configFromStringAndFormat(config);
-          } else {
-            configFromInput(config);
-          }
-          if (!isValid(config)) {
-            config._d = null;
-          }
-          return config;
-        }
-        function configFromInput(config) {
-          var input2 = config._i;
-          if (isUndefined2(input2)) {
-            config._d = new Date(hooks.now());
-          } else if (isDate2(input2)) {
-            config._d = new Date(input2.valueOf());
-          } else if (typeof input2 === "string") {
-            configFromString(config);
-          } else if (isArray3(input2)) {
-            config._a = map3(input2.slice(0), function(obj) {
-              return parseInt(obj, 10);
-            });
-            configFromArray(config);
-          } else if (isObject2(input2)) {
-            configFromObject(config);
-          } else if (isNumber3(input2)) {
-            config._d = new Date(input2);
-          } else {
-            hooks.createFromInputFallback(config);
-          }
-        }
-        function createLocalOrUTC(input2, format2, locale2, strict, isUTC) {
-          var c = {};
-          if (format2 === true || format2 === false) {
-            strict = format2;
-            format2 = void 0;
-          }
-          if (locale2 === true || locale2 === false) {
-            strict = locale2;
-            locale2 = void 0;
-          }
-          if (isObject2(input2) && isObjectEmpty(input2) || isArray3(input2) && input2.length === 0) {
-            input2 = void 0;
-          }
-          c._isAMomentObject = true;
-          c._useUTC = c._isUTC = isUTC;
-          c._l = locale2;
-          c._i = input2;
-          c._f = format2;
-          c._strict = strict;
-          return createFromConfig(c);
-        }
-        function createLocal(input2, format2, locale2, strict) {
-          return createLocalOrUTC(input2, format2, locale2, strict, false);
-        }
-        var prototypeMin = deprecate(
-          "moment().min is deprecated, use moment.max instead. http://momentjs.com/guides/#/warnings/min-max/",
-          function() {
-            var other = createLocal.apply(null, arguments);
-            if (this.isValid() && other.isValid()) {
-              return other < this ? this : other;
-            } else {
-              return createInvalid();
-            }
-          }
-        ), prototypeMax = deprecate(
-          "moment().max is deprecated, use moment.min instead. http://momentjs.com/guides/#/warnings/min-max/",
-          function() {
-            var other = createLocal.apply(null, arguments);
-            if (this.isValid() && other.isValid()) {
-              return other > this ? this : other;
-            } else {
-              return createInvalid();
-            }
-          }
-        );
-        function pickBy(fn2, moments) {
-          var res, i;
-          if (moments.length === 1 && isArray3(moments[0])) {
-            moments = moments[0];
-          }
-          if (!moments.length) {
-            return createLocal();
-          }
-          res = moments[0];
-          for (i = 1; i < moments.length; ++i) {
-            if (!moments[i].isValid() || moments[i][fn2](res)) {
-              res = moments[i];
-            }
-          }
-          return res;
-        }
-        function min2() {
-          var args = [].slice.call(arguments, 0);
-          return pickBy("isBefore", args);
-        }
-        function max2() {
-          var args = [].slice.call(arguments, 0);
-          return pickBy("isAfter", args);
-        }
-        var now2 = function() {
-          return Date.now ? Date.now() : +/* @__PURE__ */ new Date();
-        };
-        var ordering = [
-          "year",
-          "quarter",
-          "month",
-          "week",
-          "day",
-          "hour",
-          "minute",
-          "second",
-          "millisecond"
-        ];
-        function isDurationValid(m) {
-          var key, unitHasDecimal = false, i, orderLen = ordering.length;
-          for (key in m) {
-            if (hasOwnProp(m, key) && !(indexOf2.call(ordering, key) !== -1 && (m[key] == null || !isNaN(m[key])))) {
-              return false;
-            }
-          }
-          for (i = 0; i < orderLen; ++i) {
-            if (m[ordering[i]]) {
-              if (unitHasDecimal) {
-                return false;
-              }
-              if (parseFloat(m[ordering[i]]) !== toInt(m[ordering[i]])) {
-                unitHasDecimal = true;
-              }
-            }
-          }
-          return true;
-        }
-        function isValid$1() {
-          return this._isValid;
-        }
-        function createInvalid$1() {
-          return createDuration(NaN);
-        }
-        function Duration2(duration) {
-          var normalizedInput = normalizeObjectUnits(duration), years2 = normalizedInput.year || 0, quarters = normalizedInput.quarter || 0, months3 = normalizedInput.month || 0, weeks2 = normalizedInput.week || normalizedInput.isoWeek || 0, days2 = normalizedInput.day || 0, hours2 = normalizedInput.hour || 0, minutes2 = normalizedInput.minute || 0, seconds2 = normalizedInput.second || 0, milliseconds2 = normalizedInput.millisecond || 0;
-          this._isValid = isDurationValid(normalizedInput);
-          this._milliseconds = +milliseconds2 + seconds2 * 1e3 + // 1000
-          minutes2 * 6e4 + // 1000 * 60
-          hours2 * 1e3 * 60 * 60;
-          this._days = +days2 + weeks2 * 7;
-          this._months = +months3 + quarters * 3 + years2 * 12;
-          this._data = {};
-          this._locale = getLocale();
-          this._bubble();
-        }
-        function isDuration(obj) {
-          return obj instanceof Duration2;
-        }
-        function absRound(number) {
-          if (number < 0) {
-            return Math.round(-1 * number) * -1;
-          } else {
-            return Math.round(number);
-          }
-        }
-        function compareArrays(array1, array2, dontConvert) {
-          var len = Math.min(array1.length, array2.length), lengthDiff = Math.abs(array1.length - array2.length), diffs = 0, i;
-          for (i = 0; i < len; i++) {
-            if (dontConvert && array1[i] !== array2[i] || !dontConvert && toInt(array1[i]) !== toInt(array2[i])) {
-              diffs++;
-            }
-          }
-          return diffs + lengthDiff;
-        }
-        function offset3(token2, separator) {
-          addFormatToken(token2, 0, 0, function() {
-            var offset4 = this.utcOffset(), sign3 = "+";
-            if (offset4 < 0) {
-              offset4 = -offset4;
-              sign3 = "-";
-            }
-            return sign3 + zeroFill(~~(offset4 / 60), 2) + separator + zeroFill(~~offset4 % 60, 2);
-          });
-        }
-        offset3("Z", ":");
-        offset3("ZZ", "");
-        addRegexToken("Z", matchShortOffset);
-        addRegexToken("ZZ", matchShortOffset);
-        addParseToken(["Z", "ZZ"], function(input2, array, config) {
-          config._useUTC = true;
-          config._tzm = offsetFromString(matchShortOffset, input2);
-        });
-        var chunkOffset = /([\+\-]|\d\d)/gi;
-        function offsetFromString(matcher, string) {
-          var matches = (string || "").match(matcher), chunk, parts, minutes2;
-          if (matches === null) {
-            return null;
-          }
-          chunk = matches[matches.length - 1] || [];
-          parts = (chunk + "").match(chunkOffset) || ["-", 0, 0];
-          minutes2 = +(parts[1] * 60) + toInt(parts[2]);
-          return minutes2 === 0 ? 0 : parts[0] === "+" ? minutes2 : -minutes2;
-        }
-        function cloneWithOffset(input2, model) {
-          var res, diff2;
-          if (model._isUTC) {
-            res = model.clone();
-            diff2 = (isMoment(input2) || isDate2(input2) ? input2.valueOf() : createLocal(input2).valueOf()) - res.valueOf();
-            res._d.setTime(res._d.valueOf() + diff2);
-            hooks.updateOffset(res, false);
-            return res;
-          } else {
-            return createLocal(input2).local();
-          }
-        }
-        function getDateOffset(m) {
-          return -Math.round(m._d.getTimezoneOffset());
-        }
-        hooks.updateOffset = function() {
-        };
-        function getSetOffset(input2, keepLocalTime, keepMinutes) {
-          var offset4 = this._offset || 0, localAdjust;
-          if (!this.isValid()) {
-            return input2 != null ? this : NaN;
-          }
-          if (input2 != null) {
-            if (typeof input2 === "string") {
-              input2 = offsetFromString(matchShortOffset, input2);
-              if (input2 === null) {
-                return this;
-              }
-            } else if (Math.abs(input2) < 16 && !keepMinutes) {
-              input2 = input2 * 60;
-            }
-            if (!this._isUTC && keepLocalTime) {
-              localAdjust = getDateOffset(this);
-            }
-            this._offset = input2;
-            this._isUTC = true;
-            if (localAdjust != null) {
-              this.add(localAdjust, "m");
-            }
-            if (offset4 !== input2) {
-              if (!keepLocalTime || this._changeInProgress) {
-                addSubtract(
-                  this,
-                  createDuration(input2 - offset4, "m"),
-                  1,
-                  false
-                );
-              } else if (!this._changeInProgress) {
-                this._changeInProgress = true;
-                hooks.updateOffset(this, true);
-                this._changeInProgress = null;
-              }
-            }
-            return this;
-          } else {
-            return this._isUTC ? offset4 : getDateOffset(this);
-          }
-        }
-        function getSetZone(input2, keepLocalTime) {
-          if (input2 != null) {
-            if (typeof input2 !== "string") {
-              input2 = -input2;
-            }
-            this.utcOffset(input2, keepLocalTime);
-            return this;
-          } else {
-            return -this.utcOffset();
-          }
-        }
-        function setOffsetToUTC(keepLocalTime) {
-          return this.utcOffset(0, keepLocalTime);
-        }
-        function setOffsetToLocal(keepLocalTime) {
-          if (this._isUTC) {
-            this.utcOffset(0, keepLocalTime);
-            this._isUTC = false;
-            if (keepLocalTime) {
-              this.subtract(getDateOffset(this), "m");
-            }
-          }
-          return this;
-        }
-        function setOffsetToParsedOffset() {
-          if (this._tzm != null) {
-            this.utcOffset(this._tzm, false, true);
-          } else if (typeof this._i === "string") {
-            var tZone = offsetFromString(matchOffset, this._i);
-            if (tZone != null) {
-              this.utcOffset(tZone);
-            } else {
-              this.utcOffset(0, true);
-            }
-          }
-          return this;
-        }
-        function hasAlignedHourOffset(input2) {
-          if (!this.isValid()) {
-            return false;
-          }
-          input2 = input2 ? createLocal(input2).utcOffset() : 0;
-          return (this.utcOffset() - input2) % 60 === 0;
-        }
-        function isDaylightSavingTime() {
-          return this.utcOffset() > this.clone().month(0).utcOffset() || this.utcOffset() > this.clone().month(5).utcOffset();
-        }
-        function isDaylightSavingTimeShifted() {
-          if (!isUndefined2(this._isDSTShifted)) {
-            return this._isDSTShifted;
-          }
-          var c = {}, other;
-          copyConfig(c, this);
-          c = prepareConfig(c);
-          if (c._a) {
-            other = c._isUTC ? createUTC(c._a) : createLocal(c._a);
-            this._isDSTShifted = this.isValid() && compareArrays(c._a, other.toArray()) > 0;
-          } else {
-            this._isDSTShifted = false;
-          }
-          return this._isDSTShifted;
-        }
-        function isLocal() {
-          return this.isValid() ? !this._isUTC : false;
-        }
-        function isUtcOffset() {
-          return this.isValid() ? this._isUTC : false;
-        }
-        function isUtc() {
-          return this.isValid() ? this._isUTC && this._offset === 0 : false;
-        }
-        var aspNetRegex = /^(-|\+)?(?:(\d*)[. ])?(\d+):(\d+)(?::(\d+)(\.\d*)?)?$/, isoRegex = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
-        function createDuration(input2, key) {
-          var duration = input2, match5 = null, sign3, ret, diffRes;
-          if (isDuration(input2)) {
-            duration = {
-              ms: input2._milliseconds,
-              d: input2._days,
-              M: input2._months
-            };
-          } else if (isNumber3(input2) || !isNaN(+input2)) {
-            duration = {};
-            if (key) {
-              duration[key] = +input2;
-            } else {
-              duration.milliseconds = +input2;
-            }
-          } else if (match5 = aspNetRegex.exec(input2)) {
-            sign3 = match5[1] === "-" ? -1 : 1;
-            duration = {
-              y: 0,
-              d: toInt(match5[DATE]) * sign3,
-              h: toInt(match5[HOUR]) * sign3,
-              m: toInt(match5[MINUTE]) * sign3,
-              s: toInt(match5[SECOND]) * sign3,
-              ms: toInt(absRound(match5[MILLISECOND] * 1e3)) * sign3
-              // the millisecond decimal point is included in the match
-            };
-          } else if (match5 = isoRegex.exec(input2)) {
-            sign3 = match5[1] === "-" ? -1 : 1;
-            duration = {
-              y: parseIso(match5[2], sign3),
-              M: parseIso(match5[3], sign3),
-              w: parseIso(match5[4], sign3),
-              d: parseIso(match5[5], sign3),
-              h: parseIso(match5[6], sign3),
-              m: parseIso(match5[7], sign3),
-              s: parseIso(match5[8], sign3)
-            };
-          } else if (duration == null) {
-            duration = {};
-          } else if (typeof duration === "object" && ("from" in duration || "to" in duration)) {
-            diffRes = momentsDifference(
-              createLocal(duration.from),
-              createLocal(duration.to)
-            );
-            duration = {};
-            duration.ms = diffRes.milliseconds;
-            duration.M = diffRes.months;
-          }
-          ret = new Duration2(duration);
-          if (isDuration(input2) && hasOwnProp(input2, "_locale")) {
-            ret._locale = input2._locale;
-          }
-          if (isDuration(input2) && hasOwnProp(input2, "_isValid")) {
-            ret._isValid = input2._isValid;
-          }
-          return ret;
-        }
-        createDuration.fn = Duration2.prototype;
-        createDuration.invalid = createInvalid$1;
-        function parseIso(inp, sign3) {
-          var res = inp && parseFloat(inp.replace(",", "."));
-          return (isNaN(res) ? 0 : res) * sign3;
-        }
-        function positiveMomentsDifference(base, other) {
-          var res = {};
-          res.months = other.month() - base.month() + (other.year() - base.year()) * 12;
-          if (base.clone().add(res.months, "M").isAfter(other)) {
-            --res.months;
-          }
-          res.milliseconds = +other - +base.clone().add(res.months, "M");
-          return res;
-        }
-        function momentsDifference(base, other) {
-          var res;
-          if (!(base.isValid() && other.isValid())) {
-            return { milliseconds: 0, months: 0 };
-          }
-          other = cloneWithOffset(other, base);
-          if (base.isBefore(other)) {
-            res = positiveMomentsDifference(base, other);
-          } else {
-            res = positiveMomentsDifference(other, base);
-            res.milliseconds = -res.milliseconds;
-            res.months = -res.months;
-          }
-          return res;
-        }
-        function createAdder(direction, name) {
-          return function(val, period) {
-            var dur, tmp;
-            if (period !== null && !isNaN(+period)) {
-              deprecateSimple(
-                name,
-                "moment()." + name + "(period, number) is deprecated. Please use moment()." + name + "(number, period). See http://momentjs.com/guides/#/warnings/add-inverted-param/ for more info."
-              );
-              tmp = val;
-              val = period;
-              period = tmp;
-            }
-            dur = createDuration(val, period);
-            addSubtract(this, dur, direction);
-            return this;
-          };
-        }
-        function addSubtract(mom, duration, isAdding, updateOffset) {
-          var milliseconds2 = duration._milliseconds, days2 = absRound(duration._days), months3 = absRound(duration._months);
-          if (!mom.isValid()) {
-            return;
-          }
-          updateOffset = updateOffset == null ? true : updateOffset;
-          if (months3) {
-            setMonth(mom, get(mom, "Month") + months3 * isAdding);
-          }
-          if (days2) {
-            set$1(mom, "Date", get(mom, "Date") + days2 * isAdding);
-          }
-          if (milliseconds2) {
-            mom._d.setTime(mom._d.valueOf() + milliseconds2 * isAdding);
-          }
-          if (updateOffset) {
-            hooks.updateOffset(mom, days2 || months3);
-          }
-        }
-        var add = createAdder(1, "add"), subtract = createAdder(-1, "subtract");
-        function isString2(input2) {
-          return typeof input2 === "string" || input2 instanceof String;
-        }
-        function isMomentInput(input2) {
-          return isMoment(input2) || isDate2(input2) || isString2(input2) || isNumber3(input2) || isNumberOrStringArray(input2) || isMomentInputObject(input2) || input2 === null || input2 === void 0;
-        }
-        function isMomentInputObject(input2) {
-          var objectTest = isObject2(input2) && !isObjectEmpty(input2), propertyTest = false, properties = [
-            "years",
-            "year",
-            "y",
-            "months",
-            "month",
-            "M",
-            "days",
-            "day",
-            "d",
-            "dates",
-            "date",
-            "D",
-            "hours",
-            "hour",
-            "h",
-            "minutes",
-            "minute",
-            "m",
-            "seconds",
-            "second",
-            "s",
-            "milliseconds",
-            "millisecond",
-            "ms"
-          ], i, property, propertyLen = properties.length;
-          for (i = 0; i < propertyLen; i += 1) {
-            property = properties[i];
-            propertyTest = propertyTest || hasOwnProp(input2, property);
-          }
-          return objectTest && propertyTest;
-        }
-        function isNumberOrStringArray(input2) {
-          var arrayTest = isArray3(input2), dataTypeTest = false;
-          if (arrayTest) {
-            dataTypeTest = input2.filter(function(item) {
-              return !isNumber3(item) && isString2(input2);
-            }).length === 0;
-          }
-          return arrayTest && dataTypeTest;
-        }
-        function isCalendarSpec(input2) {
-          var objectTest = isObject2(input2) && !isObjectEmpty(input2), propertyTest = false, properties = [
-            "sameDay",
-            "nextDay",
-            "lastDay",
-            "nextWeek",
-            "lastWeek",
-            "sameElse"
-          ], i, property;
-          for (i = 0; i < properties.length; i += 1) {
-            property = properties[i];
-            propertyTest = propertyTest || hasOwnProp(input2, property);
-          }
-          return objectTest && propertyTest;
-        }
-        function getCalendarFormat(myMoment, now3) {
-          var diff2 = myMoment.diff(now3, "days", true);
-          return diff2 < -6 ? "sameElse" : diff2 < -1 ? "lastWeek" : diff2 < 0 ? "lastDay" : diff2 < 1 ? "sameDay" : diff2 < 2 ? "nextDay" : diff2 < 7 ? "nextWeek" : "sameElse";
-        }
-        function calendar$1(time, formats) {
-          if (arguments.length === 1) {
-            if (!arguments[0]) {
-              time = void 0;
-              formats = void 0;
-            } else if (isMomentInput(arguments[0])) {
-              time = arguments[0];
-              formats = void 0;
-            } else if (isCalendarSpec(arguments[0])) {
-              formats = arguments[0];
-              time = void 0;
-            }
-          }
-          var now3 = time || createLocal(), sod = cloneWithOffset(now3, this).startOf("day"), format2 = hooks.calendarFormat(this, sod) || "sameElse", output = formats && (isFunction2(formats[format2]) ? formats[format2].call(this, now3) : formats[format2]);
-          return this.format(
-            output || this.localeData().calendar(format2, this, createLocal(now3))
-          );
-        }
-        function clone6() {
-          return new Moment(this);
-        }
-        function isAfter(input2, units) {
-          var localInput = isMoment(input2) ? input2 : createLocal(input2);
-          if (!(this.isValid() && localInput.isValid())) {
-            return false;
-          }
-          units = normalizeUnits(units) || "millisecond";
-          if (units === "millisecond") {
-            return this.valueOf() > localInput.valueOf();
-          } else {
-            return localInput.valueOf() < this.clone().startOf(units).valueOf();
-          }
-        }
-        function isBefore(input2, units) {
-          var localInput = isMoment(input2) ? input2 : createLocal(input2);
-          if (!(this.isValid() && localInput.isValid())) {
-            return false;
-          }
-          units = normalizeUnits(units) || "millisecond";
-          if (units === "millisecond") {
-            return this.valueOf() < localInput.valueOf();
-          } else {
-            return this.clone().endOf(units).valueOf() < localInput.valueOf();
-          }
-        }
-        function isBetween(from3, to3, units, inclusivity) {
-          var localFrom = isMoment(from3) ? from3 : createLocal(from3), localTo = isMoment(to3) ? to3 : createLocal(to3);
-          if (!(this.isValid() && localFrom.isValid() && localTo.isValid())) {
-            return false;
-          }
-          inclusivity = inclusivity || "()";
-          return (inclusivity[0] === "(" ? this.isAfter(localFrom, units) : !this.isBefore(localFrom, units)) && (inclusivity[1] === ")" ? this.isBefore(localTo, units) : !this.isAfter(localTo, units));
-        }
-        function isSame(input2, units) {
-          var localInput = isMoment(input2) ? input2 : createLocal(input2), inputMs;
-          if (!(this.isValid() && localInput.isValid())) {
-            return false;
-          }
-          units = normalizeUnits(units) || "millisecond";
-          if (units === "millisecond") {
-            return this.valueOf() === localInput.valueOf();
-          } else {
-            inputMs = localInput.valueOf();
-            return this.clone().startOf(units).valueOf() <= inputMs && inputMs <= this.clone().endOf(units).valueOf();
-          }
-        }
-        function isSameOrAfter(input2, units) {
-          return this.isSame(input2, units) || this.isAfter(input2, units);
-        }
-        function isSameOrBefore(input2, units) {
-          return this.isSame(input2, units) || this.isBefore(input2, units);
-        }
-        function diff(input2, units, asFloat) {
-          var that, zoneDelta, output;
-          if (!this.isValid()) {
-            return NaN;
-          }
-          that = cloneWithOffset(input2, this);
-          if (!that.isValid()) {
-            return NaN;
-          }
-          zoneDelta = (that.utcOffset() - this.utcOffset()) * 6e4;
-          units = normalizeUnits(units);
-          switch (units) {
-            case "year":
-              output = monthDiff(this, that) / 12;
-              break;
-            case "month":
-              output = monthDiff(this, that);
-              break;
-            case "quarter":
-              output = monthDiff(this, that) / 3;
-              break;
-            case "second":
-              output = (this - that) / 1e3;
-              break;
-            // 1000
-            case "minute":
-              output = (this - that) / 6e4;
-              break;
-            // 1000 * 60
-            case "hour":
-              output = (this - that) / 36e5;
-              break;
-            // 1000 * 60 * 60
-            case "day":
-              output = (this - that - zoneDelta) / 864e5;
-              break;
-            // 1000 * 60 * 60 * 24, negate dst
-            case "week":
-              output = (this - that - zoneDelta) / 6048e5;
-              break;
-            // 1000 * 60 * 60 * 24 * 7, negate dst
-            default:
-              output = this - that;
-          }
-          return asFloat ? output : absFloor(output);
-        }
-        function monthDiff(a, b) {
-          if (a.date() < b.date()) {
-            return -monthDiff(b, a);
-          }
-          var wholeMonthDiff = (b.year() - a.year()) * 12 + (b.month() - a.month()), anchor = a.clone().add(wholeMonthDiff, "months"), anchor2, adjust;
-          if (b - anchor < 0) {
-            anchor2 = a.clone().add(wholeMonthDiff - 1, "months");
-            adjust = (b - anchor) / (anchor - anchor2);
-          } else {
-            anchor2 = a.clone().add(wholeMonthDiff + 1, "months");
-            adjust = (b - anchor) / (anchor2 - anchor);
-          }
-          return -(wholeMonthDiff + adjust) || 0;
-        }
-        hooks.defaultFormat = "YYYY-MM-DDTHH:mm:ssZ";
-        hooks.defaultFormatUtc = "YYYY-MM-DDTHH:mm:ss[Z]";
-        function toString() {
-          return this.clone().locale("en").format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ");
-        }
-        function toISOString(keepOffset) {
-          if (!this.isValid()) {
-            return null;
-          }
-          var utc = keepOffset !== true, m = utc ? this.clone().utc() : this;
-          if (m.year() < 0 || m.year() > 9999) {
-            return formatMoment(
-              m,
-              utc ? "YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]" : "YYYYYY-MM-DD[T]HH:mm:ss.SSSZ"
-            );
-          }
-          if (isFunction2(Date.prototype.toISOString)) {
-            if (utc) {
-              return this.toDate().toISOString();
-            } else {
-              return new Date(this.valueOf() + this.utcOffset() * 60 * 1e3).toISOString().replace("Z", formatMoment(m, "Z"));
-            }
-          }
-          return formatMoment(
-            m,
-            utc ? "YYYY-MM-DD[T]HH:mm:ss.SSS[Z]" : "YYYY-MM-DD[T]HH:mm:ss.SSSZ"
-          );
-        }
-        function inspect() {
-          if (!this.isValid()) {
-            return "moment.invalid(/* " + this._i + " */)";
-          }
-          var func = "moment", zone = "", prefix, year, datetime, suffix;
-          if (!this.isLocal()) {
-            func = this.utcOffset() === 0 ? "moment.utc" : "moment.parseZone";
-            zone = "Z";
-          }
-          prefix = "[" + func + '("]';
-          year = 0 <= this.year() && this.year() <= 9999 ? "YYYY" : "YYYYYY";
-          datetime = "-MM-DD[T]HH:mm:ss.SSS";
-          suffix = zone + '[")]';
-          return this.format(prefix + year + datetime + suffix);
-        }
-        function format(inputString) {
-          if (!inputString) {
-            inputString = this.isUtc() ? hooks.defaultFormatUtc : hooks.defaultFormat;
-          }
-          var output = formatMoment(this, inputString);
-          return this.localeData().postformat(output);
-        }
-        function from2(time, withoutSuffix) {
-          if (this.isValid() && (isMoment(time) && time.isValid() || createLocal(time).isValid())) {
-            return createDuration({ to: this, from: time }).locale(this.locale()).humanize(!withoutSuffix);
-          } else {
-            return this.localeData().invalidDate();
-          }
-        }
-        function fromNow(withoutSuffix) {
-          return this.from(createLocal(), withoutSuffix);
-        }
-        function to2(time, withoutSuffix) {
-          if (this.isValid() && (isMoment(time) && time.isValid() || createLocal(time).isValid())) {
-            return createDuration({ from: this, to: time }).locale(this.locale()).humanize(!withoutSuffix);
-          } else {
-            return this.localeData().invalidDate();
-          }
-        }
-        function toNow(withoutSuffix) {
-          return this.to(createLocal(), withoutSuffix);
-        }
-        function locale(key) {
-          var newLocaleData;
-          if (key === void 0) {
-            return this._locale._abbr;
-          } else {
-            newLocaleData = getLocale(key);
-            if (newLocaleData != null) {
-              this._locale = newLocaleData;
-            }
-            return this;
-          }
-        }
-        var lang2 = deprecate(
-          "moment().lang() is deprecated. Instead, use moment().localeData() to get the language configuration. Use moment().locale() to change languages.",
-          function(key) {
-            if (key === void 0) {
-              return this.localeData();
-            } else {
-              return this.locale(key);
-            }
-          }
-        );
-        function localeData() {
-          return this._locale;
-        }
-        var MS_PER_SECOND = 1e3, MS_PER_MINUTE = 60 * MS_PER_SECOND, MS_PER_HOUR = 60 * MS_PER_MINUTE, MS_PER_400_YEARS = (365 * 400 + 97) * 24 * MS_PER_HOUR;
-        function mod$1(dividend, divisor) {
-          return (dividend % divisor + divisor) % divisor;
-        }
-        function localStartOfDate(y, m, d) {
-          if (y < 100 && y >= 0) {
-            return new Date(y + 400, m, d) - MS_PER_400_YEARS;
-          } else {
-            return new Date(y, m, d).valueOf();
-          }
-        }
-        function utcStartOfDate(y, m, d) {
-          if (y < 100 && y >= 0) {
-            return Date.UTC(y + 400, m, d) - MS_PER_400_YEARS;
-          } else {
-            return Date.UTC(y, m, d);
-          }
-        }
-        function startOf(units) {
-          var time, startOfDate;
-          units = normalizeUnits(units);
-          if (units === void 0 || units === "millisecond" || !this.isValid()) {
-            return this;
-          }
-          startOfDate = this._isUTC ? utcStartOfDate : localStartOfDate;
-          switch (units) {
-            case "year":
-              time = startOfDate(this.year(), 0, 1);
-              break;
-            case "quarter":
-              time = startOfDate(
-                this.year(),
-                this.month() - this.month() % 3,
-                1
-              );
-              break;
-            case "month":
-              time = startOfDate(this.year(), this.month(), 1);
-              break;
-            case "week":
-              time = startOfDate(
-                this.year(),
-                this.month(),
-                this.date() - this.weekday()
-              );
-              break;
-            case "isoWeek":
-              time = startOfDate(
-                this.year(),
-                this.month(),
-                this.date() - (this.isoWeekday() - 1)
-              );
-              break;
-            case "day":
-            case "date":
-              time = startOfDate(this.year(), this.month(), this.date());
-              break;
-            case "hour":
-              time = this._d.valueOf();
-              time -= mod$1(
-                time + (this._isUTC ? 0 : this.utcOffset() * MS_PER_MINUTE),
-                MS_PER_HOUR
-              );
-              break;
-            case "minute":
-              time = this._d.valueOf();
-              time -= mod$1(time, MS_PER_MINUTE);
-              break;
-            case "second":
-              time = this._d.valueOf();
-              time -= mod$1(time, MS_PER_SECOND);
-              break;
-          }
-          this._d.setTime(time);
-          hooks.updateOffset(this, true);
-          return this;
-        }
-        function endOf(units) {
-          var time, startOfDate;
-          units = normalizeUnits(units);
-          if (units === void 0 || units === "millisecond" || !this.isValid()) {
-            return this;
-          }
-          startOfDate = this._isUTC ? utcStartOfDate : localStartOfDate;
-          switch (units) {
-            case "year":
-              time = startOfDate(this.year() + 1, 0, 1) - 1;
-              break;
-            case "quarter":
-              time = startOfDate(
-                this.year(),
-                this.month() - this.month() % 3 + 3,
-                1
-              ) - 1;
-              break;
-            case "month":
-              time = startOfDate(this.year(), this.month() + 1, 1) - 1;
-              break;
-            case "week":
-              time = startOfDate(
-                this.year(),
-                this.month(),
-                this.date() - this.weekday() + 7
-              ) - 1;
-              break;
-            case "isoWeek":
-              time = startOfDate(
-                this.year(),
-                this.month(),
-                this.date() - (this.isoWeekday() - 1) + 7
-              ) - 1;
-              break;
-            case "day":
-            case "date":
-              time = startOfDate(this.year(), this.month(), this.date() + 1) - 1;
-              break;
-            case "hour":
-              time = this._d.valueOf();
-              time += MS_PER_HOUR - mod$1(
-                time + (this._isUTC ? 0 : this.utcOffset() * MS_PER_MINUTE),
-                MS_PER_HOUR
-              ) - 1;
-              break;
-            case "minute":
-              time = this._d.valueOf();
-              time += MS_PER_MINUTE - mod$1(time, MS_PER_MINUTE) - 1;
-              break;
-            case "second":
-              time = this._d.valueOf();
-              time += MS_PER_SECOND - mod$1(time, MS_PER_SECOND) - 1;
-              break;
-          }
-          this._d.setTime(time);
-          hooks.updateOffset(this, true);
-          return this;
-        }
-        function valueOf() {
-          return this._d.valueOf() - (this._offset || 0) * 6e4;
-        }
-        function unix() {
-          return Math.floor(this.valueOf() / 1e3);
-        }
-        function toDate() {
-          return new Date(this.valueOf());
-        }
-        function toArray() {
-          var m = this;
-          return [
-            m.year(),
-            m.month(),
-            m.date(),
-            m.hour(),
-            m.minute(),
-            m.second(),
-            m.millisecond()
-          ];
-        }
-        function toObject() {
-          var m = this;
-          return {
-            years: m.year(),
-            months: m.month(),
-            date: m.date(),
-            hours: m.hours(),
-            minutes: m.minutes(),
-            seconds: m.seconds(),
-            milliseconds: m.milliseconds()
-          };
-        }
-        function toJSON() {
-          return this.isValid() ? this.toISOString() : null;
-        }
-        function isValid$2() {
-          return isValid(this);
-        }
-        function parsingFlags() {
-          return extend({}, getParsingFlags(this));
-        }
-        function invalidAt() {
-          return getParsingFlags(this).overflow;
-        }
-        function creationData() {
-          return {
-            input: this._i,
-            format: this._f,
-            locale: this._locale,
-            isUTC: this._isUTC,
-            strict: this._strict
-          };
-        }
-        addFormatToken("N", 0, 0, "eraAbbr");
-        addFormatToken("NN", 0, 0, "eraAbbr");
-        addFormatToken("NNN", 0, 0, "eraAbbr");
-        addFormatToken("NNNN", 0, 0, "eraName");
-        addFormatToken("NNNNN", 0, 0, "eraNarrow");
-        addFormatToken("y", ["y", 1], "yo", "eraYear");
-        addFormatToken("y", ["yy", 2], 0, "eraYear");
-        addFormatToken("y", ["yyy", 3], 0, "eraYear");
-        addFormatToken("y", ["yyyy", 4], 0, "eraYear");
-        addRegexToken("N", matchEraAbbr);
-        addRegexToken("NN", matchEraAbbr);
-        addRegexToken("NNN", matchEraAbbr);
-        addRegexToken("NNNN", matchEraName);
-        addRegexToken("NNNNN", matchEraNarrow);
-        addParseToken(
-          ["N", "NN", "NNN", "NNNN", "NNNNN"],
-          function(input2, array, config, token2) {
-            var era = config._locale.erasParse(input2, token2, config._strict);
-            if (era) {
-              getParsingFlags(config).era = era;
-            } else {
-              getParsingFlags(config).invalidEra = input2;
-            }
-          }
-        );
-        addRegexToken("y", matchUnsigned);
-        addRegexToken("yy", matchUnsigned);
-        addRegexToken("yyy", matchUnsigned);
-        addRegexToken("yyyy", matchUnsigned);
-        addRegexToken("yo", matchEraYearOrdinal);
-        addParseToken(["y", "yy", "yyy", "yyyy"], YEAR);
-        addParseToken(["yo"], function(input2, array, config, token2) {
-          var match5;
-          if (config._locale._eraYearOrdinalRegex) {
-            match5 = input2.match(config._locale._eraYearOrdinalRegex);
-          }
-          if (config._locale.eraYearOrdinalParse) {
-            array[YEAR] = config._locale.eraYearOrdinalParse(input2, match5);
-          } else {
-            array[YEAR] = parseInt(input2, 10);
-          }
-        });
-        function localeEras(m, format2) {
-          var i, l2, date, eras2 = this._eras || getLocale("en")._eras;
-          for (i = 0, l2 = eras2.length; i < l2; ++i) {
-            switch (typeof eras2[i].since) {
-              case "string":
-                date = hooks(eras2[i].since).startOf("day");
-                eras2[i].since = date.valueOf();
-                break;
-            }
-            switch (typeof eras2[i].until) {
-              case "undefined":
-                eras2[i].until = Infinity;
-                break;
-              case "string":
-                date = hooks(eras2[i].until).startOf("day").valueOf();
-                eras2[i].until = date.valueOf();
-                break;
-            }
-          }
-          return eras2;
-        }
-        function localeErasParse(eraName, format2, strict) {
-          var i, l2, eras2 = this.eras(), name, abbr, narrow;
-          eraName = eraName.toUpperCase();
-          for (i = 0, l2 = eras2.length; i < l2; ++i) {
-            name = eras2[i].name.toUpperCase();
-            abbr = eras2[i].abbr.toUpperCase();
-            narrow = eras2[i].narrow.toUpperCase();
-            if (strict) {
-              switch (format2) {
-                case "N":
-                case "NN":
-                case "NNN":
-                  if (abbr === eraName) {
-                    return eras2[i];
-                  }
-                  break;
-                case "NNNN":
-                  if (name === eraName) {
-                    return eras2[i];
-                  }
-                  break;
-                case "NNNNN":
-                  if (narrow === eraName) {
-                    return eras2[i];
-                  }
-                  break;
-              }
-            } else if ([name, abbr, narrow].indexOf(eraName) >= 0) {
-              return eras2[i];
-            }
-          }
-        }
-        function localeErasConvertYear(era, year) {
-          var dir = era.since <= era.until ? 1 : -1;
-          if (year === void 0) {
-            return hooks(era.since).year();
-          } else {
-            return hooks(era.since).year() + (year - era.offset) * dir;
-          }
-        }
-        function getEraName() {
-          var i, l2, val, eras2 = this.localeData().eras();
-          for (i = 0, l2 = eras2.length; i < l2; ++i) {
-            val = this.clone().startOf("day").valueOf();
-            if (eras2[i].since <= val && val <= eras2[i].until) {
-              return eras2[i].name;
-            }
-            if (eras2[i].until <= val && val <= eras2[i].since) {
-              return eras2[i].name;
-            }
-          }
-          return "";
-        }
-        function getEraNarrow() {
-          var i, l2, val, eras2 = this.localeData().eras();
-          for (i = 0, l2 = eras2.length; i < l2; ++i) {
-            val = this.clone().startOf("day").valueOf();
-            if (eras2[i].since <= val && val <= eras2[i].until) {
-              return eras2[i].narrow;
-            }
-            if (eras2[i].until <= val && val <= eras2[i].since) {
-              return eras2[i].narrow;
-            }
-          }
-          return "";
-        }
-        function getEraAbbr() {
-          var i, l2, val, eras2 = this.localeData().eras();
-          for (i = 0, l2 = eras2.length; i < l2; ++i) {
-            val = this.clone().startOf("day").valueOf();
-            if (eras2[i].since <= val && val <= eras2[i].until) {
-              return eras2[i].abbr;
-            }
-            if (eras2[i].until <= val && val <= eras2[i].since) {
-              return eras2[i].abbr;
-            }
-          }
-          return "";
-        }
-        function getEraYear() {
-          var i, l2, dir, val, eras2 = this.localeData().eras();
-          for (i = 0, l2 = eras2.length; i < l2; ++i) {
-            dir = eras2[i].since <= eras2[i].until ? 1 : -1;
-            val = this.clone().startOf("day").valueOf();
-            if (eras2[i].since <= val && val <= eras2[i].until || eras2[i].until <= val && val <= eras2[i].since) {
-              return (this.year() - hooks(eras2[i].since).year()) * dir + eras2[i].offset;
-            }
-          }
-          return this.year();
-        }
-        function erasNameRegex(isStrict) {
-          if (!hasOwnProp(this, "_erasNameRegex")) {
-            computeErasParse.call(this);
-          }
-          return isStrict ? this._erasNameRegex : this._erasRegex;
-        }
-        function erasAbbrRegex(isStrict) {
-          if (!hasOwnProp(this, "_erasAbbrRegex")) {
-            computeErasParse.call(this);
-          }
-          return isStrict ? this._erasAbbrRegex : this._erasRegex;
-        }
-        function erasNarrowRegex(isStrict) {
-          if (!hasOwnProp(this, "_erasNarrowRegex")) {
-            computeErasParse.call(this);
-          }
-          return isStrict ? this._erasNarrowRegex : this._erasRegex;
-        }
-        function matchEraAbbr(isStrict, locale2) {
-          return locale2.erasAbbrRegex(isStrict);
-        }
-        function matchEraName(isStrict, locale2) {
-          return locale2.erasNameRegex(isStrict);
-        }
-        function matchEraNarrow(isStrict, locale2) {
-          return locale2.erasNarrowRegex(isStrict);
-        }
-        function matchEraYearOrdinal(isStrict, locale2) {
-          return locale2._eraYearOrdinalRegex || matchUnsigned;
-        }
-        function computeErasParse() {
-          var abbrPieces = [], namePieces = [], narrowPieces = [], mixedPieces = [], i, l2, erasName, erasAbbr, erasNarrow2, eras2 = this.eras();
-          for (i = 0, l2 = eras2.length; i < l2; ++i) {
-            erasName = regexEscape(eras2[i].name);
-            erasAbbr = regexEscape(eras2[i].abbr);
-            erasNarrow2 = regexEscape(eras2[i].narrow);
-            namePieces.push(erasName);
-            abbrPieces.push(erasAbbr);
-            narrowPieces.push(erasNarrow2);
-            mixedPieces.push(erasName);
-            mixedPieces.push(erasAbbr);
-            mixedPieces.push(erasNarrow2);
-          }
-          this._erasRegex = new RegExp("^(" + mixedPieces.join("|") + ")", "i");
-          this._erasNameRegex = new RegExp("^(" + namePieces.join("|") + ")", "i");
-          this._erasAbbrRegex = new RegExp("^(" + abbrPieces.join("|") + ")", "i");
-          this._erasNarrowRegex = new RegExp(
-            "^(" + narrowPieces.join("|") + ")",
-            "i"
-          );
-        }
-        addFormatToken(0, ["gg", 2], 0, function() {
-          return this.weekYear() % 100;
-        });
-        addFormatToken(0, ["GG", 2], 0, function() {
-          return this.isoWeekYear() % 100;
-        });
-        function addWeekYearFormatToken(token2, getter) {
-          addFormatToken(0, [token2, token2.length], 0, getter);
-        }
-        addWeekYearFormatToken("gggg", "weekYear");
-        addWeekYearFormatToken("ggggg", "weekYear");
-        addWeekYearFormatToken("GGGG", "isoWeekYear");
-        addWeekYearFormatToken("GGGGG", "isoWeekYear");
-        addRegexToken("G", matchSigned);
-        addRegexToken("g", matchSigned);
-        addRegexToken("GG", match1to2, match22);
-        addRegexToken("gg", match1to2, match22);
-        addRegexToken("GGGG", match1to4, match4);
-        addRegexToken("gggg", match1to4, match4);
-        addRegexToken("GGGGG", match1to6, match6);
-        addRegexToken("ggggg", match1to6, match6);
-        addWeekParseToken(
-          ["gggg", "ggggg", "GGGG", "GGGGG"],
-          function(input2, week, config, token2) {
-            week[token2.substr(0, 2)] = toInt(input2);
-          }
-        );
-        addWeekParseToken(["gg", "GG"], function(input2, week, config, token2) {
-          week[token2] = hooks.parseTwoDigitYear(input2);
-        });
-        function getSetWeekYear(input2) {
-          return getSetWeekYearHelper.call(
-            this,
-            input2,
-            this.week(),
-            this.weekday() + this.localeData()._week.dow,
-            this.localeData()._week.dow,
-            this.localeData()._week.doy
-          );
-        }
-        function getSetISOWeekYear(input2) {
-          return getSetWeekYearHelper.call(
-            this,
-            input2,
-            this.isoWeek(),
-            this.isoWeekday(),
-            1,
-            4
-          );
-        }
-        function getISOWeeksInYear() {
-          return weeksInYear(this.year(), 1, 4);
-        }
-        function getISOWeeksInISOWeekYear() {
-          return weeksInYear(this.isoWeekYear(), 1, 4);
-        }
-        function getWeeksInYear() {
-          var weekInfo = this.localeData()._week;
-          return weeksInYear(this.year(), weekInfo.dow, weekInfo.doy);
-        }
-        function getWeeksInWeekYear() {
-          var weekInfo = this.localeData()._week;
-          return weeksInYear(this.weekYear(), weekInfo.dow, weekInfo.doy);
-        }
-        function getSetWeekYearHelper(input2, week, weekday, dow, doy) {
-          var weeksTarget;
-          if (input2 == null) {
-            return weekOfYear(this, dow, doy).year;
-          } else {
-            weeksTarget = weeksInYear(input2, dow, doy);
-            if (week > weeksTarget) {
-              week = weeksTarget;
-            }
-            return setWeekAll.call(this, input2, week, weekday, dow, doy);
-          }
-        }
-        function setWeekAll(weekYear, week, weekday, dow, doy) {
-          var dayOfYearData = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy), date = createUTCDate(dayOfYearData.year, 0, dayOfYearData.dayOfYear);
-          this.year(date.getUTCFullYear());
-          this.month(date.getUTCMonth());
-          this.date(date.getUTCDate());
-          return this;
-        }
-        addFormatToken("Q", 0, "Qo", "quarter");
-        addRegexToken("Q", match1);
-        addParseToken("Q", function(input2, array) {
-          array[MONTH] = (toInt(input2) - 1) * 3;
-        });
-        function getSetQuarter(input2) {
-          return input2 == null ? Math.ceil((this.month() + 1) / 3) : this.month((input2 - 1) * 3 + this.month() % 3);
-        }
-        addFormatToken("D", ["DD", 2], "Do", "date");
-        addRegexToken("D", match1to2, match1to2NoLeadingZero);
-        addRegexToken("DD", match1to2, match22);
-        addRegexToken("Do", function(isStrict, locale2) {
-          return isStrict ? locale2._dayOfMonthOrdinalParse || locale2._ordinalParse : locale2._dayOfMonthOrdinalParseLenient;
-        });
-        addParseToken(["D", "DD"], DATE);
-        addParseToken("Do", function(input2, array) {
-          array[DATE] = toInt(input2.match(match1to2)[0]);
-        });
-        var getSetDayOfMonth = makeGetSet("Date", true);
-        addFormatToken("DDD", ["DDDD", 3], "DDDo", "dayOfYear");
-        addRegexToken("DDD", match1to3);
-        addRegexToken("DDDD", match3);
-        addParseToken(["DDD", "DDDD"], function(input2, array, config) {
-          config._dayOfYear = toInt(input2);
-        });
-        function getSetDayOfYear(input2) {
-          var dayOfYear = Math.round(
-            (this.clone().startOf("day") - this.clone().startOf("year")) / 864e5
-          ) + 1;
-          return input2 == null ? dayOfYear : this.add(input2 - dayOfYear, "d");
-        }
-        addFormatToken("m", ["mm", 2], 0, "minute");
-        addRegexToken("m", match1to2, match1to2HasZero);
-        addRegexToken("mm", match1to2, match22);
-        addParseToken(["m", "mm"], MINUTE);
-        var getSetMinute = makeGetSet("Minutes", false);
-        addFormatToken("s", ["ss", 2], 0, "second");
-        addRegexToken("s", match1to2, match1to2HasZero);
-        addRegexToken("ss", match1to2, match22);
-        addParseToken(["s", "ss"], SECOND);
-        var getSetSecond = makeGetSet("Seconds", false);
-        addFormatToken("S", 0, 0, function() {
-          return ~~(this.millisecond() / 100);
-        });
-        addFormatToken(0, ["SS", 2], 0, function() {
-          return ~~(this.millisecond() / 10);
-        });
-        addFormatToken(0, ["SSS", 3], 0, "millisecond");
-        addFormatToken(0, ["SSSS", 4], 0, function() {
-          return this.millisecond() * 10;
-        });
-        addFormatToken(0, ["SSSSS", 5], 0, function() {
-          return this.millisecond() * 100;
-        });
-        addFormatToken(0, ["SSSSSS", 6], 0, function() {
-          return this.millisecond() * 1e3;
-        });
-        addFormatToken(0, ["SSSSSSS", 7], 0, function() {
-          return this.millisecond() * 1e4;
-        });
-        addFormatToken(0, ["SSSSSSSS", 8], 0, function() {
-          return this.millisecond() * 1e5;
-        });
-        addFormatToken(0, ["SSSSSSSSS", 9], 0, function() {
-          return this.millisecond() * 1e6;
-        });
-        addRegexToken("S", match1to3, match1);
-        addRegexToken("SS", match1to3, match22);
-        addRegexToken("SSS", match1to3, match3);
-        var token, getSetMillisecond;
-        for (token = "SSSS"; token.length <= 9; token += "S") {
-          addRegexToken(token, matchUnsigned);
-        }
-        function parseMs(input2, array) {
-          array[MILLISECOND] = toInt(("0." + input2) * 1e3);
-        }
-        for (token = "S"; token.length <= 9; token += "S") {
-          addParseToken(token, parseMs);
-        }
-        getSetMillisecond = makeGetSet("Milliseconds", false);
-        addFormatToken("z", 0, 0, "zoneAbbr");
-        addFormatToken("zz", 0, 0, "zoneName");
-        function getZoneAbbr() {
-          return this._isUTC ? "UTC" : "";
-        }
-        function getZoneName() {
-          return this._isUTC ? "Coordinated Universal Time" : "";
-        }
-        var proto = Moment.prototype;
-        proto.add = add;
-        proto.calendar = calendar$1;
-        proto.clone = clone6;
-        proto.diff = diff;
-        proto.endOf = endOf;
-        proto.format = format;
-        proto.from = from2;
-        proto.fromNow = fromNow;
-        proto.to = to2;
-        proto.toNow = toNow;
-        proto.get = stringGet;
-        proto.invalidAt = invalidAt;
-        proto.isAfter = isAfter;
-        proto.isBefore = isBefore;
-        proto.isBetween = isBetween;
-        proto.isSame = isSame;
-        proto.isSameOrAfter = isSameOrAfter;
-        proto.isSameOrBefore = isSameOrBefore;
-        proto.isValid = isValid$2;
-        proto.lang = lang2;
-        proto.locale = locale;
-        proto.localeData = localeData;
-        proto.max = prototypeMax;
-        proto.min = prototypeMin;
-        proto.parsingFlags = parsingFlags;
-        proto.set = stringSet;
-        proto.startOf = startOf;
-        proto.subtract = subtract;
-        proto.toArray = toArray;
-        proto.toObject = toObject;
-        proto.toDate = toDate;
-        proto.toISOString = toISOString;
-        proto.inspect = inspect;
-        if (typeof Symbol !== "undefined" && Symbol.for != null) {
-          proto[Symbol.for("nodejs.util.inspect.custom")] = function() {
-            return "Moment<" + this.format() + ">";
-          };
-        }
-        proto.toJSON = toJSON;
-        proto.toString = toString;
-        proto.unix = unix;
-        proto.valueOf = valueOf;
-        proto.creationData = creationData;
-        proto.eraName = getEraName;
-        proto.eraNarrow = getEraNarrow;
-        proto.eraAbbr = getEraAbbr;
-        proto.eraYear = getEraYear;
-        proto.year = getSetYear;
-        proto.isLeapYear = getIsLeapYear;
-        proto.weekYear = getSetWeekYear;
-        proto.isoWeekYear = getSetISOWeekYear;
-        proto.quarter = proto.quarters = getSetQuarter;
-        proto.month = getSetMonth;
-        proto.daysInMonth = getDaysInMonth;
-        proto.week = proto.weeks = getSetWeek;
-        proto.isoWeek = proto.isoWeeks = getSetISOWeek;
-        proto.weeksInYear = getWeeksInYear;
-        proto.weeksInWeekYear = getWeeksInWeekYear;
-        proto.isoWeeksInYear = getISOWeeksInYear;
-        proto.isoWeeksInISOWeekYear = getISOWeeksInISOWeekYear;
-        proto.date = getSetDayOfMonth;
-        proto.day = proto.days = getSetDayOfWeek;
-        proto.weekday = getSetLocaleDayOfWeek;
-        proto.isoWeekday = getSetISODayOfWeek;
-        proto.dayOfYear = getSetDayOfYear;
-        proto.hour = proto.hours = getSetHour;
-        proto.minute = proto.minutes = getSetMinute;
-        proto.second = proto.seconds = getSetSecond;
-        proto.millisecond = proto.milliseconds = getSetMillisecond;
-        proto.utcOffset = getSetOffset;
-        proto.utc = setOffsetToUTC;
-        proto.local = setOffsetToLocal;
-        proto.parseZone = setOffsetToParsedOffset;
-        proto.hasAlignedHourOffset = hasAlignedHourOffset;
-        proto.isDST = isDaylightSavingTime;
-        proto.isLocal = isLocal;
-        proto.isUtcOffset = isUtcOffset;
-        proto.isUtc = isUtc;
-        proto.isUTC = isUtc;
-        proto.zoneAbbr = getZoneAbbr;
-        proto.zoneName = getZoneName;
-        proto.dates = deprecate(
-          "dates accessor is deprecated. Use date instead.",
-          getSetDayOfMonth
-        );
-        proto.months = deprecate(
-          "months accessor is deprecated. Use month instead",
-          getSetMonth
-        );
-        proto.years = deprecate(
-          "years accessor is deprecated. Use year instead",
-          getSetYear
-        );
-        proto.zone = deprecate(
-          "moment().zone is deprecated, use moment().utcOffset instead. http://momentjs.com/guides/#/warnings/zone/",
-          getSetZone
-        );
-        proto.isDSTShifted = deprecate(
-          "isDSTShifted is deprecated. See http://momentjs.com/guides/#/warnings/dst-shifted/ for more information",
-          isDaylightSavingTimeShifted
-        );
-        function createUnix(input2) {
-          return createLocal(input2 * 1e3);
-        }
-        function createInZone() {
-          return createLocal.apply(null, arguments).parseZone();
-        }
-        function preParsePostFormat(string) {
-          return string;
-        }
-        var proto$1 = Locale2.prototype;
-        proto$1.calendar = calendar2;
-        proto$1.longDateFormat = longDateFormat;
-        proto$1.invalidDate = invalidDate;
-        proto$1.ordinal = ordinal;
-        proto$1.preparse = preParsePostFormat;
-        proto$1.postformat = preParsePostFormat;
-        proto$1.relativeTime = relativeTime;
-        proto$1.pastFuture = pastFuture;
-        proto$1.set = set2;
-        proto$1.eras = localeEras;
-        proto$1.erasParse = localeErasParse;
-        proto$1.erasConvertYear = localeErasConvertYear;
-        proto$1.erasAbbrRegex = erasAbbrRegex;
-        proto$1.erasNameRegex = erasNameRegex;
-        proto$1.erasNarrowRegex = erasNarrowRegex;
-        proto$1.months = localeMonths;
-        proto$1.monthsShort = localeMonthsShort;
-        proto$1.monthsParse = localeMonthsParse;
-        proto$1.monthsRegex = monthsRegex;
-        proto$1.monthsShortRegex = monthsShortRegex;
-        proto$1.week = localeWeek;
-        proto$1.firstDayOfYear = localeFirstDayOfYear;
-        proto$1.firstDayOfWeek = localeFirstDayOfWeek;
-        proto$1.weekdays = localeWeekdays;
-        proto$1.weekdaysMin = localeWeekdaysMin;
-        proto$1.weekdaysShort = localeWeekdaysShort;
-        proto$1.weekdaysParse = localeWeekdaysParse;
-        proto$1.weekdaysRegex = weekdaysRegex;
-        proto$1.weekdaysShortRegex = weekdaysShortRegex;
-        proto$1.weekdaysMinRegex = weekdaysMinRegex;
-        proto$1.isPM = localeIsPM;
-        proto$1.meridiem = localeMeridiem;
-        function get$1(format2, index3, field, setter2) {
-          var locale2 = getLocale(), utc = createUTC().set(setter2, index3);
-          return locale2[field](utc, format2);
-        }
-        function listMonthsImpl(format2, index3, field) {
-          if (isNumber3(format2)) {
-            index3 = format2;
-            format2 = void 0;
-          }
-          format2 = format2 || "";
-          if (index3 != null) {
-            return get$1(format2, index3, field, "month");
-          }
-          var i, out = [];
-          for (i = 0; i < 12; i++) {
-            out[i] = get$1(format2, i, field, "month");
-          }
-          return out;
-        }
-        function listWeekdaysImpl(localeSorted, format2, index3, field) {
-          if (typeof localeSorted === "boolean") {
-            if (isNumber3(format2)) {
-              index3 = format2;
-              format2 = void 0;
-            }
-            format2 = format2 || "";
-          } else {
-            format2 = localeSorted;
-            index3 = format2;
-            localeSorted = false;
-            if (isNumber3(format2)) {
-              index3 = format2;
-              format2 = void 0;
-            }
-            format2 = format2 || "";
-          }
-          var locale2 = getLocale(), shift = localeSorted ? locale2._week.dow : 0, i, out = [];
-          if (index3 != null) {
-            return get$1(format2, (index3 + shift) % 7, field, "day");
-          }
-          for (i = 0; i < 7; i++) {
-            out[i] = get$1(format2, (i + shift) % 7, field, "day");
-          }
-          return out;
-        }
-        function listMonths(format2, index3) {
-          return listMonthsImpl(format2, index3, "months");
-        }
-        function listMonthsShort(format2, index3) {
-          return listMonthsImpl(format2, index3, "monthsShort");
-        }
-        function listWeekdays(localeSorted, format2, index3) {
-          return listWeekdaysImpl(localeSorted, format2, index3, "weekdays");
-        }
-        function listWeekdaysShort(localeSorted, format2, index3) {
-          return listWeekdaysImpl(localeSorted, format2, index3, "weekdaysShort");
-        }
-        function listWeekdaysMin(localeSorted, format2, index3) {
-          return listWeekdaysImpl(localeSorted, format2, index3, "weekdaysMin");
-        }
-        getSetGlobalLocale("en", {
-          eras: [
-            {
-              since: "0001-01-01",
-              until: Infinity,
-              offset: 1,
-              name: "Anno Domini",
-              narrow: "AD",
-              abbr: "AD"
-            },
-            {
-              since: "0000-12-31",
-              until: -Infinity,
-              offset: 1,
-              name: "Before Christ",
-              narrow: "BC",
-              abbr: "BC"
-            }
-          ],
-          dayOfMonthOrdinalParse: /\d{1,2}(th|st|nd|rd)/,
-          ordinal: function(number) {
-            var b = number % 10, output = toInt(number % 100 / 10) === 1 ? "th" : b === 1 ? "st" : b === 2 ? "nd" : b === 3 ? "rd" : "th";
-            return number + output;
-          }
-        });
-        hooks.lang = deprecate(
-          "moment.lang is deprecated. Use moment.locale instead.",
-          getSetGlobalLocale
-        );
-        hooks.langData = deprecate(
-          "moment.langData is deprecated. Use moment.localeData instead.",
-          getLocale
-        );
-        var mathAbs = Math.abs;
-        function abs() {
-          var data2 = this._data;
-          this._milliseconds = mathAbs(this._milliseconds);
-          this._days = mathAbs(this._days);
-          this._months = mathAbs(this._months);
-          data2.milliseconds = mathAbs(data2.milliseconds);
-          data2.seconds = mathAbs(data2.seconds);
-          data2.minutes = mathAbs(data2.minutes);
-          data2.hours = mathAbs(data2.hours);
-          data2.months = mathAbs(data2.months);
-          data2.years = mathAbs(data2.years);
-          return this;
-        }
-        function addSubtract$1(duration, input2, value, direction) {
-          var other = createDuration(input2, value);
-          duration._milliseconds += direction * other._milliseconds;
-          duration._days += direction * other._days;
-          duration._months += direction * other._months;
-          return duration._bubble();
-        }
-        function add$1(input2, value) {
-          return addSubtract$1(this, input2, value, 1);
-        }
-        function subtract$1(input2, value) {
-          return addSubtract$1(this, input2, value, -1);
-        }
-        function absCeil(number) {
-          if (number < 0) {
-            return Math.floor(number);
-          } else {
-            return Math.ceil(number);
-          }
-        }
-        function bubble() {
-          var milliseconds2 = this._milliseconds, days2 = this._days, months3 = this._months, data2 = this._data, seconds2, minutes2, hours2, years2, monthsFromDays;
-          if (!(milliseconds2 >= 0 && days2 >= 0 && months3 >= 0 || milliseconds2 <= 0 && days2 <= 0 && months3 <= 0)) {
-            milliseconds2 += absCeil(monthsToDays(months3) + days2) * 864e5;
-            days2 = 0;
-            months3 = 0;
-          }
-          data2.milliseconds = milliseconds2 % 1e3;
-          seconds2 = absFloor(milliseconds2 / 1e3);
-          data2.seconds = seconds2 % 60;
-          minutes2 = absFloor(seconds2 / 60);
-          data2.minutes = minutes2 % 60;
-          hours2 = absFloor(minutes2 / 60);
-          data2.hours = hours2 % 24;
-          days2 += absFloor(hours2 / 24);
-          monthsFromDays = absFloor(daysToMonths(days2));
-          months3 += monthsFromDays;
-          days2 -= absCeil(monthsToDays(monthsFromDays));
-          years2 = absFloor(months3 / 12);
-          months3 %= 12;
-          data2.days = days2;
-          data2.months = months3;
-          data2.years = years2;
-          return this;
-        }
-        function daysToMonths(days2) {
-          return days2 * 4800 / 146097;
-        }
-        function monthsToDays(months3) {
-          return months3 * 146097 / 4800;
-        }
-        function as(units) {
-          if (!this.isValid()) {
-            return NaN;
-          }
-          var days2, months3, milliseconds2 = this._milliseconds;
-          units = normalizeUnits(units);
-          if (units === "month" || units === "quarter" || units === "year") {
-            days2 = this._days + milliseconds2 / 864e5;
-            months3 = this._months + daysToMonths(days2);
-            switch (units) {
-              case "month":
-                return months3;
-              case "quarter":
-                return months3 / 3;
-              case "year":
-                return months3 / 12;
-            }
-          } else {
-            days2 = this._days + Math.round(monthsToDays(this._months));
-            switch (units) {
-              case "week":
-                return days2 / 7 + milliseconds2 / 6048e5;
-              case "day":
-                return days2 + milliseconds2 / 864e5;
-              case "hour":
-                return days2 * 24 + milliseconds2 / 36e5;
-              case "minute":
-                return days2 * 1440 + milliseconds2 / 6e4;
-              case "second":
-                return days2 * 86400 + milliseconds2 / 1e3;
-              // Math.floor prevents floating point math errors here
-              case "millisecond":
-                return Math.floor(days2 * 864e5) + milliseconds2;
-              default:
-                throw new Error("Unknown unit " + units);
-            }
-          }
-        }
-        function makeAs(alias) {
-          return function() {
-            return this.as(alias);
-          };
-        }
-        var asMilliseconds = makeAs("ms"), asSeconds = makeAs("s"), asMinutes = makeAs("m"), asHours = makeAs("h"), asDays = makeAs("d"), asWeeks = makeAs("w"), asMonths = makeAs("M"), asQuarters = makeAs("Q"), asYears = makeAs("y"), valueOf$1 = asMilliseconds;
-        function clone$1() {
-          return createDuration(this);
-        }
-        function get$2(units) {
-          units = normalizeUnits(units);
-          return this.isValid() ? this[units + "s"]() : NaN;
-        }
-        function makeGetter(name) {
-          return function() {
-            return this.isValid() ? this._data[name] : NaN;
-          };
-        }
-        var milliseconds = makeGetter("milliseconds"), seconds = makeGetter("seconds"), minutes = makeGetter("minutes"), hours = makeGetter("hours"), days = makeGetter("days"), months2 = makeGetter("months"), years = makeGetter("years");
-        function weeks() {
-          return absFloor(this.days() / 7);
-        }
-        var round3 = Math.round, thresholds = {
-          ss: 44,
-          // a few seconds to seconds
-          s: 45,
-          // seconds to minute
-          m: 45,
-          // minutes to hour
-          h: 22,
-          // hours to day
-          d: 26,
-          // days to month/week
-          w: null,
-          // weeks to month
-          M: 11
-          // months to year
-        };
-        function substituteTimeAgo(string, number, withoutSuffix, isFuture, locale2) {
-          return locale2.relativeTime(number || 1, !!withoutSuffix, string, isFuture);
-        }
-        function relativeTime$1(posNegDuration, withoutSuffix, thresholds2, locale2) {
-          var duration = createDuration(posNegDuration).abs(), seconds2 = round3(duration.as("s")), minutes2 = round3(duration.as("m")), hours2 = round3(duration.as("h")), days2 = round3(duration.as("d")), months3 = round3(duration.as("M")), weeks2 = round3(duration.as("w")), years2 = round3(duration.as("y")), a = seconds2 <= thresholds2.ss && ["s", seconds2] || seconds2 < thresholds2.s && ["ss", seconds2] || minutes2 <= 1 && ["m"] || minutes2 < thresholds2.m && ["mm", minutes2] || hours2 <= 1 && ["h"] || hours2 < thresholds2.h && ["hh", hours2] || days2 <= 1 && ["d"] || days2 < thresholds2.d && ["dd", days2];
-          if (thresholds2.w != null) {
-            a = a || weeks2 <= 1 && ["w"] || weeks2 < thresholds2.w && ["ww", weeks2];
-          }
-          a = a || months3 <= 1 && ["M"] || months3 < thresholds2.M && ["MM", months3] || years2 <= 1 && ["y"] || ["yy", years2];
-          a[2] = withoutSuffix;
-          a[3] = +posNegDuration > 0;
-          a[4] = locale2;
-          return substituteTimeAgo.apply(null, a);
-        }
-        function getSetRelativeTimeRounding(roundingFunction) {
-          if (roundingFunction === void 0) {
-            return round3;
-          }
-          if (typeof roundingFunction === "function") {
-            round3 = roundingFunction;
-            return true;
-          }
-          return false;
-        }
-        function getSetRelativeTimeThreshold(threshold, limit) {
-          if (thresholds[threshold] === void 0) {
-            return false;
-          }
-          if (limit === void 0) {
-            return thresholds[threshold];
-          }
-          thresholds[threshold] = limit;
-          if (threshold === "s") {
-            thresholds.ss = limit - 1;
-          }
-          return true;
-        }
-        function humanize(argWithSuffix, argThresholds) {
-          if (!this.isValid()) {
-            return this.localeData().invalidDate();
-          }
-          var withSuffix = false, th = thresholds, locale2, output;
-          if (typeof argWithSuffix === "object") {
-            argThresholds = argWithSuffix;
-            argWithSuffix = false;
-          }
-          if (typeof argWithSuffix === "boolean") {
-            withSuffix = argWithSuffix;
-          }
-          if (typeof argThresholds === "object") {
-            th = Object.assign({}, thresholds, argThresholds);
-            if (argThresholds.s != null && argThresholds.ss == null) {
-              th.ss = argThresholds.s - 1;
-            }
-          }
-          locale2 = this.localeData();
-          output = relativeTime$1(this, !withSuffix, th, locale2);
-          if (withSuffix) {
-            output = locale2.pastFuture(+this, output);
-          }
-          return locale2.postformat(output);
-        }
-        var abs$1 = Math.abs;
-        function sign2(x) {
-          return (x > 0) - (x < 0) || +x;
-        }
-        function toISOString$1() {
-          if (!this.isValid()) {
-            return this.localeData().invalidDate();
-          }
-          var seconds2 = abs$1(this._milliseconds) / 1e3, days2 = abs$1(this._days), months3 = abs$1(this._months), minutes2, hours2, years2, s2, total = this.asSeconds(), totalSign, ymSign, daysSign, hmsSign;
-          if (!total) {
-            return "P0D";
-          }
-          minutes2 = absFloor(seconds2 / 60);
-          hours2 = absFloor(minutes2 / 60);
-          seconds2 %= 60;
-          minutes2 %= 60;
-          years2 = absFloor(months3 / 12);
-          months3 %= 12;
-          s2 = seconds2 ? seconds2.toFixed(3).replace(/\.?0+$/, "") : "";
-          totalSign = total < 0 ? "-" : "";
-          ymSign = sign2(this._months) !== sign2(total) ? "-" : "";
-          daysSign = sign2(this._days) !== sign2(total) ? "-" : "";
-          hmsSign = sign2(this._milliseconds) !== sign2(total) ? "-" : "";
-          return totalSign + "P" + (years2 ? ymSign + years2 + "Y" : "") + (months3 ? ymSign + months3 + "M" : "") + (days2 ? daysSign + days2 + "D" : "") + (hours2 || minutes2 || seconds2 ? "T" : "") + (hours2 ? hmsSign + hours2 + "H" : "") + (minutes2 ? hmsSign + minutes2 + "M" : "") + (seconds2 ? hmsSign + s2 + "S" : "");
-        }
-        var proto$2 = Duration2.prototype;
-        proto$2.isValid = isValid$1;
-        proto$2.abs = abs;
-        proto$2.add = add$1;
-        proto$2.subtract = subtract$1;
-        proto$2.as = as;
-        proto$2.asMilliseconds = asMilliseconds;
-        proto$2.asSeconds = asSeconds;
-        proto$2.asMinutes = asMinutes;
-        proto$2.asHours = asHours;
-        proto$2.asDays = asDays;
-        proto$2.asWeeks = asWeeks;
-        proto$2.asMonths = asMonths;
-        proto$2.asQuarters = asQuarters;
-        proto$2.asYears = asYears;
-        proto$2.valueOf = valueOf$1;
-        proto$2._bubble = bubble;
-        proto$2.clone = clone$1;
-        proto$2.get = get$2;
-        proto$2.milliseconds = milliseconds;
-        proto$2.seconds = seconds;
-        proto$2.minutes = minutes;
-        proto$2.hours = hours;
-        proto$2.days = days;
-        proto$2.weeks = weeks;
-        proto$2.months = months2;
-        proto$2.years = years;
-        proto$2.humanize = humanize;
-        proto$2.toISOString = toISOString$1;
-        proto$2.toString = toISOString$1;
-        proto$2.toJSON = toISOString$1;
-        proto$2.locale = locale;
-        proto$2.localeData = localeData;
-        proto$2.toIsoString = deprecate(
-          "toIsoString() is deprecated. Please use toISOString() instead (notice the capitals)",
-          toISOString$1
-        );
-        proto$2.lang = lang2;
-        addFormatToken("X", 0, 0, "unix");
-        addFormatToken("x", 0, 0, "valueOf");
-        addRegexToken("x", matchSigned);
-        addRegexToken("X", matchTimestamp);
-        addParseToken("X", function(input2, array, config) {
-          config._d = new Date(parseFloat(input2) * 1e3);
-        });
-        addParseToken("x", function(input2, array, config) {
-          config._d = new Date(toInt(input2));
-        });
-        hooks.version = "2.30.1";
-        setHookCallback(createLocal);
-        hooks.fn = proto;
-        hooks.min = min2;
-        hooks.max = max2;
-        hooks.now = now2;
-        hooks.utc = createUTC;
-        hooks.unix = createUnix;
-        hooks.months = listMonths;
-        hooks.isDate = isDate2;
-        hooks.locale = getSetGlobalLocale;
-        hooks.invalid = createInvalid;
-        hooks.duration = createDuration;
-        hooks.isMoment = isMoment;
-        hooks.weekdays = listWeekdays;
-        hooks.parseZone = createInZone;
-        hooks.localeData = getLocale;
-        hooks.isDuration = isDuration;
-        hooks.monthsShort = listMonthsShort;
-        hooks.weekdaysMin = listWeekdaysMin;
-        hooks.defineLocale = defineLocale;
-        hooks.updateLocale = updateLocale;
-        hooks.locales = listLocales;
-        hooks.weekdaysShort = listWeekdaysShort;
-        hooks.normalizeUnits = normalizeUnits;
-        hooks.relativeTimeRounding = getSetRelativeTimeRounding;
-        hooks.relativeTimeThreshold = getSetRelativeTimeThreshold;
-        hooks.calendarFormat = getCalendarFormat;
-        hooks.prototype = proto;
-        hooks.HTML5_FMT = {
-          DATETIME_LOCAL: "YYYY-MM-DDTHH:mm",
-          // <input type="datetime-local" />
-          DATETIME_LOCAL_SECONDS: "YYYY-MM-DDTHH:mm:ss",
-          // <input type="datetime-local" step="1" />
-          DATETIME_LOCAL_MS: "YYYY-MM-DDTHH:mm:ss.SSS",
-          // <input type="datetime-local" step="0.001" />
-          DATE: "YYYY-MM-DD",
-          // <input type="date" />
-          TIME: "HH:mm",
-          // <input type="time" />
-          TIME_SECONDS: "HH:mm:ss",
-          // <input type="time" step="1" />
-          TIME_MS: "HH:mm:ss.SSS",
-          // <input type="time" step="0.001" />
-          WEEK: "GGGG-[W]WW",
-          // <input type="week" />
-          MONTH: "YYYY-MM"
-          // <input type="month" />
-        };
-        return hooks;
-      });
-    }
-  });
 
   // node_modules/hangul-romanization/dist/conversionSystems/revisedRomanizationOfKorean.js
   var require_revisedRomanizationOfKorean = __commonJS({
@@ -8169,7 +4163,7 @@
             throw new Error("Invalid z-index number parsed");
           }
         };
-        var time = {
+        var time2 = {
           name: "time",
           parse: function(_context, value) {
             if (value.type === 15) {
@@ -8386,7 +4380,7 @@
           type: 1,
           parse: function(context, tokens) {
             return tokens.filter(isDimensionToken).map(function(token) {
-              return time.parse(context, token);
+              return time2.parse(context, token);
             });
           }
         };
@@ -8730,7 +4724,7 @@
                   var value_1 = parser.parseComponentValue();
                   return isLengthPercentage(value_1) ? value_1 : ZERO_LENGTH;
                 case "time":
-                  return time.parse(context, parser.parseComponentValue());
+                  return time2.parse(context, parser.parseComponentValue());
               }
               break;
           }
@@ -20229,9 +16223,6 @@
     return out;
   }
 
-  // src/build/trans.js
-  var import_moment6 = __toESM(require_moment(), 1);
-
   // node_modules/@popperjs/core/lib/enums.js
   var top = "top";
   var bottom = "bottom";
@@ -25254,3521 +21245,6 @@
 
   // src/build/tools.js
   var hangulRomanization = __toESM(require_dist(), 1);
-  function hex_to_hsl(hex2) {
-    let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex2);
-    let r = parseInt(result[1], 16);
-    let g = parseInt(result[2], 16);
-    let b = parseInt(result[3], 16);
-    r /= 255, g /= 255, b /= 255;
-    let max2 = Math.max(r, g, b), min2 = Math.min(r, g, b);
-    let h, s2, l2 = (max2 + min2) / 2;
-    if (max2 == min2) {
-      h = s2 = 0;
-    } else {
-      let d = max2 - min2;
-      s2 = l2 > 0.5 ? d / (2 - max2 - min2) : d / (max2 + min2);
-      switch (max2) {
-        case r:
-          h = (g - b) / d + (g < b ? 6 : 0);
-          break;
-        case g:
-          h = (b - r) / d + 2;
-          break;
-        case b:
-          h = (r - g) / d + 4;
-          break;
-      }
-      h /= 6;
-    }
-    h = Math.round(h * 360);
-    s2 = s2 * 100;
-    s2 = Math.round(s2);
-    l2 = l2 * 100;
-    l2 = Math.round(l2);
-    console.log("converted", hex2, "to", h, s2, l2);
-    return {
-      h,
-      s: s2,
-      l: l2
-    };
-  }
-  function rgb_to_hsl(r, g, b) {
-    let hex2 = rgb_to_hex(r, g, b);
-    return hex_to_hsl(hex2);
-  }
-  function rgb_to_hex(r, g, b) {
-    return "#" + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
-  }
-  function comp_to_hex(comp) {
-    let hex2 = comp.toString(16);
-    return hex2.length == 1 ? "0" + hex2 : hex2;
-  }
-  function clamp_sat2(sat) {
-    if (sat > 1.5)
-      return 1.5;
-    return round_two(sat);
-  }
-  function clamp_lit(sat, lit) {
-    if (sat >= 1.3 && lit < 0.8)
-      return 0.8;
-    return round_two(lit);
-  }
-  function round_two(value) {
-    return Math.round(value * 100) / 100;
-  }
-  function clean_number(string) {
-    return int(
-      string.replaceAll(",", "").replaceAll(".", "")
-    );
-  }
-  function sanitise(text3, method = "+") {
-    return encodeURIComponent(text3.replaceAll(" ", method));
-  }
-  function sanitise_text(text3) {
-    return text3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-  }
-  function desanitise(text3, method = "+") {
-    return decodeURIComponent(text3).replaceAll(method, " ");
-  }
-  function return_artist_from_track(url, is_album) {
-    let split = url.split("/");
-    let length = split.length - 1;
-    let desanitised;
-    if (is_album)
-      desanitised = desanitise(split[length - 1]);
-    else
-      desanitised = desanitise(split[length - 2]);
-    let passes = 0;
-    while (/%[0-9A-Fa-f]{2}/.test(desanitised) && passes < 5) {
-      desanitised = desanitise(desanitised, "+");
-      passes++;
-    }
-    return desanitised;
-  }
-  function return_artist_from_generic(url) {
-    let split = url.split("/");
-    let length = split.length - 1;
-    if (split[length - 1] != "_")
-      return desanitise(split[length - 1]);
-    else
-      return desanitise(split[length - 2]);
-  }
-  function interpolate_hue(current, next, proximity) {
-    current = (current % 360 + 360) % 360;
-    next = (next % 360 + 360) % 360;
-    let diff = next - current;
-    if (diff > 180) {
-      diff -= 360;
-    } else if (diff < -180) {
-      diff += 360;
-    }
-    let interpolated = current + diff * proximity;
-    return (interpolated % 360 + 360) % 360;
-  }
-  function lazy(elem, func, options = {}) {
-    const {
-      threshold = 0.1,
-      rootMargin = "50px"
-    } = options;
-    const observer = new IntersectionObserver((entries2) => {
-      entries2.forEach((entry) => {
-        if (entry.isIntersecting) {
-          log("now allowing load", "lazy", "info", { elem, options });
-          func(elem);
-          observer.unobserve(elem);
-        }
-      });
-    }, { threshold, rootMargin });
-    observer.observe(elem);
-  }
-  function copy(text3) {
-    navigator.clipboard.writeText(text3).then(() => {
-      log("copied", "copy", "info", { text: text3 });
-      notify({
-        id: "copy",
-        title: tl(trans.copied_to_clipboard),
-        icon: "icon-16-copy"
-      });
-    });
-  }
-  function download_with_progress(url, func) {
-    return new Promise((resolve2, reject) => {
-      let xhr = new XMLHttpRequest();
-      xhr.open("GET", url, true);
-      xhr.responseType = "blob";
-      xhr.onprogress = (event3) => {
-        if (event3.lengthComputable) {
-          const percent = Math.round(event3.loaded / event3.total * 100);
-          func(percent);
-          log(`downloading ${percent}%`, "download", "info", { url });
-        }
-      };
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          resolve2(xhr.response);
-          log(`downloaded ${url}`, "download");
-        } else {
-          reject(new Error(`download failed: ${xhr.status}`));
-          log(`download failed: ${xhr.status}`, "download", "error", { url });
-        }
-      };
-      xhr.onerror = () => {
-        reject(new Error("network error"));
-        log("network error", "download", "error", { url });
-      };
-      xhr.send();
-    });
-  }
-  function pad2(num) {
-    return String(num).padStart(2, "0");
-  }
-  function convert_gif_to_png(url) {
-    const available_hosts = ["www.last.fm", "lastfm.freetls.fastly.net"];
-    const link = new URL(url, `https://www.last.fm${root}`);
-    if (!available_hosts.includes(link.hostname))
-      return Promise.reject(new Error("url is not in valid hosts list: " + link.hostname));
-    return new Promise((resolve2, reject) => {
-      const image = html.node`
-            <img crossorigin="anonymous" src=${url}>
-        `;
-      console.info("image", image);
-      image.onload = () => {
-        const canvas = html.node`
-                <canvas width=${image.width} height=${image.height} />
-            `;
-        console.info("image canvas", canvas);
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(image, 0, 0);
-        resolve2(canvas.toDataURL("image/png"));
-      };
-      image.onerror = reject;
-    });
-  }
-  function control_gif_pause(image, override = false) {
-    let processed = image.getAttribute("data-gif-pause");
-    if (processed) return;
-    image.setAttribute("data-gif-pause", "true");
-    let setting2 = settings.static_gifs;
-    if (override) setting2 = "never";
-    if (setting2 == "always") return;
-    const original = image.src;
-    convert_gif_to_png(original).then((paused) => {
-      if (setting2 == "never") {
-        image.src = paused;
-        return;
-      }
-      image.addEventListener("mouseenter", () => {
-        image.src = original;
-      });
-      image.addEventListener("mouseleave", () => {
-        image.src = paused;
-      });
-      image.src = paused;
-      log("processed url", "image", "log", { original, paused });
-    }).catch((e) => {
-      log("failed to process url", "image", "error", { original });
-      console.error(e);
-    });
-  }
-  function is_link_external(url) {
-    try {
-      const link = new URL(url, window.location.origin);
-      return link.hostname != window.location.hostname;
-    } catch {
-      return false;
-    }
-  }
-  function romanise(text3) {
-    if (/[\u30A0-\u30FF\u3040-\u309F]/.test(text3) && settings.romanise_jp)
-      return title_case(toRomaji(text3));
-    if (/[\uAC00-\uD7AF]/.test(text3) && settings.romanise_ko)
-      return title_case(hangulRomanization.convert(text3));
-    return text3;
-  }
-  function title_case(text3) {
-    return text3.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
-  }
-  function int(num) {
-    return parseInt(num.replace(/\u00A0/g, ""));
-  }
-
-  // src/build/music.js
-  var artist_corrections = {};
-  var album_track_corrections = {};
-  var combined_artists = {};
-  var ranks = {
-    15: {
-      start: 6e4,
-      hue: 240,
-      sat: 1.15,
-      lit: 1.1
-    },
-    14: {
-      start: 44e3,
-      hue: 260,
-      sat: 1.2,
-      lit: 1.15
-    },
-    13: {
-      start: 32e3,
-      hue: 280,
-      sat: 1.25,
-      lit: 1.17
-    },
-    12: {
-      start: 26e3,
-      hue: 300,
-      sat: 1.2,
-      lit: 1.2
-    },
-    11: {
-      start: 17e3,
-      hue: 320,
-      sat: 1.15,
-      lit: 1.22
-    },
-    10: {
-      start: 12e3,
-      hue: 0,
-      sat: 1.25,
-      lit: 1.2
-    },
-    9: {
-      start: 8e3,
-      hue: 15,
-      sat: 1.25,
-      lit: 1.22
-    },
-    8: {
-      start: 5300,
-      hue: 30,
-      sat: 1.2,
-      lit: 1.23
-    },
-    7: {
-      start: 4e3,
-      hue: 45,
-      sat: 1.15,
-      lit: 1.25
-    },
-    6: {
-      start: 2250,
-      hue: 60,
-      sat: 1.1,
-      lit: 1.25
-    },
-    5: {
-      start: 1500,
-      hue: 80,
-      sat: 1.05,
-      lit: 1.23
-    },
-    4: {
-      start: 1e3,
-      hue: 100,
-      sat: 1,
-      lit: 1.2
-    },
-    3: {
-      start: 500,
-      hue: 120,
-      sat: 0.95,
-      lit: 1.17
-    },
-    2: {
-      start: 300,
-      hue: 150,
-      sat: 1,
-      lit: 1.15
-    },
-    1: {
-      start: 100,
-      hue: 180,
-      sat: 1.05,
-      lit: 1.13
-    },
-    0: {
-      start: 0,
-      hue: 200,
-      sat: 1.1,
-      lit: 1.17
-    }
-  };
-  var includes = {
-    guests: [
-      "feat.",
-      "featuring",
-      "- feat",
-      "[feat.",
-      "- with",
-      "(with",
-      "[with",
-      "w/ ",
-      "ft.",
-      "ref.",
-      "(hosted by"
-    ],
-    versions: [
-      "(taylor",
-      "- spotify singles",
-      "[taylor",
-      "(+",
-      "- vers\xE3o",
-      "(vers\xE3o",
-      "[vers\xE3o",
-      "- without dialogue",
-      "(without dialogue",
-      "[without dialogue",
-      "- no dialogue",
-      "(no dialogue",
-      "[no dialogue",
-      "- pop version",
-      "(pop version",
-      "[pop version",
-      "- rock version",
-      "(rock version",
-      "[rock version",
-      "- pop mix",
-      "(pop mix",
-      "[pop mix",
-      "- emo version",
-      "(emo version",
-      "[emo version",
-      "- version",
-      "(version",
-      "[version"
-    ],
-    remasters: [
-      "- remaster",
-      "(remaster",
-      "[remaster",
-      "- remasterizado",
-      "(remasterizado",
-      "[remasterizado",
-      ": high resolution remasters",
-      "- high resolution remasters",
-      "(high resolution remasters",
-      ": the high resolution remasters",
-      "- the high resolution remasters",
-      "(the high resolution remasters"
-      // Pink Floyd bootleg remaster boxsets
-    ],
-    mixes: [
-      "- devonshire mix",
-      "(devonshire mix",
-      "mike dean master",
-      "- remix",
-      "(remix",
-      "[remix",
-      "- live",
-      "(live",
-      "- ao vivo",
-      "(ao vivo",
-      "[ao vivo",
-      "- en vivo",
-      "(en vivo",
-      "[en vivo",
-      "- multishow ao vivo",
-      "(multishow ao vivo",
-      "[multishow ao vivo",
-      "- demo",
-      "(demo",
-      "- rehearsal",
-      "(rehearsal",
-      "- sample clearance",
-      "(sample clearance",
-      "[sample clearance",
-      "- home demo",
-      "(home demo",
-      "- solo acoustic",
-      "(solo acoustic",
-      "- acoustic",
-      "(acoustic",
-      "- alternative",
-      "(alternative",
-      "- chopped",
-      "(chopped",
-      "[chopped",
-      "(kate",
-      "(asmr",
-      "(agressive",
-      "(aggressive",
-      "brazilian phonk",
-      // lol
-      "- sped up",
-      "(sped up",
-      "[sped up",
-      "- slow",
-      "(slow",
-      "[slow",
-      "a. g. cook remix",
-      "- offline",
-      "- og mix",
-      "- club edit",
-      "(club edit",
-      "- radio",
-      "(radio",
-      "- orchestral",
-      "(orchestral",
-      "- self-titled demo",
-      "(self-titled demo",
-      "- album version",
-      "(album version",
-      "[album version",
-      "- us album version",
-      "(us album version",
-      "[us album version",
-      "- uk album version",
-      "(uk album version",
-      "[uk album version",
-      "- twilight soundtrack version",
-      "- transformers soundtrack version",
-      "- studio",
-      "(studio",
-      "[studio",
-      "(fifty shades darker",
-      "- j stax radio",
-      // fearless international version
-      "(10 minute",
-      "- old timey",
-      "(old timey",
-      "[old timey",
-      "- official english",
-      "(official english",
-      "[official english",
-      "- english version",
-      "(english version",
-      "[english version",
-      "- japanese version",
-      "(japanese version",
-      "[japanese version",
-      "- spanish version",
-      "(spanish version",
-      "[spanish version",
-      "- soundtrack",
-      "(soundtrack",
-      "[soundtrack",
-      "- the ultimate mix",
-      "(the ultimate mix",
-      "[the ultimate mix",
-      "- short edit",
-      "(short edit",
-      "short edit",
-      "- short version",
-      "(short version",
-      "[short version",
-      "- long version",
-      "(long version",
-      "[long version",
-      "- full length",
-      "(full length",
-      "[full length",
-      "[over now",
-      // billie eilish l'amour de ma vie
-      "- the remix",
-      "(the remix",
-      "[the remix",
-      "(unfinished original recordings of de-loused in the comatorium",
-      "[unfinished original recordings of de-loused in the comatorium",
-      "- unfinished original recordings of de-loused in the comatorium",
-      // landscape tantrums
-      "- esher",
-      "(esher",
-      "[esher",
-      "- first",
-      "(first",
-      "[first",
-      "- hummed",
-      "(hummed",
-      "[hummed",
-      "- second",
-      "(second",
-      "[second",
-      "- songwriting",
-      "(songwriting",
-      "[songwriting",
-      "- strings",
-      "(strings",
-      "[strings",
-      "- take",
-      "(take",
-      "[take",
-      "- unnumbered",
-      "(unnumbered",
-      "[unnumbered",
-      "- vocal",
-      "(vocal",
-      "[vocal",
-      "- without",
-      "(without",
-      "[without",
-      "- alternate version",
-      "(alternate version",
-      "[alternate version",
-      "- cla mix",
-      "(cla mix",
-      "[cla mix",
-      "- chris lord-alge mix",
-      "(chris lord-alge mix",
-      "[chris lord-alge mix",
-      "- mono",
-      "(mono",
-      "[mono",
-      "- stereo",
-      "(stereo",
-      "[stereo"
-    ],
-    mixes_numbers: [
-      "(v1",
-      "(v2",
-      "(v3",
-      "(v4",
-      "(v5",
-      "(v6",
-      "(v7",
-      "(v8",
-      "(v9",
-      "[v1",
-      "[v2",
-      "[v3",
-      "[v4",
-      "[v5",
-      "[v6",
-      "[v7",
-      "[v8",
-      "[v9",
-      "- mix 1",
-      "- mix 2",
-      "- mix 3",
-      "- mix 4",
-      "- mix 5",
-      "- mix 6",
-      "- mix 7",
-      "- mix 8",
-      "- mix 9",
-      "(mix 1",
-      "(mix 2",
-      "(mix 3",
-      "(mix 4",
-      "(mix 5",
-      "(mix 6",
-      "(mix 7",
-      "(mix 8",
-      "(mix 9"
-    ],
-    stems: [
-      "- acapella",
-      "(acapella",
-      "[acapella",
-      "- a cappella",
-      "(a cappella",
-      "[a cappella",
-      "- instrumental",
-      "(instrumental",
-      "[instrumental",
-      "- session",
-      "(session",
-      "[session",
-      "- studio session",
-      "(studio session",
-      "[studio session",
-      "- smart session",
-      "(smart session",
-      "[smart session",
-      "- boombox",
-      "(boombox",
-      "- mtv unplugged",
-      "(mtv unplugged",
-      "- unplugged",
-      "(unplugged",
-      "- ac\xFAstico",
-      "- \xE1custico",
-      "(ac\xFAstico",
-      "[ac\xFAstico",
-      "- the long pond studio",
-      "(the long pond studio",
-      "- recorded at long pond studio",
-      "(recorded at long pond studio"
-    ],
-    bonus: [
-      "- intro",
-      "(intro",
-      "[intro",
-      "- outro",
-      "(outro",
-      "[outro",
-      "dean outro",
-      "- interlude",
-      "(interlude",
-      "[interlude",
-      "- bonus",
-      "(bonus",
-      "[bonus",
-      "- edit",
-      "(edit",
-      "[edit",
-      "- from",
-      "(from",
-      "[from",
-      "- music from",
-      "(music from",
-      "- skit",
-      "(skit",
-      "- original",
-      "(original",
-      "[original",
-      "- deluxe",
-      "(deluxe",
-      "[deluxe",
-      "- digital deluxe",
-      "(digital deluxe",
-      "[digital deluxe",
-      "- complete edition",
-      "(complete edition",
-      "[complete edition",
-      ": edi\xE7\xE3o",
-      "- edi\xE7\xE3o",
-      "(edi\xE7\xE3o",
-      "[edi\xE7\xE3o",
-      "- edicion",
-      "- edici\xF3n",
-      "(edicion",
-      "(edici\xF3n",
-      "- extended",
-      "(extended",
-      "[extended",
-      "- the extended edition",
-      // denzel
-      "- expanded",
-      "(expanded",
-      "[expanded",
-      "- anniversary",
-      "(anniversary",
-      "[anniversary",
-      "- b-side",
-      "- c-side",
-      "(b-side",
-      "(c-side",
-      "- lp",
-      "- ep",
-      "(lp",
-      "(ep",
-      "- single",
-      "(single",
-      "- mixtape",
-      "(mixtape",
-      "- box set",
-      "(box set",
-      "- spilled",
-      "(spilled",
-      "[spilled",
-      // olivia rodrigo
-      "- slightly deluxe",
-      "(slightly deluxe",
-      "[slightly deluxe",
-      // ariana grande
-      ": self-titled deluxe",
-      "(self-titled deluxe",
-      "[self-titled deluxe",
-      // paramore
-      ": the anthology",
-      "(the anthology",
-      "[the anthology",
-      "- 3am edition",
-      "(3am edition",
-      "[3am edition",
-      "- the til dawn edition",
-      "(the til dawn edition",
-      "[the til dawn edition",
-      "- til dawn edition",
-      "(til dawn edition",
-      "[til dawn edition",
-      "- late night edition",
-      "(late night edition",
-      "[late night edition",
-      "- the late night edition",
-      "(the late night edition",
-      "[the late night edition",
-      "- big machine radio release special",
-      "(big machine radio release special",
-      "[big machine radio release special",
-      ": platinum",
-      "- platinum",
-      "(platinum",
-      "[platinum",
-      "- international",
-      "(international",
-      "[international",
-      // taylor swift
-      "- uk deluxe",
-      "(uk deluxe",
-      "[uk deluxe",
-      "- magic city edition",
-      "(magic city edition",
-      "[magic city edition",
-      "- japan edition",
-      "(japan edition",
-      "[japan edition",
-      // added edition to some for safety
-      "- japan version",
-      "(japan version",
-      "[japan version",
-      "- australian version",
-      "(australian version",
-      "[australian version",
-      "- after school - deluxe",
-      "(after school - deluxe",
-      "[after school - deluxe",
-      // melanie martinez
-      "- revised",
-      "(revised",
-      "[revised",
-      ": the complete",
-      "(the complete",
-      "[the complete",
-      "- the moonlight",
-      "(the moonlight",
-      "[the moonlight",
-      "- moonlight",
-      "(moonlight",
-      "[moonlight",
-      // dua lipa
-      "- tour",
-      "(tour",
-      "[tour",
-      "music from and inspired by",
-      // on the end of black panther the album
-      "- music inspired",
-      "(music inspired",
-      "[music inspired",
-      "- featured in",
-      "(featured in",
-      "[featured in",
-      "- best weekend ever edition",
-      "(best weekend ever edition",
-      "[best weekend ever edition",
-      "- double disc",
-      "(double disc",
-      "[double disc",
-      "- reissue",
-      "(reissue",
-      "[reissue",
-      "(12 reg. tracks",
-      // confessions madonna
-      "- special",
-      "(special",
-      "[special",
-      "- highlights from",
-      "(highlights from",
-      "[highlights from",
-      "- disc 1",
-      "- disc 2",
-      "- disc 3",
-      "- disc 4",
-      "- disc 5",
-      "- disc 6",
-      "- disc 7",
-      "- disc 8",
-      "- disc 9",
-      "(disc 1",
-      "(disc 2",
-      "(disc 3",
-      "(disc 4",
-      "(disc 5",
-      "(disc 6",
-      "(disc 7",
-      "(disc 8",
-      "(disc 9",
-      "[disc 1",
-      "[disc 2",
-      "[disc 3",
-      "[disc 4",
-      "[disc 5",
-      "[disc 6",
-      "[disc 7",
-      "[disc 8",
-      "[disc 9",
-      //,
-      "- 19",
-      "- 20",
-      "(19",
-      "(20",
-      "[19",
-      "[20",
-      "- 10th",
-      "- 25th",
-      "- 30th",
-      "- 35th",
-      "- 40th",
-      "- 50th",
-      "- 60th",
-      "(10th",
-      "(25th",
-      "(30th",
-      "(35th",
-      "(40th",
-      "(50th",
-      "(60th",
-      "- tenth anniversary",
-      "fifth anniversary",
-      "(tenth anniversary",
-      "(fifth anniversary",
-      ": the tenth anniversary",
-      "the tenth anniversary",
-      // lady gaga born this way
-      "- 10 year",
-      "- 25 year",
-      "-30 year",
-      "-35 year",
-      "- 40 year",
-      "- 50 year",
-      "- 60 year",
-      "(10 year",
-      "(25 year",
-      "(30 year",
-      "(35 year",
-      "(40 year",
-      "(50 year",
-      "(60 year",
-      "- transition",
-      "(transition",
-      "[transition",
-      "- reprise",
-      "(reprise",
-      "[reprise",
-      "(director"
-    ],
-    form: ["(clean", "[clean", "(explicit", "[explicit", "(spotify)"]
-  };
-  var clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify|(feat\.|ft\.|featuring|with)[^)\]]*)\s*[\])]?/gi;
-  function clean_title(title) {
-    return title.replace(clean_title_regex, "").replace(/\u2010/g, "-");
-  }
-
-  // src/build/seasonal.js
-  var seasonal_timer = {
-    state: void 0
-  };
-  var stored_season = {
-    id: "none",
-    new_years_eve: false
-  };
-  var seasonal_events = [
-    {
-      id: "new_years",
-      start: "y0-01-01T00:00:00{offset}",
-      end: "y0-01-14T23:59:59{offset}",
-      snowflakes: {
-        state: true,
-        count: 90
-      }
-    },
-    {
-      id: "easter",
-      start: "y0-04-02T00:00:00{offset}",
-      end: "y0-04-30T23:59:59{offset}",
-      snowflakes: {
-        state: false
-      }
-    },
-    {
-      id: "pride",
-      start: "y0-05-31T00:00:00{offset}",
-      end: "y0-07-07T23:59:59{offset}",
-      snowflakes: {
-        state: false
-      }
-    },
-    {
-      id: "halloween",
-      start: "y0-09-22T00:00:00{offset}",
-      end: "y0-11-01T11:59:59{offset}",
-      snowflakes: {
-        state: false
-      }
-    },
-    {
-      id: "pre_fall",
-      start: "y0-11-01T12:00:00{offset}",
-      end: "y0-11-12T23:59:59{offset}",
-      snowflakes: {
-        state: true,
-        count: 12
-      }
-    },
-    {
-      id: "fall",
-      start: "y0-11-13T00:00:00{offset}",
-      end: "y0-11-22T23:59:59{offset}",
-      snowflakes: {
-        state: true,
-        count: 40
-      }
-    },
-    {
-      id: "christmas",
-      start: "y0-11-23T00:00:00{offset}",
-      end: "y0-12-31T23:59:59{offset}",
-      snowflakes: {
-        state: true,
-        count: 160
-      }
-    }
-  ];
-
-  // src/build/sponsor.js
-  var sponsor_list = {
-    latest: 0,
-    sponsors: [],
-    sponsors_one_time: [],
-    sponsor_count_remove: 0,
-    sponsor_account: "",
-    sponsor_link: "",
-    special: [],
-    badges: {}
-  };
-
-  // src/components/dialog.js
-  function load_dialogs() {
-    let dialogs2 = document.createElement("div");
-    dialogs2.classList.add("bleh-modals");
-    document.body.appendChild(dialogs2);
-    page.structure.dialogs = dialogs2;
-  }
-  function dialog({
-    id = "",
-    title,
-    subtitle,
-    body = html.node``,
-    dismiss = true,
-    type = "",
-    has_overlays = true,
-    replace = false,
-    replace_if_possible = true,
-    replace_id = "",
-    allow_scroll = false,
-    colourful = false,
-    colourful_bg = false,
-    handle_escape_manually = false
-  }) {
-    log(`creating ${id}`, "window", "info", {
-      id,
-      title,
-      subtitle,
-      body,
-      dismiss,
-      type,
-      has_overlays,
-      replace,
-      replace_id,
-      allow_scroll,
-      colourful,
-      colourful_bg,
-      handle_escape_manually
-    });
-    if (replace && replace_if_possible)
-      replace_if_possible = false;
-    if (replace_if_possible && Object.keys(dialogs).length > 0) {
-      replace = true;
-      for (let dialog2 in dialogs) {
-        replace_id = dialog2;
-        break;
-      }
-    }
-    let modal = html.node`
-        <div
-        class=${[
-      "bleh-modal",
-      colourful ? "colorful" : "",
-      colourful_bg ? "colourful-bg" : ""
-    ].join(" ")}
-        role="dialog"
-        data-modal-id=${id}
-        data-modal-has-overlays=${has_overlays}
-        data-modal-type=${type}
-        />
-    `;
-    if (title) {
-      modal.setAttribute("aria-labelledby", "modal_title");
-      modal.appendChild(html.node`
-            <div class="bleh-modal-title" id="modal_title">
-                <h1>${title}</h1>
-                ${subtitle ? html.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
-            </div>
-        `);
-    }
-    if (dismiss) {
-      let modal_close = document.createElement("button");
-      modal_close.classList.add("modal-close-button");
-      modal_close.setAttribute("onclick", `_dialog_rm({id: "${id}"})`);
-      modal.appendChild(modal_close);
-      page.structure.dialogs.setAttribute("onclick", "_dialog_rm({all: true, modal_bg: true})");
-    } else {
-      page.structure.dialogs.removeAttribute("onclick");
-    }
-    if (dismiss && !handle_escape_manually) {
-      document.addEventListener("keydown", (e) => {
-        if (e.key == "Escape") {
-          dialog_rm({ id });
-        }
-      });
-    }
-    let modal_body = document.createElement("div");
-    modal_body.classList.add("bleh-modal-body");
-    modal_body.setAttribute("data-allow-scroll", allow_scroll);
-    modal_body.appendChild(body);
-    modal.appendChild(modal_body);
-    dialogs[id] = {
-      instance: modal
-    };
-    if (replace || !replace && dialogs.hasOwnProperty(replace_id)) {
-      log(`window set to replace ${replace_id}`, "window");
-      dialog_rm({ id: replace_id });
-      delete dialogs[replace_id];
-    }
-    page.structure.dialogs.appendChild(modal);
-    page.structure.dialogs.classList.add("has-dialog");
-    return modal;
-  }
-  unsafeWindow._dialog_rm = function({
-    id = null,
-    all = false,
-    modal_bg = false
-  }) {
-    dialog_rm({
-      id,
-      all,
-      modal_bg
-    });
-  };
-  function dialog_rm({
-    id,
-    all = false,
-    modal_bg = false
-  }) {
-    if (all) {
-      if (modal_bg) {
-        console.log(event);
-        if (event.target.classList[0] != "bleh-modals")
-          return;
-      }
-      log("requested kill all", "window");
-      console.info(dialogs);
-      for (let dialog2 in dialogs) {
-        dialog_rm({
-          id: dialog2
-        });
-      }
-      return;
-    }
-    if (!id) return;
-    if (!page.structure.dialogs) return;
-    if (dialogs.hasOwnProperty(id)) {
-      let dialog2 = dialogs[id];
-      if (!page.structure.dialogs.contains(dialog2.instance))
-        return;
-      log(`queuing ${id} to kill`, "window");
-      dialog2.instance.classList.add("to-remove");
-      setTimeout(function() {
-        page.structure.dialogs.removeChild(dialog2.instance);
-      }, 400);
-      delete dialogs[id];
-      if (JSON.stringify(dialogs) == "{}") {
-        page.structure.dialogs.classList.remove("has-dialog");
-      }
-    }
-  }
-  function kill_window(id, replacing = false) {
-    try {
-      if (replacing) {
-        log(`killed ${id}`, "window");
-        document.body.removeChild(document.getElementById(`bleh--window-${id}--background`));
-        document.body.removeChild(document.getElementById(`bleh--window-${id}--wrapper`));
-      } else {
-        log(`queuing ${id} to kill`, "window");
-        let background = document.getElementById(`bleh--window-${id}--background`);
-        let window2 = document.getElementById(`bleh--window-${id}--wrapper`);
-        background.classList.add("window-removing");
-        window2.classList.add("window-removing");
-        setTimeout(function() {
-          document.body.removeChild(background);
-          document.body.removeChild(window2);
-        }, 270);
-      }
-    } catch (e) {
-      log(`kill failed, ${id} does not exist`, "window");
-    }
-  }
-  unsafeWindow._kill_window = function(id) {
-    kill_window(id);
-  };
-
-  // src/sku.js
-  function ff(flag) {
-    log(`parsing ${flag}`, "flag", "log", {
-      setting: settings.feature_flags[flag],
-      sku: version.feature_flags[flag]
-    });
-    if (settings.feature_flags[flag] != null)
-      return settings.feature_flags[flag];
-    if (version.feature_flags[flag] != null)
-      return version.feature_flags[flag].default;
-  }
-
-  // src/components/status.js
-  function load_status() {
-    if (!page.structure.status) {
-      let notification_host = html.node`
-            <div class="status-alerts" />
-        `;
-      page.structure.status = notification_host;
-      document.body.appendChild(notification_host);
-    }
-  }
-  function status({ title, body, type }) {
-    let icon = "icon-16-info";
-    if (type == "error") {
-      icon = "icon-16-x";
-    }
-    const alert2 = html.node`
-        <div class="status-alert colourful colourful-bg" onclick=${() => status_remove()}>
-            <div class="status-icon">
-                <div class="bleh-icon" style="--icon: var(--${icon})" />
-            </div>
-            <div class="status-title">${title}</div>
-            ${body ? html.node`<div class="status-body">${body}</div>` : ""}
-        </div>
-    `;
-    setTimeout(() => {
-      status_remove();
-    }, 2200);
-    page.structure.status.appendChild(alert2);
-    return alert2;
-    function status_remove() {
-      alert2.classList.add("hiding");
-      setTimeout(() => {
-        alert2.remove();
-      }, 150);
-    }
-  }
-
-  // src/sponsor.js
-  function sponsors(force = false) {
-    if (!ff("sponsor"))
-      return;
-    let sponsor_data = localStorage.getItem("kat_sponsors");
-    let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (!sponsor_data) {
-      log("not cached, fetching", "sponsor");
-      sponsor_request(true);
-    } else {
-      for (var member in sponsor_list) delete sponsor_list[member];
-      Object.assign(sponsor_list, JSON.parse(sponsor_data));
-      if (sponsor_list) {
-        auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-        auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
-      }
-      if (sponsor_expire < current_time && !force) {
-        sponsor_request();
-      } else if (force) {
-        sponsor_request(true);
-      }
-    }
-  }
-  function sponsor_request(notify2 = false) {
-    let button = document.body.querySelector('[onclick="_sponsor_check()"]');
-    if (button)
-      button.setAttribute("disabled", "");
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`list responded with ${xhr.status}`, "sponsor");
-      let api_expire = /* @__PURE__ */ new Date();
-      if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "sponsor");
-        api_expire.setHours(api_expire.getHours() + 1);
-      }
-      if (xhr.status == 200) {
-        if (sponsor_list.latest != 0 || sponsor_list && parseFloat(JSON.parse(this.response).latest) >= parseFloat(sponsor_list.latest)) {
-          for (const member in sponsor_list) delete sponsor_list[member];
-          Object.assign(sponsor_list, JSON.parse(this.response));
-          if (sponsor_list) {
-            auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-            auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
-          }
-          if (notify2)
-            status({
-              title: tl(trans.downloaded_value).replace("{v}", tl(trans.sponsor_details))
-            });
-          localStorage.setItem("kat_sponsors", this.response);
-        }
-        api_expire.setHours(api_expire.getHours() + 4);
-        log(`list cached until ${api_expire}`, "sponsor");
-      }
-      localStorage.setItem("kat_sponsors_expire", api_expire);
-      if (button != null)
-        button.removeAttribute("disabled");
-    };
-    xhr.send();
-  }
-  unsafeWindow._sponsor_check = function() {
-    sponsors(true);
-  };
-  unsafeWindow._sponsor = function(replace = false) {
-    sponsor(replace);
-  };
-  function sponsor(replace = false) {
-    dialog({
-      id: "sponsor",
-      title: tl(trans.support_future_development),
-      body: html.node`
-            <div class="modal-vertical-inner support-inner">
-                <div class="avatar">
-                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                </div>
-                <h1>${tl(trans.support_future_development)}</h1>
-                <p>${html.node([
-        tl(trans.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
-      ])}</p>
-            </div>
-            <div class="modal-footer">
-                <div class="fill"></div>
-                <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
-                    ${tl(trans.sponsor)}
-                </a>
-                <div class="fill"></div>
-            </div>
-        `,
-      type: "sponsor",
-      replace_if_possible: replace
-    });
-  }
-  unsafeWindow._sponsor_manage = function() {
-    sponsor_manage();
-  };
-  function sponsor_manage() {
-    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
-      dialog({
-        id: "sponsor_manage",
-        title: tl(trans.sponsor),
-        body: html.node`
-                <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_no_badge)}</p>
-                </div>
-            `,
-        type: "sponsor"
-      });
-    } else {
-      dialog({
-        id: "sponsor_manage",
-        title: tl(trans.sponsor),
-        body: html.node`
-                <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_get_badge)}</p>
-                </div>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
-                        ${tl(trans.manage_sponsor)}
-                    </a>
-                    <div class="fill"></div>
-                </div>
-            `,
-        type: "sponsor"
-      });
-    }
-  }
-  function bleh_sponsor_page() {
-    document.body.style.removeProperty("--hue-album");
-    document.body.style.removeProperty("--sat-album");
-    document.body.style.removeProperty("--lit-album");
-    let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
-    if (adaptive_skin_container == null)
-      return;
-    adaptive_skin_container.setAttribute("data-bleh", "true");
-    adaptive_skin_container.innerHTML = "";
-    log("internal bleh sponsor", "page");
-    page.type = "bleh_sponsor";
-    page.subpage = "";
-    sponsor();
-  }
-
-  // src/components/badge.js
-  function load_badges(user, solo = false) {
-    if (!sponsor_list || !sponsor_list.badges) return;
-    if (!sponsor_list.badges.hasOwnProperty(user)) return;
-    let badges = [];
-    if (!Array.isArray(sponsor_list.badges[user])) {
-      log("1 badge found", "sponsor", "info", sponsor_list.badges[user]);
-      badges.push(sponsor_list.badges[user]);
-    } else {
-      log(
-        "multiple badges found",
-        "sponsor",
-        "info",
-        sponsor_list.badges[user]
-      );
-      if (solo)
-        badges.push(
-          sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]
-        );
-      else badges = sponsor_list.badges[user];
-    }
-    badges.forEach((badge) => {
-      badge.user = user;
-      if (!badge.name) {
-        if (trans.badges[badge.type]) {
-          badge.name = tl(trans.badges[badge.type].name);
-        } else {
-          badge.name = tl(trans.unavailable);
-          badge.reason = tl(trans.requires_higher_bleh_version);
-        }
-      }
-      if (trans.badges[badge.type] && trans.badges[badge.type].reason)
-        badge.reason = tl(trans.badges[badge.type].reason);
-      else if (badge.reason && trans.badges[badge.reason] && trans.badges[badge.reason].reason)
-        badge.reason = tl(trans.badges[badge.reason].reason);
-      if (badge.reason) return;
-      if (badge.type == "sponsor" || badge.type == "contributor")
-        badge.reason = badge.type;
-      else if (badge.type == "cute" || badge.type == "queen")
-        badge.reason = tl(trans.badges.cute.reason);
-      else badge.reason = tl(trans.badges.reserved.reason);
-    });
-    log("final badge list", "sponsor", "info", badges);
-    return badges;
-  }
-  function create_badge(badge = {
-    type: "",
-    icon: "",
-    reason: "",
-    hue: -1,
-    sat: -1,
-    lit: -1,
-    name: "",
-    user: "",
-    inbuilt: false
-  }, on_avatar = false, long = false, small = false) {
-    const classlist = on_avatar ? "avatar-status-dot" : "label no-hover";
-    let elem = html.node`
-        <span class=${classlist}>
-            ${badge.name}
-        </span>
-    `;
-    if (long) elem.classList.add("expand");
-    if (badge.icon != "" && badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
-      elem.style.setProperty("--mask", `url(${badge.icon})`);
-      elem.style.setProperty("--hue-over", badge.hue);
-      elem.style.setProperty("--sat-over", badge.sat);
-      elem.style.setProperty("--lit-over", badge.lit);
-    } else if (badge.inbuilt) {
-      elem.classList.add(badge.type);
-    } else {
-      elem.classList.add(
-        `user-status--bleh-${badge.type}`,
-        `user-status--bleh-user-${badge.user}`
-      );
-    }
-    if (on_avatar || small) return elem;
-    tippy_esm_default(elem, {
-      theme: "badge",
-      placement: "bottom",
-      content: html.node`
-            <div class="badge-name">${badge.name}</div>
-            <div class="badge-reason">${badge.reason}</div>
-        `
-    });
-    if (badge.type == "sponsor") elem.onclick = sponsor;
-    return elem;
-  }
-
-  // src/components/menu.js
-  function register_menu(element, menu) {
-    element.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      menu.setProps({
-        placement: "right-start",
-        offset: [0, 0],
-        getReferenceClientRect: () => ({
-          width: 0,
-          height: 0,
-          top: e.clientY,
-          bottom: e.clientY,
-          left: e.clientX,
-          right: e.clientX
-        })
-      });
-      menu.show();
-    });
-  }
-
-  // src/components/calendar.js
-  function calendar({
-    value,
-    min: min2,
-    max: max2,
-    disabled,
-    show_time = true,
-    name
-  }) {
-    let date_button;
-    let manual_button;
-    let up_button;
-    let down_button;
-    let now2 = /* @__PURE__ */ new Date();
-    if (value != null) now2 = new Date(value);
-    const min_date = min2 != null ? new Date(min2) : new Date(now2.getTime() - 14 * 24 * 60 * 60 * 1e3);
-    min_date.setHours(0, 0, 0, 0);
-    const max_date = max2 != null ? new Date(max2) : /* @__PURE__ */ new Date();
-    max_date.setHours(23, 59, 59, 999);
-    let last_action;
-    const state = {
-      year: now2.getFullYear(),
-      month: now2.getMonth() + 1,
-      day: now2.getDate(),
-      hours: now2.getHours(),
-      mins: now2.getMinutes(),
-      secs: now2.getSeconds()
-    };
-    let view = {
-      level: "day",
-      year: state.year,
-      month: state.month
-    };
-    let legacy_date;
-    let date_display;
-    let time_input;
-    let popup_inner = html.node`<div class="calendar" />`;
-    const locale = void 0;
-    const months2 = Array.from(
-      { length: 12 },
-      (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(
-        new Date(2e3, i, 1)
-      )
-    );
-    const raw_weekdays = Array.from(
-      { length: 7 },
-      (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(
-        new Date(1970, 0, 4 + i)
-      )
-    );
-    const weekdays2 = raw_weekdays.slice(1).concat(raw_weekdays[0]);
-    function months_between(a, b) {
-      return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
-    }
-    function can_nav_month_view() {
-      return months_between(min_date, max_date) >= 1;
-    }
-    function can_nav_year_view() {
-      return max_date.getFullYear() - min_date.getFullYear() >= 1;
-    }
-    function on_month_year_click() {
-      last_action = "";
-      if (view.level === "day" && can_nav_month_view()) {
-        view.level = "month";
-      } else if (view.level === "month" && can_nav_year_view()) {
-        view.level = "year";
-      } else if (view.level === "year") {
-        view.level = "month";
-      } else if (view.level === "manual") {
-        view.level = "day";
-      } else {
-        return;
-      }
-      render_popup();
-    }
-    const container = html.node`
-        <div class="input-group">
-            <div class="content-form input-container" data-type="date">
-                <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
-                <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
-            </div>
-            ${show_time ? html.node`
-            <div class="content-form input-container" data-type="time">
-                <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
-            </div>
-            ` : ""}
-        </div>
-    `;
-    if (time_input) {
-      time_input.addEventListener("input", () => {
-        const parts = time_input.value.split(":").map((n2) => parseInt(n2, 10));
-        state.hours = parts[0] || 0;
-        state.mins = parts[1] || 0;
-        state.secs = parts[2] || 0;
-        emit();
-      });
-    }
-    function can_prev() {
-      const py = view.month === 1 ? view.year - 1 : view.year;
-      const pm = view.month === 1 ? 12 : view.month - 1;
-      return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
-    }
-    function can_next() {
-      const ny = view.month === 12 ? view.year + 1 : view.year;
-      const nm = view.month === 12 ? 1 : view.month + 1;
-      return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
-    }
-    let tooltip = tippy_esm_default(date_display, {
-      theme: "window",
-      content: "",
-      placement: "top",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      appendTo: document.body,
-      onShow() {
-        last_action = "";
-        render_popup();
-      }
-    });
-    let menu = tippy_esm_default(date_display, {
-      theme: "context-menu",
-      content: html.node`
-            <button class="dropdown-menu-clickable-item" data-type="manual" onclick=${() => {
-        view.level = "manual";
-        tooltip.show();
-      }}>
-                ${tl(trans.manual_date)}
-            </button>
-        `,
-      placement: "right-start",
-      trigger: "manual",
-      interactive: true,
-      interactiveBorder: 10,
-      offset: [0, 0],
-      appendTo: document.body,
-      onShow(instance) {
-        instance.popper.addEventListener("click", (event3) => {
-          instance.hide();
-        });
-      }
-    });
-    register_menu(date_display, menu);
-    function render_popup() {
-      let inner;
-      if (view.level === "year") {
-        inner = render_year_view();
-      } else if (view.level === "month") {
-        inner = render_month_view();
-      } else if (view.level === "manual") {
-        inner = render_manual_view();
-      } else {
-        inner = render_day_view();
-      }
-      tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
-      if (date_button) tippy_esm_default(date_button, { content: tl(trans.change_zoom) });
-      if (manual_button)
-        tippy_esm_default(manual_button, { content: manual_button.textContent });
-      if (up_button) tippy_esm_default(up_button, { content: up_button.textContent });
-      if (down_button)
-        tippy_esm_default(down_button, { content: down_button.textContent });
-    }
-    function render_day_view() {
-      return html.node`
-            <div class="calendar-header">
-                <button class="month-year" type="button" ref=${(el) => date_button = el} onclick=${on_month_year_click} disabled=${!can_nav_month_view()}>
-                    ${months2[view.month - 1]} ${view.year}
-                </button>
-                <div class="fill" />
-                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" onclick=${() => {
-        view.level = "manual";
-        render_popup();
-      }}>
-                    ${tl(trans.manual)}
-                </button>
-                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled=${!can_prev()} type="button" onclick=${() => {
-        if (!can_prev()) return;
-        view.month--;
-        if (view.month < 1) {
-          view.month = 12;
-          view.year--;
-        }
-        last_action = "prev";
-        render_popup();
-      }}>
-                    ${tl(trans.back)}
-                </button>
-                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled=${!can_next()} type="button" onclick=${() => {
-        if (!can_next()) return;
-        view.month++;
-        if (view.month > 12) {
-          view.month = 1;
-          view.year++;
-        }
-        last_action = "next";
-        render_popup();
-      }}>
-                    ${tl(trans.next)}
-                </button>
-            </div>
-            <div class="date-header">
-                ${weekdays2.map((day) => html.node`<div class="date">${day}</div>`)}
-            </div>
-            <div class="days" data-last-action=${last_action}>
-                ${days(view.year, view.month).map(
-        (cell) => cell.type == "empty" ? html.node`<button class="day empty" type="button" disabled />` : html.node`
-                            <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date >= min_date && cell.date <= max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
-          state.day = cell.day;
-          state.year = view.year;
-          state.month = view.month;
-          update_display();
-          emit();
-          last_action = "";
-          render_popup();
-        }}>${cell.day}</button>
-                        `
-      )}
-            </div>
-        `;
-    }
-    function render_month_view() {
-      const min_year = min_date.getFullYear();
-      const max_year = max_date.getFullYear();
-      return html.node`
-            <div class="calendar-header">
-                <button class="month-year" type="button" ref=${(el) => date_button = el} onclick=${on_month_year_click} disabled=${!can_nav_year_view()}>
-                    ${view.year}
-                </button>
-                <div class="fill" />
-                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" onclick=${() => {
-        view.level = "manual";
-        render_popup();
-      }}>
-                    ${tl(trans.manual)}
-                </button>
-                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} type="button" disabled=${view.year <= min_year} onclick=${() => {
-        if (view.year < min_year) return;
-        view.year--;
-        last_action = "prev";
-        render_popup();
-      }}>
-                    ${tl(trans.back)}
-                </button>
-                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} type="button" disabled=${view.year >= max_year} onclick=${() => {
-        if (view.year > max_year) return;
-        view.year++;
-        last_action = "next";
-        render_popup();
-      }}>
-                    ${tl(trans.next)}
-                </button>
-            </div>
-            <div class="months" data-last-action=${last_action}>
-                ${months2.map((label, i) => {
-        const month_start = new Date(view.year, i, 1);
-        const month_end = new Date(
-          view.year,
-          i + 1,
-          0,
-          23,
-          59,
-          59,
-          999
-        );
-        return html.node`
-                        <button class="month" aria-selected=${view.year === state.year && i + 1 === state.month} disabled=${month_end < min_date || month_start > max_date} onclick=${() => {
-          view.month = i + 1;
-          view.level = "day";
-          last_action = "";
-          update_display();
-          emit();
-          render_popup();
-        }}>
-                            ${label}
-                        </button>
-                    `;
-      })}
-            </div>
-        `;
-    }
-    function render_year_view() {
-      const min_year = min_date.getFullYear();
-      const max_year = max_date.getFullYear();
-      const decade_start = Math.floor(view.year / 10) * 10;
-      return html.node`
-            <div class="calendar-header">
-                <button class="month-year" ref=${(el) => date_button = el} onclick=${on_month_year_click}>
-                    ${decade_start} – ${decade_start + 9}
-                </button>
-                <div class="fill" />
-                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" onclick=${() => {
-        view.level = "manual";
-        render_popup();
-      }}>
-                    ${tl(trans.manual)}
-                </button>
-                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled=${decade_start - 10 < min_year} onclick=${() => {
-        if (decade_start - 10 < min_year) return;
-        view.year -= 10;
-        render_popup();
-      }}>
-                    ${tl(trans.back)}
-                </button>
-                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled=${decade_start + 10 > max_year} onclick=${() => {
-        if (decade_start + 10 > max_year) return;
-        view.year += 10;
-        render_popup();
-      }}>
-                    ${tl(trans.next)}
-                </button>
-            </div>
-            <div class="years">
-                ${Array.from({ length: 10 }, (_, i) => decade_start + i).map(
-        (yr) => {
-          return html.node`
-                        <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
-            view.year = yr;
-            view.level = "month";
-            render_popup();
-          }}>
-                            ${yr}
-                        </button>
-                    `;
-        }
-      )}
-            </div>
-        `;
-    }
-    function validate_text_date(value2) {
-      const m = value2.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-      if (!m) return null;
-      const [_, ys, ms, ds] = m;
-      const date = /* @__PURE__ */ new Date(`${ys}-${ms}-${ds}T00:00:00`);
-      if (date.getFullYear() !== +ys || date.getMonth() + 1 !== +ms || date.getDate() !== +ds) {
-        return null;
-      }
-      if (date < min_date || date > max_date) return null;
-      return date;
-    }
-    function render_manual_view() {
-      let manual_date;
-      let elem = html.node`
-            <div class="calendar-header">
-                <button class="month-year" ref=${(el) => date_button = el} onclick=${on_month_year_click}>
-                    ${tl(trans.manual)}
-                </button>
-                <div class="fill" />
-                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" disabled>
-                    ${tl(trans.manual)}
-                </button>
-                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled>
-                    ${tl(trans.back)}
-                </button>
-                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled>
-                    ${tl(trans.next)}
-                </button>
-            </div>
-            <div class="manual">
-                ${manual_date = input({
-        type: "text",
-        value: `${state.year}-${pad2(state.month)}-${pad2(state.day)}`,
-        func: (value2) => {
-          const parsed2 = validate_text_date(value2);
-          if (!parsed2) {
-            manual_date.value(
-              `${state.year}-${pad2(state.month)}-${pad2(state.day)}`
-            );
-            return;
-          }
-          state.year = parsed2.getFullYear();
-          state.month = parsed2.getMonth() + 1;
-          state.day = parsed2.getDate();
-          view.level = "day";
-          view.year = state.year;
-          view.month = state.month;
-          update_display();
-          emit();
-          render_popup();
-        }
-      })}
-                <p>${tl(trans.enter_a_manual_date)}</p>
-                <p>${tl(trans.minimum_value).replace("{v}", `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
-                <p>${tl(trans.maximum_value).replace("{v}", `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
-            </div>
-        `;
-      manual_date.focus();
-      return elem;
-    }
-    function days(year, month) {
-      const raw_first = new Date(year, month - 1, 1).getDay();
-      const offset3 = (raw_first + 6) % 7;
-      const days_in_month = new Date(year, month, 0).getDate();
-      const cells = [];
-      for (let i = 0; i < offset3; i++) cells.push({ type: "empty" });
-      for (let day = 1; day <= days_in_month; day++) {
-        cells.push({
-          type: "day",
-          day,
-          month: state.month,
-          date: new Date(year, month - 1, day)
-        });
-      }
-      const rem = (7 - cells.length % 7) % 7;
-      for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
-      console.info("cells", cells, state.month, view.month);
-      return cells;
-    }
-    function update_display() {
-      date_display.textContent = format_date(state);
-    }
-    function emit() {
-      const date_object = new Date(
-        state.year,
-        state.month - 1,
-        state.day,
-        state.hours,
-        state.mins,
-        state.secs
-      );
-      legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
-      container.dispatchEvent(new CustomEvent("change"), {
-        detail: date_object
-      });
-    }
-    function format_date({ year, month, day }) {
-      const date_object = new Date(year, month - 1, day);
-      return date_object.toLocaleDateString(void 0, {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-      });
-    }
-    container.value = (val = null) => {
-      if (val === null) {
-        return new Date(
-          state.year,
-          state.month - 1,
-          state.day,
-          state.hours,
-          state.mins,
-          state.secs
-        );
-      }
-      const date_object = new Date(val);
-      state.year = date_object.getFullYear();
-      state.month = date_object.getMonth() + 1;
-      state.day = date_object.getDate();
-      state.hours = date_object.getHours();
-      state.mins = date_object.getMinutes();
-      state.secs = date_object.getSeconds();
-      view.year = state.year;
-      view.month = state.month;
-      render_popup();
-      update_display();
-      if (time_input)
-        time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
-      return date_object;
-    };
-    container.disabled = (val = null) => {
-      if (val === null) return time_input.disabled;
-      if (!val) date_display.removeAttribute("disabled");
-      else date_display.setAttribute("disabled", "true");
-      if (time_input) time_input.disabled = val;
-      return val;
-    };
-    return container;
-  }
-
-  // src/components/input.js
-  function input({
-    type = "text",
-    value,
-    placeholder,
-    min: min2,
-    max: max2,
-    maxlength,
-    warn_if_empty = false,
-    warn_if_matches_auth = false,
-    warn_if_not_matching_lower = "",
-    focus = false,
-    disabled,
-    show_time = true,
-    name,
-    func,
-    func_esc
-  }) {
-    if (type == "date") {
-      return calendar({
-        value,
-        min: min2,
-        max: max2,
-        disabled,
-        show_time,
-        name
-      });
-    }
-    let input_box;
-    let error_tooltip;
-    let colour_block;
-    let container = html.node`
-        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
-            ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
-            ${type == "textarea" ? html.node`
-                <textarea class="modern-input" disabled=${disabled} autofocus=${focus} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
-            ` : html.node`
-                <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
-            `}
-        </div>
-    `;
-    error_tooltip = tippy_esm_default(input_box, {
-      theme: "error",
-      placement: "top",
-      trigger: "manual"
-    });
-    error_tooltip.disable();
-    update_input(true);
-    input_box.addEventListener("input", () => {
-      update_input();
-    });
-    input_box.addEventListener("keydown", (event3) => {
-      if (event3.keyCode == 13 && type != "textarea") {
-        event3.preventDefault();
-        if (func) func(input_box.value);
-      } else if (event3.keyCode == 27) {
-        event3.preventDefault();
-        if (func_esc) func_esc(input_box.value);
-      }
-    });
-    container.submit = () => {
-      if (func) func(input_box.value);
-    };
-    container.focus = () => {
-      setTimeout(() => {
-        input_box.focus();
-      }, 5);
-    };
-    container.value = (val = null) => {
-      if (val == null) return input_box.value;
-      input_box.value = val;
-      return val;
-    };
-    container.disabled = (state = null) => {
-      if (state === null) return input_box.getAttribute("disabled") || false;
-      if (state === true) input_box.setAttribute("disabled", "true");
-      else input_box.removeAttribute("disabled");
-      return state;
-    };
-    return container;
-    function update_input(skip_most = false) {
-      container.setAttribute("data-has-error", "false");
-      error_tooltip.disable();
-      if (type != "number" && !skip_most) {
-        if (input_box.value == "" && warn_if_empty) {
-          error_input2(tl(trans.this_field_is_required));
-        } else if (input_box.value.length > maxlength) {
-          error_input2(tl(trans.keep_within_the_range));
-        } else if (warn_if_matches_auth && input_box.value == auth.name) {
-          error_input2(tl(trans.please_dont_clone_yourself));
-        } else if (warn_if_not_matching_lower != "" && input_box.value.toLowerCase() != warn_if_not_matching_lower) {
-          error_input2(tl(trans.please_match_the_format));
-        }
-      }
-      if (type == "number" && !skip_most) {
-        if (input_box.value == "") {
-          error_input2(tl(trans.only_numbers_are_allowed));
-        } else if (parseInt(input_box.value) > max2 || parseInt(input_box.value) < min2) {
-          error_input2(tl(trans.keep_within_the_range));
-        }
-      } else if (type == "colour") {
-        if (!input_box.value.startsWith("#"))
-          input_box.value = `#${input_box.value}`;
-        colour_block.style.backgroundColor = input_box.value;
-      }
-    }
-    function error_input2(reason) {
-      log(reason, "input", "log");
-      container.setAttribute("data-has-error", "true");
-      error_tooltip.setContent(reason);
-      error_tooltip.enable();
-      error_tooltip.show();
-    }
-  }
-
-  // src/components/colourful_counts.js
-  function patch_artist_ranks_in_list_view(track) {
-    let count_bar = track.querySelector(".chartlist-count-bar");
-    if (!count_bar) return;
-    let count_bar_link = count_bar.querySelector(".chartlist-count-bar-link");
-    if (count_bar_link.getAttribute("href").includes("?from=") || count_bar_link.getAttribute("href").includes("?date_preset=") && !count_bar_link.getAttribute("href").endsWith("?date_preset=ALL") && !count_bar_link.getAttribute("href").endsWith("?date_preset=null"))
-      return;
-    let count = count_bar.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value");
-    if (!count_bar.hasAttribute("data-kate-processed")) {
-      count_bar.setAttribute("data-kate-processed", "true");
-      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
-      count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-      count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-      count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-      count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
-    }
-  }
-  function parse_scrobbles_as_rank(scrobbles) {
-    let scrobble_milestone = 0;
-    let scrobble_proximity = 0;
-    let max_rank = 15;
-    for (let rank = max_rank; rank >= 0; rank--) {
-      if (scrobbles >= ranks[rank].start) {
-        scrobble_milestone = rank;
-        break;
-      }
-    }
-    let milestone_hue = ranks[scrobble_milestone].hue;
-    let milestone_sat = ranks[scrobble_milestone].sat;
-    let milestone_lit = ranks[scrobble_milestone].lit;
-    if (scrobble_milestone < max_rank) {
-      let current_start = ranks[scrobble_milestone].start;
-      let next_start = ranks[scrobble_milestone + 1].start;
-      scrobble_proximity = (scrobbles - current_start) / (next_start - current_start);
-    }
-    if (scrobble_milestone < max_rank) {
-      let next_milestone_hue = ranks[scrobble_milestone + 1].hue;
-      let next_milestone_sat = ranks[scrobble_milestone + 1].sat;
-      let next_milestone_lit = ranks[scrobble_milestone + 1].lit;
-      milestone_hue = interpolate_hue(milestone_hue, next_milestone_hue, scrobble_proximity);
-      milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
-      milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
-    }
-    log(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
-    return {
-      milestone: scrobble_milestone,
-      proximity: scrobble_proximity,
-      hue: milestone_hue,
-      sat: milestone_sat,
-      lit: milestone_lit
-    };
-  }
-
-  // src/components/music_grid.js
-  var import_color_thief_browser = __toESM(require_color_thief_min(), 1);
-  function music_grids(search = page.structure.main, use_colour = true) {
-    if (!search) return;
-    let insights = {
-      artist: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      album: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      track: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      }
-    };
-    let grids = search.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
-    grids.forEach((grid, index3) => {
-      let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
-      if (is_loading) return;
-      grid.style.setProperty("--delay", index3 * 0.04 + "s");
-      grid.setAttribute("data-bleh-music-grids", "true");
-      let is_album;
-      if (page.type == "search") {
-        is_album = grid.querySelector(".stat-name") == null;
-      } else {
-        is_album = grid.querySelector(".grid-items-item-aux-block") != null;
-      }
-      let image_wrap = grid.querySelector(".grid-items-cover-image-image");
-      let image = image_wrap.querySelector("img");
-      if (grid.classList.contains("grid-items-item--big"))
-        image.src = image.src.replace("/avatar300s/", "/500x500/");
-      if (image && !image_wrap.classList.contains("grid-items-cover-default") && use_colour) {
-        let grid_colour = document.createElement("div");
-        grid_colour.classList.add("grid-item-colour-bg");
-        image_wrap.appendChild(grid_colour);
-        image.setAttribute("crossorigin", "anonymous");
-        try {
-          image.addEventListener("load", function() {
-            let thief = new import_color_thief_browser.default();
-            let colour2 = thief.getColor(image);
-            let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
-            grid_colour.style.setProperty("background", `rgb(${colour2})`);
-            grid.classList.add("grid-items-item-has-colour");
-            grid.style.setProperty("--hue-over", hsl.h);
-            grid.style.setProperty("--sat-over", clamp_sat2(hsl.s / 100 * 3));
-            grid.style.setProperty("--lit-over", 1);
-          });
-        } catch (e) {
-        }
-      } else {
-        grid.classList.add("generic-cover");
-      }
-      let plays_elem;
-      if (page.type == "search") {
-        if (!is_album) {
-          let aux_text = grid.querySelector(".grid-items-item-aux-text");
-          let stat_name = aux_text.querySelector(".stat-name");
-          aux_text.removeChild(stat_name);
-          plays_elem = aux_text;
-        }
-      } else if (page.type == "tag") {
-        let aux_text = grid.querySelector(".grid-items-item-aux-text");
-        let stat_name = aux_text.querySelector(".stat-name");
-        if (!stat_name) return;
-        aux_text.removeChild(stat_name);
-        plays_elem = aux_text;
-        if (is_album) {
-          let artist2 = grid.querySelector(".grid-items-item-aux-block");
-          aux_text.removeChild(artist2);
-          plays_elem = document.createElement("a");
-          plays_elem.textContent = aux_text.textContent;
-          aux_text.textContent = "";
-          aux_text.appendChild(artist2);
-          aux_text.appendChild(plays_elem);
-        }
-      } else {
-        plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
-      }
-      if (plays_elem && !grid.classList.contains("obsessions-item") && !grid.classList.contains("compare-item")) {
-        let plays = clean_number(plays_elem.textContent.trim().replace(`${tl(trans.plays_lower)}`, ""));
-        plays_elem.classList.add("grid-item-plays");
-        if (is_album)
-          plays_elem.textContent = plays.toLocaleString(lang);
-        if (!is_album) {
-          insights.artist.display = true;
-          insights.artist.values.push(plays);
-          if (plays > insights.artist.highest.value)
-            insights.artist.highest.value = plays;
-        } else {
-          insights.album.display = true;
-          insights.album.values.push(plays);
-          if (plays > insights.album.highest.value)
-            insights.album.highest.value = plays;
-        }
-        if (page.type == "search" || page.type == "tag")
-          plays_elem.classList.add("grid-item-listeners");
-        if (!is_album && settings.colourful_counts && page.type == "user") {
-          if (!plays_elem.getAttribute("href").includes("?from=") && (!plays_elem.getAttribute("href").includes("?date_preset=") || plays_elem.getAttribute("href").endsWith("?date_preset=ALL") || plays_elem.getAttribute("href").endsWith("?date_preset=null"))) {
-            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
-            plays_elem.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-            plays_elem.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-            plays_elem.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-            plays_elem.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
-          }
-        }
-      }
-      let name = grid.querySelector(".grid-items-item-main-text a");
-      if (!name) return;
-      let artist;
-      if (!is_album) {
-        name.textContent = romanise(correct_artist(name.textContent.trim()));
-        insights.artist.labels.push(name.textContent);
-      } else {
-        artist = grid.querySelector(".grid-items-item-aux-block");
-        if (!artist) artist = grid.querySelector(".grid-items-item-aux-text");
-        if (!artist) return;
-        if (settings.format_guest_features) {
-          let name_elem = name;
-          let artist_elem = artist;
-          let song_title = name_elem.getAttribute("title");
-          let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
-          let song_tags = {};
-          if (formatted_title) {
-            song_title = romanise(formatted_title[0].trim());
-            insights.album.labels.push(song_title);
-            song_tags = formatted_title[1];
-            artist.textContent = romanise(formatted_title[2]);
-          }
-          render(name_elem, html.node`
-                    <span class="title">${song_title}</span>
-                    ${song_tags.map((tag) => html.node`
-                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
-                    `)}
-                `);
-        } else {
-          artist.textContent = romanise(correct_artist(artist.textContent.trim()));
-          name.textContent = romanise(correct_item_by_artist(name.textContent.trim(), artist.textContent.trim()));
-        }
-      }
-      const menu = tippy_esm_default(grid, {
-        theme: "context-menu",
-        content: html.node`
-                ${!is_album ? html.node`
-                <div class="button-combo">
-                    ${() => {
-          return html.node`
-                            <a class="dropdown-menu-clickable-item" data-type="artist" href=${name.getAttribute("href")}>
-                                ${tl(trans.artist)}
-                            </a>
-                        `;
-        }}
-                    <div class="button-combo-sep"/>
-                    ${() => {
-          let button = html.node`
-                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${name.getAttribute("href")}">
-                                ${tl(trans.explore_in_library)}
-                            </a>
-                        `;
-          tippy_esm_default(button, {
-            content: tl(trans.explore_in_library),
-            delay: [500, 0],
-            appendTo: document.body
-          });
-          return button;
-        }}
-                </div>
-                ` : html.node`
-                <div class="button-combo">
-                    ${() => {
-          return html.node`
-                            <a class="dropdown-menu-clickable-item" data-type="album" href=${name.getAttribute("href")}>
-                                ${tl(trans.album)}
-                            </a>
-                        `;
-        }}
-                    <div class="button-combo-sep"/>
-                    ${() => {
-          let button = html.node`
-                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${name.getAttribute("href")}">
-                                ${tl(trans.explore_in_library)}
-                            </a>
-                        `;
-          tippy_esm_default(button, {
-            content: tl(trans.explore_in_library),
-            delay: [500, 0],
-            appendTo: document.body
-          });
-          return button;
-        }}
-                </div>
-                <div class="button-combo">
-                    ${() => {
-          return html.node`
-                            <a class="dropdown-menu-clickable-item" data-type="artist" href=${artist.getAttribute("href")}>
-                                ${tl(trans.artist)}
-                            </a>
-                        `;
-        }}
-                    <div class="button-combo-sep"/>
-                    ${() => {
-          let button = html.node`
-                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${artist.getAttribute("href")}">
-                                ${tl(trans.explore_in_library)}
-                            </a>
-                        `;
-          tippy_esm_default(button, {
-            content: tl(trans.explore_in_library),
-            delay: [500, 0],
-            appendTo: document.body
-          });
-          return button;
-        }}
-                </div>
-                `}
-                <a class="dropdown-menu-clickable-item" data-type="gallery" href="${name.getAttribute("href")}/+images">
-                    ${is_album ? tl(trans.artwork) : tl(trans.photos)}
-                </a>
-                <a class="dropdown-menu-clickable-item" data-type="wiki" href="${name.getAttribute("href")}/+wiki">
-                    ${is_album ? tl(trans.wiki) : tl(trans.biography)}
-                </a>
-                ${!is_album ? html.node`
-                <a class="dropdown-menu-clickable-item" data-type="listeners" href="${name.getAttribute("href")}/+listeners/you-know">
-                    ${tl(trans.listeners)}
-                </a>
-                ` : ""}
-                <a class="dropdown-menu-clickable-item" data-type="shouts" href="${name.getAttribute("href")}/+shoutbox">
-                    ${tl(trans.shouts)}
-                </a>
-                <a class="dropdown-menu-clickable-item" data-type="tags" href="${name.getAttribute("href")}/+tags">
-                    ${tl(trans.tags)}
-                </a>
-                <div class="sep" />
-                <button class="dropdown-menu-clickable-item" data-type="expand" onclick=${() => {
-          expand_avatar(image.src.replace("/avatar300s/", "/ar0/").replace("/500x500/", "ar0"));
-        }}>
-                    ${tl(trans.expand)}
-                </button>
-                <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
-          copy(name.href);
-        }}>
-                    ${tl(trans.copy)}
-                </button>
-            `,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        appendTo: document.body,
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event3) => {
-            instance.hide();
-          });
-        }
-      });
-      register_menu(grid, menu);
-    });
-    if (page.subpage.startsWith("library"))
-      bleh_glacier_insights(insights);
-  }
-
-  // src/components/select.js
-  unsafeWindow._update_inbuilt_select = function(id, value) {
-    update_inbuilt_select(id, value);
-  };
-  function update_inbuilt_select(id, value) {
-    document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
-  }
-  function select(values, initial = "", name = "", func = null) {
-    let select2;
-    let button;
-    if (values.length === 0) {
-      return html.node``;
-    }
-    if (initial == "")
-      initial = values.find((v) => "value" in v)?.value ?? initial;
-    let container = html.node`
-        <div class="select-wrap custom-selector">
-            <select ref=${(el) => select2 = el} name=${name}>
-                ${values.map((value) => {
-      if (value.value == null) return html.node``;
-      return html.node`
-                        <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
-                    `;
-    })}
-            </select>
-            <button class="select-button" type="button" ref=${(el) => button = el} />
-        </div>
-    `;
-    let menu = tippy_esm_default(button, {
-      theme: "select-menu",
-      content: html.node``,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      appendTo: document.body,
-      onShow(instance) {
-        if (values.length > 15) {
-          setTimeout(() => {
-            instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
-              behavior: "instant",
-              block: "center"
-            });
-          }, 1);
-        }
-      }
-    });
-    set_select(initial);
-    container.set = (val) => {
-      set_select(val);
-    };
-    container.value = () => {
-      return select2.value;
-    };
-    return container;
-    function set_select(selected) {
-      values.some((value) => {
-        if (value.value == selected) {
-          render(button, html`${value.text}`);
-          return false;
-        }
-      });
-      select2.value = selected;
-      if (name != "")
-        document.documentElement.setAttribute(
-          `data-bleh--inbuilt-id_${name}`,
-          selected
-        );
-      if (func) func(selected);
-      menu.setContent(html.node`
-        ${values.map((value) => {
-        if (value.value == null) {
-          return html.node`
-                    <div class="select-header">
-                        ${value.text}
-                    </div>
-                `;
-        }
-        return html.node`
-                <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(value.value)}>
-                    ${value.text}
-                </button>
-            `;
-      })}
-    `);
-    }
-  }
-  function select_prepare(element) {
-    let values = [];
-    element.querySelectorAll("option").forEach((option) => {
-      values.push({
-        value: option.value,
-        text: option.textContent
-      });
-    });
-    return values;
-  }
-  function select_prepare_list(list, icon = null) {
-    return list.map((item) => {
-      if (typeof item === "string") return { value: item, text: item, icon };
-      return item;
-    });
-  }
-  function custom_select(select2, element_to_append) {
-    console.info(select2);
-    let id = select2.getAttribute("id");
-    let value = select2.value;
-    let value_objects = select2.querySelectorAll("option");
-    let menu_list = document.createElement("div");
-    value_objects.forEach((object) => {
-      let object_value = object.getAttribute("value");
-      let object_text = object.textContent;
-      let item = document.createElement("button");
-      item.classList.add(
-        "btn",
-        "dropdown-menu-clickable-item",
-        "select-item"
-      );
-      item.setAttribute(
-        "onclick",
-        `_set_custom_select_value('${id}', '${object_value}')`
-      );
-      item.setAttribute("data-value", object_value);
-      item.setAttribute("type", "button");
-      item.textContent = object_text;
-      menu_list.appendChild(item);
-    });
-    let button = document.createElement("button");
-    button.classList.add("select-button");
-    button.setAttribute("id", `select-${id}`);
-    button.setAttribute("type", "button");
-    button.textContent = menu_list.querySelector(
-      `[data-value="${value}"]`
-    ).textContent;
-    let theme_menu_item = tippy_esm_default(button, {
-      theme: "select-menu",
-      content: html.node([menu_list.innerHTML]),
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        update_custom_select(instance.popper, select2.value);
-      }
-    });
-    element_to_append.appendChild(button);
-  }
-  unsafeWindow._set_custom_select_value = function(select_id, value) {
-    let select2 = document.getElementById(select_id);
-    select2.value = value;
-    console.info(select2, `#select-${select_id}`);
-    update_custom_select(
-      document.getElementById(`select-${select_id}`)._tippy.popper,
-      value,
-      select_id
-    );
-    document.documentElement.setAttribute(
-      `data-bleh--inbuilt-${select_id}`,
-      value
-    );
-  };
-  function update_custom_select(element = document.body, value = "", select_id = "") {
-    let btns = element.querySelectorAll(".dropdown-menu-clickable-item");
-    btns.forEach((btn) => {
-      if (btn.getAttribute("data-value") != value) {
-        btn.classList.remove("active");
-      } else {
-        btn.classList.add("active");
-        let sel_button = document.body.querySelector(
-          `#select-${select_id}`
-        );
-        console.log(sel_button);
-        if (!sel_button) return;
-        sel_button.textContent = btn.textContent;
-      }
-    });
-  }
-  unsafeWindow._update_inbuilt_selection = function(id, index3) {
-    document.getElementById(id).selectedIndex = index3;
-    update_inbuilt_select(id, document.getElementById(id).value);
-  };
-
-  // src/components/share.js
-  function share(url) {
-    let input2;
-    dialog({
-      id: "share",
-      title: tl(trans.share),
-      body: html.node`
-            <div class="share-top content-form">
-                <input
-                    type="text"
-                    readonly
-                    value=${url}
-                    class="share-input"
-                    ref=${(el) => input2 = el}
-                />
-                <button 
-                    class="btn primary icon copy"
-                    onclick=${() => {
-        input2.select();
-        document.execCommand("copy");
-        notify({
-          title: tl(trans.copied_to_clipboard),
-          icon: "icon-16-copy"
-        });
-      }}
-                >${tl(trans.copy)}</button>
-            </div>
-            <div class="share-links">
-                <a 
-                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-twitter"
-                >Twitter</a>
-                <a 
-                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-facebook"
-                >Facebook</a>
-            </div>
-        `,
-      replace_if_possible: true
-    });
-  }
-  function download(url, filename = null) {
-    log(`downloading ${filename}`, "download");
-    let link = html.node`
-        <a href=${url} download />
-    `;
-    if (filename)
-      link.setAttribute("download", filename);
-    link.click();
-    notify({
-      id: "downloaded",
-      title: tl(trans.downloaded),
-      body: filename,
-      icon: "icon-16-download"
-    });
-  }
-
-  // src/pages/gallery.js
-  function bleh_gallery() {
-    if (page.subpage != "image") return;
-    log("focusing on image", "gallery");
-    let image_sidebar = page.structure.side.querySelector(
-      ".js-gallery-image-details > div"
-    );
-    if (!image_sidebar) return;
-    if (image_sidebar.hasAttribute("data-bleh-gallery")) return;
-    image_sidebar.setAttribute("data-bleh-gallery", "true");
-    if (!ff("new_gallery_experience")) {
-      patch_gallery_focused_image(
-        image_sidebar,
-        page.structure.container.querySelector(".gallery-image-buttons")
-      );
-      return;
-    }
-    let image_details;
-    let gallery_section;
-    let first = false;
-    try {
-      gallery_section = page.structure.main.querySelector(".gallery-section");
-      if (gallery_section) {
-        first = true;
-        if (ff("short"))
-          page.structure.row.insertBefore(
-            gallery_section,
-            page.structure.content
-          );
-        else page.structure.nav.after(gallery_section);
-        image_details = html.node`
-                <section class="image-details" />
-            `;
-      } else {
-        image_details = page.structure.main.querySelector(".image-details");
-        image_details.innerHTML = "";
-      }
-    } catch (e) {
-      gallery_section = page.structure.container.querySelector(".gallery-section");
-      image_details = page.structure.main.querySelector(".image-details");
-      image_details.innerHTML = "";
-    }
-    image_details.appendChild(image_sidebar);
-    let image_title = image_details.querySelector(".gallery-image-title");
-    let image_date = image_details.querySelector(".gallery-image-uploaded-by");
-    if (image_title.textContent.trim() == "") {
-      image_title.classList.add("gallery-image-title-empty");
-      image_title.textContent = trans_legacy.en.gallery.empty.title;
-    }
-    let breadcrumbs = document.body.querySelector(".content-top-lower-row");
-    let breadcrumb_root = breadcrumbs.querySelector("a");
-    let breadcrumb_name = breadcrumbs.querySelector(".subpage-title");
-    let image_title_container = document.createElement("div");
-    image_title_container.classList.add("image-title-container");
-    image_title_container.innerHTML = `
-        <div class="sub-text">
-            <div class="breadcrumb">
-                ${breadcrumb_root.outerHTML}
-                <div class="breadcrumb-name">
-                    ${breadcrumb_name.textContent}
-                </div>
-            </div>
-            ${image_date.outerHTML}
-        </div>
-        <div class="title-layer">
-            ${image_title.outerHTML}
-            <div class="vote-number" data-side="pos">+0</div>
-        </div>
-    `;
-    image_details.insertBefore(image_title_container, image_sidebar);
-    breadcrumbs.style.setProperty("display", "none");
-    page.structure.main.insertBefore(
-      image_details,
-      page.structure.main.firstElementChild
-    );
-    if (first) image_details.after(html.node`<div class="sep" />`);
-    let description = image_details.querySelector(".gallery-image-description");
-    if (!description) {
-      description = document.createElement("p");
-      description.classList.add(
-        "gallery-image-description",
-        "gallery-image-description-empty"
-      );
-      description.textContent = trans_legacy.en.gallery.empty.description;
-      image_details.querySelector("[data-image-url]").appendChild(description);
-    }
-    let buttons = image_details.querySelector(".gallery-image-buttons");
-    let button_container = document.createElement("div");
-    button_container.classList.add("button-container-wrapper");
-    button_container.appendChild(buttons);
-    let vote_buttons = buttons.querySelector(".gallery-image-vote-buttons");
-    vote_buttons.after(create_divider());
-    let positive_btn = vote_buttons.querySelector(
-      ':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)'
-    ).cloneNode(true);
-    let negative_btn = vote_buttons.querySelector(
-      ':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)'
-    ).cloneNode(true);
-    let positive = parseInt(
-      positive_btn.textContent.replace(trans_legacy.en.gallery.up, "")
-    );
-    let negative = parseInt(
-      negative_btn.textContent.replace(trans_legacy.en.gallery.down, "")
-    );
-    let number = positive - negative;
-    let is_negative = number < 0;
-    console.info(positive_btn, positive, negative_btn, negative, number);
-    let vote_badge = image_title_container.querySelector(".vote-number");
-    vote_badge.textContent = `${is_negative ? "" : "+"}${number}`;
-    vote_badge.setAttribute("data-side", is_negative ? "neg" : "pos");
-    tippy_esm_default(vote_badge, {
-      content: trans_legacy.en.gallery.vote
-    });
-    let buttons_extra = document.createElement("div");
-    buttons_extra.classList.add(
-      "gallery-image-buttons",
-      "gallery-image-buttons-extra"
-    );
-    button_container.appendChild(buttons_extra);
-    image_details.appendChild(button_container);
-    let open_button = html.node`
-        <button class="image-open-button" onclick=${() => expand_gallery_image()}>
-            ${tl(trans.expand)}
-        </button>
-    `;
-    tippy_esm_default(open_button, {
-      content: tl(trans.expand_to_full_resolution)
-    });
-    buttons_extra.appendChild(open_button);
-    let share_button = html.node`
-        <button class="image-share-button" onclick=${() => share(window.location.href)}>
-            ${tl(trans.share)}
-        </button>
-    `;
-    buttons_extra.appendChild(share_button);
-    share_button.after(create_divider());
-    let delete_button = image_details.querySelector(".gallery-image-delete");
-    if (delete_button) buttons_extra.appendChild(delete_button);
-    let report_button = image_details.querySelector(
-      ".gallery-image-report-form"
-    );
-    let report_text = report_button.querySelector("button");
-    tippy_esm_default(report_text, {
-      content: report_text.textContent
-    });
-    report_text.textContent = tl(trans.report);
-    buttons_extra.appendChild(report_button);
-    let star_buttons = image_details.querySelectorAll(
-      ".gallery-image-preferred-button :is(button, a)"
-    );
-    star_buttons.forEach((star_button) => {
-      star_button.removeAttribute("title");
-      let text3 = star_button.querySelector(".gallery-image-preferred-states");
-      text3.textContent = tl(trans.star);
-    });
-    let view_all_container = page.structure.main.querySelector(
-      ".more-link-fullwidth-right-flush-top"
-    );
-    if (view_all_container) {
-      let side_actions = document.createElement("section");
-      side_actions.classList.add("side-actions");
-      if (!page.mobile) page.structure.side.appendChild(side_actions);
-      else page.structure.main.appendChild(side_actions);
-      let view_all = view_all_container.querySelector("a");
-      view_all.classList.add("btn", "side-action");
-      view_all.setAttribute("data-type", "gallery");
-      side_actions.appendChild(view_all);
-      page.structure.main.removeChild(view_all_container);
-      if (page.type == "artist" || ff("display_album_bookmark")) {
-        let view_saved = document.createElement("a");
-        view_saved.classList.add("btn", "side-action");
-        view_saved.setAttribute(
-          "href",
-          `${view_all.getAttribute("href")}?tab=saved`
-        );
-        view_saved.setAttribute("data-type", "gallery-saved");
-        view_saved.textContent = trans_legacy.en.gallery.bookmarks.link;
-        side_actions.appendChild(view_saved);
-      }
-    }
-    if (page.type == "artist" || ff("display_album_bookmark"))
-      patch_gallery_focused_image(image_sidebar, buttons);
-  }
-  function expand_gallery_image() {
-    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
-    expand_avatar(image_src);
-  }
-  function create_divider() {
-    let divider = document.createElement("div");
-    divider.classList.add("listen-divider");
-    return divider;
-  }
-  function bleh_gallery_upload() {
-    let content_top = document.body.querySelector(".page-content");
-    content_top.innerHTML = "";
-    if (!ff("mesmerizer")) {
-      page.structure.row.insertBefore(
-        html.node`
-            <section class="gallery-section gallery--initialised">
-                <div class="gallery-image-container">
-                    <div class="gallery-slides">
-                        <div class="gallery-image gallery-slide image-preview active-slide">
-                            <img class="image-preview-hook" ref=${(el) => page.state.image_preview = el} />
-                        </div>
-                    </div>
-                </div>
-            </section>
-        `,
-        page.structure.row.firstElementChild
-      );
-      let form2 = page.structure.main.querySelector(".form-horizontal");
-      form2.classList.add("panel-form");
-      let upload_rules_group2 = form2.querySelector(
-        ".form-group--description + .form-group"
-      );
-      let rules2 = upload_rules_group2.querySelector(".gallery-upload-rules");
-      let rules_panel = document.createElement("section");
-      rules_panel.classList.add("rules-panel");
-      rules_panel.innerHTML = rules2.innerHTML;
-      page.structure.side.appendChild(rules_panel);
-      form2.removeChild(upload_rules_group2);
-      return;
-    }
-    const form = page.structure.main.querySelector(":scope > form");
-    const upload_rules_group = form.querySelector(
-      ".form-group--description + .form-group"
-    );
-    const rules = upload_rules_group.querySelector(".gallery-upload-rules");
-    page.structure.side.appendChild(html.node`
-        <section class="rules-panel">
-            ${{ html: rules.innerHTML }}
-        </section>
-    `);
-    form.removeChild(upload_rules_group);
-    const token = form.querySelector(':scope > [name="csrfmiddlewaretoken"]');
-    const title = form.querySelector('[name="title"]');
-    const description = form.querySelector('[name="description"]');
-    const file_input = form.querySelector('input[type="file"]');
-    const formats = form.querySelector(".form-row-help-text");
-    if (page.type == "artist") {
-      title.value = correct_artist(page.name);
-    } else {
-      title.value = correct_item_by_artist(page.name, page.sister);
-    }
-    const panel = html.node`
-        <section class="gallery-upload-panel bleh--panel">
-            <h4>${tl(trans.image_details)}</h4>
-            <form method="post" action=${form.getAttribute("action")} enctype=${form.getAttribute("enctype")}>
-                ${token}
-                <div style="display: none">
-                    ${file_input}
-                </div>
-                <div class="setting-group">
-                    <div class="setting" data-type="text">
-                        <div class="heading">
-                            <h5>${tl(trans.title)}</h5>
-                        </div>
-                        <div class="input-container content-form wide">
-                            ${title}
-                        </div>
-                    </div>
-                    <div class="setting" data-type="text">
-                        <div class="heading">
-                            <h5>${tl(trans.description)}</h5>
-                        </div>
-                        <div class="input-container content-form textarea">
-                            ${description}
-                        </div>
-                    </div>
-                </div>
-                <div class="settings-footer end">
-                    <button class="btn primary icon" data-type="upload" type="submit">
-                        ${tl(trans.upload)}
-                    </button>
-                </div>
-            </form>
-        </section>
-    `;
-    page.structure.main.appendChild(panel);
-    let dropzone;
-    let container;
-    page.structure.row.insertBefore(
-      html.node`
-        <section class="gallery-section gallery--initialised">
-            <div class="dropzone" ref=${(el) => dropzone = el} onclick=${() => {
-        file_input.click();
-      }}>
-                <div class="dropzone-message">${tl(trans.dropzone)}</div>
-                <div class="card-tip">${formats.textContent}</div>
-            </div>
-            <div class="gallery-image-container" ref=${(el) => container = el}>
-                <div class="gallery-slides">
-                    <div class="gallery-image gallery-slide image-preview active-slide">
-                        <img class="image-preview-hook" ref=${(el) => page.state.image_preview = el} />
-                    </div>
-                </div>
-            </div>
-        </section>
-    `,
-      page.structure.row.firstElementChild
-    );
-    ["dragenter", "dragover"].forEach((type) => {
-      dropzone.addEventListener(type, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        container.setAttribute("data-dragging", true);
-        dropzone.setAttribute("data-dragging", true);
-      });
-    });
-    ["dragleave", "drop"].forEach((type) => {
-      dropzone.addEventListener(type, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        container.setAttribute("data-dragging", false);
-        dropzone.setAttribute("data-dragging", false);
-      });
-    });
-    dropzone.addEventListener("drop", (e) => {
-      const files = e.dataTransfer.files;
-      if (files.length) file_input.files = files;
-      file_input.dispatchEvent(new Event("change"));
-    });
-    file_input.addEventListener("change", () => {
-      log("file input changed", "gallery", "info", {
-        files: file_input.files
-      });
-      if (!file_input.files.length) return;
-      const file = file_input.files[0];
-      const reader = new FileReader();
-      dropzone.setAttribute("data-has-file", true);
-      reader.onload = (event3) => {
-        page.state.image_preview.src = event3.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-    form.style.setProperty("display", "none");
-  }
-  function bleh_gallery_upload_check() {
-    if (page.subpage != "images_image-upload" || !page.state.image_preview)
-      return;
-    if (ff("mesmerizer")) {
-      const artwork_finder = page.structure.main.querySelector(
-        "#lfmmaf-widget:not([data-bleh])"
-      );
-      if (artwork_finder) {
-        artwork_finder.setAttribute("data-bleh", true);
-        const group = page.structure.main.querySelector(".setting-group");
-        const controls = artwork_finder.querySelectorAll(
-          ".form-group-controls > *"
-        );
-        let info;
-        group.insertBefore(
-          html.node`
-                <div class="setting" data-type="info">
-                    <div class="heading">
-                        <h5>${{ html: artwork_finder.querySelector("label").innerHTML }}</h5>
-                    </div>
-                    <div class="info artwork-finder-info" ref=${(el) => info = el} />
-                </div>
-            `,
-          group.firstElementChild
-        );
-        controls.forEach((control) => {
-          info.appendChild(control);
-        });
-      }
-      return;
-    }
-    const image_preview = page.structure.main.querySelector(
-      ".form-image-preview"
-    );
-    if (!image_preview) return;
-    page.state.image_preview.setAttribute(
-      "src",
-      image_preview.getAttribute("src")
-    );
-  }
-  function bleh_gallery_list() {
-    let upload_btn = page.structure.main.querySelector(".btn-add");
-    if (upload_btn) {
-      upload_btn.classList = "btn view-all-button back upload-button";
-      let upload_panel = document.createElement("section");
-      upload_panel.classList.add("view-all-panel", "upload-panel");
-      upload_panel.appendChild(upload_btn);
-      page.structure.side.insertBefore(
-        upload_panel,
-        page.structure.side.firstElementChild
-      );
-    }
-    page.structure.main.classList.add("bleh--gallery");
-    if (page.type == "artist") patch_gallery_image_listing();
-  }
-  function patch_gallery_image_listing() {
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    if (page.requested.tab != "saved" || page.requested.page != null)
-      page.structure.container.setAttribute("data-bleh--gallery-tab", "all");
-    else
-      page.structure.container.setAttribute(
-        "data-bleh--gallery-tab",
-        "saved"
-      );
-    let nav = html.node`
-        <div class="toolbar">
-            <nav class="navlist secondary-nav navlist--more redesigned-navigation">
-                <ul class="navlist-items">
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
-                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("all")}>
-                            ${tl(trans.photos)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
-                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("saved")}>
-                            ${tl(trans.saved)}
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    `;
-    page.structure.row.insertBefore(nav, page.structure.content);
-    let bookmarks_panel;
-    page.structure.main.after(html.node`
-        <div class="col-main bleh--bookmarks not-a-panel">
-            <section class="bookmarks-panel" ref=${(el) => bookmarks_panel = el}>
-                <ul class="image-list" data-kate-processed="true"></ul>
-            </section>
-        </div>
-    `);
-    if (bookmarked_images.hasOwnProperty(page.name)) {
-      bookmarked_images[page.name].forEach((image) => {
-        let image_element = document.createElement("li");
-        image_element.classList.add("image-list-item-wrapper");
-        image_element.setAttribute("data-image-id", image);
-        image_element.innerHTML = `
-                <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
-                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" alt=${image} loading="lazy">
-                </a>
-            `;
-        page.structure.container.querySelector(".bookmarks-panel .image-list").appendChild(image_element);
-        if (ff("remove_bookmark")) {
-          let menu = tippy_esm_default(image_element, {
-            theme: "context-menu",
-            content: html.node`
-                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
-                            ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
-                        </button>
-                    `,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event3) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(image_element, menu);
-        }
-      });
-      let image_list = page.structure.main.querySelectorAll(".image-list-item");
-      image_list.forEach((image_list_item) => {
-        let image_id_split = image_list_item.getAttribute("href").split("/");
-        let image_id_length = image_id_split.length;
-        let image_id = image_id_split[image_id_length - 1];
-        if (bookmarked_images[page.name].includes(image_id)) {
-          image_list_item.classList.add("image-list-item-bookmarked");
-        }
-      });
-    } else {
-      render(
-        bookmarks_panel,
-        html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">
-                        ${tl(trans.no_images_saved)}
-                    </div>
-                </div>
-            `
-      );
-    }
-  }
-  function gallery_tab(id) {
-    page.structure.container.setAttribute("data-bleh--gallery-tab", id);
-  }
-  function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
-    let focused_image_id_split = focused_image_details.getAttribute("data-image-url").split("/");
-    let focused_image_id_length = focused_image_id_split.length - 1;
-    let focused_image_id = focused_image_id_split[focused_image_id_length];
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    let image_is_bookmarked = false;
-    if (bookmarked_images.hasOwnProperty(page.name)) {
-      if (bookmarked_images[page.name].includes(focused_image_id)) {
-        image_is_bookmarked = true;
-        log("focused is bookmarked", "gallery");
-      }
-    }
-    let gallery_bookmark_button = document.createElement("button");
-    gallery_bookmark_button.classList.add(
-      "bleh--gallery-bookmark-image-btn",
-      "btn--has-icon"
-    );
-    gallery_bookmark_button.setAttribute(
-      "data-bleh--image-is-bookmarked",
-      image_is_bookmarked
-    );
-    gallery_bookmark_button.setAttribute(
-      "onclick",
-      `_update_image_bookmark(this, '${focused_image_id}')`
-    );
-    gallery_bookmark_button.textContent = trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.name;
-    unsafeWindow.bookmark_tooltip = tippy_esm_default(gallery_bookmark_button, {
-      content: image_is_bookmarked ? trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.bio : trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.bio
-    });
-    gallery_interactions.appendChild(gallery_bookmark_button);
-  }
-  unsafeWindow._update_image_bookmark = function(button, id, tooltip = true) {
-    update_image_bookmark(button, id, tooltip);
-  };
-  function update_image_bookmark(button, id, tooltip = true) {
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    let is_bookmarked = button.getAttribute("data-bleh--image-is-bookmarked") === "true";
-    if (tooltip) {
-      unsafeWindow.bookmark_tooltip.setContent(
-        !is_bookmarked ? trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.bio : trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.bio
-      );
-    } else {
-      button = page.structure.container.querySelector(
-        `[data-image-id="${id}"]`
-      );
-    }
-    if (!bookmarked_images.hasOwnProperty(page.name))
-      bookmarked_images[page.name] = [];
-    if (is_bookmarked) {
-      button.setAttribute("data-bleh--image-is-bookmarked", "false");
-      let new_artist_bookmarks = [];
-      for (let image in bookmarked_images[page.name]) {
-        if (bookmarked_images[page.name][image] != id) {
-          new_artist_bookmarks.push(bookmarked_images[page.name][image]);
-        }
-      }
-      bookmarked_images[page.name] = new_artist_bookmarks;
-      log(`image ${id} from ${page.name} removed from bookmarks`, "gallery");
-    } else {
-      button.setAttribute("data-bleh--image-is-bookmarked", "true");
-      bookmarked_images[page.name].push(id);
-      log(`image ${id} from ${page.name} added to bookmarks`, "gallery");
-    }
-    localStorage.setItem(
-      "bleh_bookmarked_images",
-      JSON.stringify(bookmarked_images)
-    );
-  }
-
-  // src/components/profile_shortcut.js
-  unsafeWindow._open_profile_shortcut_window = function() {
-    open_profile_shortcut_window();
-  };
-  function open_profile_shortcut_window() {
-    let modal = dialog({
-      id: "profile_shortcut",
-      title: tl(trans.profile_shortcut.name),
-      body: html.node`
-            ${setting({ id: "profile_shortcut", text: false, focus: true, standalone: true })}
-        `
-    });
-    modal.querySelector("#text-profile_shortcut").focus();
-  }
-  unsafeWindow._other_listener = function(id) {
-    other_listener(id);
-  };
-  function other_listener(id) {
-    let input2;
-    let submit;
-    dialog({
-      id: "other_listener",
-      title: tl(trans.view_others_library),
-      body: html.node`
-        <div class="setting standalone" data-type="text">
-            <div class="avatar-container">
-                <div class="avatar-inner avatar--bleh-missing">
-                    <img>
-                </div>
-            </div>
-            <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
-                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
-        let name = input2.value;
-        let link = id;
-        dialog_rm({
-          id: "other_listener"
-        });
-        window.location.href = `${root}user/${name}/library/music/${link}`;
-      }}>${tl(trans.done)}</button>
-            </div>
-        </div>
-        `
-    });
-    input2.addEventListener("keydown", (event3) => {
-      if (event3.keyCode === 13) {
-        event3.preventDefault();
-        submit.click();
-      }
-    });
-    tippy_esm_default(submit, {
-      content: tl(trans.save)
-    });
-    input2.focus();
-  }
-  unsafeWindow._save_profile_shortcut = function() {
-    let profile_name = document.getElementById("text-profile_shortcut").value;
-    let profile_img = document.getElementById("avatar-profile_shortcut");
-    if (profile_name == "" || profile_name == auth.name) {
-      localStorage.removeItem("bleh_profile_shortcut_avi");
-      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      save_setting("profile_shortcut", "");
-      return;
-    }
-    profile_img.classList.add("requesting");
-    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
-      console.log("DOC", doc);
-      profile_img.classList.remove("requesting");
-      try {
-        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
-          icon: "icon-16-profile-shortcut"
-        });
-        save_setting("profile_shortcut", profile_name);
-      } catch (e) {
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.failed_to_find_profile),
-          type: "error"
-        });
-        localStorage.removeItem("bleh_profile_shortcut_avi");
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      }
-    });
-  };
-
-  // src/components/toggle.js
-  function toggle({
-    value = false,
-    type = "toggle",
-    name = "",
-    title = "",
-    body = "",
-    small = "",
-    disabled = false,
-    data: data2 = "",
-    func = null,
-    standalone = true
-  }) {
-    let checkbox;
-    let state;
-    let elem = html.node`
-        <div class="setting ${standalone ? "standalone" : ""}" data-type=${type} onclick=${() => {
-      if (disabled) return;
-      let current = checkbox.checked;
-      if (func) func(!current);
-      checkbox.checked = !current;
-      state.setAttribute("aria-checked", !current);
-    }}>
-            <div class="heading">
-                <h5>${title}</h5>
-                ${body != "" ? html.node`<p>${body}</p>` : ""}
-                ${small != "" ? html.node`<small>${small}</small>` : ""}
-            </div>
-            ${type == "toggle" ? html.node`
-            <div class="toggle-wrap">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name} value=${data2} checked=${value} />
-                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
-                    <div class="dot" />
-                </button>
-            </div>
-            ` : html.node`
-            <div class="check">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name} value=${data2} checked=${value} disabled=${disabled} />
-                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
-                    <div class="bleh-icon" />
-                </div>
-            </div>
-            `}
-        </div>
-    `;
-    elem.check = () => {
-      if (disabled) return;
-      if (func) func(true);
-      checkbox.checked = true;
-      state.setAttribute("aria-checked", true);
-    };
-    elem.uncheck = () => {
-      if (disabled) return;
-      if (func) func(false);
-      checkbox.checked = false;
-      state.setAttribute("aria-checked", false);
-    };
-    elem.checked = () => {
-      return checkbox.checked;
-    };
-    elem.disabled = (state2 = null) => {
-      if (state2 === null) return checkbox.getAttribute("disabled") || false;
-      if (state2 === true) checkbox.setAttribute("disabled", "true");
-      else checkbox.removeAttribute("disabled");
-      return state2;
-    };
-    return elem;
-  }
-
-  // src/components/scrobble.js
-  function submit_scrobble({
-    pre_track = "",
-    pre_album = "",
-    pre_artist = "",
-    pre_album_artist = "",
-    func,
-    can_api
-  } = {}) {
-    if (!can_api)
-      can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
-    if (!can_api) {
-      window.location.href = `${root}bleh/general`;
-      return;
-    }
-    const random = random_list[Math.floor(Math.random() * random_list.length)];
-    let track;
-    let album;
-    let artist;
-    let album_artist;
-    let use_current;
-    let date;
-    let create_scrobble;
-    let max_date = /* @__PURE__ */ new Date();
-    max_date.setDate(max_date.getDate() + 1);
-    dialog({
-      id: "submit_scrobble",
-      title: tl(trans.new_scrobble),
-      body: html.node`
-            <div class="new-scrobble-form">
-                <p class="generic-label">${tl(trans.track)}</p>
-                ${track = input({
-        type: "text",
-        value: pre_track,
-        placeholder: tl(trans.example, { v: random.track }),
-        warn_if_empty: true
-      })}
-                <p class="generic-label">${tl(trans.album)}</p>
-                ${album = input({
-        type: "text",
-        value: pre_album,
-        placeholder: tl(trans.example, { v: random.album })
-      })}
-                <p class="generic-label">${tl(trans.artist)}</p>
-                ${artist = input({
-        type: "text",
-        value: pre_artist,
-        placeholder: tl(trans.example, { v: random.artist }),
-        warn_if_empty: true
-      })}
-                <p class="generic-label">${tl(trans.album_artist)}</p>
-                ${album_artist = input({
-        type: "text",
-        value: pre_album_artist,
-        placeholder: tl(trans.example, { v: random.album_artist })
-      })}
-                <p class="generic-label">${tl(trans.time)}</p>
-                <div class="toggle-and-time">
-                    ${use_current = toggle({
-        value: true,
-        type: "checkbox",
-        title: tl(trans.use_current_time),
-        func: (state) => {
-          date.disabled(state);
-        }
-      })}
-                    ${date = input({
-        type: "date",
-        max: `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`,
-        disabled: true
-      })}
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "submit_scrobble" })}>
-                    ${tl(trans.cancel)}
-                </button>
-                <div class="fill" />
-                <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
-        if (track.value() == "" || artist.value() == "") {
-          notify({
-            id: "submit_scrobble",
-            title: tl(trans.new_scrobble),
-            body: tl(trans.missing_fields),
-            type: "error"
-          });
-          return;
-        }
-        track.disabled(true);
-        album.disabled(true);
-        artist.disabled(true);
-        album_artist.disabled(true);
-        use_current.disabled(true);
-        date.disabled(true);
-        create_scrobble.disabled = true;
-        if (album.value() != "" && album_artist.value() == "")
-          album_artist.value(artist.value());
-        let params = {
-          sk: localStorage.getItem("bleh_auth"),
-          artist: artist.value(),
-          track: track.value(),
-          timestamp: Math.floor(date.value() / 1e3)
-        };
-        if (album.value() != "") params.album = album.value();
-        if (album_artist.value() != "")
-          params.albumArtist = album_artist.value();
-        const res = await fetch(
-          "https://jufufu.katelyn.moe/api/lastfm",
-          {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-              method: "track.scrobble",
-              params
-            })
-          }
-        );
-        const json = await res.json();
-        log("received response", "submit scrobble", "info", {
-          result: json
-        });
-        function re_enable() {
-          track.disabled(false);
-          album.disabled(false);
-          artist.disabled(false);
-          album_artist.disabled(false);
-          use_current.disabled(false);
-          date.disabled(false);
-          create_scrobble.disabled = false;
-        }
-        if (json.error) {
-          log("error", "submit scrobble", "error");
-          notify({
-            id: "submit_scrobble",
-            title: tl(trans.scrobble_failed),
-            body: json.message,
-            type: "error",
-            persist: true
-          });
-          re_enable();
-          return;
-        }
-        const error_code = json.scrobbles.scrobble.ignoredMessage.code;
-        if (error_code > 0) {
-          log("error", "submit scrobble", "error", {
-            error_code
-          });
-          notify({
-            id: "submit_scrobble",
-            title: tl(trans.scrobble_failed),
-            body: tl(trans.scrobble_error_codes[error_code]),
-            type: "error",
-            persist: true
-          });
-          re_enable();
-          return;
-        }
-        notify({
-          id: "submit_scrobble",
-          title: tl(trans.new_scrobble),
-          body: params.track,
-          type: "success"
-        });
-        dialog_rm({ id: "submit_scrobble" });
-        if (func) func();
-      }}>
-                    ${tl(trans.new)}
-                </button>
-            </div>
-        `
-    });
-  }
 
   // node_modules/luxon/src/errors.js
   var LuxonError = class extends Error {
@@ -31029,23 +23505,23 @@
     `${isoTimeBaseRegex.source} ?(?:${offsetRegex.source}|(${ianaRegex.source}))?`
   );
   var sqlTimeExtensionRegex = RegExp(`(?: ${sqlTimeRegex.source})?`);
-  function int2(match3, pos, fallback) {
+  function int(match3, pos, fallback) {
     const m = match3[pos];
     return isUndefined(m) ? fallback : parseInteger(m);
   }
   function extractISOYmd(match3, cursor) {
     const item = {
-      year: int2(match3, cursor),
-      month: int2(match3, cursor + 1, 1),
-      day: int2(match3, cursor + 2, 1)
+      year: int(match3, cursor),
+      month: int(match3, cursor + 1, 1),
+      day: int(match3, cursor + 2, 1)
     };
     return [item, null, cursor + 3];
   }
   function extractISOTime(match3, cursor) {
     const item = {
-      hours: int2(match3, cursor, 0),
-      minutes: int2(match3, cursor + 1, 0),
-      seconds: int2(match3, cursor + 2, 0),
+      hours: int(match3, cursor, 0),
+      minutes: int(match3, cursor + 1, 0),
+      seconds: int(match3, cursor + 2, 0),
       milliseconds: parseMillis(match3[cursor + 3])
     };
     return [item, null, cursor + 4];
@@ -35322,6 +27798,3531 @@
         `Unknown datetime argument: ${dateTimeish}, of type ${typeof dateTimeish}`
       );
     }
+  }
+
+  // src/build/tools.js
+  function hex_to_hsl(hex2) {
+    let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(
+      hex2
+    );
+    let r = parseInt(result[1], 16);
+    let g = parseInt(result[2], 16);
+    let b = parseInt(result[3], 16);
+    r /= 255, g /= 255, b /= 255;
+    let max2 = Math.max(r, g, b), min2 = Math.min(r, g, b);
+    let h, s2, l2 = (max2 + min2) / 2;
+    if (max2 == min2) {
+      h = s2 = 0;
+    } else {
+      let d = max2 - min2;
+      s2 = l2 > 0.5 ? d / (2 - max2 - min2) : d / (max2 + min2);
+      switch (max2) {
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = (b - r) / d + 2;
+          break;
+        case b:
+          h = (r - g) / d + 4;
+          break;
+      }
+      h /= 6;
+    }
+    h = Math.round(h * 360);
+    s2 = s2 * 100;
+    s2 = Math.round(s2);
+    l2 = l2 * 100;
+    l2 = Math.round(l2);
+    console.log("converted", hex2, "to", h, s2, l2);
+    return {
+      h,
+      s: s2,
+      l: l2
+    };
+  }
+  function rgb_to_hsl(r, g, b) {
+    let hex2 = rgb_to_hex(r, g, b);
+    return hex_to_hsl(hex2);
+  }
+  function rgb_to_hex(r, g, b) {
+    return "#" + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
+  }
+  function comp_to_hex(comp) {
+    let hex2 = comp.toString(16);
+    return hex2.length == 1 ? "0" + hex2 : hex2;
+  }
+  function clamp_sat2(sat) {
+    if (sat > 1.5) return 1.5;
+    return round_two(sat);
+  }
+  function clamp_lit(sat, lit) {
+    if (sat >= 1.3 && lit < 0.8) return 0.8;
+    return round_two(lit);
+  }
+  function round_two(value) {
+    return Math.round(value * 100) / 100;
+  }
+  function clean_number(string) {
+    return int2(string.replaceAll(",", "").replaceAll(".", ""));
+  }
+  function sanitise(text3, method = "+") {
+    return encodeURIComponent(text3.replaceAll(" ", method));
+  }
+  function sanitise_text(text3) {
+    return text3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+  function desanitise(text3, method = "+") {
+    return decodeURIComponent(text3).replaceAll(method, " ");
+  }
+  function return_artist_from_track(url, is_album) {
+    let split = url.split("/");
+    let length = split.length - 1;
+    let desanitised;
+    if (is_album) desanitised = desanitise(split[length - 1]);
+    else desanitised = desanitise(split[length - 2]);
+    let passes = 0;
+    while (/%[0-9A-Fa-f]{2}/.test(desanitised) && passes < 5) {
+      desanitised = desanitise(desanitised, "+");
+      passes++;
+    }
+    return desanitised;
+  }
+  function return_artist_from_generic(url) {
+    let split = url.split("/");
+    let length = split.length - 1;
+    if (split[length - 1] != "_") return desanitise(split[length - 1]);
+    else return desanitise(split[length - 2]);
+  }
+  function interpolate_hue(current, next, proximity) {
+    current = (current % 360 + 360) % 360;
+    next = (next % 360 + 360) % 360;
+    let diff = next - current;
+    if (diff > 180) {
+      diff -= 360;
+    } else if (diff < -180) {
+      diff += 360;
+    }
+    let interpolated = current + diff * proximity;
+    return (interpolated % 360 + 360) % 360;
+  }
+  function lazy(elem, func, options = {}) {
+    const { threshold = 0.1, rootMargin = "50px" } = options;
+    const observer = new IntersectionObserver(
+      (entries2) => {
+        entries2.forEach((entry) => {
+          if (entry.isIntersecting) {
+            log("now allowing load", "lazy", "info", {
+              elem,
+              options
+            });
+            func(elem);
+            observer.unobserve(elem);
+          }
+        });
+      },
+      { threshold, rootMargin }
+    );
+    observer.observe(elem);
+  }
+  function copy(text3) {
+    navigator.clipboard.writeText(text3).then(() => {
+      log("copied", "copy", "info", { text: text3 });
+      notify({
+        id: "copy",
+        title: tl(trans.copied_to_clipboard),
+        icon: "icon-16-copy"
+      });
+    });
+  }
+  function download_with_progress(url, func) {
+    return new Promise((resolve2, reject) => {
+      let xhr = new XMLHttpRequest();
+      xhr.open("GET", url, true);
+      xhr.responseType = "blob";
+      xhr.onprogress = (event3) => {
+        if (event3.lengthComputable) {
+          const percent = Math.round(event3.loaded / event3.total * 100);
+          func(percent);
+          log(`downloading ${percent}%`, "download", "info", {
+            url
+          });
+        }
+      };
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          resolve2(xhr.response);
+          log(`downloaded ${url}`, "download");
+        } else {
+          reject(new Error(`download failed: ${xhr.status}`));
+          log(`download failed: ${xhr.status}`, "download", "error", {
+            url
+          });
+        }
+      };
+      xhr.onerror = () => {
+        reject(new Error("network error"));
+        log("network error", "download", "error", { url });
+      };
+      xhr.send();
+    });
+  }
+  function pad2(num) {
+    return String(num).padStart(2, "0");
+  }
+  function convert_gif_to_png(url) {
+    const available_hosts = ["www.last.fm", "lastfm.freetls.fastly.net"];
+    const link = new URL(url, `https://www.last.fm${root}`);
+    if (!available_hosts.includes(link.hostname))
+      return Promise.reject(
+        new Error("url is not in valid hosts list: " + link.hostname)
+      );
+    return new Promise((resolve2, reject) => {
+      const image = html.node`
+            <img crossorigin="anonymous" src=${url}>
+        `;
+      console.info("image", image);
+      image.onload = () => {
+        const canvas = html.node`
+                <canvas width=${image.width} height=${image.height} />
+            `;
+        console.info("image canvas", canvas);
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(image, 0, 0);
+        resolve2(canvas.toDataURL("image/png"));
+      };
+      image.onerror = reject;
+    });
+  }
+  function control_gif_pause(image, override = false) {
+    let processed = image.getAttribute("data-gif-pause");
+    if (processed) return;
+    image.setAttribute("data-gif-pause", "true");
+    let setting2 = settings.static_gifs;
+    if (override) setting2 = "never";
+    if (setting2 == "always") return;
+    const original = image.src;
+    convert_gif_to_png(original).then((paused) => {
+      if (setting2 == "never") {
+        image.src = paused;
+        return;
+      }
+      image.addEventListener("mouseenter", () => {
+        image.src = original;
+      });
+      image.addEventListener("mouseleave", () => {
+        image.src = paused;
+      });
+      image.src = paused;
+      log("processed url", "image", "log", { original, paused });
+    }).catch((e) => {
+      log("failed to process url", "image", "error", { original });
+      console.error(e);
+    });
+  }
+  function is_link_external(url) {
+    try {
+      const link = new URL(url, window.location.origin);
+      return link.hostname != window.location.hostname;
+    } catch {
+      return false;
+    }
+  }
+  function romanise(text3) {
+    if (/[\u30A0-\u30FF\u3040-\u309F]/.test(text3) && settings.romanise_jp)
+      return title_case(toRomaji(text3));
+    if (/[\uAC00-\uD7AF]/.test(text3) && settings.romanise_ko)
+      return title_case(hangulRomanization.convert(text3));
+    return text3;
+  }
+  function title_case(text3) {
+    return text3.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+  }
+  function int2(num) {
+    return parseInt(num.replace(/\u00A0/g, ""));
+  }
+  function time(string = "") {
+    if (string == "") string = (/* @__PURE__ */ new Date()).toString();
+    const date = DateTime.fromJSDate(new Date(string));
+    return date.toFormat("HH:mm:ss Z");
+  }
+
+  // src/build/music.js
+  var artist_corrections = {};
+  var album_track_corrections = {};
+  var combined_artists = {};
+  var ranks = {
+    15: {
+      start: 6e4,
+      hue: 240,
+      sat: 1.15,
+      lit: 1.1
+    },
+    14: {
+      start: 44e3,
+      hue: 260,
+      sat: 1.2,
+      lit: 1.15
+    },
+    13: {
+      start: 32e3,
+      hue: 280,
+      sat: 1.25,
+      lit: 1.17
+    },
+    12: {
+      start: 26e3,
+      hue: 300,
+      sat: 1.2,
+      lit: 1.2
+    },
+    11: {
+      start: 17e3,
+      hue: 320,
+      sat: 1.15,
+      lit: 1.22
+    },
+    10: {
+      start: 12e3,
+      hue: 0,
+      sat: 1.25,
+      lit: 1.2
+    },
+    9: {
+      start: 8e3,
+      hue: 15,
+      sat: 1.25,
+      lit: 1.22
+    },
+    8: {
+      start: 5300,
+      hue: 30,
+      sat: 1.2,
+      lit: 1.23
+    },
+    7: {
+      start: 4e3,
+      hue: 45,
+      sat: 1.15,
+      lit: 1.25
+    },
+    6: {
+      start: 2250,
+      hue: 60,
+      sat: 1.1,
+      lit: 1.25
+    },
+    5: {
+      start: 1500,
+      hue: 80,
+      sat: 1.05,
+      lit: 1.23
+    },
+    4: {
+      start: 1e3,
+      hue: 100,
+      sat: 1,
+      lit: 1.2
+    },
+    3: {
+      start: 500,
+      hue: 120,
+      sat: 0.95,
+      lit: 1.17
+    },
+    2: {
+      start: 300,
+      hue: 150,
+      sat: 1,
+      lit: 1.15
+    },
+    1: {
+      start: 100,
+      hue: 180,
+      sat: 1.05,
+      lit: 1.13
+    },
+    0: {
+      start: 0,
+      hue: 200,
+      sat: 1.1,
+      lit: 1.17
+    }
+  };
+  var includes = {
+    guests: [
+      "feat.",
+      "featuring",
+      "- feat",
+      "[feat.",
+      "- with",
+      "(with",
+      "[with",
+      "w/ ",
+      "ft.",
+      "ref.",
+      "(hosted by"
+    ],
+    versions: [
+      "(taylor",
+      "- spotify singles",
+      "[taylor",
+      "(+",
+      "- vers\xE3o",
+      "(vers\xE3o",
+      "[vers\xE3o",
+      "- without dialogue",
+      "(without dialogue",
+      "[without dialogue",
+      "- no dialogue",
+      "(no dialogue",
+      "[no dialogue",
+      "- pop version",
+      "(pop version",
+      "[pop version",
+      "- rock version",
+      "(rock version",
+      "[rock version",
+      "- pop mix",
+      "(pop mix",
+      "[pop mix",
+      "- emo version",
+      "(emo version",
+      "[emo version",
+      "- version",
+      "(version",
+      "[version"
+    ],
+    remasters: [
+      "- remaster",
+      "(remaster",
+      "[remaster",
+      "- remasterizado",
+      "(remasterizado",
+      "[remasterizado",
+      ": high resolution remasters",
+      "- high resolution remasters",
+      "(high resolution remasters",
+      ": the high resolution remasters",
+      "- the high resolution remasters",
+      "(the high resolution remasters"
+      // Pink Floyd bootleg remaster boxsets
+    ],
+    mixes: [
+      "- devonshire mix",
+      "(devonshire mix",
+      "mike dean master",
+      "- remix",
+      "(remix",
+      "[remix",
+      "- live",
+      "(live",
+      "- ao vivo",
+      "(ao vivo",
+      "[ao vivo",
+      "- en vivo",
+      "(en vivo",
+      "[en vivo",
+      "- multishow ao vivo",
+      "(multishow ao vivo",
+      "[multishow ao vivo",
+      "- demo",
+      "(demo",
+      "- rehearsal",
+      "(rehearsal",
+      "- sample clearance",
+      "(sample clearance",
+      "[sample clearance",
+      "- home demo",
+      "(home demo",
+      "- solo acoustic",
+      "(solo acoustic",
+      "- acoustic",
+      "(acoustic",
+      "- alternative",
+      "(alternative",
+      "- chopped",
+      "(chopped",
+      "[chopped",
+      "(kate",
+      "(asmr",
+      "(agressive",
+      "(aggressive",
+      "brazilian phonk",
+      // lol
+      "- sped up",
+      "(sped up",
+      "[sped up",
+      "- slow",
+      "(slow",
+      "[slow",
+      "a. g. cook remix",
+      "- offline",
+      "- og mix",
+      "- club edit",
+      "(club edit",
+      "- radio",
+      "(radio",
+      "- orchestral",
+      "(orchestral",
+      "- self-titled demo",
+      "(self-titled demo",
+      "- album version",
+      "(album version",
+      "[album version",
+      "- us album version",
+      "(us album version",
+      "[us album version",
+      "- uk album version",
+      "(uk album version",
+      "[uk album version",
+      "- twilight soundtrack version",
+      "- transformers soundtrack version",
+      "- studio",
+      "(studio",
+      "[studio",
+      "(fifty shades darker",
+      "- j stax radio",
+      // fearless international version
+      "(10 minute",
+      "- old timey",
+      "(old timey",
+      "[old timey",
+      "- official english",
+      "(official english",
+      "[official english",
+      "- english version",
+      "(english version",
+      "[english version",
+      "- japanese version",
+      "(japanese version",
+      "[japanese version",
+      "- spanish version",
+      "(spanish version",
+      "[spanish version",
+      "- soundtrack",
+      "(soundtrack",
+      "[soundtrack",
+      "- the ultimate mix",
+      "(the ultimate mix",
+      "[the ultimate mix",
+      "- short edit",
+      "(short edit",
+      "short edit",
+      "- short version",
+      "(short version",
+      "[short version",
+      "- long version",
+      "(long version",
+      "[long version",
+      "- full length",
+      "(full length",
+      "[full length",
+      "[over now",
+      // billie eilish l'amour de ma vie
+      "- the remix",
+      "(the remix",
+      "[the remix",
+      "(unfinished original recordings of de-loused in the comatorium",
+      "[unfinished original recordings of de-loused in the comatorium",
+      "- unfinished original recordings of de-loused in the comatorium",
+      // landscape tantrums
+      "- esher",
+      "(esher",
+      "[esher",
+      "- first",
+      "(first",
+      "[first",
+      "- hummed",
+      "(hummed",
+      "[hummed",
+      "- second",
+      "(second",
+      "[second",
+      "- songwriting",
+      "(songwriting",
+      "[songwriting",
+      "- strings",
+      "(strings",
+      "[strings",
+      "- take",
+      "(take",
+      "[take",
+      "- unnumbered",
+      "(unnumbered",
+      "[unnumbered",
+      "- vocal",
+      "(vocal",
+      "[vocal",
+      "- without",
+      "(without",
+      "[without",
+      "- alternate version",
+      "(alternate version",
+      "[alternate version",
+      "- cla mix",
+      "(cla mix",
+      "[cla mix",
+      "- chris lord-alge mix",
+      "(chris lord-alge mix",
+      "[chris lord-alge mix",
+      "- mono",
+      "(mono",
+      "[mono",
+      "- stereo",
+      "(stereo",
+      "[stereo"
+    ],
+    mixes_numbers: [
+      "(v1",
+      "(v2",
+      "(v3",
+      "(v4",
+      "(v5",
+      "(v6",
+      "(v7",
+      "(v8",
+      "(v9",
+      "[v1",
+      "[v2",
+      "[v3",
+      "[v4",
+      "[v5",
+      "[v6",
+      "[v7",
+      "[v8",
+      "[v9",
+      "- mix 1",
+      "- mix 2",
+      "- mix 3",
+      "- mix 4",
+      "- mix 5",
+      "- mix 6",
+      "- mix 7",
+      "- mix 8",
+      "- mix 9",
+      "(mix 1",
+      "(mix 2",
+      "(mix 3",
+      "(mix 4",
+      "(mix 5",
+      "(mix 6",
+      "(mix 7",
+      "(mix 8",
+      "(mix 9"
+    ],
+    stems: [
+      "- acapella",
+      "(acapella",
+      "[acapella",
+      "- a cappella",
+      "(a cappella",
+      "[a cappella",
+      "- instrumental",
+      "(instrumental",
+      "[instrumental",
+      "- session",
+      "(session",
+      "[session",
+      "- studio session",
+      "(studio session",
+      "[studio session",
+      "- smart session",
+      "(smart session",
+      "[smart session",
+      "- boombox",
+      "(boombox",
+      "- mtv unplugged",
+      "(mtv unplugged",
+      "- unplugged",
+      "(unplugged",
+      "- ac\xFAstico",
+      "- \xE1custico",
+      "(ac\xFAstico",
+      "[ac\xFAstico",
+      "- the long pond studio",
+      "(the long pond studio",
+      "- recorded at long pond studio",
+      "(recorded at long pond studio"
+    ],
+    bonus: [
+      "- intro",
+      "(intro",
+      "[intro",
+      "- outro",
+      "(outro",
+      "[outro",
+      "dean outro",
+      "- interlude",
+      "(interlude",
+      "[interlude",
+      "- bonus",
+      "(bonus",
+      "[bonus",
+      "- edit",
+      "(edit",
+      "[edit",
+      "- from",
+      "(from",
+      "[from",
+      "- music from",
+      "(music from",
+      "- skit",
+      "(skit",
+      "- original",
+      "(original",
+      "[original",
+      "- deluxe",
+      "(deluxe",
+      "[deluxe",
+      "- digital deluxe",
+      "(digital deluxe",
+      "[digital deluxe",
+      "- complete edition",
+      "(complete edition",
+      "[complete edition",
+      ": edi\xE7\xE3o",
+      "- edi\xE7\xE3o",
+      "(edi\xE7\xE3o",
+      "[edi\xE7\xE3o",
+      "- edicion",
+      "- edici\xF3n",
+      "(edicion",
+      "(edici\xF3n",
+      "- extended",
+      "(extended",
+      "[extended",
+      "- the extended edition",
+      // denzel
+      "- expanded",
+      "(expanded",
+      "[expanded",
+      "- anniversary",
+      "(anniversary",
+      "[anniversary",
+      "- b-side",
+      "- c-side",
+      "(b-side",
+      "(c-side",
+      "- lp",
+      "- ep",
+      "(lp",
+      "(ep",
+      "- single",
+      "(single",
+      "- mixtape",
+      "(mixtape",
+      "- box set",
+      "(box set",
+      "- spilled",
+      "(spilled",
+      "[spilled",
+      // olivia rodrigo
+      "- slightly deluxe",
+      "(slightly deluxe",
+      "[slightly deluxe",
+      // ariana grande
+      ": self-titled deluxe",
+      "(self-titled deluxe",
+      "[self-titled deluxe",
+      // paramore
+      ": the anthology",
+      "(the anthology",
+      "[the anthology",
+      "- 3am edition",
+      "(3am edition",
+      "[3am edition",
+      "- the til dawn edition",
+      "(the til dawn edition",
+      "[the til dawn edition",
+      "- til dawn edition",
+      "(til dawn edition",
+      "[til dawn edition",
+      "- late night edition",
+      "(late night edition",
+      "[late night edition",
+      "- the late night edition",
+      "(the late night edition",
+      "[the late night edition",
+      "- big machine radio release special",
+      "(big machine radio release special",
+      "[big machine radio release special",
+      ": platinum",
+      "- platinum",
+      "(platinum",
+      "[platinum",
+      "- international",
+      "(international",
+      "[international",
+      // taylor swift
+      "- uk deluxe",
+      "(uk deluxe",
+      "[uk deluxe",
+      "- magic city edition",
+      "(magic city edition",
+      "[magic city edition",
+      "- japan edition",
+      "(japan edition",
+      "[japan edition",
+      // added edition to some for safety
+      "- japan version",
+      "(japan version",
+      "[japan version",
+      "- australian version",
+      "(australian version",
+      "[australian version",
+      "- after school - deluxe",
+      "(after school - deluxe",
+      "[after school - deluxe",
+      // melanie martinez
+      "- revised",
+      "(revised",
+      "[revised",
+      ": the complete",
+      "(the complete",
+      "[the complete",
+      "- the moonlight",
+      "(the moonlight",
+      "[the moonlight",
+      "- moonlight",
+      "(moonlight",
+      "[moonlight",
+      // dua lipa
+      "- tour",
+      "(tour",
+      "[tour",
+      "music from and inspired by",
+      // on the end of black panther the album
+      "- music inspired",
+      "(music inspired",
+      "[music inspired",
+      "- featured in",
+      "(featured in",
+      "[featured in",
+      "- best weekend ever edition",
+      "(best weekend ever edition",
+      "[best weekend ever edition",
+      "- double disc",
+      "(double disc",
+      "[double disc",
+      "- reissue",
+      "(reissue",
+      "[reissue",
+      "(12 reg. tracks",
+      // confessions madonna
+      "- special",
+      "(special",
+      "[special",
+      "- highlights from",
+      "(highlights from",
+      "[highlights from",
+      "- disc 1",
+      "- disc 2",
+      "- disc 3",
+      "- disc 4",
+      "- disc 5",
+      "- disc 6",
+      "- disc 7",
+      "- disc 8",
+      "- disc 9",
+      "(disc 1",
+      "(disc 2",
+      "(disc 3",
+      "(disc 4",
+      "(disc 5",
+      "(disc 6",
+      "(disc 7",
+      "(disc 8",
+      "(disc 9",
+      "[disc 1",
+      "[disc 2",
+      "[disc 3",
+      "[disc 4",
+      "[disc 5",
+      "[disc 6",
+      "[disc 7",
+      "[disc 8",
+      "[disc 9",
+      //,
+      "- 19",
+      "- 20",
+      "(19",
+      "(20",
+      "[19",
+      "[20",
+      "- 10th",
+      "- 25th",
+      "- 30th",
+      "- 35th",
+      "- 40th",
+      "- 50th",
+      "- 60th",
+      "(10th",
+      "(25th",
+      "(30th",
+      "(35th",
+      "(40th",
+      "(50th",
+      "(60th",
+      "- tenth anniversary",
+      "fifth anniversary",
+      "(tenth anniversary",
+      "(fifth anniversary",
+      ": the tenth anniversary",
+      "the tenth anniversary",
+      // lady gaga born this way
+      "- 10 year",
+      "- 25 year",
+      "-30 year",
+      "-35 year",
+      "- 40 year",
+      "- 50 year",
+      "- 60 year",
+      "(10 year",
+      "(25 year",
+      "(30 year",
+      "(35 year",
+      "(40 year",
+      "(50 year",
+      "(60 year",
+      "- transition",
+      "(transition",
+      "[transition",
+      "- reprise",
+      "(reprise",
+      "[reprise",
+      "(director"
+    ],
+    form: ["(clean", "[clean", "(explicit", "[explicit", "(spotify)"]
+  };
+  var clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify|(feat\.|ft\.|featuring|with)[^)\]]*)\s*[\])]?/gi;
+  function clean_title(title) {
+    return title.replace(clean_title_regex, "").replace(/\u2010/g, "-");
+  }
+
+  // src/build/seasonal.js
+  var seasonal_timer = {
+    state: void 0
+  };
+  var stored_season = {
+    id: "none",
+    new_years_eve: false
+  };
+  var seasonal_events = [
+    {
+      id: "new_years",
+      start: "y0-01-01T00:00:00{offset}",
+      end: "y0-01-14T23:59:59{offset}",
+      snowflakes: {
+        state: true,
+        count: 90
+      }
+    },
+    {
+      id: "easter",
+      start: "y0-04-02T00:00:00{offset}",
+      end: "y0-04-30T23:59:59{offset}",
+      snowflakes: {
+        state: false
+      }
+    },
+    {
+      id: "pride",
+      start: "y0-05-31T00:00:00{offset}",
+      end: "y0-07-07T23:59:59{offset}",
+      snowflakes: {
+        state: false
+      }
+    },
+    {
+      id: "halloween",
+      start: "y0-09-22T00:00:00{offset}",
+      end: "y0-11-01T11:59:59{offset}",
+      snowflakes: {
+        state: false
+      }
+    },
+    {
+      id: "pre_fall",
+      start: "y0-11-01T12:00:00{offset}",
+      end: "y0-11-12T23:59:59{offset}",
+      snowflakes: {
+        state: true,
+        count: 12
+      }
+    },
+    {
+      id: "fall",
+      start: "y0-11-13T00:00:00{offset}",
+      end: "y0-11-22T23:59:59{offset}",
+      snowflakes: {
+        state: true,
+        count: 40
+      }
+    },
+    {
+      id: "christmas",
+      start: "y0-11-23T00:00:00{offset}",
+      end: "y0-12-31T23:59:59{offset}",
+      snowflakes: {
+        state: true,
+        count: 160
+      }
+    }
+  ];
+
+  // src/build/sponsor.js
+  var sponsor_list = {
+    latest: 0,
+    sponsors: [],
+    sponsors_one_time: [],
+    sponsor_count_remove: 0,
+    sponsor_account: "",
+    sponsor_link: "",
+    special: [],
+    badges: {}
+  };
+
+  // src/components/dialog.js
+  function load_dialogs() {
+    let dialogs2 = document.createElement("div");
+    dialogs2.classList.add("bleh-modals");
+    document.body.appendChild(dialogs2);
+    page.structure.dialogs = dialogs2;
+  }
+  function dialog({
+    id = "",
+    title,
+    subtitle,
+    body = html.node``,
+    dismiss = true,
+    type = "",
+    has_overlays = true,
+    replace = false,
+    replace_if_possible = true,
+    replace_id = "",
+    allow_scroll = false,
+    colourful = false,
+    colourful_bg = false,
+    handle_escape_manually = false
+  }) {
+    log(`creating ${id}`, "window", "info", {
+      id,
+      title,
+      subtitle,
+      body,
+      dismiss,
+      type,
+      has_overlays,
+      replace,
+      replace_id,
+      allow_scroll,
+      colourful,
+      colourful_bg,
+      handle_escape_manually
+    });
+    if (replace && replace_if_possible)
+      replace_if_possible = false;
+    if (replace_if_possible && Object.keys(dialogs).length > 0) {
+      replace = true;
+      for (let dialog2 in dialogs) {
+        replace_id = dialog2;
+        break;
+      }
+    }
+    let modal = html.node`
+        <div
+        class=${[
+      "bleh-modal",
+      colourful ? "colorful" : "",
+      colourful_bg ? "colourful-bg" : ""
+    ].join(" ")}
+        role="dialog"
+        data-modal-id=${id}
+        data-modal-has-overlays=${has_overlays}
+        data-modal-type=${type}
+        />
+    `;
+    if (title) {
+      modal.setAttribute("aria-labelledby", "modal_title");
+      modal.appendChild(html.node`
+            <div class="bleh-modal-title" id="modal_title">
+                <h1>${title}</h1>
+                ${subtitle ? html.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
+            </div>
+        `);
+    }
+    if (dismiss) {
+      let modal_close = document.createElement("button");
+      modal_close.classList.add("modal-close-button");
+      modal_close.setAttribute("onclick", `_dialog_rm({id: "${id}"})`);
+      modal.appendChild(modal_close);
+      page.structure.dialogs.setAttribute("onclick", "_dialog_rm({all: true, modal_bg: true})");
+    } else {
+      page.structure.dialogs.removeAttribute("onclick");
+    }
+    if (dismiss && !handle_escape_manually) {
+      document.addEventListener("keydown", (e) => {
+        if (e.key == "Escape") {
+          dialog_rm({ id });
+        }
+      });
+    }
+    let modal_body = document.createElement("div");
+    modal_body.classList.add("bleh-modal-body");
+    modal_body.setAttribute("data-allow-scroll", allow_scroll);
+    modal_body.appendChild(body);
+    modal.appendChild(modal_body);
+    dialogs[id] = {
+      instance: modal
+    };
+    if (replace || !replace && dialogs.hasOwnProperty(replace_id)) {
+      log(`window set to replace ${replace_id}`, "window");
+      dialog_rm({ id: replace_id });
+      delete dialogs[replace_id];
+    }
+    page.structure.dialogs.appendChild(modal);
+    page.structure.dialogs.classList.add("has-dialog");
+    return modal;
+  }
+  unsafeWindow._dialog_rm = function({
+    id = null,
+    all = false,
+    modal_bg = false
+  }) {
+    dialog_rm({
+      id,
+      all,
+      modal_bg
+    });
+  };
+  function dialog_rm({
+    id,
+    all = false,
+    modal_bg = false
+  }) {
+    if (all) {
+      if (modal_bg) {
+        console.log(event);
+        if (event.target.classList[0] != "bleh-modals")
+          return;
+      }
+      log("requested kill all", "window");
+      console.info(dialogs);
+      for (let dialog2 in dialogs) {
+        dialog_rm({
+          id: dialog2
+        });
+      }
+      return;
+    }
+    if (!id) return;
+    if (!page.structure.dialogs) return;
+    if (dialogs.hasOwnProperty(id)) {
+      let dialog2 = dialogs[id];
+      if (!page.structure.dialogs.contains(dialog2.instance))
+        return;
+      log(`queuing ${id} to kill`, "window");
+      dialog2.instance.classList.add("to-remove");
+      setTimeout(function() {
+        page.structure.dialogs.removeChild(dialog2.instance);
+      }, 400);
+      delete dialogs[id];
+      if (JSON.stringify(dialogs) == "{}") {
+        page.structure.dialogs.classList.remove("has-dialog");
+      }
+    }
+  }
+  function kill_window(id, replacing = false) {
+    try {
+      if (replacing) {
+        log(`killed ${id}`, "window");
+        document.body.removeChild(document.getElementById(`bleh--window-${id}--background`));
+        document.body.removeChild(document.getElementById(`bleh--window-${id}--wrapper`));
+      } else {
+        log(`queuing ${id} to kill`, "window");
+        let background = document.getElementById(`bleh--window-${id}--background`);
+        let window2 = document.getElementById(`bleh--window-${id}--wrapper`);
+        background.classList.add("window-removing");
+        window2.classList.add("window-removing");
+        setTimeout(function() {
+          document.body.removeChild(background);
+          document.body.removeChild(window2);
+        }, 270);
+      }
+    } catch (e) {
+      log(`kill failed, ${id} does not exist`, "window");
+    }
+  }
+  unsafeWindow._kill_window = function(id) {
+    kill_window(id);
+  };
+
+  // src/sku.js
+  function ff(flag) {
+    log(`parsing ${flag}`, "flag", "log", {
+      setting: settings.feature_flags[flag],
+      sku: version.feature_flags[flag]
+    });
+    if (settings.feature_flags[flag] != null)
+      return settings.feature_flags[flag];
+    if (version.feature_flags[flag] != null)
+      return version.feature_flags[flag].default;
+  }
+
+  // src/components/status.js
+  function load_status() {
+    if (!page.structure.status) {
+      let notification_host = html.node`
+            <div class="status-alerts" />
+        `;
+      page.structure.status = notification_host;
+      document.body.appendChild(notification_host);
+    }
+  }
+  function status({ title, body, type }) {
+    let icon = "icon-16-info";
+    if (type == "error") {
+      icon = "icon-16-x";
+    }
+    const alert2 = html.node`
+        <div class="status-alert colourful colourful-bg" onclick=${() => status_remove()}>
+            <div class="status-icon">
+                <div class="bleh-icon" style="--icon: var(--${icon})" />
+            </div>
+            <div class="status-title">${title}</div>
+            ${body ? html.node`<div class="status-body">${body}</div>` : ""}
+        </div>
+    `;
+    setTimeout(() => {
+      status_remove();
+    }, 2200);
+    page.structure.status.appendChild(alert2);
+    return alert2;
+    function status_remove() {
+      alert2.classList.add("hiding");
+      setTimeout(() => {
+        alert2.remove();
+      }, 150);
+    }
+  }
+
+  // src/sponsor.js
+  function sponsors(force = false) {
+    if (!ff("sponsor"))
+      return;
+    let sponsor_data = localStorage.getItem("kat_sponsors");
+    let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (!sponsor_data) {
+      log("not cached, fetching", "sponsor");
+      sponsor_request(true);
+    } else {
+      for (var member in sponsor_list) delete sponsor_list[member];
+      Object.assign(sponsor_list, JSON.parse(sponsor_data));
+      if (sponsor_list) {
+        auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+        auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
+      }
+      if (sponsor_expire < current_time && !force) {
+        sponsor_request();
+      } else if (force) {
+        sponsor_request(true);
+      }
+    }
+  }
+  function sponsor_request(notify2 = false) {
+    let button = document.body.querySelector('[onclick="_sponsor_check()"]');
+    if (button)
+      button.setAttribute("disabled", "");
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`list responded with ${xhr.status}`, "sponsor");
+      let api_expire = /* @__PURE__ */ new Date();
+      if (xhr.status != 200) {
+        log("request has been cancelled, will request again in 1h", "sponsor");
+        api_expire.setHours(api_expire.getHours() + 1);
+      }
+      if (xhr.status == 200) {
+        if (sponsor_list.latest != 0 || sponsor_list && parseFloat(JSON.parse(this.response).latest) >= parseFloat(sponsor_list.latest)) {
+          for (const member in sponsor_list) delete sponsor_list[member];
+          Object.assign(sponsor_list, JSON.parse(this.response));
+          if (sponsor_list) {
+            auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+            auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
+          }
+          if (notify2)
+            status({
+              title: tl(trans.downloaded_value).replace("{v}", tl(trans.sponsor_details))
+            });
+          localStorage.setItem("kat_sponsors", this.response);
+        }
+        api_expire.setHours(api_expire.getHours() + 4);
+        log(`list cached until ${api_expire}`, "sponsor");
+      }
+      localStorage.setItem("kat_sponsors_expire", api_expire);
+      if (button != null)
+        button.removeAttribute("disabled");
+    };
+    xhr.send();
+  }
+  unsafeWindow._sponsor_check = function() {
+    sponsors(true);
+  };
+  unsafeWindow._sponsor = function(replace = false) {
+    sponsor(replace);
+  };
+  function sponsor(replace = false) {
+    dialog({
+      id: "sponsor",
+      title: tl(trans.support_future_development),
+      body: html.node`
+            <div class="modal-vertical-inner support-inner">
+                <div class="avatar">
+                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                </div>
+                <h1>${tl(trans.support_future_development)}</h1>
+                <p>${html.node([
+        tl(trans.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
+      ])}</p>
+            </div>
+            <div class="modal-footer">
+                <div class="fill"></div>
+                <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
+                    ${tl(trans.sponsor)}
+                </a>
+                <div class="fill"></div>
+            </div>
+        `,
+      type: "sponsor",
+      replace_if_possible: replace
+    });
+  }
+  unsafeWindow._sponsor_manage = function() {
+    sponsor_manage();
+  };
+  function sponsor_manage() {
+    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
+      dialog({
+        id: "sponsor_manage",
+        title: tl(trans.sponsor),
+        body: html.node`
+                <div class="modal-vertical-inner support-inner">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_no_badge)}</p>
+                </div>
+            `,
+        type: "sponsor"
+      });
+    } else {
+      dialog({
+        id: "sponsor_manage",
+        title: tl(trans.sponsor),
+        body: html.node`
+                <div class="modal-vertical-inner support-inner">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_get_badge)}</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="fill"></div>
+                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
+                        ${tl(trans.manage_sponsor)}
+                    </a>
+                    <div class="fill"></div>
+                </div>
+            `,
+        type: "sponsor"
+      });
+    }
+  }
+  function bleh_sponsor_page() {
+    document.body.style.removeProperty("--hue-album");
+    document.body.style.removeProperty("--sat-album");
+    document.body.style.removeProperty("--lit-album");
+    let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
+    if (adaptive_skin_container == null)
+      return;
+    adaptive_skin_container.setAttribute("data-bleh", "true");
+    adaptive_skin_container.innerHTML = "";
+    log("internal bleh sponsor", "page");
+    page.type = "bleh_sponsor";
+    page.subpage = "";
+    sponsor();
+  }
+
+  // src/components/badge.js
+  function load_badges(user, solo = false) {
+    if (!sponsor_list || !sponsor_list.badges) return;
+    if (!sponsor_list.badges.hasOwnProperty(user)) return;
+    let badges = [];
+    if (!Array.isArray(sponsor_list.badges[user])) {
+      log("1 badge found", "sponsor", "info", sponsor_list.badges[user]);
+      badges.push(sponsor_list.badges[user]);
+    } else {
+      log(
+        "multiple badges found",
+        "sponsor",
+        "info",
+        sponsor_list.badges[user]
+      );
+      if (solo)
+        badges.push(
+          sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]
+        );
+      else badges = sponsor_list.badges[user];
+    }
+    badges.forEach((badge) => {
+      badge.user = user;
+      if (!badge.name) {
+        if (trans.badges[badge.type]) {
+          badge.name = tl(trans.badges[badge.type].name);
+        } else {
+          badge.name = tl(trans.unavailable);
+          badge.reason = tl(trans.requires_higher_bleh_version);
+        }
+      }
+      if (trans.badges[badge.type] && trans.badges[badge.type].reason)
+        badge.reason = tl(trans.badges[badge.type].reason);
+      else if (badge.reason && trans.badges[badge.reason] && trans.badges[badge.reason].reason)
+        badge.reason = tl(trans.badges[badge.reason].reason);
+      if (badge.reason) return;
+      if (badge.type == "sponsor" || badge.type == "contributor")
+        badge.reason = badge.type;
+      else if (badge.type == "cute" || badge.type == "queen")
+        badge.reason = tl(trans.badges.cute.reason);
+      else badge.reason = tl(trans.badges.reserved.reason);
+    });
+    log("final badge list", "sponsor", "info", badges);
+    return badges;
+  }
+  function create_badge(badge = {
+    type: "",
+    icon: "",
+    reason: "",
+    hue: -1,
+    sat: -1,
+    lit: -1,
+    name: "",
+    user: "",
+    inbuilt: false
+  }, on_avatar = false, long = false, small = false) {
+    const classlist = on_avatar ? "avatar-status-dot" : "label no-hover";
+    let elem = html.node`
+        <span class=${classlist}>
+            ${badge.name}
+        </span>
+    `;
+    if (long) elem.classList.add("expand");
+    if (badge.icon != "" && badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+      elem.style.setProperty("--mask", `url(${badge.icon})`);
+      elem.style.setProperty("--hue-over", badge.hue);
+      elem.style.setProperty("--sat-over", badge.sat);
+      elem.style.setProperty("--lit-over", badge.lit);
+    } else if (badge.inbuilt) {
+      elem.classList.add(badge.type);
+    } else {
+      elem.classList.add(
+        `user-status--bleh-${badge.type}`,
+        `user-status--bleh-user-${badge.user}`
+      );
+    }
+    if (on_avatar || small) return elem;
+    tippy_esm_default(elem, {
+      theme: "badge",
+      placement: "bottom",
+      content: html.node`
+            <div class="badge-name">${badge.name}</div>
+            <div class="badge-reason">${badge.reason}</div>
+        `
+    });
+    if (badge.type == "sponsor") elem.onclick = sponsor;
+    return elem;
+  }
+
+  // src/components/menu.js
+  function register_menu(element, menu) {
+    element.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      menu.setProps({
+        placement: "right-start",
+        offset: [0, 0],
+        getReferenceClientRect: () => ({
+          width: 0,
+          height: 0,
+          top: e.clientY,
+          bottom: e.clientY,
+          left: e.clientX,
+          right: e.clientX
+        })
+      });
+      menu.show();
+    });
+  }
+
+  // src/components/calendar.js
+  function calendar({
+    value,
+    min: min2,
+    max: max2,
+    disabled,
+    show_time = true,
+    name
+  }) {
+    let date_button;
+    let manual_button;
+    let up_button;
+    let down_button;
+    let now2 = /* @__PURE__ */ new Date();
+    if (value != null) now2 = new Date(value);
+    const min_date = min2 != null ? new Date(min2) : new Date(now2.getTime() - 14 * 24 * 60 * 60 * 1e3);
+    min_date.setHours(0, 0, 0, 0);
+    const max_date = max2 != null ? new Date(max2) : /* @__PURE__ */ new Date();
+    max_date.setHours(23, 59, 59, 999);
+    let last_action;
+    const state = {
+      year: now2.getFullYear(),
+      month: now2.getMonth() + 1,
+      day: now2.getDate(),
+      hours: now2.getHours(),
+      mins: now2.getMinutes(),
+      secs: now2.getSeconds()
+    };
+    let view = {
+      level: "day",
+      year: state.year,
+      month: state.month
+    };
+    let legacy_date;
+    let date_display;
+    let time_input;
+    let popup_inner = html.node`<div class="calendar" />`;
+    const locale = void 0;
+    const months2 = Array.from(
+      { length: 12 },
+      (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(
+        new Date(2e3, i, 1)
+      )
+    );
+    const raw_weekdays = Array.from(
+      { length: 7 },
+      (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(
+        new Date(1970, 0, 4 + i)
+      )
+    );
+    const weekdays2 = raw_weekdays.slice(1).concat(raw_weekdays[0]);
+    function months_between(a, b) {
+      return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+    }
+    function can_nav_month_view() {
+      return months_between(min_date, max_date) >= 1;
+    }
+    function can_nav_year_view() {
+      return max_date.getFullYear() - min_date.getFullYear() >= 1;
+    }
+    function on_month_year_click() {
+      last_action = "";
+      if (view.level === "day" && can_nav_month_view()) {
+        view.level = "month";
+      } else if (view.level === "month" && can_nav_year_view()) {
+        view.level = "year";
+      } else if (view.level === "year") {
+        view.level = "month";
+      } else if (view.level === "manual") {
+        view.level = "day";
+      } else {
+        return;
+      }
+      render_popup();
+    }
+    const container = html.node`
+        <div class="input-group">
+            <div class="content-form input-container" data-type="date">
+                <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
+                <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
+            </div>
+            ${show_time ? html.node`
+            <div class="content-form input-container" data-type="time">
+                <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
+            </div>
+            ` : ""}
+        </div>
+    `;
+    if (time_input) {
+      time_input.addEventListener("input", () => {
+        const parts = time_input.value.split(":").map((n2) => parseInt(n2, 10));
+        state.hours = parts[0] || 0;
+        state.mins = parts[1] || 0;
+        state.secs = parts[2] || 0;
+        emit();
+      });
+    }
+    function can_prev() {
+      const py = view.month === 1 ? view.year - 1 : view.year;
+      const pm = view.month === 1 ? 12 : view.month - 1;
+      return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
+    }
+    function can_next() {
+      const ny = view.month === 12 ? view.year + 1 : view.year;
+      const nm = view.month === 12 ? 1 : view.month + 1;
+      return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
+    }
+    let tooltip = tippy_esm_default(date_display, {
+      theme: "window",
+      content: "",
+      placement: "top",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      appendTo: document.body,
+      onShow() {
+        last_action = "";
+        render_popup();
+      }
+    });
+    let menu = tippy_esm_default(date_display, {
+      theme: "context-menu",
+      content: html.node`
+            <button class="dropdown-menu-clickable-item" data-type="manual" onclick=${() => {
+        view.level = "manual";
+        tooltip.show();
+      }}>
+                ${tl(trans.manual_date)}
+            </button>
+        `,
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      appendTo: document.body,
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
+    register_menu(date_display, menu);
+    function render_popup() {
+      let inner;
+      if (view.level === "year") {
+        inner = render_year_view();
+      } else if (view.level === "month") {
+        inner = render_month_view();
+      } else if (view.level === "manual") {
+        inner = render_manual_view();
+      } else {
+        inner = render_day_view();
+      }
+      tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
+      if (date_button) tippy_esm_default(date_button, { content: tl(trans.change_zoom) });
+      if (manual_button)
+        tippy_esm_default(manual_button, { content: manual_button.textContent });
+      if (up_button) tippy_esm_default(up_button, { content: up_button.textContent });
+      if (down_button)
+        tippy_esm_default(down_button, { content: down_button.textContent });
+    }
+    function render_day_view() {
+      return html.node`
+            <div class="calendar-header">
+                <button class="month-year" type="button" ref=${(el) => date_button = el} onclick=${on_month_year_click} disabled=${!can_nav_month_view()}>
+                    ${months2[view.month - 1]} ${view.year}
+                </button>
+                <div class="fill" />
+                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" onclick=${() => {
+        view.level = "manual";
+        render_popup();
+      }}>
+                    ${tl(trans.manual)}
+                </button>
+                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled=${!can_prev()} type="button" onclick=${() => {
+        if (!can_prev()) return;
+        view.month--;
+        if (view.month < 1) {
+          view.month = 12;
+          view.year--;
+        }
+        last_action = "prev";
+        render_popup();
+      }}>
+                    ${tl(trans.back)}
+                </button>
+                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled=${!can_next()} type="button" onclick=${() => {
+        if (!can_next()) return;
+        view.month++;
+        if (view.month > 12) {
+          view.month = 1;
+          view.year++;
+        }
+        last_action = "next";
+        render_popup();
+      }}>
+                    ${tl(trans.next)}
+                </button>
+            </div>
+            <div class="date-header">
+                ${weekdays2.map((day) => html.node`<div class="date">${day}</div>`)}
+            </div>
+            <div class="days" data-last-action=${last_action}>
+                ${days(view.year, view.month).map(
+        (cell) => cell.type == "empty" ? html.node`<button class="day empty" type="button" disabled />` : html.node`
+                            <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date >= min_date && cell.date <= max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+          state.day = cell.day;
+          state.year = view.year;
+          state.month = view.month;
+          update_display();
+          emit();
+          last_action = "";
+          render_popup();
+        }}>${cell.day}</button>
+                        `
+      )}
+            </div>
+        `;
+    }
+    function render_month_view() {
+      const min_year = min_date.getFullYear();
+      const max_year = max_date.getFullYear();
+      return html.node`
+            <div class="calendar-header">
+                <button class="month-year" type="button" ref=${(el) => date_button = el} onclick=${on_month_year_click} disabled=${!can_nav_year_view()}>
+                    ${view.year}
+                </button>
+                <div class="fill" />
+                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" onclick=${() => {
+        view.level = "manual";
+        render_popup();
+      }}>
+                    ${tl(trans.manual)}
+                </button>
+                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} type="button" disabled=${view.year <= min_year} onclick=${() => {
+        if (view.year < min_year) return;
+        view.year--;
+        last_action = "prev";
+        render_popup();
+      }}>
+                    ${tl(trans.back)}
+                </button>
+                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} type="button" disabled=${view.year >= max_year} onclick=${() => {
+        if (view.year > max_year) return;
+        view.year++;
+        last_action = "next";
+        render_popup();
+      }}>
+                    ${tl(trans.next)}
+                </button>
+            </div>
+            <div class="months" data-last-action=${last_action}>
+                ${months2.map((label, i) => {
+        const month_start = new Date(view.year, i, 1);
+        const month_end = new Date(
+          view.year,
+          i + 1,
+          0,
+          23,
+          59,
+          59,
+          999
+        );
+        return html.node`
+                        <button class="month" aria-selected=${view.year === state.year && i + 1 === state.month} disabled=${month_end < min_date || month_start > max_date} onclick=${() => {
+          view.month = i + 1;
+          view.level = "day";
+          last_action = "";
+          update_display();
+          emit();
+          render_popup();
+        }}>
+                            ${label}
+                        </button>
+                    `;
+      })}
+            </div>
+        `;
+    }
+    function render_year_view() {
+      const min_year = min_date.getFullYear();
+      const max_year = max_date.getFullYear();
+      const decade_start = Math.floor(view.year / 10) * 10;
+      return html.node`
+            <div class="calendar-header">
+                <button class="month-year" ref=${(el) => date_button = el} onclick=${on_month_year_click}>
+                    ${decade_start} – ${decade_start + 9}
+                </button>
+                <div class="fill" />
+                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" onclick=${() => {
+        view.level = "manual";
+        render_popup();
+      }}>
+                    ${tl(trans.manual)}
+                </button>
+                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled=${decade_start - 10 < min_year} onclick=${() => {
+        if (decade_start - 10 < min_year) return;
+        view.year -= 10;
+        render_popup();
+      }}>
+                    ${tl(trans.back)}
+                </button>
+                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled=${decade_start + 10 > max_year} onclick=${() => {
+        if (decade_start + 10 > max_year) return;
+        view.year += 10;
+        render_popup();
+      }}>
+                    ${tl(trans.next)}
+                </button>
+            </div>
+            <div class="years">
+                ${Array.from({ length: 10 }, (_, i) => decade_start + i).map(
+        (yr) => {
+          return html.node`
+                        <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
+            view.year = yr;
+            view.level = "month";
+            render_popup();
+          }}>
+                            ${yr}
+                        </button>
+                    `;
+        }
+      )}
+            </div>
+        `;
+    }
+    function validate_text_date(value2) {
+      const m = value2.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (!m) return null;
+      const [_, ys, ms, ds] = m;
+      const date = /* @__PURE__ */ new Date(`${ys}-${ms}-${ds}T00:00:00`);
+      if (date.getFullYear() !== +ys || date.getMonth() + 1 !== +ms || date.getDate() !== +ds) {
+        return null;
+      }
+      if (date < min_date || date > max_date) return null;
+      return date;
+    }
+    function render_manual_view() {
+      let manual_date;
+      let elem = html.node`
+            <div class="calendar-header">
+                <button class="month-year" ref=${(el) => date_button = el} onclick=${on_month_year_click}>
+                    ${tl(trans.manual)}
+                </button>
+                <div class="fill" />
+                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" disabled>
+                    ${tl(trans.manual)}
+                </button>
+                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled>
+                    ${tl(trans.back)}
+                </button>
+                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled>
+                    ${tl(trans.next)}
+                </button>
+            </div>
+            <div class="manual">
+                ${manual_date = input({
+        type: "text",
+        value: `${state.year}-${pad2(state.month)}-${pad2(state.day)}`,
+        func: (value2) => {
+          const parsed2 = validate_text_date(value2);
+          if (!parsed2) {
+            manual_date.value(
+              `${state.year}-${pad2(state.month)}-${pad2(state.day)}`
+            );
+            return;
+          }
+          state.year = parsed2.getFullYear();
+          state.month = parsed2.getMonth() + 1;
+          state.day = parsed2.getDate();
+          view.level = "day";
+          view.year = state.year;
+          view.month = state.month;
+          update_display();
+          emit();
+          render_popup();
+        }
+      })}
+                <p>${tl(trans.enter_a_manual_date)}</p>
+                <p>${tl(trans.minimum_value).replace("{v}", `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
+                <p>${tl(trans.maximum_value).replace("{v}", `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
+            </div>
+        `;
+      manual_date.focus();
+      return elem;
+    }
+    function days(year, month) {
+      const raw_first = new Date(year, month - 1, 1).getDay();
+      const offset3 = (raw_first + 6) % 7;
+      const days_in_month = new Date(year, month, 0).getDate();
+      const cells = [];
+      for (let i = 0; i < offset3; i++) cells.push({ type: "empty" });
+      for (let day = 1; day <= days_in_month; day++) {
+        cells.push({
+          type: "day",
+          day,
+          month: state.month,
+          date: new Date(year, month - 1, day)
+        });
+      }
+      const rem = (7 - cells.length % 7) % 7;
+      for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
+      console.info("cells", cells, state.month, view.month);
+      return cells;
+    }
+    function update_display() {
+      date_display.textContent = format_date(state);
+    }
+    function emit() {
+      const date_object = new Date(
+        state.year,
+        state.month - 1,
+        state.day,
+        state.hours,
+        state.mins,
+        state.secs
+      );
+      legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
+      container.dispatchEvent(new CustomEvent("change"), {
+        detail: date_object
+      });
+    }
+    function format_date({ year, month, day }) {
+      const date_object = new Date(year, month - 1, day);
+      return date_object.toLocaleDateString(void 0, {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+    }
+    container.value = (val = null) => {
+      if (val === null) {
+        return new Date(
+          state.year,
+          state.month - 1,
+          state.day,
+          state.hours,
+          state.mins,
+          state.secs
+        );
+      }
+      const date_object = new Date(val);
+      state.year = date_object.getFullYear();
+      state.month = date_object.getMonth() + 1;
+      state.day = date_object.getDate();
+      state.hours = date_object.getHours();
+      state.mins = date_object.getMinutes();
+      state.secs = date_object.getSeconds();
+      view.year = state.year;
+      view.month = state.month;
+      render_popup();
+      update_display();
+      if (time_input)
+        time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
+      return date_object;
+    };
+    container.disabled = (val = null) => {
+      if (val === null) return time_input.disabled;
+      if (!val) date_display.removeAttribute("disabled");
+      else date_display.setAttribute("disabled", "true");
+      if (time_input) time_input.disabled = val;
+      return val;
+    };
+    return container;
+  }
+
+  // src/components/input.js
+  function input({
+    type = "text",
+    value,
+    placeholder,
+    min: min2,
+    max: max2,
+    maxlength,
+    warn_if_empty = false,
+    warn_if_matches_auth = false,
+    warn_if_not_matching_lower = "",
+    focus = false,
+    disabled,
+    show_time = true,
+    name,
+    func,
+    func_esc
+  }) {
+    if (type == "date") {
+      return calendar({
+        value,
+        min: min2,
+        max: max2,
+        disabled,
+        show_time,
+        name
+      });
+    }
+    let input_box;
+    let error_tooltip;
+    let colour_block;
+    let container = html.node`
+        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
+            ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
+            ${type == "textarea" ? html.node`
+                <textarea class="modern-input" disabled=${disabled} autofocus=${focus} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
+            ` : html.node`
+                <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
+            `}
+        </div>
+    `;
+    error_tooltip = tippy_esm_default(input_box, {
+      theme: "error",
+      placement: "top",
+      trigger: "manual"
+    });
+    error_tooltip.disable();
+    update_input(true);
+    input_box.addEventListener("input", () => {
+      update_input();
+    });
+    input_box.addEventListener("keydown", (event3) => {
+      if (event3.keyCode == 13 && type != "textarea") {
+        event3.preventDefault();
+        if (func) func(input_box.value);
+      } else if (event3.keyCode == 27) {
+        event3.preventDefault();
+        if (func_esc) func_esc(input_box.value);
+      }
+    });
+    container.submit = () => {
+      if (func) func(input_box.value);
+    };
+    container.focus = () => {
+      setTimeout(() => {
+        input_box.focus();
+      }, 5);
+    };
+    container.value = (val = null) => {
+      if (val == null) return input_box.value;
+      input_box.value = val;
+      return val;
+    };
+    container.disabled = (state = null) => {
+      if (state === null) return input_box.getAttribute("disabled") || false;
+      if (state === true) input_box.setAttribute("disabled", "true");
+      else input_box.removeAttribute("disabled");
+      return state;
+    };
+    return container;
+    function update_input(skip_most = false) {
+      container.setAttribute("data-has-error", "false");
+      error_tooltip.disable();
+      if (type != "number" && !skip_most) {
+        if (input_box.value == "" && warn_if_empty) {
+          error_input2(tl(trans.this_field_is_required));
+        } else if (input_box.value.length > maxlength) {
+          error_input2(tl(trans.keep_within_the_range));
+        } else if (warn_if_matches_auth && input_box.value == auth.name) {
+          error_input2(tl(trans.please_dont_clone_yourself));
+        } else if (warn_if_not_matching_lower != "" && input_box.value.toLowerCase() != warn_if_not_matching_lower) {
+          error_input2(tl(trans.please_match_the_format));
+        }
+      }
+      if (type == "number" && !skip_most) {
+        if (input_box.value == "") {
+          error_input2(tl(trans.only_numbers_are_allowed));
+        } else if (parseInt(input_box.value) > max2 || parseInt(input_box.value) < min2) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      } else if (type == "colour") {
+        if (!input_box.value.startsWith("#"))
+          input_box.value = `#${input_box.value}`;
+        colour_block.style.backgroundColor = input_box.value;
+      }
+    }
+    function error_input2(reason) {
+      log(reason, "input", "log");
+      container.setAttribute("data-has-error", "true");
+      error_tooltip.setContent(reason);
+      error_tooltip.enable();
+      error_tooltip.show();
+    }
+  }
+
+  // src/components/colourful_counts.js
+  function patch_artist_ranks_in_list_view(track) {
+    let count_bar = track.querySelector(".chartlist-count-bar");
+    if (!count_bar) return;
+    let count_bar_link = count_bar.querySelector(".chartlist-count-bar-link");
+    if (count_bar_link.getAttribute("href").includes("?from=") || count_bar_link.getAttribute("href").includes("?date_preset=") && !count_bar_link.getAttribute("href").endsWith("?date_preset=ALL") && !count_bar_link.getAttribute("href").endsWith("?date_preset=null"))
+      return;
+    let count = count_bar.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value");
+    if (!count_bar.hasAttribute("data-kate-processed")) {
+      count_bar.setAttribute("data-kate-processed", "true");
+      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
+      count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+      count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+      count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+      count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+    }
+  }
+  function parse_scrobbles_as_rank(scrobbles) {
+    let scrobble_milestone = 0;
+    let scrobble_proximity = 0;
+    let max_rank = 15;
+    for (let rank = max_rank; rank >= 0; rank--) {
+      if (scrobbles >= ranks[rank].start) {
+        scrobble_milestone = rank;
+        break;
+      }
+    }
+    let milestone_hue = ranks[scrobble_milestone].hue;
+    let milestone_sat = ranks[scrobble_milestone].sat;
+    let milestone_lit = ranks[scrobble_milestone].lit;
+    if (scrobble_milestone < max_rank) {
+      let current_start = ranks[scrobble_milestone].start;
+      let next_start = ranks[scrobble_milestone + 1].start;
+      scrobble_proximity = (scrobbles - current_start) / (next_start - current_start);
+    }
+    if (scrobble_milestone < max_rank) {
+      let next_milestone_hue = ranks[scrobble_milestone + 1].hue;
+      let next_milestone_sat = ranks[scrobble_milestone + 1].sat;
+      let next_milestone_lit = ranks[scrobble_milestone + 1].lit;
+      milestone_hue = interpolate_hue(milestone_hue, next_milestone_hue, scrobble_proximity);
+      milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
+      milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
+    }
+    log(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
+    return {
+      milestone: scrobble_milestone,
+      proximity: scrobble_proximity,
+      hue: milestone_hue,
+      sat: milestone_sat,
+      lit: milestone_lit
+    };
+  }
+
+  // src/components/music_grid.js
+  var import_color_thief_browser = __toESM(require_color_thief_min(), 1);
+  function music_grids(search = page.structure.main, use_colour = true) {
+    if (!search) return;
+    let insights = {
+      artist: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      album: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      track: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      }
+    };
+    let grids = search.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
+    grids.forEach((grid, index3) => {
+      let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
+      if (is_loading) return;
+      grid.style.setProperty("--delay", index3 * 0.04 + "s");
+      grid.setAttribute("data-bleh-music-grids", "true");
+      let is_album;
+      if (page.type == "search") {
+        is_album = grid.querySelector(".stat-name") == null;
+      } else {
+        is_album = grid.querySelector(".grid-items-item-aux-block") != null;
+      }
+      let image_wrap = grid.querySelector(".grid-items-cover-image-image");
+      let image = image_wrap.querySelector("img");
+      if (grid.classList.contains("grid-items-item--big"))
+        image.src = image.src.replace("/avatar300s/", "/500x500/");
+      if (image && !image_wrap.classList.contains("grid-items-cover-default") && use_colour) {
+        let grid_colour = document.createElement("div");
+        grid_colour.classList.add("grid-item-colour-bg");
+        image_wrap.appendChild(grid_colour);
+        image.setAttribute("crossorigin", "anonymous");
+        try {
+          image.addEventListener("load", function() {
+            let thief = new import_color_thief_browser.default();
+            let colour2 = thief.getColor(image);
+            let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
+            grid_colour.style.setProperty("background", `rgb(${colour2})`);
+            grid.classList.add("grid-items-item-has-colour");
+            grid.style.setProperty("--hue-over", hsl.h);
+            grid.style.setProperty("--sat-over", clamp_sat2(hsl.s / 100 * 3));
+            grid.style.setProperty("--lit-over", 1);
+          });
+        } catch (e) {
+        }
+      } else {
+        grid.classList.add("generic-cover");
+      }
+      let plays_elem;
+      if (page.type == "search") {
+        if (!is_album) {
+          let aux_text = grid.querySelector(".grid-items-item-aux-text");
+          let stat_name = aux_text.querySelector(".stat-name");
+          aux_text.removeChild(stat_name);
+          plays_elem = aux_text;
+        }
+      } else if (page.type == "tag") {
+        let aux_text = grid.querySelector(".grid-items-item-aux-text");
+        let stat_name = aux_text.querySelector(".stat-name");
+        if (!stat_name) return;
+        aux_text.removeChild(stat_name);
+        plays_elem = aux_text;
+        if (is_album) {
+          let artist2 = grid.querySelector(".grid-items-item-aux-block");
+          aux_text.removeChild(artist2);
+          plays_elem = document.createElement("a");
+          plays_elem.textContent = aux_text.textContent;
+          aux_text.textContent = "";
+          aux_text.appendChild(artist2);
+          aux_text.appendChild(plays_elem);
+        }
+      } else {
+        plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
+      }
+      if (plays_elem && !grid.classList.contains("obsessions-item") && !grid.classList.contains("compare-item")) {
+        let plays = clean_number(plays_elem.textContent.trim().replace(`${tl(trans.plays_lower)}`, ""));
+        plays_elem.classList.add("grid-item-plays");
+        if (is_album)
+          plays_elem.textContent = plays.toLocaleString(lang);
+        if (!is_album) {
+          insights.artist.display = true;
+          insights.artist.values.push(plays);
+          if (plays > insights.artist.highest.value)
+            insights.artist.highest.value = plays;
+        } else {
+          insights.album.display = true;
+          insights.album.values.push(plays);
+          if (plays > insights.album.highest.value)
+            insights.album.highest.value = plays;
+        }
+        if (page.type == "search" || page.type == "tag")
+          plays_elem.classList.add("grid-item-listeners");
+        if (!is_album && settings.colourful_counts && page.type == "user") {
+          if (!plays_elem.getAttribute("href").includes("?from=") && (!plays_elem.getAttribute("href").includes("?date_preset=") || plays_elem.getAttribute("href").endsWith("?date_preset=ALL") || plays_elem.getAttribute("href").endsWith("?date_preset=null"))) {
+            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
+            plays_elem.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+            plays_elem.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+            plays_elem.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+            plays_elem.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+          }
+        }
+      }
+      let name = grid.querySelector(".grid-items-item-main-text a");
+      if (!name) return;
+      let artist;
+      if (!is_album) {
+        name.textContent = romanise(correct_artist(name.textContent.trim()));
+        insights.artist.labels.push(name.textContent);
+      } else {
+        artist = grid.querySelector(".grid-items-item-aux-block");
+        if (!artist) artist = grid.querySelector(".grid-items-item-aux-text");
+        if (!artist) return;
+        if (settings.format_guest_features) {
+          let name_elem = name;
+          let artist_elem = artist;
+          let song_title = name_elem.getAttribute("title");
+          let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
+          let song_tags = {};
+          if (formatted_title) {
+            song_title = romanise(formatted_title[0].trim());
+            insights.album.labels.push(song_title);
+            song_tags = formatted_title[1];
+            artist.textContent = romanise(formatted_title[2]);
+          }
+          render(name_elem, html.node`
+                    <span class="title">${song_title}</span>
+                    ${song_tags.map((tag) => html.node`
+                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
+                    `)}
+                `);
+        } else {
+          artist.textContent = romanise(correct_artist(artist.textContent.trim()));
+          name.textContent = romanise(correct_item_by_artist(name.textContent.trim(), artist.textContent.trim()));
+        }
+      }
+      const menu = tippy_esm_default(grid, {
+        theme: "context-menu",
+        content: html.node`
+                ${!is_album ? html.node`
+                <div class="button-combo">
+                    ${() => {
+          return html.node`
+                            <a class="dropdown-menu-clickable-item" data-type="artist" href=${name.getAttribute("href")}>
+                                ${tl(trans.artist)}
+                            </a>
+                        `;
+        }}
+                    <div class="button-combo-sep"/>
+                    ${() => {
+          let button = html.node`
+                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${name.getAttribute("href")}">
+                                ${tl(trans.explore_in_library)}
+                            </a>
+                        `;
+          tippy_esm_default(button, {
+            content: tl(trans.explore_in_library),
+            delay: [500, 0],
+            appendTo: document.body
+          });
+          return button;
+        }}
+                </div>
+                ` : html.node`
+                <div class="button-combo">
+                    ${() => {
+          return html.node`
+                            <a class="dropdown-menu-clickable-item" data-type="album" href=${name.getAttribute("href")}>
+                                ${tl(trans.album)}
+                            </a>
+                        `;
+        }}
+                    <div class="button-combo-sep"/>
+                    ${() => {
+          let button = html.node`
+                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${name.getAttribute("href")}">
+                                ${tl(trans.explore_in_library)}
+                            </a>
+                        `;
+          tippy_esm_default(button, {
+            content: tl(trans.explore_in_library),
+            delay: [500, 0],
+            appendTo: document.body
+          });
+          return button;
+        }}
+                </div>
+                <div class="button-combo">
+                    ${() => {
+          return html.node`
+                            <a class="dropdown-menu-clickable-item" data-type="artist" href=${artist.getAttribute("href")}>
+                                ${tl(trans.artist)}
+                            </a>
+                        `;
+        }}
+                    <div class="button-combo-sep"/>
+                    ${() => {
+          let button = html.node`
+                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${artist.getAttribute("href")}">
+                                ${tl(trans.explore_in_library)}
+                            </a>
+                        `;
+          tippy_esm_default(button, {
+            content: tl(trans.explore_in_library),
+            delay: [500, 0],
+            appendTo: document.body
+          });
+          return button;
+        }}
+                </div>
+                `}
+                <a class="dropdown-menu-clickable-item" data-type="gallery" href="${name.getAttribute("href")}/+images">
+                    ${is_album ? tl(trans.artwork) : tl(trans.photos)}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-type="wiki" href="${name.getAttribute("href")}/+wiki">
+                    ${is_album ? tl(trans.wiki) : tl(trans.biography)}
+                </a>
+                ${!is_album ? html.node`
+                <a class="dropdown-menu-clickable-item" data-type="listeners" href="${name.getAttribute("href")}/+listeners/you-know">
+                    ${tl(trans.listeners)}
+                </a>
+                ` : ""}
+                <a class="dropdown-menu-clickable-item" data-type="shouts" href="${name.getAttribute("href")}/+shoutbox">
+                    ${tl(trans.shouts)}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-type="tags" href="${name.getAttribute("href")}/+tags">
+                    ${tl(trans.tags)}
+                </a>
+                <div class="sep" />
+                <button class="dropdown-menu-clickable-item" data-type="expand" onclick=${() => {
+          expand_avatar(image.src.replace("/avatar300s/", "/ar0/").replace("/500x500/", "ar0"));
+        }}>
+                    ${tl(trans.expand)}
+                </button>
+                <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
+          copy(name.href);
+        }}>
+                    ${tl(trans.copy)}
+                </button>
+            `,
+        placement: "right-start",
+        trigger: "manual",
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        appendTo: document.body,
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event3) => {
+            instance.hide();
+          });
+        }
+      });
+      register_menu(grid, menu);
+    });
+    if (page.subpage.startsWith("library"))
+      bleh_glacier_insights(insights);
+  }
+
+  // src/components/select.js
+  unsafeWindow._update_inbuilt_select = function(id, value) {
+    update_inbuilt_select(id, value);
+  };
+  function update_inbuilt_select(id, value) {
+    document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
+  }
+  function select(values, initial = "", name = "", func = null) {
+    let select2;
+    let button;
+    if (values.length === 0) {
+      return html.node``;
+    }
+    if (initial == "")
+      initial = values.find((v) => "value" in v)?.value ?? initial;
+    let container = html.node`
+        <div class="select-wrap custom-selector">
+            <select ref=${(el) => select2 = el} name=${name}>
+                ${values.map((value) => {
+      if (value.value == null) return html.node``;
+      return html.node`
+                        <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
+                    `;
+    })}
+            </select>
+            <button class="select-button" type="button" ref=${(el) => button = el} />
+        </div>
+    `;
+    let menu = tippy_esm_default(button, {
+      theme: "select-menu",
+      content: html.node``,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      appendTo: document.body,
+      onShow(instance) {
+        if (values.length > 15) {
+          setTimeout(() => {
+            instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
+              behavior: "instant",
+              block: "center"
+            });
+          }, 1);
+        }
+      }
+    });
+    set_select(initial);
+    container.set = (val) => {
+      set_select(val);
+    };
+    container.value = () => {
+      return select2.value;
+    };
+    return container;
+    function set_select(selected) {
+      values.some((value) => {
+        if (value.value == selected) {
+          render(button, html`${value.text}`);
+          return false;
+        }
+      });
+      select2.value = selected;
+      if (name != "")
+        document.documentElement.setAttribute(
+          `data-bleh--inbuilt-id_${name}`,
+          selected
+        );
+      if (func) func(selected);
+      menu.setContent(html.node`
+        ${values.map((value) => {
+        if (value.value == null) {
+          return html.node`
+                    <div class="select-header">
+                        ${value.text}
+                    </div>
+                `;
+        }
+        return html.node`
+                <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(value.value)}>
+                    ${value.text}
+                </button>
+            `;
+      })}
+    `);
+    }
+  }
+  function select_prepare(element) {
+    let values = [];
+    element.querySelectorAll("option").forEach((option) => {
+      values.push({
+        value: option.value,
+        text: option.textContent
+      });
+    });
+    return values;
+  }
+  function select_prepare_list(list, icon = null) {
+    return list.map((item) => {
+      if (typeof item === "string") return { value: item, text: item, icon };
+      return item;
+    });
+  }
+  function custom_select(select2, element_to_append) {
+    console.info(select2);
+    let id = select2.getAttribute("id");
+    let value = select2.value;
+    let value_objects = select2.querySelectorAll("option");
+    let menu_list = document.createElement("div");
+    value_objects.forEach((object) => {
+      let object_value = object.getAttribute("value");
+      let object_text = object.textContent;
+      let item = document.createElement("button");
+      item.classList.add(
+        "btn",
+        "dropdown-menu-clickable-item",
+        "select-item"
+      );
+      item.setAttribute(
+        "onclick",
+        `_set_custom_select_value('${id}', '${object_value}')`
+      );
+      item.setAttribute("data-value", object_value);
+      item.setAttribute("type", "button");
+      item.textContent = object_text;
+      menu_list.appendChild(item);
+    });
+    let button = document.createElement("button");
+    button.classList.add("select-button");
+    button.setAttribute("id", `select-${id}`);
+    button.setAttribute("type", "button");
+    button.textContent = menu_list.querySelector(
+      `[data-value="${value}"]`
+    ).textContent;
+    let theme_menu_item = tippy_esm_default(button, {
+      theme: "select-menu",
+      content: html.node([menu_list.innerHTML]),
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        update_custom_select(instance.popper, select2.value);
+      }
+    });
+    element_to_append.appendChild(button);
+  }
+  unsafeWindow._set_custom_select_value = function(select_id, value) {
+    let select2 = document.getElementById(select_id);
+    select2.value = value;
+    console.info(select2, `#select-${select_id}`);
+    update_custom_select(
+      document.getElementById(`select-${select_id}`)._tippy.popper,
+      value,
+      select_id
+    );
+    document.documentElement.setAttribute(
+      `data-bleh--inbuilt-${select_id}`,
+      value
+    );
+  };
+  function update_custom_select(element = document.body, value = "", select_id = "") {
+    let btns = element.querySelectorAll(".dropdown-menu-clickable-item");
+    btns.forEach((btn) => {
+      if (btn.getAttribute("data-value") != value) {
+        btn.classList.remove("active");
+      } else {
+        btn.classList.add("active");
+        let sel_button = document.body.querySelector(
+          `#select-${select_id}`
+        );
+        console.log(sel_button);
+        if (!sel_button) return;
+        sel_button.textContent = btn.textContent;
+      }
+    });
+  }
+  unsafeWindow._update_inbuilt_selection = function(id, index3) {
+    document.getElementById(id).selectedIndex = index3;
+    update_inbuilt_select(id, document.getElementById(id).value);
+  };
+
+  // src/components/share.js
+  function share(url) {
+    let input2;
+    dialog({
+      id: "share",
+      title: tl(trans.share),
+      body: html.node`
+            <div class="share-top content-form">
+                <input
+                    type="text"
+                    readonly
+                    value=${url}
+                    class="share-input"
+                    ref=${(el) => input2 = el}
+                />
+                <button 
+                    class="btn primary icon copy"
+                    onclick=${() => {
+        input2.select();
+        document.execCommand("copy");
+        notify({
+          title: tl(trans.copied_to_clipboard),
+          icon: "icon-16-copy"
+        });
+      }}
+                >${tl(trans.copy)}</button>
+            </div>
+            <div class="share-links">
+                <a 
+                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-twitter"
+                >Twitter</a>
+                <a 
+                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-facebook"
+                >Facebook</a>
+            </div>
+        `,
+      replace_if_possible: true
+    });
+  }
+  function download(url, filename = null) {
+    log(`downloading ${filename}`, "download");
+    let link = html.node`
+        <a href=${url} download />
+    `;
+    if (filename)
+      link.setAttribute("download", filename);
+    link.click();
+    notify({
+      id: "downloaded",
+      title: tl(trans.downloaded),
+      body: filename,
+      icon: "icon-16-download"
+    });
+  }
+
+  // src/pages/gallery.js
+  function bleh_gallery() {
+    if (page.subpage != "image") return;
+    log("focusing on image", "gallery");
+    let image_sidebar = page.structure.side.querySelector(
+      ".js-gallery-image-details > div"
+    );
+    if (!image_sidebar) return;
+    if (image_sidebar.hasAttribute("data-bleh-gallery")) return;
+    image_sidebar.setAttribute("data-bleh-gallery", "true");
+    if (!ff("new_gallery_experience")) {
+      patch_gallery_focused_image(
+        image_sidebar,
+        page.structure.container.querySelector(".gallery-image-buttons")
+      );
+      return;
+    }
+    let image_details;
+    let gallery_section;
+    let first = false;
+    try {
+      gallery_section = page.structure.main.querySelector(".gallery-section");
+      if (gallery_section) {
+        first = true;
+        if (ff("short"))
+          page.structure.row.insertBefore(
+            gallery_section,
+            page.structure.content
+          );
+        else page.structure.nav.after(gallery_section);
+        image_details = html.node`
+                <section class="image-details" />
+            `;
+      } else {
+        image_details = page.structure.main.querySelector(".image-details");
+        image_details.innerHTML = "";
+      }
+    } catch (e) {
+      gallery_section = page.structure.container.querySelector(".gallery-section");
+      image_details = page.structure.main.querySelector(".image-details");
+      image_details.innerHTML = "";
+    }
+    image_details.appendChild(image_sidebar);
+    let image_title = image_details.querySelector(".gallery-image-title");
+    let image_date = image_details.querySelector(".gallery-image-uploaded-by");
+    if (image_title.textContent.trim() == "") {
+      image_title.classList.add("gallery-image-title-empty");
+      image_title.textContent = trans_legacy.en.gallery.empty.title;
+    }
+    let breadcrumbs = document.body.querySelector(".content-top-lower-row");
+    let breadcrumb_root = breadcrumbs.querySelector("a");
+    let breadcrumb_name = breadcrumbs.querySelector(".subpage-title");
+    let image_title_container = document.createElement("div");
+    image_title_container.classList.add("image-title-container");
+    image_title_container.innerHTML = `
+        <div class="sub-text">
+            <div class="breadcrumb">
+                ${breadcrumb_root.outerHTML}
+                <div class="breadcrumb-name">
+                    ${breadcrumb_name.textContent}
+                </div>
+            </div>
+            ${image_date.outerHTML}
+        </div>
+        <div class="title-layer">
+            ${image_title.outerHTML}
+            <div class="vote-number" data-side="pos">+0</div>
+        </div>
+    `;
+    image_details.insertBefore(image_title_container, image_sidebar);
+    breadcrumbs.style.setProperty("display", "none");
+    page.structure.main.insertBefore(
+      image_details,
+      page.structure.main.firstElementChild
+    );
+    if (first) image_details.after(html.node`<div class="sep" />`);
+    let description = image_details.querySelector(".gallery-image-description");
+    if (!description) {
+      description = document.createElement("p");
+      description.classList.add(
+        "gallery-image-description",
+        "gallery-image-description-empty"
+      );
+      description.textContent = trans_legacy.en.gallery.empty.description;
+      image_details.querySelector("[data-image-url]").appendChild(description);
+    }
+    let buttons = image_details.querySelector(".gallery-image-buttons");
+    let button_container = document.createElement("div");
+    button_container.classList.add("button-container-wrapper");
+    button_container.appendChild(buttons);
+    let vote_buttons = buttons.querySelector(".gallery-image-vote-buttons");
+    vote_buttons.after(create_divider());
+    let positive_btn = vote_buttons.querySelector(
+      ':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)'
+    ).cloneNode(true);
+    let negative_btn = vote_buttons.querySelector(
+      ':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)'
+    ).cloneNode(true);
+    let positive = parseInt(
+      positive_btn.textContent.replace(trans_legacy.en.gallery.up, "")
+    );
+    let negative = parseInt(
+      negative_btn.textContent.replace(trans_legacy.en.gallery.down, "")
+    );
+    let number = positive - negative;
+    let is_negative = number < 0;
+    console.info(positive_btn, positive, negative_btn, negative, number);
+    let vote_badge = image_title_container.querySelector(".vote-number");
+    vote_badge.textContent = `${is_negative ? "" : "+"}${number}`;
+    vote_badge.setAttribute("data-side", is_negative ? "neg" : "pos");
+    tippy_esm_default(vote_badge, {
+      content: trans_legacy.en.gallery.vote
+    });
+    let buttons_extra = document.createElement("div");
+    buttons_extra.classList.add(
+      "gallery-image-buttons",
+      "gallery-image-buttons-extra"
+    );
+    button_container.appendChild(buttons_extra);
+    image_details.appendChild(button_container);
+    let open_button = html.node`
+        <button class="image-open-button" onclick=${() => expand_gallery_image()}>
+            ${tl(trans.expand)}
+        </button>
+    `;
+    tippy_esm_default(open_button, {
+      content: tl(trans.expand_to_full_resolution)
+    });
+    buttons_extra.appendChild(open_button);
+    let share_button = html.node`
+        <button class="image-share-button" onclick=${() => share(window.location.href)}>
+            ${tl(trans.share)}
+        </button>
+    `;
+    buttons_extra.appendChild(share_button);
+    share_button.after(create_divider());
+    let delete_button = image_details.querySelector(".gallery-image-delete");
+    if (delete_button) buttons_extra.appendChild(delete_button);
+    let report_button = image_details.querySelector(
+      ".gallery-image-report-form"
+    );
+    let report_text = report_button.querySelector("button");
+    tippy_esm_default(report_text, {
+      content: report_text.textContent
+    });
+    report_text.textContent = tl(trans.report);
+    buttons_extra.appendChild(report_button);
+    let star_buttons = image_details.querySelectorAll(
+      ".gallery-image-preferred-button :is(button, a)"
+    );
+    star_buttons.forEach((star_button) => {
+      star_button.removeAttribute("title");
+      let text3 = star_button.querySelector(".gallery-image-preferred-states");
+      text3.textContent = tl(trans.star);
+    });
+    let view_all_container = page.structure.main.querySelector(
+      ".more-link-fullwidth-right-flush-top"
+    );
+    if (view_all_container) {
+      let side_actions = document.createElement("section");
+      side_actions.classList.add("side-actions");
+      if (!page.mobile) page.structure.side.appendChild(side_actions);
+      else page.structure.main.appendChild(side_actions);
+      let view_all = view_all_container.querySelector("a");
+      view_all.classList.add("btn", "side-action");
+      view_all.setAttribute("data-type", "gallery");
+      side_actions.appendChild(view_all);
+      page.structure.main.removeChild(view_all_container);
+      if (page.type == "artist" || ff("display_album_bookmark")) {
+        let view_saved = document.createElement("a");
+        view_saved.classList.add("btn", "side-action");
+        view_saved.setAttribute(
+          "href",
+          `${view_all.getAttribute("href")}?tab=saved`
+        );
+        view_saved.setAttribute("data-type", "gallery-saved");
+        view_saved.textContent = trans_legacy.en.gallery.bookmarks.link;
+        side_actions.appendChild(view_saved);
+      }
+    }
+    if (page.type == "artist" || ff("display_album_bookmark"))
+      patch_gallery_focused_image(image_sidebar, buttons);
+  }
+  function expand_gallery_image() {
+    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
+    expand_avatar(image_src);
+  }
+  function create_divider() {
+    let divider = document.createElement("div");
+    divider.classList.add("listen-divider");
+    return divider;
+  }
+  function bleh_gallery_upload() {
+    let content_top = document.body.querySelector(".page-content");
+    content_top.innerHTML = "";
+    if (!ff("mesmerizer")) {
+      page.structure.row.insertBefore(
+        html.node`
+            <section class="gallery-section gallery--initialised">
+                <div class="gallery-image-container">
+                    <div class="gallery-slides">
+                        <div class="gallery-image gallery-slide image-preview active-slide">
+                            <img class="image-preview-hook" ref=${(el) => page.state.image_preview = el} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `,
+        page.structure.row.firstElementChild
+      );
+      let form2 = page.structure.main.querySelector(".form-horizontal");
+      form2.classList.add("panel-form");
+      let upload_rules_group2 = form2.querySelector(
+        ".form-group--description + .form-group"
+      );
+      let rules2 = upload_rules_group2.querySelector(".gallery-upload-rules");
+      let rules_panel = document.createElement("section");
+      rules_panel.classList.add("rules-panel");
+      rules_panel.innerHTML = rules2.innerHTML;
+      page.structure.side.appendChild(rules_panel);
+      form2.removeChild(upload_rules_group2);
+      return;
+    }
+    const form = page.structure.main.querySelector(":scope > form");
+    const upload_rules_group = form.querySelector(
+      ".form-group--description + .form-group"
+    );
+    const rules = upload_rules_group.querySelector(".gallery-upload-rules");
+    page.structure.side.appendChild(html.node`
+        <section class="rules-panel">
+            ${{ html: rules.innerHTML }}
+        </section>
+    `);
+    form.removeChild(upload_rules_group);
+    const token = form.querySelector(':scope > [name="csrfmiddlewaretoken"]');
+    const title = form.querySelector('[name="title"]');
+    const description = form.querySelector('[name="description"]');
+    const file_input = form.querySelector('input[type="file"]');
+    const formats = form.querySelector(".form-row-help-text");
+    if (page.type == "artist") {
+      title.value = correct_artist(page.name);
+    } else {
+      title.value = correct_item_by_artist(page.name, page.sister);
+    }
+    const panel = html.node`
+        <section class="gallery-upload-panel bleh--panel">
+            <h4>${tl(trans.image_details)}</h4>
+            <form method="post" action=${form.getAttribute("action")} enctype=${form.getAttribute("enctype")}>
+                ${token}
+                <div style="display: none">
+                    ${file_input}
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.title)}</h5>
+                        </div>
+                        <div class="input-container content-form wide">
+                            ${title}
+                        </div>
+                    </div>
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.description)}</h5>
+                        </div>
+                        <div class="input-container content-form textarea">
+                            ${description}
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-footer end">
+                    <button class="btn primary icon" data-type="upload" type="submit">
+                        ${tl(trans.upload)}
+                    </button>
+                </div>
+            </form>
+        </section>
+    `;
+    page.structure.main.appendChild(panel);
+    let dropzone;
+    let container;
+    page.structure.row.insertBefore(
+      html.node`
+        <section class="gallery-section gallery--initialised">
+            <div class="dropzone" ref=${(el) => dropzone = el} onclick=${() => {
+        file_input.click();
+      }}>
+                <div class="dropzone-message">${tl(trans.dropzone)}</div>
+                <div class="card-tip">${formats.textContent}</div>
+            </div>
+            <div class="gallery-image-container" ref=${(el) => container = el}>
+                <div class="gallery-slides">
+                    <div class="gallery-image gallery-slide image-preview active-slide">
+                        <img class="image-preview-hook" ref=${(el) => page.state.image_preview = el} />
+                    </div>
+                </div>
+            </div>
+        </section>
+    `,
+      page.structure.row.firstElementChild
+    );
+    ["dragenter", "dragover"].forEach((type) => {
+      dropzone.addEventListener(type, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        container.setAttribute("data-dragging", true);
+        dropzone.setAttribute("data-dragging", true);
+      });
+    });
+    ["dragleave", "drop"].forEach((type) => {
+      dropzone.addEventListener(type, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        container.setAttribute("data-dragging", false);
+        dropzone.setAttribute("data-dragging", false);
+      });
+    });
+    dropzone.addEventListener("drop", (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length) file_input.files = files;
+      file_input.dispatchEvent(new Event("change"));
+    });
+    file_input.addEventListener("change", () => {
+      log("file input changed", "gallery", "info", {
+        files: file_input.files
+      });
+      if (!file_input.files.length) return;
+      const file = file_input.files[0];
+      const reader = new FileReader();
+      dropzone.setAttribute("data-has-file", true);
+      reader.onload = (event3) => {
+        page.state.image_preview.src = event3.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    form.style.setProperty("display", "none");
+  }
+  function bleh_gallery_upload_check() {
+    if (page.subpage != "images_image-upload" || !page.state.image_preview)
+      return;
+    if (ff("mesmerizer")) {
+      const artwork_finder = page.structure.main.querySelector(
+        "#lfmmaf-widget:not([data-bleh])"
+      );
+      if (artwork_finder) {
+        artwork_finder.setAttribute("data-bleh", true);
+        const group = page.structure.main.querySelector(".setting-group");
+        const controls = artwork_finder.querySelectorAll(
+          ".form-group-controls > *"
+        );
+        let info;
+        group.insertBefore(
+          html.node`
+                <div class="setting" data-type="info">
+                    <div class="heading">
+                        <h5>${{ html: artwork_finder.querySelector("label").innerHTML }}</h5>
+                    </div>
+                    <div class="info artwork-finder-info" ref=${(el) => info = el} />
+                </div>
+            `,
+          group.firstElementChild
+        );
+        controls.forEach((control) => {
+          info.appendChild(control);
+        });
+      }
+      return;
+    }
+    const image_preview = page.structure.main.querySelector(
+      ".form-image-preview"
+    );
+    if (!image_preview) return;
+    page.state.image_preview.setAttribute(
+      "src",
+      image_preview.getAttribute("src")
+    );
+  }
+  function bleh_gallery_list() {
+    let upload_btn = page.structure.main.querySelector(".btn-add");
+    if (upload_btn) {
+      upload_btn.classList = "btn view-all-button back upload-button";
+      let upload_panel = document.createElement("section");
+      upload_panel.classList.add("view-all-panel", "upload-panel");
+      upload_panel.appendChild(upload_btn);
+      page.structure.side.insertBefore(
+        upload_panel,
+        page.structure.side.firstElementChild
+      );
+    }
+    page.structure.main.classList.add("bleh--gallery");
+    if (page.type == "artist") patch_gallery_image_listing();
+  }
+  function patch_gallery_image_listing() {
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    if (page.requested.tab != "saved" || page.requested.page != null)
+      page.structure.container.setAttribute("data-bleh--gallery-tab", "all");
+    else
+      page.structure.container.setAttribute(
+        "data-bleh--gallery-tab",
+        "saved"
+      );
+    let nav = html.node`
+        <div class="toolbar">
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("all")}>
+                            ${tl(trans.photos)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("saved")}>
+                            ${tl(trans.saved)}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    `;
+    page.structure.row.insertBefore(nav, page.structure.content);
+    let bookmarks_panel;
+    page.structure.main.after(html.node`
+        <div class="col-main bleh--bookmarks not-a-panel">
+            <section class="bookmarks-panel" ref=${(el) => bookmarks_panel = el}>
+                <ul class="image-list" data-kate-processed="true"></ul>
+            </section>
+        </div>
+    `);
+    if (bookmarked_images.hasOwnProperty(page.name)) {
+      bookmarked_images[page.name].forEach((image) => {
+        let image_element = document.createElement("li");
+        image_element.classList.add("image-list-item-wrapper");
+        image_element.setAttribute("data-image-id", image);
+        image_element.innerHTML = `
+                <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
+                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" alt=${image} loading="lazy">
+                </a>
+            `;
+        page.structure.container.querySelector(".bookmarks-panel .image-list").appendChild(image_element);
+        if (ff("remove_bookmark")) {
+          let menu = tippy_esm_default(image_element, {
+            theme: "context-menu",
+            content: html.node`
+                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
+                            ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
+                        </button>
+                    `,
+            placement: "right-start",
+            trigger: "manual",
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+            onShow(instance) {
+              instance.popper.addEventListener("click", (event3) => {
+                instance.hide();
+              });
+            }
+          });
+          register_menu(image_element, menu);
+        }
+      });
+      let image_list = page.structure.main.querySelectorAll(".image-list-item");
+      image_list.forEach((image_list_item) => {
+        let image_id_split = image_list_item.getAttribute("href").split("/");
+        let image_id_length = image_id_split.length;
+        let image_id = image_id_split[image_id_length - 1];
+        if (bookmarked_images[page.name].includes(image_id)) {
+          image_list_item.classList.add("image-list-item-bookmarked");
+        }
+      });
+    } else {
+      render(
+        bookmarks_panel,
+        html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">
+                        ${tl(trans.no_images_saved)}
+                    </div>
+                </div>
+            `
+      );
+    }
+  }
+  function gallery_tab(id) {
+    page.structure.container.setAttribute("data-bleh--gallery-tab", id);
+  }
+  function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
+    let focused_image_id_split = focused_image_details.getAttribute("data-image-url").split("/");
+    let focused_image_id_length = focused_image_id_split.length - 1;
+    let focused_image_id = focused_image_id_split[focused_image_id_length];
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    let image_is_bookmarked = false;
+    if (bookmarked_images.hasOwnProperty(page.name)) {
+      if (bookmarked_images[page.name].includes(focused_image_id)) {
+        image_is_bookmarked = true;
+        log("focused is bookmarked", "gallery");
+      }
+    }
+    let gallery_bookmark_button = document.createElement("button");
+    gallery_bookmark_button.classList.add(
+      "bleh--gallery-bookmark-image-btn",
+      "btn--has-icon"
+    );
+    gallery_bookmark_button.setAttribute(
+      "data-bleh--image-is-bookmarked",
+      image_is_bookmarked
+    );
+    gallery_bookmark_button.setAttribute(
+      "onclick",
+      `_update_image_bookmark(this, '${focused_image_id}')`
+    );
+    gallery_bookmark_button.textContent = trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.name;
+    unsafeWindow.bookmark_tooltip = tippy_esm_default(gallery_bookmark_button, {
+      content: image_is_bookmarked ? trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.bio : trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.bio
+    });
+    gallery_interactions.appendChild(gallery_bookmark_button);
+  }
+  unsafeWindow._update_image_bookmark = function(button, id, tooltip = true) {
+    update_image_bookmark(button, id, tooltip);
+  };
+  function update_image_bookmark(button, id, tooltip = true) {
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    let is_bookmarked = button.getAttribute("data-bleh--image-is-bookmarked") === "true";
+    if (tooltip) {
+      unsafeWindow.bookmark_tooltip.setContent(
+        !is_bookmarked ? trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.bio : trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.bio
+      );
+    } else {
+      button = page.structure.container.querySelector(
+        `[data-image-id="${id}"]`
+      );
+    }
+    if (!bookmarked_images.hasOwnProperty(page.name))
+      bookmarked_images[page.name] = [];
+    if (is_bookmarked) {
+      button.setAttribute("data-bleh--image-is-bookmarked", "false");
+      let new_artist_bookmarks = [];
+      for (let image in bookmarked_images[page.name]) {
+        if (bookmarked_images[page.name][image] != id) {
+          new_artist_bookmarks.push(bookmarked_images[page.name][image]);
+        }
+      }
+      bookmarked_images[page.name] = new_artist_bookmarks;
+      log(`image ${id} from ${page.name} removed from bookmarks`, "gallery");
+    } else {
+      button.setAttribute("data-bleh--image-is-bookmarked", "true");
+      bookmarked_images[page.name].push(id);
+      log(`image ${id} from ${page.name} added to bookmarks`, "gallery");
+    }
+    localStorage.setItem(
+      "bleh_bookmarked_images",
+      JSON.stringify(bookmarked_images)
+    );
+  }
+
+  // src/components/profile_shortcut.js
+  unsafeWindow._open_profile_shortcut_window = function() {
+    open_profile_shortcut_window();
+  };
+  function open_profile_shortcut_window() {
+    let modal = dialog({
+      id: "profile_shortcut",
+      title: tl(trans.profile_shortcut.name),
+      body: html.node`
+            ${setting({ id: "profile_shortcut", text: false, focus: true, standalone: true })}
+        `
+    });
+    modal.querySelector("#text-profile_shortcut").focus();
+  }
+  unsafeWindow._other_listener = function(id) {
+    other_listener(id);
+  };
+  function other_listener(id) {
+    let input2;
+    let submit;
+    dialog({
+      id: "other_listener",
+      title: tl(trans.view_others_library),
+      body: html.node`
+        <div class="setting standalone" data-type="text">
+            <div class="avatar-container">
+                <div class="avatar-inner avatar--bleh-missing">
+                    <img>
+                </div>
+            </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
+        let name = input2.value;
+        let link = id;
+        dialog_rm({
+          id: "other_listener"
+        });
+        window.location.href = `${root}user/${name}/library/music/${link}`;
+      }}>${tl(trans.done)}</button>
+            </div>
+        </div>
+        `
+    });
+    input2.addEventListener("keydown", (event3) => {
+      if (event3.keyCode === 13) {
+        event3.preventDefault();
+        submit.click();
+      }
+    });
+    tippy_esm_default(submit, {
+      content: tl(trans.save)
+    });
+    input2.focus();
+  }
+  unsafeWindow._save_profile_shortcut = function() {
+    let profile_name = document.getElementById("text-profile_shortcut").value;
+    let profile_img = document.getElementById("avatar-profile_shortcut");
+    if (profile_name == "" || profile_name == auth.name) {
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      save_setting("profile_shortcut", "");
+      return;
+    }
+    profile_img.classList.add("requesting");
+    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
+      console.log("DOC", doc);
+      profile_img.classList.remove("requesting");
+      try {
+        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
+          icon: "icon-16-profile-shortcut"
+        });
+        save_setting("profile_shortcut", profile_name);
+      } catch (e) {
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.failed_to_find_profile),
+          type: "error"
+        });
+        localStorage.removeItem("bleh_profile_shortcut_avi");
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      }
+    });
+  };
+
+  // src/components/toggle.js
+  function toggle({
+    value = false,
+    type = "toggle",
+    name = "",
+    title = "",
+    body = "",
+    small = "",
+    disabled = false,
+    data: data2 = "",
+    func = null,
+    standalone = true
+  }) {
+    let checkbox;
+    let state;
+    let elem = html.node`
+        <div class="setting ${standalone ? "standalone" : ""}" data-type=${type} onclick=${() => {
+      if (disabled) return;
+      let current = checkbox.checked;
+      if (func) func(!current);
+      checkbox.checked = !current;
+      state.setAttribute("aria-checked", !current);
+    }}>
+            <div class="heading">
+                <h5>${title}</h5>
+                ${body != "" ? html.node`<p>${body}</p>` : ""}
+                ${small != "" ? html.node`<small>${small}</small>` : ""}
+            </div>
+            ${type == "toggle" ? html.node`
+            <div class="toggle-wrap">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name} value=${data2} checked=${value} />
+                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
+                    <div class="dot" />
+                </button>
+            </div>
+            ` : html.node`
+            <div class="check">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name} value=${data2} checked=${value} disabled=${disabled} />
+                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
+                    <div class="bleh-icon" />
+                </div>
+            </div>
+            `}
+        </div>
+    `;
+    elem.check = () => {
+      if (disabled) return;
+      if (func) func(true);
+      checkbox.checked = true;
+      state.setAttribute("aria-checked", true);
+    };
+    elem.uncheck = () => {
+      if (disabled) return;
+      if (func) func(false);
+      checkbox.checked = false;
+      state.setAttribute("aria-checked", false);
+    };
+    elem.checked = () => {
+      return checkbox.checked;
+    };
+    elem.disabled = (state2 = null) => {
+      if (state2 === null) return checkbox.getAttribute("disabled") || false;
+      if (state2 === true) checkbox.setAttribute("disabled", "true");
+      else checkbox.removeAttribute("disabled");
+      return state2;
+    };
+    return elem;
+  }
+
+  // src/components/scrobble.js
+  function submit_scrobble({
+    pre_track = "",
+    pre_album = "",
+    pre_artist = "",
+    pre_album_artist = "",
+    func,
+    can_api
+  } = {}) {
+    if (!can_api)
+      can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+    if (!can_api) {
+      window.location.href = `${root}bleh/general`;
+      return;
+    }
+    const random = random_list[Math.floor(Math.random() * random_list.length)];
+    let track;
+    let album;
+    let artist;
+    let album_artist;
+    let use_current;
+    let date;
+    let create_scrobble;
+    let max_date = /* @__PURE__ */ new Date();
+    max_date.setDate(max_date.getDate() + 1);
+    dialog({
+      id: "submit_scrobble",
+      title: tl(trans.new_scrobble),
+      body: html.node`
+            <div class="new-scrobble-form">
+                <p class="generic-label">${tl(trans.track)}</p>
+                ${track = input({
+        type: "text",
+        value: pre_track,
+        placeholder: tl(trans.example, { v: random.track }),
+        warn_if_empty: true
+      })}
+                <p class="generic-label">${tl(trans.album)}</p>
+                ${album = input({
+        type: "text",
+        value: pre_album,
+        placeholder: tl(trans.example, { v: random.album })
+      })}
+                <p class="generic-label">${tl(trans.artist)}</p>
+                ${artist = input({
+        type: "text",
+        value: pre_artist,
+        placeholder: tl(trans.example, { v: random.artist }),
+        warn_if_empty: true
+      })}
+                <p class="generic-label">${tl(trans.album_artist)}</p>
+                ${album_artist = input({
+        type: "text",
+        value: pre_album_artist,
+        placeholder: tl(trans.example, { v: random.album_artist })
+      })}
+                <p class="generic-label">${tl(trans.time)}</p>
+                <div class="toggle-and-time">
+                    ${use_current = toggle({
+        value: true,
+        type: "checkbox",
+        title: tl(trans.use_current_time),
+        func: (state) => {
+          date.disabled(state);
+        }
+      })}
+                    ${date = input({
+        type: "date",
+        max: `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`,
+        disabled: true
+      })}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "submit_scrobble" })}>
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill" />
+                <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
+        if (track.value() == "" || artist.value() == "") {
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.new_scrobble),
+            body: tl(trans.missing_fields),
+            type: "error"
+          });
+          return;
+        }
+        track.disabled(true);
+        album.disabled(true);
+        artist.disabled(true);
+        album_artist.disabled(true);
+        use_current.disabled(true);
+        date.disabled(true);
+        create_scrobble.disabled = true;
+        if (album.value() != "" && album_artist.value() == "")
+          album_artist.value(artist.value());
+        let params = {
+          sk: localStorage.getItem("bleh_auth"),
+          artist: artist.value(),
+          track: track.value(),
+          timestamp: Math.floor(date.value() / 1e3)
+        };
+        if (album.value() != "") params.album = album.value();
+        if (album_artist.value() != "")
+          params.albumArtist = album_artist.value();
+        const res = await fetch(
+          "https://jufufu.katelyn.moe/api/lastfm",
+          {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              method: "track.scrobble",
+              params
+            })
+          }
+        );
+        const json = await res.json();
+        log("received response", "submit scrobble", "info", {
+          result: json
+        });
+        function re_enable() {
+          track.disabled(false);
+          album.disabled(false);
+          artist.disabled(false);
+          album_artist.disabled(false);
+          use_current.disabled(false);
+          date.disabled(false);
+          create_scrobble.disabled = false;
+        }
+        if (json.error) {
+          log("error", "submit scrobble", "error");
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.scrobble_failed),
+            body: json.message,
+            type: "error",
+            persist: true
+          });
+          re_enable();
+          return;
+        }
+        const error_code = json.scrobbles.scrobble.ignoredMessage.code;
+        if (error_code > 0) {
+          log("error", "submit scrobble", "error", {
+            error_code
+          });
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.scrobble_failed),
+            body: tl(trans.scrobble_error_codes[error_code]),
+            type: "error",
+            persist: true
+          });
+          re_enable();
+          return;
+        }
+        notify({
+          id: "submit_scrobble",
+          title: tl(trans.new_scrobble),
+          body: params.track,
+          type: "success"
+        });
+        dialog_rm({ id: "submit_scrobble" });
+        if (func) func();
+      }}>
+                    ${tl(trans.new)}
+                </button>
+            </div>
+        `
+    });
   }
 
   // src/components/oracle.js
@@ -40179,9 +36180,9 @@
     if (media.matches) apply_theme("night");
     else apply_theme("day");
   }
-  function apply_theme(time) {
-    log(`applying theme for time ${time}`, "dynamic theming");
-    save_setting("theme", settings[`theme_${time}`]);
+  function apply_theme(time2) {
+    log(`applying theme for time ${time2}`, "dynamic theming");
+    save_setting("theme", settings[`theme_${time2}`]);
   }
 
   // src/components/rabbit.js
@@ -50347,10 +46348,8 @@
   }
 
   // src/seasonal.js
-  var import_moment = __toESM(require_moment(), 1);
   function set_season() {
-    if (!settings.seasonal)
-      return;
+    if (!settings.seasonal) return;
     let last_season_seen = localStorage.getItem("bleh_last_season_seen") || "";
     let now2 = /* @__PURE__ */ new Date();
     log(`it is now ${now2}`, "season", "log");
@@ -50358,27 +46357,51 @@
     log(`calculated offset as ${stored_season.offset}`, "season");
     let current_year = now2.getFullYear();
     seasonal_events.forEach((season, index3) => {
-      log(`running thru, ${season.id} - ${new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
-      log(`${now2 >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${now2 <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
-      season.days_until = -(0, import_moment.default)().diff(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset), "days");
+      log(
+        `running thru, ${season.id} - ${new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`,
+        "season",
+        "log"
+      );
+      log(
+        `${now2 >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${now2 <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`,
+        "season",
+        "log"
+      );
+      season.days_until = -DateTime.now().diff(
+        DateTime.fromISO(
+          season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)
+        ),
+        "days"
+      ).days;
       season.is_next_year = false;
       if (season.days_until < 0) {
-        season.days_until = -(0, import_moment.default)().diff(season.start.replace("y0", current_year + 1).replace("{offset}", stored_season.offset), "days");
+        season.days_until = -DateTime.now().diff(
+          DateTime.fromISO(
+            season.start.replace("y0", current_year + 1).replace("{offset}", stored_season.offset)
+          ),
+          "days"
+        ).days;
         season.is_next_year = true;
       }
-      if (now2 >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)) && now2 <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))) {
+      if (now2 >= new Date(
+        season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)
+      ) && now2 <= new Date(
+        season.end.replace("y0", current_year).replace("{offset}", stored_season.offset)
+      )) {
         stored_season.now = now2;
         stored_season.year = current_year;
         update_season_nav();
-        if (stored_season.id == season.id)
-          return;
+        if (stored_season.id == season.id) return;
         stored_season.id = season.id;
         stored_season.start = season.start;
         stored_season.end = season.end;
         stored_season.snowflakes = season.snowflakes;
         if (now2.getDate() == 31) {
           stored_season.new_years_eve = true;
-          stored_season.seasonal_timer = setInterval(update_season_nav, 1e3);
+          stored_season.seasonal_timer = setInterval(
+            update_season_nav,
+            1e3
+          );
         } else if (stored_season.seasonal_timer) {
           clearInterval(stored_season.seasonal_timer);
         }
@@ -50392,8 +46415,14 @@
           stored_season.next_is_new_year = false;
         }
         log(`${season.id} from ${season.start} to ${season.end}`, "season");
-        log(`next will be ${stored_season.next_id} from ${stored_season.next_start} (is new year? ${stored_season.next_is_new_year})`, "season");
-        document.documentElement.setAttribute("data-bleh--season", season.id);
+        log(
+          `next will be ${stored_season.next_id} from ${stored_season.next_start} (is new year? ${stored_season.next_is_new_year})`,
+          "season"
+        );
+        document.documentElement.setAttribute(
+          "data-bleh--season",
+          season.id
+        );
         if (season.snowflakes.state && settings.seasonal_particles != "none") {
           log("let the snow start!", "season");
           prep_snow();
@@ -50407,7 +46436,12 @@
           notify({
             id: "new_season",
             title: tl(trans.new_season),
-            body: tl(trans.value_for_time).replace("{v}", tl(trans.seasonal.listing[season.id])).replace("{time}", (0, import_moment.default)(season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)),
+            body: tl(trans.value_for_time).replace("{v}", tl(trans.seasonal.listing[season.id])).replace(
+              "{time}",
+              DateTime.fromISO(
+                season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
+              ).toRelative(DateTime.fromISO(stored_season.now))
+            ),
             icon: "icon-16-season",
             persist: true
           });
@@ -50433,7 +46467,14 @@
       stored_season.next_id = next_season.id;
       stored_season.next_start = next_season.start;
       stored_season.next_is_new_year = next_season.is_next_year;
-      log("next season found", "season", "info", { next: next_season, stored: stored_season, date: stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset) });
+      log("next season found", "season", "info", {
+        next: next_season,
+        stored: stored_season,
+        date: stored_season.next_start.replace(
+          "y0",
+          stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year
+        ).replace("{offset}", stored_season.offset)
+      });
     }
   }
   function calculate_offset(now2) {
@@ -50476,7 +46517,9 @@
     if (!page.header.season) return;
     page.header.season.setAttribute("data-season", stored_season.id);
     if (!stored_season.new_years_eve) {
-      page.header.season.textContent = (0, import_moment.default)(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
+      page.header.season.textContent = DateTime.fromISO(
+        stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
+      ).toRelative(DateTime.fromISO(stored_season.now));
     } else {
       let next = stored_season.next_start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset);
       if (stored_season.next_is_new_year)
@@ -50490,38 +46533,37 @@
     }
   }
   function countdown_to(time_until) {
-    let days = Math.floor(time_until / (1e3 * 60 * 60 * 24));
-    let hours = Math.floor(time_until % (1e3 * 60 * 60 * 24) / (1e3 * 60 * 60));
-    let minutes = Math.floor(time_until % (1e3 * 60 * 60) / (1e3 * 60));
-    let seconds = Math.floor(time_until % (1e3 * 60) / 1e3);
-    console.info(time_until, hours, minutes, seconds);
-    if (hours < 10)
-      hours = "0" + hours;
-    if (minutes < 10)
-      minutes = "0" + minutes;
-    if (seconds < 10)
-      seconds = "0" + seconds;
+    const duration = Duration.fromMillis(time_until).shiftTo(
+      "days",
+      "hours",
+      "minutes",
+      "seconds"
+    );
+    let { days, hours, minutes, seconds } = duration.toObject();
+    days = Math.floor(days);
+    hours = Math.floor(hours);
+    minutes = Math.floor(minutes);
+    seconds = Math.floor(seconds);
+    hours = String(hours).padStart(2, "0");
+    minutes = String(minutes).padStart(2, "0");
+    seconds = String(seconds).padStart(2, "0");
     if (days != 0)
-      return (0, import_moment.default)(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
-    if (hours == "00" && minutes == "00" && seconds == "00")
-      set_season();
-    if (hours == "00")
-      return `${hours}:${minutes}:${seconds}`;
-    else
-      return `${hours}:${minutes}:${seconds}`;
+      return DateTime.fromISO(
+        stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
+      ).toRelative(DateTime.fromISO(stored_season.now));
+    if (hours == "00" && minutes == "00" && seconds == "00") set_season();
+    return `${hours}:${minutes}:${seconds}`;
   }
   function prep_snow() {
     let prev_container = document.getElementById("snowflakes");
-    if (prev_container != null)
-      return;
+    if (prev_container != null) return;
     document.documentElement.appendChild(html.node`
         <div class="snow-container" id="snowflakes">
             <span class="snow snowflake"></span>
         </div>`);
   }
   function begin_snowflakes(enabled, count) {
-    if (!enabled)
-      return;
+    if (!enabled) return;
     let dynamic_css = "";
     var snow_html = "";
     for (let i = 1; i < count; i++) {
@@ -50745,7 +46787,6 @@
   }
 
   // src/pages/bleh_config.js
-  var import_moment2 = __toESM(require_moment(), 1);
   function bleh_settings() {
     page.name = auth.name;
     page.subpage = "";
@@ -50925,7 +46966,7 @@
                     </div>
                     <div class="update-center-details">
                         <h2>${tl(trans.updates_paused)}</h2>
-                        <p class="last-checked">${tl(trans.paused_until_date).replace("{d}", (0, import_moment2.default)(paused_until).fromNow())}</p>
+                        <p class="last-checked">${tl(trans.paused_until_date).replace("{d}", DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
                     </div>
                     <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl(trans.check)}</button>
                     ` : update_required === "false" ? html.node`
@@ -50942,7 +46983,7 @@
                     <div class="update-center-details">
                         ${last_checked ? html.node`
                         <h2>${tl(trans.you_are_up_to_date)}</h2>
-                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", (0, import_moment2.default)(last_checked).fromNow())}</p>
+                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
                         ` : html.node`
                         <h2>${tl(trans.missing_updates)}</h2>
                         <p class="last-checked">${tl(trans.never_checked)}</p>
@@ -50966,7 +47007,7 @@
                     <div class="update-center-details">
                         <h2>${tl(trans.update_available_to_install)}</h2>
                         ${last_checked ? html.node`
-                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", (0, import_moment2.default)(last_checked).fromNow())}</p>
+                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
                         ` : html.node`
                         <p class="last-checked">${tl(trans.never_checked)}</p>
                         `}
@@ -51151,13 +47192,15 @@
                                     </div>
                                     ` : html.node`<div class="badges"></div>`}
                                     <div class="date" ref=${(el) => date = el}>
-                                        <p>${language.last_updated != "latest" ? (0, import_moment2.default)(language.last_updated).fromNow() : language.last_updated}</p>
+                                        <p>${language.last_updated != "latest" ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
                                     </div>
                                 </div>
                             `;
             if (language.last_updated != "latest") {
               tippy_esm_default(date, {
-                content: language.last_updated
+                content: DateTime.fromISO(
+                  language.last_updated
+                ).toLocaleString(DateTime.DATE_MED)
               });
             }
             return row;
@@ -51951,7 +47994,9 @@
                             ${tl(trans.seasonal_timeline)}
                         </div>
                         <h4>
-                            ${(0, import_moment2.default)(stored_season.now).format("MMMM Do YYYY")}
+                            ${DateTime.fromJSDate(
+          new Date(stored_season.now)
+        ).toLocaleString(DateTime.DATE_FULL)}
                         </h4>
                     </div>
                     <div class="setting-group">
@@ -51982,7 +48027,7 @@
                             <h5>${tl(trans.started)}</h5>
                         </div>
                         <div class="info">
-                            <p id="current_season_start">${(0, import_moment2.default)(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</p>
+                            <p id="current_season_start">${DateTime.fromISO(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
                         </div>
                     </div>
                     <div class="setting" data-type="info">
@@ -51990,7 +48035,7 @@
                             <h5>${tl(trans.ends_in)}</h5>
                         </div>
                         <div class="info">
-                            <p id="current_season">${(0, import_moment2.default)(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</p>
+                            <p id="current_season">${DateTime.fromISO(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
                         </div>
                     </div>
                     ` : settings.seasonal ? html.node`
@@ -51999,7 +48044,7 @@
                             <h5>${tl(trans.next_in)}</h5>
                         </div>
                         <div class="info">
-                            <p id="next_season_start">${(0, import_moment2.default)(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</p>
+                            <p id="next_season_start">${DateTime.fromISO(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
                         </div>
                     </div>
                     ` : ""}
@@ -52139,11 +48184,11 @@
                         <li>
                             Theme will expire at
                             <span class="time"
-                                >${(0, import_moment2.default)(
+                                >${time(
           localStorage.getItem(
             "bleh_cached_style_timeout"
           )
-        ).format("HH:mm:ss Z")}</span
+        )}</span
                             >
                         </li>
                         <li>
@@ -52152,9 +48197,9 @@
                             >
                             (artist) will expire at
                             <span class="time"
-                                >${(0, import_moment2.default)(
+                                >${time(
           localStorage.getItem("lotus_artist_expire")
-        ).format("HH:mm:ss Z")}</span
+        )}</span
                             >
                         </li>
                         <li>
@@ -52163,19 +48208,17 @@
                             >
                             (album_track) will expire at
                             <span class="time"
-                                >${(0, import_moment2.default)(
+                                >${time(
           localStorage.getItem(
             "lotus_album_track_expire"
           )
-        ).format("HH:mm:ss Z")}</span
+        )}</span
                             >
                         </li>
                         <br />
                         <li>
                             It is currently
-                            <span class="time"
-                                >${(0, import_moment2.default)().format("HH:mm:ss Z")}</span
-                            >
+                            <span class="time">${time()}</span>
                         </li>
                         <br />
                         <li>
@@ -53482,51 +49525,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
   }
   function activity_preview_new(parent, activity) {
-    let activity_item = document.createElement("a");
-    activity_item.classList.add("activity-item", `activity--${activity.type}`);
-    let involved_text = "";
-    activity.involved.forEach((involved) => {
-      let name = involved.name;
-      let sister = involved.sister;
-      if (involved.type == "track" && settings.format_guest_features) {
-        let formatted_title = name_includes(name, sister);
-        let song_title;
-        let song_tags = {};
-        if (formatted_title) {
-          song_title = formatted_title[0];
-          song_tags = formatted_title[1];
-          sister = formatted_title[2];
-        }
-        name = html.node`
-                <div class="title">${song_title.trim()}</div>
-                ${song_tags.map(
-          (tag) => html.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-                `
-        )}
-            `;
-      } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        name = html.node`${correct_item_by_artist(name, sister)}`;
-        sister = correct_artist(sister);
-      } else if (involved.type == "artist" && settings.corrections) {
-        sister = correct_artist(sister);
-      }
-      if (involved_text != "")
-        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
-      else
-        involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
-    });
-    render(
-      activity_item,
-      html`
-            <div class="type">
-                ${tl(trans.activity.listing[activity.type])}
-                <div class="date">${(0, import_moment2.default)(activity.date).fromNow(true)}</div>
-            </div>
-            <div class="name">${involved_text}</div>
-        `
-    );
-    parent.insertBefore(activity_item, parent.firstElementChild);
+    parent.insertBefore(render_activity(activity), parent.firstElementChild);
     if (parent.childElementCount > 3)
       parent.removeChild(parent.lastElementChild);
   }
@@ -54160,7 +50159,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
 
   // src/activity.js
-  var import_moment3 = __toESM(require_moment(), 1);
   function render_activity_list() {
     load_activities();
     let activity_list = html.node`
@@ -54169,83 +50167,96 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let recent_activity_list_r = recent_activity_list;
     recent_activity_list_r.reverse();
     recent_activity_list_r.forEach((activity) => {
-      let activity_item = document.createElement("a");
-      activity_item.classList.add("activity-item", `activity--${activity.type}`);
-      activity_item.setAttribute("href", activity.context);
-      let involved_text = "";
-      let tooltip_name;
-      let tooltip_sister;
-      activity.involved.forEach((involved) => {
-        let involved_link;
-        if (involved.type == "user")
-          involved_link = `${root}user/${involved.name}`;
-        else if (involved.type == "artist")
-          involved_link = `${root}music/${redirect()}${sanitise(involved.name)}`;
-        else if (involved.type == "album")
-          involved_link = `${root}music/${redirect()}${sanitise(involved.sister)}/${sanitise(involved.name)}`;
-        else if (involved.type == "track")
-          involved_link = `${root}music/${redirect()}${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
-        else if (involved.type == "tag")
-          involved_link = `${root}tag/${sanitise(involved.name)}`;
-        else if (involved.type == "bwaa")
-          involved_link = `${root}bwaa`;
-        else if (involved.type == "bleh")
-          involved_link = `${root}bleh`;
-        let name = involved.name;
-        let sister = involved.sister;
-        if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
-          tooltip_name = name;
-          tooltip_sister = sister;
-        }
-        if (involved.type == "track" && settings.format_guest_features) {
-          let formatted_title = name_includes(name, sister);
-          let song_title;
-          let song_tags;
-          if (formatted_title) {
-            song_title = formatted_title[0];
-            song_tags = formatted_title[1];
-            sister = romanise(formatted_title[2]);
-            tooltip_name = song_title;
-            tooltip_sister = sister;
-          }
-          name = html.node`
-                    <div class="title">${romanise(song_title.trim())}</div>
-                    ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
-                    `)}
-                `;
-        } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-          name = romanise(correct_item_by_artist(name, sister));
-          tooltip_name = name;
-          sister = romanise(correct_artist(sister));
-          tooltip_sister = sister;
-        } else if (involved.type == "artist" && settings.corrections) {
-          name = romanise(correct_artist(name));
-        }
-        if (involved_text != "")
-          involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
-        else
-          involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
-      });
-      render(activity_item, html`
-            <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${(0, import_moment3.default)(activity.date).fromNow(true)}</div></div>
-            <div class="name">${involved_text}</div>
-        `);
-      activity_list.appendChild(activity_item);
-      if (tooltip_name)
-        tippy_esm_default(activity_item.querySelector(".name a"), {
-          theme: "name-sister-combo",
-          content: html.node`
-                    <span class="name">${tooltip_name}</span>
-                    <span class="sister">${tooltip_sister}</span>
-                `
-        });
+      activity_list.appendChild(render_activity(activity));
     });
     return activity_list;
   }
+  function render_activity(activity) {
+    const activity_item = html.node`
+        <a class="activity-item activity--${activity.type}" href=${activity.context} />
+    `;
+    let involved_text = "";
+    let tooltip_name;
+    let tooltip_sister;
+    activity.involved.forEach((involved) => {
+      let involved_link;
+      if (involved.type == "user")
+        involved_link = `${root}user/${involved.name}`;
+      else if (involved.type == "artist")
+        involved_link = `${root}music/${redirect()}${sanitise(involved.name)}`;
+      else if (involved.type == "album")
+        involved_link = `${root}music/${redirect()}${sanitise(involved.sister)}/${sanitise(involved.name)}`;
+      else if (involved.type == "track")
+        involved_link = `${root}music/${redirect()}${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+      else if (involved.type == "tag")
+        involved_link = `${root}tag/${sanitise(involved.name)}`;
+      else if (involved.type == "bwaa") involved_link = `${root}bwaa`;
+      else if (involved.type == "bleh") involved_link = `${root}bleh`;
+      let name = involved.name;
+      let sister = involved.sister;
+      if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
+        tooltip_name = name;
+        tooltip_sister = sister;
+      }
+      if (involved.type == "track" && settings.format_guest_features) {
+        let formatted_title = name_includes(name, sister);
+        let song_title;
+        let song_tags;
+        if (formatted_title) {
+          song_title = formatted_title[0];
+          song_tags = formatted_title[1];
+          sister = romanise(formatted_title[2]);
+          tooltip_name = song_title;
+          tooltip_sister = sister;
+        }
+        name = html.node`
+                <div class="title">${romanise(song_title.trim())}</div>
+                ${song_tags.map(
+          (tag) => html.node`
+                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
+                `
+        )}
+            `;
+      } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
+        name = romanise(correct_item_by_artist(name, sister));
+        tooltip_name = name;
+        sister = romanise(correct_artist(sister));
+        tooltip_sister = sister;
+      } else if (involved.type == "artist" && settings.corrections) {
+        name = romanise(correct_artist(name));
+      }
+      if (involved_text != "")
+        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+      else
+        involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+    });
+    render(
+      activity_item,
+      html`
+            <div class="type">
+                ${tl(trans.activity.listing[activity.type])}
+                <div class="date">
+                    ${DateTime.fromISO(activity.date).toRelative()}
+                </div>
+            </div>
+            <div class="name">${involved_text}</div>
+        `
+    );
+    if (tooltip_name)
+      tippy_esm_default(activity_item.querySelector(".name a"), {
+        theme: "name-sister-combo",
+        content: html.node`
+                <span class="name">${tooltip_name}</span>
+                <span class="sister">${tooltip_sister}</span>
+            `
+      });
+    return activity_item;
+  }
   function subscribe_to_events() {
     if (!settings.activities || !page.structure.main) return;
-    let love_track = page.structure.container.querySelectorAll(`form[action="${root}user/${auth.name}/loved"]:not([data-bleh-subscribed])`);
+    let love_track = page.structure.container.querySelectorAll(
+      `form[action="${root}user/${auth.name}/loved"]:not([data-bleh-subscribed])`
+    );
     love_track.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");
       let track = form.querySelector('[name="track"]').getAttribute("value");
@@ -54253,33 +50264,53 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       artist = correct_artist(artist);
       track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
-      btn.addEventListener("click", (event3) => {
-        event3.preventDefault();
-        log("heard", "event", "info", event3);
-        let action = btn.getAttribute("data-analytics-action");
-        if (btn.getAttribute("data-type") == "love") {
-          setTimeout(() => {
-            if (!btn.querySelector("span")) {
-              let new_text = document.createElement("span");
-              new_text.textContent = tl(trans.love);
-              btn.appendChild(new_text);
-            }
-          }, 1);
-        }
-        register_activity(action == "LoveTrack" ? "love" : "unlove", [{ name: track, type: "track", sister: artist }], `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(track)}`);
-      }, false);
+      btn.addEventListener(
+        "click",
+        (event3) => {
+          event3.preventDefault();
+          log("heard", "event", "info", event3);
+          let action = btn.getAttribute("data-analytics-action");
+          if (btn.getAttribute("data-type") == "love") {
+            setTimeout(() => {
+              if (!btn.querySelector("span")) {
+                let new_text = document.createElement("span");
+                new_text.textContent = tl(trans.love);
+                btn.appendChild(new_text);
+              }
+            }, 1);
+          }
+          register_activity(
+            action == "LoveTrack" ? "love" : "unlove",
+            [{ name: track, type: "track", sister: artist }],
+            `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(track)}`
+          );
+        },
+        false
+      );
     });
-    let bookmark_item = document.body.querySelectorAll(`form[action="/music/+bookmarks"]:not([data-bleh-subscribed])`);
+    let bookmark_item = document.body.querySelectorAll(
+      `form[action="/music/+bookmarks"]:not([data-bleh-subscribed])`
+    );
     bookmark_item.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");
       let btn = form.querySelector("button");
-      btn.addEventListener("click", (event3) => {
-        log("heard", "event", "info", event3);
-        let action = btn.getAttribute("data-analytics-action");
-        register_activity(action.startsWith("Bookmark") ? "bookmark" : "unbookmark", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
-      }, false);
+      btn.addEventListener(
+        "click",
+        (event3) => {
+          log("heard", "event", "info", event3);
+          let action = btn.getAttribute("data-analytics-action");
+          register_activity(
+            action.startsWith("Bookmark") ? "bookmark" : "unbookmark",
+            [{ name: page.name, type: page.type, sister: page.sister }],
+            window.location.href
+          );
+        },
+        false
+      );
     });
-    let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth.name}/obsessions"]:not([data-bleh-subscribed])`);
+    let obsess = document.body.querySelectorAll(
+      `.modal-body form[action$="${auth.name}/obsessions"]:not([data-bleh-subscribed])`
+    );
     obsess.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");
       let track = form.querySelector('[name="name"]').getAttribute("value");
@@ -54287,55 +50318,109 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       artist = correct_artist(artist);
       track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
-      btn.addEventListener("click", (event3) => {
-        log("heard", "event", "info", event3);
-        register_activity("obsess", [{ name: track, type: "track", sister: artist }], window.location.href);
-      }, false);
+      btn.addEventListener(
+        "click",
+        (event3) => {
+          log("heard", "event", "info", event3);
+          register_activity(
+            "obsess",
+            [{ name: track, type: "track", sister: artist }],
+            window.location.href
+          );
+        },
+        false
+      );
     });
-    const post_shouts = page.structure.main.querySelectorAll(".btn-post-shout:not([data-bleh-subscribed])");
+    const post_shouts = page.structure.main.querySelectorAll(
+      ".btn-post-shout:not([data-bleh-subscribed])"
+    );
     post_shouts.forEach((post) => {
       post.setAttribute("data-bleh-subscribed", "true");
-      post.addEventListener("click", (e) => {
-        log("heard", "event", "info", e);
-        setTimeout(() => {
-          const is_loading = post.classList.contains("btn--loading");
-          console.info(is_loading, post.classList);
-          if (!is_loading) return;
-          register_activity("shout", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
-        }, 150);
-      }, false);
+      post.addEventListener(
+        "click",
+        (e) => {
+          log("heard", "event", "info", e);
+          setTimeout(() => {
+            const is_loading = post.classList.contains("btn--loading");
+            console.info(is_loading, post.classList);
+            if (!is_loading) return;
+            register_activity(
+              "shout",
+              [
+                {
+                  name: page.name,
+                  type: page.type,
+                  sister: page.sister
+                }
+              ],
+              window.location.href
+            );
+          }, 150);
+        },
+        false
+      );
     });
-    let save_wiki_form = document.body.querySelector(".wiki-edit-form:not([data-bleh-subscribed])");
+    let save_wiki_form = document.body.querySelector(
+      ".wiki-edit-form:not([data-bleh-subscribed])"
+    );
     if (save_wiki_form != null) {
       save_wiki_form.setAttribute("data-bleh-subscribed", "true");
       let btn = save_wiki_form.querySelector(".form-submit button");
-      btn.addEventListener("click", (event3) => {
-        log("heard", "event", "info", event3);
-        register_activity("wiki", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
-      }, false);
+      btn.addEventListener(
+        "click",
+        (event3) => {
+          log("heard", "event", "info", event3);
+          register_activity(
+            "wiki",
+            [{ name: page.name, type: page.type, sister: page.sister }],
+            window.location.href
+          );
+        },
+        false
+      );
     }
-    let upload_img_form = document.body.querySelector('form[action$="/+images/upload"]:not([data-bleh-subscribed])');
+    let upload_img_form = document.body.querySelector(
+      'form[action$="/+images/upload"]:not([data-bleh-subscribed])'
+    );
     if (upload_img_form) {
       upload_img_form.setAttribute("data-bleh-subscribed", "true");
       let btn = upload_img_form.querySelector(".form-submit button");
       if (!btn) btn = upload_img_form.querySelector('button[type="submit"]');
       if (btn) {
-        btn.addEventListener("click", (event3) => {
-          log("heard", "event", "info", event3);
-          register_activity("image_upload", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
-        }, false);
+        btn.addEventListener(
+          "click",
+          (event3) => {
+            log("heard", "event", "info", event3);
+            register_activity(
+              "image_upload",
+              [
+                {
+                  name: page.name,
+                  type: page.type,
+                  sister: page.sister
+                }
+              ],
+              window.location.href
+            );
+          },
+          false
+        );
       }
     }
   }
   function load_activities() {
-    if (!settings.activities)
-      return;
+    if (!settings.activities) return;
     recent_activity_list.length = 0;
-    recent_activity_list.push(...JSON.parse(localStorage.getItem("bwaa_recent_activity")) || []);
+    recent_activity_list.push(
+      ...JSON.parse(localStorage.getItem("bwaa_recent_activity")) || []
+    );
     log("loaded", "activity", "info", recent_activity_list);
     check_activities_length();
     log("saved", "activity", "info", recent_activity_list);
-    localStorage.setItem("bwaa_recent_activity", JSON.stringify(recent_activity_list));
+    localStorage.setItem(
+      "bwaa_recent_activity",
+      JSON.stringify(recent_activity_list)
+    );
   }
   function check_activities_length() {
     if (recent_activity_list.length > 10) {
@@ -54346,8 +50431,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     return recent_activity_list;
   }
   function register_activity(type, involved, context, date = /* @__PURE__ */ new Date()) {
-    if (!settings.activities)
-      return;
+    if (!settings.activities) return;
     if (type == "shout") {
       if (!settings.activity_shout) return;
     } else if (type == "image_upload" || type == "image_star") {
@@ -54364,7 +50448,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (!settings.wiki) return;
     }
     recent_activity_list.length = 0;
-    recent_activity_list.push(...JSON.parse(localStorage.getItem("bwaa_recent_activity")) || []);
+    recent_activity_list.push(
+      ...JSON.parse(localStorage.getItem("bwaa_recent_activity")) || []
+    );
     log("loaded", "activity", "info", recent_activity_list);
     recent_activity_list.push({
       type,
@@ -54380,7 +50466,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
     check_activities_length();
     log("saved", "activity", "info", recent_activity_list);
-    localStorage.setItem("bwaa_recent_activity", JSON.stringify(recent_activity_list));
+    localStorage.setItem(
+      "bwaa_recent_activity",
+      JSON.stringify(recent_activity_list)
+    );
   }
 
   // src/components/nag_bar.js
@@ -54432,7 +50521,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let split = href.replace(root, "").split("/");
       const avatar3 = notification.querySelector(".avatar");
       avatar3.classList = "avatar";
-      const time = notification.querySelector("time");
+      const time2 = notification.querySelector("time");
       let is_reply = false;
       let others_included = 0;
       if (href.endsWith("/obsessions/set")) {
@@ -54561,7 +50650,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         </span>
                     </div>
                 </div>
-                <div class="notification-time">${time}</div>
+                <div class="notification-time">${time2}</div>
                 <a
                     class="link-block-cover-link"
                     href=${link.getAttribute("href")}
@@ -54580,7 +50669,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
 
   // src/navigation.js
-  var import_moment4 = __toESM(require_moment(), 1);
   function patch_masthead() {
     let masthead_logo = document.body.querySelector(".masthead-logo");
     if (!masthead_logo) return;
@@ -54669,7 +50757,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
                 ${last_checked ? tl(trans.last_checked_date).replace(
         "{d}",
-        (0, import_moment4.default)(last_checked).fromNow()
+        DateTime.fromJSDate(
+          new Date(last_checked)
+        ).toRelative()
       ) : tl(trans.never_checked)}
             </a>
         `,
@@ -54839,7 +50929,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let bleh_container = html.node`
         <li class="masthead-nav-item">
             <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "/seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-                ${stored_season.id == "none" ? tl(trans.bleh_settings) : (0, import_moment4.default)(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
+                ${stored_season.id == "none" ? tl(trans.bleh_settings) : DateTime.fromISO(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}
             </a>
         </li>
     `;
@@ -56932,25 +53022,26 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
 
   // src/pages/chart.js
-  var import_moment5 = __toESM(require_moment(), 1);
   function bleh_charts() {
-    if (page.subpage != "overview")
-      return;
+    if (page.subpage != "overview") return;
     let charts = page.structure.main.querySelector(".charts");
     charts.classList.add("legacy-charts");
-    let chart_rows = charts.querySelectorAll(".charts-col:not(.charts-col--mobile-ad)");
+    let chart_rows = charts.querySelectorAll(
+      ".charts-col:not(.charts-col--mobile-ad)"
+    );
     let new_panel = document.createElement("section");
     new_panel.classList.add("charts-panel");
-    let out_now = page.structure.side.querySelector(".more-link-fullwidth-right a");
-    if (out_now)
-      out_now.classList.add("btn", "out-now-btn");
+    let out_now = page.structure.side.querySelector(
+      ".more-link-fullwidth-right a"
+    );
+    if (out_now) out_now.classList.add("btn", "out-now-btn");
     let header = html.node`
         <div class="charts-header top-header">
             <div class="left">
 
             </div>
             <div class="middle">
-                <div class="sub-text">${(0, import_moment5.default)(/* @__PURE__ */ new Date()).format("MMMM Do YYYY")}</div>
+                <div class="sub-text">${DateTime.now().toLocaleString(DateTime.DATE_FULL)}</div>
                 <h2>${tl(trans.charts)}</h2>
             </div>
             <div class="right">
@@ -57026,7 +53117,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         let rank = item.querySelector(".globalchart-rank");
         let name = item.querySelector(".globalchart-name a");
         let link = name.getAttribute("href");
-        image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
+        image.setAttribute(
+          "src",
+          image.getAttribute("src").replace("/avatar70s/", "/avatar300s/")
+        );
         if (index3 == 1) {
           name.textContent = correct_artist(name.textContent);
           list_item = html.node`
@@ -57049,9 +53143,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     </li>
                 `;
         } else {
-          let artist = item.querySelector(".globalchart-track-artist-name a");
+          let artist = item.querySelector(
+            ".globalchart-track-artist-name a"
+          );
           artist.textContent = correct_artist(artist.textContent);
-          name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
+          name.textContent = correct_item_by_artist(
+            name.textContent,
+            artist.textContent
+          );
           list_item = html.node`
                     <li class="music-bookmarks-albums-item-wrap charts-list-item">
                         <div class="music-bookmarks-albums-item charts-list-item-inner">
@@ -57080,7 +53179,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       chart_row.appendChild(list);
       new_panel.appendChild(chart_row);
     });
-    page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
+    page.structure.main.insertBefore(
+      new_panel,
+      page.structure.main.firstElementChild
+    );
   }
 
   // src/pages/home.js
@@ -57111,16 +53213,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       register_background(null);
     }
     let hour = (/* @__PURE__ */ new Date()).getHours();
-    let time;
+    let time2;
     if (hour >= 22 || hour <= 6)
-      time = "night";
+      time2 = "night";
     else if (hour >= 7 && hour <= 10)
-      time = "morning";
+      time2 = "morning";
     else if (hour >= 11 && hour <= 18)
-      time = "afternoon";
+      time2 = "afternoon";
     else
-      time = "evening";
-    log(`hour ${hour} time ${time}`, "time");
+      time2 = "evening";
+    log(`hour ${hour} time ${time2}`, "time");
     let welcome;
     if (auth.name) {
       welcome = html.node`
@@ -57131,7 +53233,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                     ` : ""}
                 </div>
-                <h1>${{ html: tl(trans[`good_${time}_user`]).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}</h1>
+                <h1>${{ html: tl(trans[`good_${time2}_user`]).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}</h1>
             </div>
         `;
     } else {
@@ -67148,46 +63250,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     }
   };
-  import_moment6.default.updateLocale("de", {
-    relativeTime: {
-      future: "in %s",
-      past: "vor %s",
-      s: "ein paar Sekunden",
-      ss: "%d Sekunden",
-      m: "eine Minute",
-      mm: "%d Minuten",
-      h: "eine Stunde",
-      hh: "%d Stunden",
-      d: "ein Tag",
-      dd: "%d Tagen",
-      w: "eine Woche",
-      ww: "%d Wochen",
-      M: "im Monat",
-      MM: "%d Monate",
-      y: "ein Jahr",
-      yy: "%d Jahre"
-    }
-  });
-  import_moment6.default.updateLocale("pt", {
-    relativeTime: {
-      future: "em %s",
-      past: "h\xE1 %s",
-      s: "alguns segundos",
-      ss: "%d segundos",
-      m: "um minuto",
-      mm: "%d minutos",
-      h: "uma hora",
-      hh: "%d horas",
-      d: "um dia",
-      dd: "%d dias",
-      w: "uma semana",
-      ww: "%d semanas",
-      M: "um m\xEAs",
-      MM: "%d meses",
-      y: "um ano",
-      yy: "%d anos"
-    }
-  });
   function tl(key, replacements = {}) {
     if (!key) {
       log("your key is undefined", "trans");
@@ -67240,7 +63302,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     lang = document.documentElement.getAttribute("lang");
     Settings.defaultLocale = lang;
-    import_moment6.default.locale(lang);
   }
 
   // src/build/config.js
@@ -82805,12 +78866,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     }
   }
-  function addTick(ticks, time, timestamps) {
+  function addTick(ticks, time2, timestamps) {
     if (!timestamps) {
-      ticks[time] = true;
+      ticks[time2] = true;
     } else if (timestamps.length) {
-      const { lo, hi } = _lookup(timestamps, time);
-      const timestamp = timestamps[lo] >= time ? timestamps[lo] : timestamps[hi];
+      const { lo, hi } = _lookup(timestamps, time2);
+      const timestamp = timestamps[lo] >= time2 ? timestamps[lo] : timestamps[hi];
       ticks[timestamp] = true;
     }
   }
@@ -82877,14 +78938,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       this._parseOpts = void 0;
     }
     init(scaleOpts, opts = {}) {
-      const time = scaleOpts.time || (scaleOpts.time = {});
+      const time2 = scaleOpts.time || (scaleOpts.time = {});
       const adapter = this._adapter = new adapters._date(scaleOpts.adapters.date);
       adapter.init(opts);
-      mergeIf(time.displayFormats, adapter.formats());
+      mergeIf(time2.displayFormats, adapter.formats());
       this._parseOpts = {
-        parser: time.parser,
-        round: time.round,
-        isoWeekday: time.isoWeekday
+        parser: time2.parser,
+        round: time2.round,
+        isoWeekday: time2.isoWeekday
       };
       super.init(scaleOpts);
       this._normalized = opts.normalized;
@@ -83004,7 +79065,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const hasWeekday = isNumber2(weekday) || weekday === true;
       const ticks = {};
       let first = min2;
-      let time, count;
+      let time2, count;
       if (hasWeekday) {
         first = +adapter.startOf(first, "isoWeek", weekday);
       }
@@ -83013,11 +79074,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         throw new Error(min2 + " and " + max2 + " are too far apart with stepSize of " + stepSize + " " + minor);
       }
       const timestamps = options.ticks.source === "data" && this.getDataTimestamps();
-      for (time = first, count = 0; time < max2; time = +adapter.add(time, stepSize, minor), count++) {
-        addTick(ticks, time, timestamps);
+      for (time2 = first, count = 0; time2 < max2; time2 = +adapter.add(time2, stepSize, minor), count++) {
+        addTick(ticks, time2, timestamps);
       }
-      if (time === max2 || options.bounds === "ticks" || count === 1) {
-        addTick(ticks, time, timestamps);
+      if (time2 === max2 || options.bounds === "ticks" || count === 1) {
+        addTick(ticks, time2, timestamps);
       }
       return Object.keys(ticks).sort(sorter).map((x) => +x);
     }
@@ -83036,12 +79097,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const fmt = format || formats[unit];
       return this._adapter.format(value, fmt);
     }
-    _tickFormatFunction(time, index3, ticks, format) {
+    _tickFormatFunction(time2, index3, ticks, format) {
       const options = this.options;
       const formatter = options.ticks.callback;
       if (formatter) {
         return callback(formatter, [
-          time,
+          time2,
           index3,
           ticks
         ], this);
@@ -83053,7 +79114,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const majorFormat = majorUnit && formats[majorUnit];
       const tick = ticks[index3];
       const major = majorUnit && majorFormat && tick && tick.major;
-      return this._adapter.format(time, format || (major ? majorFormat : minorFormat));
+      return this._adapter.format(time2, format || (major ? majorFormat : minorFormat));
     }
     generateTickLabels(ticks) {
       let i, ilen, tick;
@@ -83272,8 +79333,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     /**
      * @private
      */
-    _create: function(time) {
-      return DateTime.fromMillis(time, this.options);
+    _create: function(time2) {
+      return DateTime.fromMillis(time2, this.options);
     },
     init(chartOptions) {
       if (!this.options.locale) {
@@ -83304,28 +79365,28 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       return value.isValid ? value.valueOf() : null;
     },
-    format: function(time, format) {
-      const datetime = this._create(time);
+    format: function(time2, format) {
+      const datetime = this._create(time2);
       return typeof format === "string" ? datetime.toFormat(format) : datetime.toLocaleString(format);
     },
-    add: function(time, amount, unit) {
+    add: function(time2, amount, unit) {
       const args = {};
       args[unit] = amount;
-      return this._create(time).plus(args).valueOf();
+      return this._create(time2).plus(args).valueOf();
     },
     diff: function(max2, min2, unit) {
       return this._create(max2).diff(this._create(min2)).as(unit).valueOf();
     },
-    startOf: function(time, unit, weekday) {
+    startOf: function(time2, unit, weekday) {
       if (unit === "isoWeek") {
         weekday = Math.trunc(Math.min(Math.max(0, weekday), 6));
-        const dateTime = this._create(time);
+        const dateTime = this._create(time2);
         return dateTime.minus({ days: (dateTime.weekday - weekday + 7) % 7 }).startOf("day").valueOf();
       }
-      return unit ? this._create(time).startOf(unit).valueOf() : time;
+      return unit ? this._create(time2).startOf(unit).valueOf() : time2;
     },
-    endOf: function(time, unit) {
-      return this._create(time).endOf(unit).valueOf();
+    endOf: function(time2, unit) {
+      return this._create(time2).endOf(unit).valueOf();
     }
   });
 
@@ -83339,13 +79400,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   bleh();
 })();
 /*! Bundled license information:
-
-moment/moment.js:
-  (*! moment.js *)
-  (*! version : 2.30.1 *)
-  (*! authors : Tim Wood, Iskren Chernev, Moment.js contributors *)
-  (*! license : MIT *)
-  (*! momentjs.com *)
 
 hangul-romanization/dist/conversionSystems/revisedRomanizationOfKorean.js:
 hangul-romanization/dist/index.js:
