@@ -6573,14 +6573,21 @@
         text-decoration: var(--force-underline, none) !important;
     }
 
+    .smart-title {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 6px;
+    }
+
+    .smart-title,
     .source-album-name,
-    .activity-item .name a,
+    .activity-item .name > a,
     .grid-items-item-main-text,
     .featured-item-name,
-    .chartlist-name {
-        .feat {
+    .chartlist-name > a {
+        & > .feat {
             font-size: var(--font-size-sm);
-            line-height: var(--line-height-sm);
+            line-height: var(--line-height);
             width: fit-content;
             height: fit-content;
             margin: auto 0;
@@ -9725,6 +9732,28 @@
 
                     & > :last-child {
                         color: hsl(var(--c2), 60%);
+                    }
+
+                    & > .artist {
+                        display: flex;
+                        color: hsl(var(--c3), 60%);
+                        cursor: default;
+
+                        & > a {
+                            &:not(:hover) {
+                                color: hsl(var(--c2), 60%) !important;
+                            }
+
+                            min-width: 0;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            flex-shrink: 1;
+
+                            & + a {
+                                margin-left: 4px;
+                            }
+                        }
                     }
                 }
             }
@@ -14885,6 +14914,10 @@
         & > p:has(> .markdown-image),
         br {
             display: none;
+        }
+
+        & > .top-track {
+            display: inline-flex;
         }
     }
 

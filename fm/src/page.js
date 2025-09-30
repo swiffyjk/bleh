@@ -566,9 +566,6 @@ function load_page() {
 
         if (settings.corrections) {
             if (page.type == 'artist') {
-                correct_generic_combo_no_artist(
-                    'artist-header-featured-items-item'
-                );
                 correct_generic_combo_no_artist('artist-top-albums-item');
             } else if (page.type == 'track') {
                 correct_generic_combo('source-album-details');
@@ -971,16 +968,17 @@ function favi() {
     let favicon = document.querySelector('link[rel="icon"]');
     if (!favicon) return;
 
-    favicon.href = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? dark
-        : light;
+    favicon.href =
+        window.matchMedia('(prefers-color-scheme: dark)').matches ?
+            dark
+        :   light;
 
     window
         .matchMedia('(prefers-color-scheme: dark)')
         .addEventListener('change', function () {
-            favicon.href = window.matchMedia('(prefers-color-scheme: dark)')
-                .matches
-                ? dark
-                : light;
+            favicon.href =
+                window.matchMedia('(prefers-color-scheme: dark)').matches ?
+                    dark
+                :   light;
         });
 }

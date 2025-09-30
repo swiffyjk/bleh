@@ -33442,9 +33442,22 @@
     let badge = patch_avatar(user_list_avatar, name, "listener");
     if (track_wrap) {
       let track_link = about_me.querySelector("a");
-      track_link.textContent = romanise(
-        correct_item_by_artist(track_link.textContent.trim(), page.sister)
-      );
+      track_link.classList.add("top-track");
+      if (settings.format_guest_features) {
+        const formatted = name_includes(
+          track_link.textContent.trim(),
+          page.sister
+        );
+        track_link.classList.add("smart-title");
+        render(track_link, smart_title(formatted[0], formatted[1]));
+      } else if (settings.corrections) {
+        track_link.textContent = romanise(
+          correct_item_by_artist(
+            track_link.textContent.trim(),
+            page.sister
+          )
+        );
+      }
     }
     return new_listener;
   }
@@ -33738,17 +33751,7 @@
               track_artist
             )
           );
-          render(
-            track_title,
-            html`
-                        <div class="title">${romanise(song_title.trim())}</div>
-                        ${song_tags.map(
-              (tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
-                    `
-            )}
-                    `
-          );
+          render(track_title, smart_title(song_title, song_tags));
           let song_artist_element = track.querySelector(".chartlist-artist");
           if (!song_artist_element && !is_user) {
             song_artist_element = document.createElement("td");
@@ -33771,19 +33774,8 @@
             );
             render(
               song_artist_element,
-              html`<a
-                            href="${root}music/${redirect()}${sanitise(
-                formatted_title[2]
-              )}"
-                            >${romanise(formatted_title[2])}</a
-                        >`
+              smart_artists(formatted_title[2], formatted_title[3])
             );
-            let song_guests = formatted_title[3];
-            for (let guest in song_guests) {
-              song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${romanise(song_guests[guest])}</a>
-                        `);
-            }
           }
           if (track.getAttribute("data-disambig") == "explicit") {
             song_artist_element.insertBefore(
@@ -33811,7 +33803,10 @@
                                     `
             )}
                                 </div>
-                                ${is_album ? "" : html.node`<p class="album">${image && album_link ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : ""}</p>`}
+                                ${is_album ? "" : html.node`<p class="album">${image && album_link ? correct_item_by_artist(
+              image.getAttribute("alt"),
+              track_artist
+            ) : album ? album.textContent : ""}</p>`}
                                 ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
                             </div>
                         </div>
@@ -49810,7 +49805,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function correct_generic_combo(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
     if (albums.length == 0) return;
-    if (!settings.corrections) return;
+    if (!settings.format_guest_features && !settings.corrections) return;
     albums.forEach((album) => {
       if (!album.hasAttribute("data-kate-processed")) {
         album.setAttribute("data-kate-processed", "true");
@@ -49822,24 +49817,31 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           `.${parent.replace("-details", "")}-artist a`
         );
         if (!artist_name) return;
-        let corrected_album_name = romanise(
-          correct_item_by_artist(
+        if (settings.format_guest_features) {
+          const formatted = name_includes(
             album_name.textContent,
             artist_name.textContent
-          )
-        );
-        let corrected_artist_name = romanise(
+          );
+          album_name.classList.add("smart-title");
+          render(album_name, smart_title(formatted[0], formatted[1]));
+        } else if (settings.corrections) {
+          album_name.textContent = romanise(
+            correct_item_by_artist(
+              album_name.textContent,
+              artist_name.textContent
+            )
+          );
+        }
+        artist_name.textContent = romanise(
           correct_artist(artist_name.textContent)
         );
-        album_name.textContent = corrected_album_name;
-        artist_name.textContent = corrected_artist_name;
       }
     });
   }
   function correct_generic_combo_no_artist(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
     if (albums.length == 0) return;
-    if (!settings.corrections) return;
+    if (!settings.format_guest_features && !settings.corrections) return;
     albums.forEach((album) => {
       if (!album.hasAttribute("data-kate-processed")) {
         album.setAttribute("data-kate-processed", "true");
@@ -49850,9 +49852,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         let artist_name = return_artist_from_generic(
           album_name.getAttribute("href")
         );
-        album_name.textContent = romanise(
-          correct_item_by_artist(album_name.textContent, artist_name)
-        );
+        if (settings.format_guest_features) {
+          const formatted = name_includes(
+            album_name.textContent,
+            artist_name
+          );
+          album_name.classList.add("smart-title");
+          render(album_name, smart_title(formatted[0], formatted[1]));
+        } else if (settings.corrections) {
+          album_name.textContent = romanise(
+            correct_item_by_artist(album_name.textContent, artist_name)
+          );
+        }
       }
     });
   }
@@ -49926,7 +49937,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections) {
       original_artist = correct_artist(artist_corrections[original_artist]);
     }
-    if (matches.length === 0) {
+    if (matches.length == 0) {
       const result2 = [
         formatted_title,
         [],
@@ -49969,6 +49980,30 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     ];
     log("finalised", "lotus", "log", { result });
     return result;
+  }
+  function smart_title(song_title, song_tags) {
+    return html`
+        <div class="title">${romanise(song_title.trim())}</div>
+        ${song_tags.map(
+      (tag) => html.node`
+                <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${romanise(tag.text)}</div>
+            `
+    )}
+    `;
+  }
+  function smart_artists(song_artist, song_guests) {
+    return html`
+        <a href="${root}music/${redirect()}${sanitise(song_artist)}"
+            >${romanise(song_artist)}</a
+        >
+        ${song_guests.map(
+      (guest) => html.node`
+                ,<a href="${root}music/${redirect()}${sanitise(guest)}"
+                    >${romanise(guest)}</a
+                >
+            `
+    )}
+    `;
   }
   function artist_title() {
     let title = document.body.querySelector(".header-new-title");
@@ -50054,17 +50089,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           let song_title = formatted_title[0];
           let song_tags = formatted_title[1];
           page.corrected = formatted_title[4];
-          render(
-            track_title,
-            html.node`
-                <div class="title">${romanise(song_title.trim())}</div>
-                ${song_tags.map(
-              (tag) => html.node`
-                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${romanise(tag.text)}</div>
-                `
-            )}
-            `
-          );
+          render(track_title, smart_title(song_title, song_tags));
           if (song_tags.some((tag) => tag.group == "form"))
             page.suggest = sanitise(song_title.trim());
           let song_artist_element = document.body.querySelector(
@@ -50205,18 +50230,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         if (formatted_title) {
           song_title = formatted_title[0];
           song_tags = formatted_title[1];
-          sister = romanise(formatted_title[2]);
           tooltip_name = song_title;
           tooltip_sister = sister;
         }
-        name = html.node`
-                <div class="title">${romanise(song_title.trim())}</div>
-                ${song_tags.map(
-          (tag) => html.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
-                `
-        )}
-            `;
+        name = html.node`${smart_title(song_title, song_tags)}`;
+        sister = html.node`${smart_artists(formatted_title[2], formatted_title[3])}`;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
         name = romanise(correct_item_by_artist(name, sister));
         tooltip_name = name;
@@ -51624,18 +51642,27 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         active = false;
       const track = doc.querySelector(".user-now-track a");
       const links = doc.querySelectorAll(".user-now-artist-and-album a");
-      const artist = links[0];
+      let artist = links[0];
       const album = links[1];
       const avatar3 = doc.querySelector(".cover-art img")?.src;
       track.removeAttribute("target");
       artist.removeAttribute("target");
       album.removeAttribute("target");
-      artist.textContent = romanise(correct_artist(artist.textContent));
-      track.textContent = romanise(
-        correct_item_by_artist(track.textContent, artist.textContent)
-      );
       let next = /* @__PURE__ */ new Date();
       next.setMinutes(next.getMinutes() + 1);
+      if (settings.format_guest_features) {
+        const formatted = name_includes(
+          track.textContent,
+          artist.textContent
+        );
+        render(track, smart_title(formatted[0], formatted[1]));
+        artist = html.node`<span class="artist">${smart_artists(formatted[2], formatted[3])}</span>`;
+      } else if (settings.corrections) {
+        track.textContent = romanise(
+          correct_item_by_artist(track.textContent, artist.textContent)
+        );
+        artist.textContent = romanise(correct_artist(artist.textContent));
+      }
       page.now = {
         next_fetch: next,
         name: track,
@@ -52365,12 +52392,22 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
               ".artist-header-featured-items-item-header"
             );
             header.parentElement.removeChild(header);
-            let name = correct_item_by_artist(
-              item.querySelector(
-                ".artist-header-featured-items-item-name"
-              ).textContent.trim(),
-              page.name
-            );
+            let original_name = item.querySelector(
+              ".artist-header-featured-items-item-name"
+            ).textContent.trim();
+            let name;
+            if (settings.format_guest_features) {
+              const formatted = name_includes(
+                original_name,
+                page.name
+              );
+              name = html.node`${smart_title(formatted[0], formatted[1])}`;
+            } else if (settings.corrections) {
+              name = correct_item_by_artist(
+                original_name,
+                page.name
+              );
+            }
             let aux = item.querySelector(
               ".artist-header-featured-items-item-aux-text"
             )?.textContent.trim();
@@ -52389,27 +52426,27 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 );
             }
             return html.node`
-                            <div class="featured-artist-item">
-                                <div class="sub-text normal" data-type=${type}>
-                                    <span class="bleh-icon" style="--icon: var(--mask)" />
-                                    ${text3}
-                                </div>
-                                <div class="source-album js-link-block link-block" data-type=${type}>
-                                    <div class="source-album-art">
-                                        <span class="cover-art">
-                                            <img src=${img} alt=${name} />
-                                        </span>
+                                <div class="featured-artist-item">
+                                    <div class="sub-text normal" data-type=${type}>
+                                        <span class="bleh-icon" style="--icon: var(--mask)" />
+                                        ${text3}
                                     </div>
-                                    <div class="source-album-details">
-                                        <h4 class="source-album-name">
-                                            <a href=${link}>${name}</a>
-                                        </h4>
-                                        <p class="source-album-stats">${aux}</p>
+                                    <div class="source-album js-link-block link-block" data-type=${type}>
+                                        <div class="source-album-art">
+                                            <span class="cover-art">
+                                                <img src=${img} alt=${original_name} />
+                                            </span>
+                                        </div>
+                                        <div class="source-album-details">
+                                            <h4 class="source-album-name">
+                                                <a class="smart-title" href=${link}>${name}</a>
+                                            </h4>
+                                            <p class="source-album-stats">${aux}</p>
+                                        </div>
+                                        <a class="js-link-block-cover-link link-block-cover-link" href=${link} tabindex="-1" aria-hidden="true" />
                                     </div>
-                                    <a class="js-link-block-cover-link link-block-cover-link" href=${link} tabindex="-1" aria-hidden="true" />
                                 </div>
-                            </div>
-                        `;
+                            `;
           }
         )}
                 </section>
@@ -55259,9 +55296,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       if (settings.corrections) {
         if (page.type == "artist") {
-          correct_generic_combo_no_artist(
-            "artist-header-featured-items-item"
-          );
           correct_generic_combo_no_artist("artist-top-albums-item");
         } else if (page.type == "track") {
           correct_generic_combo("source-album-details");

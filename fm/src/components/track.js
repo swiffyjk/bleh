@@ -18,7 +18,13 @@ import {
 } from '../build/tools';
 import { bleh_glacier_insights } from '../pages/glacier';
 import { patch_artist_ranks_in_list_view } from './colourful_counts';
-import { correct_artist, correct_item_by_artist, name_includes } from './lotus';
+import {
+    correct_artist,
+    correct_item_by_artist,
+    name_includes,
+    smart_artists,
+    smart_title
+} from './lotus';
 import { register_menu } from './menu';
 import { tl, trans } from '../build/trans.js';
 import { notify } from './notify.js';
@@ -294,17 +300,7 @@ export function patch_titles(search = page.structure.main) {
                 );
 
                 // parse tags into text
-                render(
-                    track_title,
-                    html`
-                        <div class="title">${romanise(song_title.trim())}</div>
-                        ${song_tags.map(
-                            (tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
-                    `
-                        )}
-                    `
-                );
+                render(track_title, smart_title(song_title, song_tags));
 
                 let song_artist_element =
                     track.querySelector('.chartlist-artist');
@@ -339,21 +335,8 @@ export function patch_titles(search = page.structure.main) {
                     // replaces with corrected artist if applicable
                     render(
                         song_artist_element,
-                        html`<a
-                            href="${root}music/${redirect()}${sanitise(
-                                formatted_title[2]
-                            )}"
-                            >${romanise(formatted_title[2])}</a
-                        >`
+                        smart_artists(formatted_title[2], formatted_title[3])
                     );
-
-                    // append guests
-                    let song_guests = formatted_title[3];
-                    for (let guest in song_guests) {
-                        song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${romanise(song_guests[guest])}</a>
-                        `);
-                    }
                 }
 
                 if (track.getAttribute('data-disambig') == 'explicit') {
@@ -383,7 +366,19 @@ export function patch_titles(search = page.structure.main) {
                                     `
                                     )}
                                 </div>
-                                ${is_album ? '' : html.node`<p class="album">${image && album_link ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : album ? album.textContent : ''}</p>`}
+                                ${
+                                    is_album ? '' : (
+                                        html.node`<p class="album">${
+                                            image && album_link ?
+                                                correct_item_by_artist(
+                                                    image.getAttribute('alt'),
+                                                    track_artist
+                                                )
+                                            : album ? album.textContent
+                                            : ''
+                                        }</p>`
+                                    )
+                                }
                                 ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
                         </div>
@@ -605,14 +600,13 @@ export function patch_titles(search = page.structure.main) {
                     }
 
                     let album_name = sanitise(
-                        image
-                            ? correct_item_by_artist(
-                                  image.getAttribute('alt'),
-                                  track_artist
-                              )
-                            : album
-                              ? album.textContent
-                              : ''
+                        image ?
+                            correct_item_by_artist(
+                                image.getAttribute('alt'),
+                                track_artist
+                            )
+                        : album ? album.textContent
+                        : ''
                     );
 
                     menu = tippy(more_button, {
@@ -620,8 +614,8 @@ export function patch_titles(search = page.structure.main) {
                         content: html.node`
                             ${track.preview}
                             ${
-                                can_edit
-                                    ? html.node`
+                                can_edit ?
+                                    html.node`
                             <div class="button-combo">
                                 ${() => {
                                     if (is_album) {
@@ -656,8 +650,8 @@ export function patch_titles(search = page.structure.main) {
                                     `;
                                 }}
                                 ${
-                                    bulk_edit_button
-                                        ? html.node`
+                                    bulk_edit_button ?
+                                        html.node`
                                     <div class="button-combo-sep" />
                                     ${() => {
                                         let button =
@@ -682,12 +676,12 @@ export function patch_titles(search = page.structure.main) {
                                         return button;
                                     }}
                                 `
-                                        : ''
+                                    :   ''
                                 }
                             </div>
                             <div class="sep" />
                             `
-                                    : ''
+                                :   ''
                             }
                             ${() => {
                                 let container =
@@ -709,8 +703,8 @@ export function patch_titles(search = page.structure.main) {
                                 return button;
                             }}
                             ${
-                                !is_album
-                                    ? html.node`
+                                !is_album ?
+                                    html.node`
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
@@ -737,11 +731,11 @@ export function patch_titles(search = page.structure.main) {
                                 }}
                             </div>
                             `
-                                    : ''
+                                :   ''
                             }
                             ${
-                                album_name && album_link
-                                    ? html.node`
+                                album_name && album_link ?
+                                    html.node`
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
@@ -768,8 +762,8 @@ export function patch_titles(search = page.structure.main) {
                                 }}
                             </div>
                             `
-                                    : is_album
-                                      ? html.node`
+                                : is_album ?
+                                    html.node`
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
@@ -796,7 +790,7 @@ export function patch_titles(search = page.structure.main) {
                                 }}
                             </div>
                             `
-                                      : ''
+                                :   ''
                             }
                             <div class="button-combo">
                                 ${() => {

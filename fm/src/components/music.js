@@ -21,7 +21,12 @@ import { refresh_all } from '../config';
 import { create_divider } from '../pages/gallery';
 import { ff } from '../sku';
 import { parse_scrobbles_as_rank } from './colourful_counts';
-import { correct_item_by_artist, create_correction } from './lotus';
+import {
+    correct_item_by_artist,
+    create_correction,
+    name_includes,
+    smart_title
+} from './lotus';
 import { register_menu } from './menu';
 import { other_listener } from './profile_shortcut';
 import { submit_scrobble } from './scrobble.js';
@@ -1708,9 +1713,23 @@ export function convert_top_listener(listener, index, key = 'top-listeners') {
     if (track_wrap) {
         let track_link = about_me.querySelector('a');
 
-        track_link.textContent = romanise(
-            correct_item_by_artist(track_link.textContent.trim(), page.sister)
-        );
+        track_link.classList.add('top-track');
+        if (settings.format_guest_features) {
+            const formatted = name_includes(
+                track_link.textContent.trim(),
+                page.sister
+            );
+
+            track_link.classList.add('smart-title');
+            render(track_link, smart_title(formatted[0], formatted[1]));
+        } else if (settings.corrections) {
+            track_link.textContent = romanise(
+                correct_item_by_artist(
+                    track_link.textContent.trim(),
+                    page.sister
+                )
+            );
+        }
     }
 
     return new_listener;

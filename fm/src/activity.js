@@ -12,7 +12,9 @@ import { tl, trans } from './build/trans';
 import {
     correct_artist,
     correct_item_by_artist,
-    name_includes
+    name_includes,
+    smart_artists,
+    smart_title
 } from './components/lotus';
 import { html, render } from 'lighterhtml';
 import { redirect } from './components/music.js';
@@ -92,20 +94,13 @@ export function render_activity(activity) {
             if (formatted_title) {
                 song_title = formatted_title[0];
                 song_tags = formatted_title[1];
-                sister = romanise(formatted_title[2]);
                 tooltip_name = song_title;
                 tooltip_sister = sister;
             }
 
             // combine
-            name = html.node`
-                <div class="title">${romanise(song_title.trim())}</div>
-                ${song_tags.map(
-                    (tag) => html.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
-                `
-                )}
-            `;
+            name = html.node`${smart_title(song_title, song_tags)}`;
+            sister = html.node`${smart_artists(formatted_title[2], formatted_title[3])}`;
         } else if (
             (involved.type == 'album' || involved.type == 'track') &&
             settings.corrections

@@ -17,7 +17,13 @@ import { toggle_theme } from './config.js';
 import { save_setting, setting } from './components/settings.js';
 import { prompt_for_update } from './style.js';
 import { log } from './build/log.js';
-import { correct_artist, correct_item_by_artist } from './components/lotus.js';
+import {
+    correct_artist,
+    correct_item_by_artist,
+    name_includes,
+    smart_artists,
+    smart_title
+} from './components/lotus.js';
 import { bleh_notification_list } from './components/notifications.js';
 import tippy from 'tippy.js';
 import {
@@ -1194,7 +1200,7 @@ export async function live_status() {
         const track = doc.querySelector('.user-now-track a');
         const links = doc.querySelectorAll('.user-now-artist-and-album a');
 
-        const artist = links[0];
+        let artist = links[0];
         const album = links[1];
         const avatar = doc.querySelector('.cover-art img')?.src;
 
@@ -1203,13 +1209,23 @@ export async function live_status() {
         artist.removeAttribute('target');
         album.removeAttribute('target');
 
-        artist.textContent = romanise(correct_artist(artist.textContent));
-        track.textContent = romanise(
-            correct_item_by_artist(track.textContent, artist.textContent)
-        );
-
         let next = new Date();
         next.setMinutes(next.getMinutes() + 1);
+
+        if (settings.format_guest_features) {
+            const formatted = name_includes(
+                track.textContent,
+                artist.textContent
+            );
+
+            render(track, smart_title(formatted[0], formatted[1]));
+            artist = html.node`<span class="artist">${smart_artists(formatted[2], formatted[3])}</span>`;
+        } else if (settings.corrections) {
+            track.textContent = romanise(
+                correct_item_by_artist(track.textContent, artist.textContent)
+            );
+            artist.textContent = romanise(correct_artist(artist.textContent));
+        }
 
         page.now = {
             next_fetch: next,

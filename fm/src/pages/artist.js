@@ -13,7 +13,9 @@ import {
     artist_title,
     correct_artist,
     correct_generic_combo_no_artist,
-    correct_item_by_artist
+    correct_item_by_artist,
+    name_includes,
+    smart_title
 } from '../components/lotus';
 import { register_menu } from '../components/menu';
 import {
@@ -374,14 +376,27 @@ export function bleh_artists() {
                             );
                             header.parentElement.removeChild(header);
 
-                            let name = correct_item_by_artist(
-                                item
-                                    .querySelector(
-                                        '.artist-header-featured-items-item-name'
-                                    )
-                                    .textContent.trim(),
-                                page.name
-                            );
+                            let original_name = item
+                                .querySelector(
+                                    '.artist-header-featured-items-item-name'
+                                )
+                                .textContent.trim();
+                            let name;
+
+                            if (settings.format_guest_features) {
+                                const formatted = name_includes(
+                                    original_name,
+                                    page.name
+                                );
+
+                                name = html.node`${smart_title(formatted[0], formatted[1])}`;
+                            } else if (settings.corrections) {
+                                name = correct_item_by_artist(
+                                    original_name,
+                                    page.name
+                                );
+                            }
+
                             let aux = item
                                 .querySelector(
                                     '.artist-header-featured-items-item-aux-text'
@@ -410,27 +425,27 @@ export function bleh_artists() {
                             }
 
                             return html.node`
-                            <div class="featured-artist-item">
-                                <div class="sub-text normal" data-type=${type}>
-                                    <span class="bleh-icon" style="--icon: var(--mask)" />
-                                    ${text}
-                                </div>
-                                <div class="source-album js-link-block link-block" data-type=${type}>
-                                    <div class="source-album-art">
-                                        <span class="cover-art">
-                                            <img src=${img} alt=${name} />
-                                        </span>
+                                <div class="featured-artist-item">
+                                    <div class="sub-text normal" data-type=${type}>
+                                        <span class="bleh-icon" style="--icon: var(--mask)" />
+                                        ${text}
                                     </div>
-                                    <div class="source-album-details">
-                                        <h4 class="source-album-name">
-                                            <a href=${link}>${name}</a>
-                                        </h4>
-                                        <p class="source-album-stats">${aux}</p>
+                                    <div class="source-album js-link-block link-block" data-type=${type}>
+                                        <div class="source-album-art">
+                                            <span class="cover-art">
+                                                <img src=${img} alt=${original_name} />
+                                            </span>
+                                        </div>
+                                        <div class="source-album-details">
+                                            <h4 class="source-album-name">
+                                                <a class="smart-title" href=${link}>${name}</a>
+                                            </h4>
+                                            <p class="source-album-stats">${aux}</p>
+                                        </div>
+                                        <a class="js-link-block-cover-link link-block-cover-link" href=${link} tabindex="-1" aria-hidden="true" />
                                     </div>
-                                    <a class="js-link-block-cover-link link-block-cover-link" href=${link} tabindex="-1" aria-hidden="true" />
                                 </div>
-                            </div>
-                        `;
+                            `;
                         }
                     )}
                 </section>
