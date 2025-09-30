@@ -12929,26 +12929,13 @@
     .highcharts-background {
         fill: transparent !important;
     }
-    text:not([text-anchor]) {
+    text:has(> .your-progress-label-position) {
         font-family: var(--font) !important;
-    }
-    text:not(
-        .music-decades-chart-container text,
-        .js-top-tags-over-time-target text,
-        .js-mainstream-chart-container text,
-        .summary-chart-container text,
-        [text-anchor]
-    ) {
         font-size: var(--font-size) !important;
         line-height: var(--line-height) !important;
         font-weight: var(--font-weight) !important;
         color: hsl(var(--c2)) !important;
         fill: hsl(var(--c2)) !important;
-    }
-    text[style^="color: rgb(255, 172, 172)"] {
-        color: rgb(255, 172, 172) !important;
-        fill: rgb(255, 172, 172) !important;
-        font-size: 12px !important;
     }
 
     .your-progress {
@@ -13122,72 +13109,6 @@
             display: none;
         }
     }
-    .listener-trend {
-        /* makes the listener trend bigger */
-        padding-top: 55%;
-        margin-top: var(--card-gap);
-
-        .highcharts-alternate-grid {
-            fill: hsla(var(--b4), 60%) !important;
-        }
-
-        .highcharts-graph {
-            stroke: hsl(var(--l3-c)) !important;
-        }
-
-        .highcharts-area {
-            fill: hsla(var(--h4), 25%) !important;
-        }
-
-        .highcharts-markers .highcharts-point {
-            fill: hsl(var(--b5)) !important;
-            stroke: hsl(var(--l2-c)) !important;
-        }
-    }
-
-    .highcharts-grid-line[stroke="#EBEBEB"],
-    .highcharts-axis-line[stroke="#EBEBEB"] {
-        stroke: hsla(var(--b4), 60%) !important;
-    }
-
-    #scrobble-chart-content .highcharts-point {
-        fill: hsl(var(--h3)) !important;
-        rx: var(--item-small-radius);
-
-        /* yearly */
-        &[width="30"] {
-            transform: translateX(1px) !important;
-            width: 22px;
-        }
-
-        /* monthly */
-        &[width="19"] {
-            transform: translateX(-5px) !important;
-            width: 22px;
-        }
-
-        /* daily */
-        &[width="12"] {
-            transform: translateX(-2px) !important;
-            width: 10px;
-        }
-    }
-
-    .highcharts-tooltip-box:not(
-        .summary-chart-container .highcharts-tooltip-box
-    ) {
-        fill: unset !important;
-        stroke: unset !important;
-        height: 20px !important;
-        overflow: hidden;
-    }
-    .highcharts-tooltip text,
-    .highcharts-tooltip text[style^="color: rgb(51, 51, 51)"],
-    text.highcharts-title[style^="color: rgb(51, 51, 51)"] {
-        font-size: var(--font-size) !important;
-        color: hsl(var(--b5)) !important;
-        fill: hsl(var(--c2)) !important;
-    }
 
     /* remove random leftovers tooltips from corner */
     [data-tippy-root][style$="transform: translate(0px, 10px);"] {
@@ -13195,9 +13116,7 @@
     }
 
     .tippy-box,
-    .user-dashboard-controls-tooltip,
-    .tooltip-dark,
-    .user-dashboard-tooltip {
+    .tooltip-dark {
         background: hsla(var(--b8), 80%);
         backdrop-filter: blur(8px) saturate(var(--blur-saturate))
             brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
@@ -13626,19 +13545,6 @@
         --mask: var(--icon-16-moon-fill);
     }
 
-    .listener-trend .highcharts-axis-labels text,
-    #scrobble-chart-content .highcharts-axis-labels text {
-        color: hsl(var(--c3)) !important;
-        fill: hsl(var(--c3)) !important;
-        font-size: calc(var(--font-size) - 1px) !important;
-    }
-    #scrobble-chart-content
-        .highcharts-axis-labels
-        text[style*="font-size: 10px"] {
-        font-size: 12px !important;
-        transform: translateY(4px);
-    }
-
     /*     LISTENING REPORT     */
     .user-dashboard-musical-matches,
     .user-dashboard-module {
@@ -13665,6 +13571,7 @@
         margin-bottom: 6px;
     }
 
+    .user-dashboard-tooltip,
     .top-item-modal,
     .listening-report-top-item,
     .mainstream-score--artist,
@@ -13860,19 +13767,6 @@
         strong {
         font-size: 18px;
         font-weight: 700;
-    }
-
-    text[style^="color: rgb(51, 51, 51)"] {
-        color: rgb(51, 51, 51) !important;
-        fill: rgb(51, 51, 51) !important;
-    }
-    text[style^="color: rgb(0, 0, 0)"] {
-        color: rgb(0, 0, 0) !important;
-        fill: rgb(0, 0, 0) !important;
-    }
-
-    .listener-trend .highcharts-label text {
-        display: none;
     }
 
     .report-box-container .listening-report-brick-inner {
