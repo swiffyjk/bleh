@@ -973,7 +973,7 @@ export function oracle_data(force = false) {
         if (cached_artists_expire < current_time && !force) {
             oracle_request();
         } else if (force) {
-            oracle_request('artistms', true);
+            oracle_request('artists', true);
         }
     }
 

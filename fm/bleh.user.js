@@ -28215,6 +28215,10 @@
       "- remix",
       "(remix",
       "[remix",
+      "-reloaded-",
+      // deco*27
+      "(best friend remix",
+      // deco*27
       "- live",
       "(live",
       "- ao vivo",
@@ -28306,6 +28310,12 @@
       "- the ultimate mix",
       "(the ultimate mix",
       "[the ultimate mix",
+      "- tv size",
+      "(tv size",
+      "[tv size",
+      "- cut ver",
+      "(cut ver",
+      "[cut ver",
       "- short edit",
       "(short edit",
       "short edit",
@@ -28392,6 +28402,7 @@
       "[v7",
       "[v8",
       "[v9",
+      "- mixed",
       "- mix 1",
       "- mix 2",
       "- mix 3",
@@ -32032,7 +32043,7 @@
       if (cached_artists_expire < current_time && !force) {
         oracle_request();
       } else if (force) {
-        oracle_request("artistms", true);
+        oracle_request("artists", true);
       }
     }
     if (!cached_albums) {
