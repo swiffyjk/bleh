@@ -64576,7 +64576,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0929",
+    build: "2025.0930",
     sku: "vivian",
     bio: "bleh!!! ^-^",
     author: "katelyn",
