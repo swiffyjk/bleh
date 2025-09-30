@@ -25255,7 +25255,9 @@
   // src/build/tools.js
   var hangulRomanization = __toESM(require_dist(), 1);
   function hex_to_hsl(hex2) {
-    let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex2);
+    let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(
+      hex2
+    );
     let r = parseInt(result[1], 16);
     let g = parseInt(result[2], 16);
     let b = parseInt(result[3], 16);
@@ -25304,22 +25306,18 @@
     return hex2.length == 1 ? "0" + hex2 : hex2;
   }
   function clamp_sat2(sat) {
-    if (sat > 1.5)
-      return 1.5;
+    if (sat > 1.5) return 1.5;
     return round_two(sat);
   }
   function clamp_lit(sat, lit) {
-    if (sat >= 1.3 && lit < 0.8)
-      return 0.8;
+    if (sat >= 1.3 && lit < 0.8) return 0.8;
     return round_two(lit);
   }
   function round_two(value) {
     return Math.round(value * 100) / 100;
   }
   function clean_number(string) {
-    return int(
-      string.replaceAll(",", "").replaceAll(".", "")
-    );
+    return int(string.replaceAll(",", "").replaceAll(".", ""));
   }
   function sanitise(text3, method = "+") {
     return encodeURIComponent(text3.replaceAll(" ", method));
@@ -25334,10 +25332,8 @@
     let split = url.split("/");
     let length = split.length - 1;
     let desanitised;
-    if (is_album)
-      desanitised = desanitise(split[length - 1]);
-    else
-      desanitised = desanitise(split[length - 2]);
+    if (is_album) desanitised = desanitise(split[length - 1]);
+    else desanitised = desanitise(split[length - 2]);
     let passes = 0;
     while (/%[0-9A-Fa-f]{2}/.test(desanitised) && passes < 5) {
       desanitised = desanitise(desanitised, "+");
@@ -25348,10 +25344,8 @@
   function return_artist_from_generic(url) {
     let split = url.split("/");
     let length = split.length - 1;
-    if (split[length - 1] != "_")
-      return desanitise(split[length - 1]);
-    else
-      return desanitise(split[length - 2]);
+    if (split[length - 1] != "_") return desanitise(split[length - 1]);
+    else return desanitise(split[length - 2]);
   }
   function interpolate_hue(current, next, proximity) {
     current = (current % 360 + 360) % 360;
@@ -25366,19 +25360,22 @@
     return (interpolated % 360 + 360) % 360;
   }
   function lazy(elem, func, options = {}) {
-    const {
-      threshold = 0.1,
-      rootMargin = "50px"
-    } = options;
-    const observer = new IntersectionObserver((entries2) => {
-      entries2.forEach((entry) => {
-        if (entry.isIntersecting) {
-          log("now allowing load", "lazy", "info", { elem, options });
-          func(elem);
-          observer.unobserve(elem);
-        }
-      });
-    }, { threshold, rootMargin });
+    const { threshold = 0.1, rootMargin = "50px" } = options;
+    const observer = new IntersectionObserver(
+      (entries2) => {
+        entries2.forEach((entry) => {
+          if (entry.isIntersecting) {
+            log("now allowing load", "lazy", "info", {
+              elem,
+              options
+            });
+            func(elem);
+            observer.unobserve(elem);
+          }
+        });
+      },
+      { threshold, rootMargin }
+    );
     observer.observe(elem);
   }
   function copy(text3) {
@@ -25400,7 +25397,9 @@
         if (event3.lengthComputable) {
           const percent = Math.round(event3.loaded / event3.total * 100);
           func(percent);
-          log(`downloading ${percent}%`, "download", "info", { url });
+          log(`downloading ${percent}%`, "download", "info", {
+            url
+          });
         }
       };
       xhr.onload = () => {
@@ -25409,7 +25408,9 @@
           log(`downloaded ${url}`, "download");
         } else {
           reject(new Error(`download failed: ${xhr.status}`));
-          log(`download failed: ${xhr.status}`, "download", "error", { url });
+          log(`download failed: ${xhr.status}`, "download", "error", {
+            url
+          });
         }
       };
       xhr.onerror = () => {
@@ -25426,7 +25427,9 @@
     const available_hosts = ["www.last.fm", "lastfm.freetls.fastly.net"];
     const link = new URL(url, `https://www.last.fm${root}`);
     if (!available_hosts.includes(link.hostname))
-      return Promise.reject(new Error("url is not in valid hosts list: " + link.hostname));
+      return Promise.reject(
+        new Error("url is not in valid hosts list: " + link.hostname)
+      );
     return new Promise((resolve2, reject) => {
       const image = html.node`
             <img crossorigin="anonymous" src=${url}>
@@ -25445,6 +25448,7 @@
     });
   }
   function control_gif_pause(image, override = false) {
+    if (!image) return;
     let processed = image.getAttribute("data-gif-pause");
     if (processed) return;
     image.setAttribute("data-gif-pause", "true");
@@ -46551,7 +46555,7 @@
         </section>
     `;
     const avatar_img = avatar3.querySelector(":scope > img");
-    cache3.avatar = avatar_img.src;
+    if (avatar_img) cache3.avatar = avatar_img.src;
     if (page.name == auth.name && !settings.profile_header_own) {
       register_background(null, "hidden");
     } else if (page.name != auth.name && !settings.profile_header_others) {
@@ -47940,7 +47944,8 @@
       { threshold: 0.3, rootMargin: "0px" }
     );
   }
-  function bleh_profile_chart_render(panel = page.structure.side.querySelector(".listen-profile-panel"), table = null) {
+  function bleh_profile_chart_render(panel = page.structure.side?.querySelector(".listen-profile-panel"), table = null) {
+    if (!panel) return;
     if (!table) table = panel.querySelector("table");
     if (!table) return;
     let entries2 = table.querySelectorAll("tbody tr");
@@ -68308,7 +68313,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0929",
+    build: "2025.0930",
     sku: "alice",
     bio: "bleh!!! ^-^",
     author: "katelyn",

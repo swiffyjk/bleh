@@ -4,11 +4,11 @@
 // Licensed under GPLv3
 //
 
-import {log} from "./log.js";
-import {notify} from "../components/notify.js";
-import {tl, trans} from "./trans.js";
+import { log } from './log.js';
+import { notify } from '../components/notify.js';
+import { tl, trans } from './trans.js';
 import { settings } from './config.js';
-import {html} from "lighterhtml";
+import { html } from 'lighterhtml';
 import { root } from './page.js';
 import * as wanakana from 'wanakana';
 import * as hangulRomanization from 'hangul-romanization';
@@ -20,15 +20,20 @@ import * as hangulRomanization from 'hangul-romanization';
  * @returns {{h: number, s: number, l: number}}
  */
 export function hex_to_hsl(hex) {
-    let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex);
+    let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(
+        hex
+    );
 
     let r = parseInt(result[1], 16);
     let g = parseInt(result[2], 16);
     let b = parseInt(result[3], 16);
 
-    r /= 255, g /= 255, b /= 255;
-    let max = Math.max(r, g, b), min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
+    ((r /= 255), (g /= 255), (b /= 255));
+    let max = Math.max(r, g, b),
+        min = Math.min(r, g, b);
+    let h,
+        s,
+        l = (max + min) / 2;
 
     if (max == min) {
         h = s = 0; // achromatic
@@ -89,7 +94,7 @@ export function rgb_to_hex(r, g, b) {
 // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#5624139
 function comp_to_hex(comp) {
     let hex = comp.toString(16);
-    return (hex.length == 1) ? '0' + hex : hex;
+    return hex.length == 1 ? '0' + hex : hex;
 }
 
 /**
@@ -98,15 +103,13 @@ function comp_to_hex(comp) {
  * @returns {number}
  */
 export function clamp_sat(sat) {
-    if (sat > 1.5)
-        return 1.5;
+    if (sat > 1.5) return 1.5;
 
     return round_two(sat);
 }
 
 export function clamp_lit(sat, lit) {
-    if (sat >= 1.3 && lit < 0.8)
-        return 0.8;
+    if (sat >= 1.3 && lit < 0.8) return 0.8;
 
     return round_two(lit);
 }
@@ -121,10 +124,7 @@ function round_two(value) {
  * @returns {number}
  */
 export function clean_number(string) {
-    return int(string
-    .replaceAll(',','')
-    .replaceAll('.','')
-    );
+    return int(string.replaceAll(',', '').replaceAll('.', ''));
 }
 
 /**
@@ -134,9 +134,8 @@ export function clean_number(string) {
  * @returns {string}
  * @see desanitise
  */
-export function sanitise(text, method='+') {
-    return encodeURIComponent(text
-    .replaceAll(' ', method));
+export function sanitise(text, method = '+') {
+    return encodeURIComponent(text.replaceAll(' ', method));
 }
 
 /**
@@ -146,11 +145,11 @@ export function sanitise(text, method='+') {
  */
 export function sanitise_text(text) {
     return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 /**
@@ -160,10 +159,9 @@ export function sanitise_text(text) {
  * @returns {string}
  * @see sanitise
  */
-export function desanitise(text, method='+') {
+export function desanitise(text, method = '+') {
     return decodeURIComponent(text).replaceAll(method, ' ');
 }
-
 
 /**
  * Return the artist from an album or track URL
@@ -174,14 +172,12 @@ export function desanitise(text, method='+') {
  */
 export function return_artist_from_track(url, is_album) {
     let split = url.split('/');
-    let length = (split.length - 1);
+    let length = split.length - 1;
 
     let desanitised;
 
-    if (is_album)
-        desanitised = desanitise(split[length - 1]);
-    else
-        desanitised = desanitise(split[length - 2]);
+    if (is_album) desanitised = desanitise(split[length - 1]);
+    else desanitised = desanitise(split[length - 2]);
 
     // for some reason last.fm double-encodes urls sometimes,
     // leading to the % being encoded as %25 (very stupid)
@@ -202,13 +198,11 @@ export function return_artist_from_track(url, is_album) {
  */
 export function return_artist_from_generic(url) {
     let split = url.split('/');
-    let length = (split.length - 1);
+    let length = split.length - 1;
 
     // artist/_/name in the url means it is a track
-    if (split[length - 1] != '_')
-        return desanitise(split[length - 1]);
-    else
-        return desanitise(split[length - 2]);
+    if (split[length - 1] != '_') return desanitise(split[length - 1]);
+    else return desanitise(split[length - 2]);
 }
 
 /**
@@ -234,7 +228,7 @@ export function interpolate_hue(current, next, proximity) {
         diff += 360;
     }
 
-    let interpolated = current + (diff * proximity);
+    let interpolated = current + diff * proximity;
 
     // normalise once more
     return ((interpolated % 360) + 360) % 360;
@@ -247,20 +241,23 @@ export function interpolate_hue(current, next, proximity) {
  * @param {Object} options - Any options to pass
  */
 export function lazy(elem, func, options = {}) {
-    const {
-        threshold = 0.1,
-        rootMargin = '50px'
-    } = options;
+    const { threshold = 0.1, rootMargin = '50px' } = options;
 
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                log('now allowing load', 'lazy', 'info', {elem: elem, options: options});
-                func(elem);
-                observer.unobserve(elem);
-            }
-        });
-    }, { threshold, rootMargin });
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    log('now allowing load', 'lazy', 'info', {
+                        elem: elem,
+                        options: options
+                    });
+                    func(elem);
+                    observer.unobserve(elem);
+                }
+            });
+        },
+        { threshold, rootMargin }
+    );
 
     observer.observe(elem);
 }
@@ -271,7 +268,7 @@ export function lazy(elem, func, options = {}) {
  */
 export function copy(text) {
     navigator.clipboard.writeText(text).then(() => {
-        log('copied', 'copy', 'info', {text: text});
+        log('copied', 'copy', 'info', { text: text });
         notify({
             id: 'copy',
             title: tl(trans.copied_to_clipboard),
@@ -290,9 +287,11 @@ export function download_with_progress(url, func) {
             if (event.lengthComputable) {
                 const percent = Math.round((event.loaded / event.total) * 100);
                 func(percent);
-                log(`downloading ${percent}%`, 'download', 'info', {url: url});
+                log(`downloading ${percent}%`, 'download', 'info', {
+                    url: url
+                });
             }
-        }
+        };
 
         xhr.onload = () => {
             if (xhr.status === 200) {
@@ -300,13 +299,15 @@ export function download_with_progress(url, func) {
                 log(`downloaded ${url}`, 'download');
             } else {
                 reject(new Error(`download failed: ${xhr.status}`));
-                log(`download failed: ${xhr.status}`, 'download', 'error', {url: url});
+                log(`download failed: ${xhr.status}`, 'download', 'error', {
+                    url: url
+                });
             }
-        }
+        };
 
         xhr.onerror = () => {
             reject(new Error('network error'));
-            log('network error', 'download', 'error', {url: url});
+            log('network error', 'download', 'error', { url: url });
         };
         xhr.send();
     });
@@ -322,7 +323,9 @@ export function convert_gif_to_png(url) {
     const link = new URL(url, `https://www.last.fm${root}`);
 
     if (!available_hosts.includes(link.hostname))
-        return Promise.reject(new Error('url is not in valid hosts list: ' + link.hostname));
+        return Promise.reject(
+            new Error('url is not in valid hosts list: ' + link.hostname)
+        );
 
     return new Promise((resolve, reject) => {
         const image = html.node`
@@ -339,13 +342,15 @@ export function convert_gif_to_png(url) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(image, 0, 0);
             resolve(canvas.toDataURL('image/png'));
-        }
+        };
 
         image.onerror = reject;
-    })
+    });
 }
 
 export function control_gif_pause(image, override = false) {
+    if (!image) return;
+
     let processed = image.getAttribute('data-gif-pause');
     if (processed) return;
     image.setAttribute('data-gif-pause', 'true');
@@ -357,26 +362,28 @@ export function control_gif_pause(image, override = false) {
 
     const original = image.src;
 
-    convert_gif_to_png(original).then(paused => {
-        if (setting == 'never') {
+    convert_gif_to_png(original)
+        .then((paused) => {
+            if (setting == 'never') {
+                image.src = paused;
+                return;
+            }
+
+            image.addEventListener('mouseenter', () => {
+                image.src = original;
+            });
+
+            image.addEventListener('mouseleave', () => {
+                image.src = paused;
+            });
+
             image.src = paused;
-            return;
-        }
-
-        image.addEventListener('mouseenter', () => {
-            image.src = original;
+            log('processed url', 'image', 'log', { original, paused });
+        })
+        .catch((e) => {
+            log('failed to process url', 'image', 'error', { original });
+            console.error(e);
         });
-
-        image.addEventListener('mouseleave', () => {
-            image.src = paused;
-        });
-
-        image.src = paused;
-        log('processed url', 'image', 'log', {original, paused});
-    }).catch(e => {
-        log('failed to process url', 'image', 'error', {original});
-        console.error(e);
-    });
 }
 
 export function is_link_external(url) {
@@ -403,7 +410,7 @@ export function romanise(text) {
 export function title_case(text) {
     return text
         .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 }
 

@@ -202,7 +202,7 @@ export async function bleh_profiles() {
 
     const avatar_img = avatar.querySelector(':scope > img');
 
-    cache.avatar = avatar_img.src;
+    if (avatar_img) cache.avatar = avatar_img.src;
 
     if (page.name == auth.name && !settings.profile_header_own) {
         register_background(null, 'hidden');
@@ -1923,9 +1923,11 @@ function bleh_profile_chart() {
 }
 
 export function bleh_profile_chart_render(
-    panel = page.structure.side.querySelector('.listen-profile-panel'),
+    panel = page.structure.side?.querySelector('.listen-profile-panel'),
     table = null
 ) {
+    if (!panel) return;
+
     if (!table) table = panel.querySelector('table');
     if (!table) return;
 
