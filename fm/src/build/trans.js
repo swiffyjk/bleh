@@ -4700,6 +4700,9 @@ export const trans = {
         body: {
             en: 'Choose which services to display for artists, albums, and tracks'
         }
+    },
+    missing_keys: {
+        en: '{v} missing'
     }
 };
 
@@ -7768,6 +7771,56 @@ export function tl(key, replacements = {}) {
     }
 
     return translation;
+}
+
+function collect_keys(object, prefix, out = []) {
+    for (const k in object) {
+        const val = object[k];
+        const key = prefix ? `${prefix}.${k}` : k;
+
+        if (
+            typeof val == 'object' &&
+            !Object.keys(lang_info).some((lang) => lang in val)
+        ) {
+            collect_keys(val, key, out);
+        } else {
+            out.push(key);
+        }
+    }
+
+    return out;
+}
+
+function get_value_by_path(object, path) {
+    return path.split('.').reduce((acc, part) => acc?.[part], object);
+}
+
+export function translation_stats() {
+    const keys = collect_keys(trans);
+
+    for (const lang of Object.keys(lang_info)) {
+        if (lang == 'en') continue;
+
+        let translated = 0;
+        const missing = [];
+
+        for (const key of keys) {
+            const value = get_value_by_path(trans, key);
+            if (value && value[lang]) {
+                translated++;
+            } else {
+                missing.push(key);
+            }
+        }
+
+        lang_info[lang].total = keys.length;
+        lang_info[lang].translated = translated;
+        lang_info[lang].missing = missing.length;
+        lang_info[lang].missing_keys = missing;
+        lang_info[lang].percent = Math.round((translated / keys.length) * 100);
+    }
+
+    log('translation stats', 'trans', 'info', { lang_info });
 }
 
 function get_lang() {

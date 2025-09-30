@@ -49,6 +49,7 @@ import { match } from '../components/dynamic_theming.js';
 import { oracle_data } from '../components/oracle.js';
 import { render_activity } from '../activity.js';
 import { DateTime } from 'luxon';
+import { sponsor, sponsor_manage } from '../sponsor.js';
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -319,7 +320,7 @@ export async function render_setting_page(page_id) {
                         ${
                             last_checked ?
                                 html.node`
-                        <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
+                        <p class="last-checked">${tl(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
                         `
                             :   html.node`
                         <p class="last-checked">${tl(trans.never_checked)}</p>
@@ -347,10 +348,10 @@ export async function render_setting_page(page_id) {
                         update_required === 'true'
                     ) ?
                         html.node`
-                <div class="alert alert-info">${tl(trans.you_are_installing_version).replace('{v}', version_to_install)}</div>
+                <div class="alert alert-info">${tl(trans.you_are_installing_version, { v: version_to_install })}</div>
                 `
                     :   html.node`
-                <div class="alert alert-info">${tl(trans.you_are_running_version).replace('{v}', version.build)}</div>
+                <div class="alert alert-info">${tl(trans.you_are_running_version, { v: version.build })}</div>
                 `}
                 </section>
                 <section class="bleh--panel">
@@ -368,7 +369,7 @@ export async function render_setting_page(page_id) {
                             <h5>${auth.name}</h5>
                         </div>
                         <div class="info">
-                            <p>${tl(trans.profile_and_badges).replace('{c}', badge_count.toString())}</p>
+                            <p>${tl(trans.profile_and_badges, { c: badge_count.toString() })}</p>
                             ${
                                 badge_count > 0 ?
                                     html.node`
@@ -446,7 +447,7 @@ export async function render_setting_page(page_id) {
                             <p>${tl(trans.sponsor_get_badge)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <button class="btn primary icon sponsor" data-type="sponsor" onclick="_sponsor_manage()">
+                            <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
                                 ${tl(trans.manage_sponsor)}
                             </button>
                         </div>
@@ -459,7 +460,7 @@ export async function render_setting_page(page_id) {
                             <p>${tl(trans.api.body)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <button class="btn primary icon sponsor" data-type="sponsor" onclick="_sponsor()">
+                            <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
                                 ${tl(trans.sponsor)}
                             </button>
                         </div>
@@ -502,7 +503,7 @@ export async function render_setting_page(page_id) {
                             <p>${tl(trans.api.body)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <a class="btn ${auth_key && auth_valid === 'true' ? '' : 'primary'} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                            <a class="btn ${auth_key && auth_valid == 'true' ? '' : 'primary'} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
                                 ${tl(trans.connect)}
                             </a>
                         </div>
@@ -513,7 +514,7 @@ export async function render_setting_page(page_id) {
                         </div>
                         <div class="info">
                             ${
-                                auth_key && auth_valid === 'true' ?
+                                auth_key && auth_valid == 'true' ?
                                     html.node`
                             <p>${tl(trans.connected)}</p>
                             `
@@ -535,36 +536,38 @@ export async function render_setting_page(page_id) {
                                 ([key, language]) => {
                                     let date;
 
-                                    // turns into strings :c
-                                    const authors = language.by.map(
-                                        (author) => html.node`
-                                <a class="mention" href="${root}user/${author}" target="_blank">${author}</a>
-                            `
-                                    );
-
                                     const row = html.node`
-                                <div class="language-row${lang == key ? ' active' : ''}">
-                                    <div class="flag-container">
-                                        <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
-                                    </div>
-                                    <div class="name">
-                                        <h5>${language.name}</h5>
-                                        <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(', ') }) }}</p>
-                                    </div>
-                                    ${
-                                        language.new ?
-                                            html.node`
-                                    <div class="badges">
-                                        <div class="new-badge">${tl(trans.new)}</div>
-                                    </div>
-                                    `
-                                        :   html.node`<div class="badges"></div>`
-                                    }
-                                    <div class="date" ref=${(el) => (date = el)}>
-                                        <p>${language.last_updated != 'latest' ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
-                                    </div>
-                                </div>
-                            `;
+                                        <div class="language-row${lang == key ? ' active' : ''}">
+                                            <div class="flag-container">
+                                                <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
+                                            </div>
+                                            <div class="name">
+                                                <h5>${language.name}</h5>
+                                                <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(', ') }) }}</p>
+                                            </div>
+                                            ${
+                                                language.new ?
+                                                    html.node`
+                                            <div class="badges">
+                                                <div class="new-badge">${tl(trans.new)}</div>
+                                            </div>
+                                            `
+                                                :   html.node`<div class="badges"></div>`
+                                            }
+                                            ${
+                                                language.percent ?
+                                                    html.node`
+                                                        <div class="percent">
+                                                            <p data-percent=${language.percent}>${language.percent}%</p>
+                                                        </div>
+                                                    `
+                                                :   ''
+                                            }
+                                            <div class="date">
+                                                <p ref=${(el) => (date = el)}>${language.last_updated != 'latest' ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
+                                            </div>
+                                        </div>
+                                    `;
 
                                     if (language.last_updated != 'latest') {
                                         tippy(date, {

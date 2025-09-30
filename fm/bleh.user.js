@@ -47013,7 +47013,7 @@
                     <div class="update-center-details">
                         <h2>${tl(trans.update_available_to_install)}</h2>
                         ${last_checked ? html.node`
-                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
+                        <p class="last-checked">${tl(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
                         ` : html.node`
                         <p class="last-checked">${tl(trans.never_checked)}</p>
                         `}
@@ -47033,9 +47033,9 @@
                     `}
                     </div>
                     ${last_checked && paused === "false" && update_required === "true" ? html.node`
-                <div class="alert alert-info">${tl(trans.you_are_installing_version).replace("{v}", version_to_install)}</div>
+                <div class="alert alert-info">${tl(trans.you_are_installing_version, { v: version_to_install })}</div>
                 ` : html.node`
-                <div class="alert alert-info">${tl(trans.you_are_running_version).replace("{v}", version.build)}</div>
+                <div class="alert alert-info">${tl(trans.you_are_running_version, { v: version.build })}</div>
                 `}
                 </section>
                 <section class="bleh--panel">
@@ -47052,7 +47052,7 @@
                             <h5>${auth.name}</h5>
                         </div>
                         <div class="info">
-                            <p>${tl(trans.profile_and_badges).replace("{c}", badge_count.toString())}</p>
+                            <p>${tl(trans.profile_and_badges, { c: badge_count.toString() })}</p>
                             ${badge_count > 0 ? html.node`
                             <button class="see-more" onclick=${() => {
           dialog({
@@ -47110,7 +47110,7 @@
                             <p>${tl(trans.sponsor_get_badge)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <button class="btn primary icon sponsor" data-type="sponsor" onclick="_sponsor_manage()">
+                            <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
                                 ${tl(trans.manage_sponsor)}
                             </button>
                         </div>
@@ -47122,7 +47122,7 @@
                             <p>${tl(trans.api.body)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <button class="btn primary icon sponsor" data-type="sponsor" onclick="_sponsor()">
+                            <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
                                 ${tl(trans.sponsor)}
                             </button>
                         </div>
@@ -47162,7 +47162,7 @@
                             <p>${tl(trans.api.body)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <a class="btn ${auth_key && auth_valid === "true" ? "" : "primary"} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                            <a class="btn ${auth_key && auth_valid == "true" ? "" : "primary"} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
                                 ${tl(trans.connect)}
                             </a>
                         </div>
@@ -47172,7 +47172,7 @@
                             <h5>${tl(trans.api_status)}</h5>
                         </div>
                         <div class="info">
-                            ${auth_key && auth_valid === "true" ? html.node`
+                            ${auth_key && auth_valid == "true" ? html.node`
                             <p>${tl(trans.connected)}</p>
                             ` : html.node`
                             <p>${tl(trans.not_connected)}</p>
@@ -47189,30 +47189,30 @@
                             ${Object.entries(lang_info).map(
           ([key, language]) => {
             let date;
-            const authors = language.by.map(
-              (author) => html.node`
-                                <a class="mention" href="${root}user/${author}" target="_blank">${author}</a>
-                            `
-            );
             const row = html.node`
-                                <div class="language-row${lang == key ? " active" : ""}">
-                                    <div class="flag-container">
-                                        <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
-                                    </div>
-                                    <div class="name">
-                                        <h5>${language.name}</h5>
-                                        <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(", ") }) }}</p>
-                                    </div>
-                                    ${language.new ? html.node`
-                                    <div class="badges">
-                                        <div class="new-badge">${tl(trans.new)}</div>
-                                    </div>
-                                    ` : html.node`<div class="badges"></div>`}
-                                    <div class="date" ref=${(el) => date = el}>
-                                        <p>${language.last_updated != "latest" ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
-                                    </div>
-                                </div>
-                            `;
+                                        <div class="language-row${lang == key ? " active" : ""}">
+                                            <div class="flag-container">
+                                                <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
+                                            </div>
+                                            <div class="name">
+                                                <h5>${language.name}</h5>
+                                                <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(", ") }) }}</p>
+                                            </div>
+                                            ${language.new ? html.node`
+                                            <div class="badges">
+                                                <div class="new-badge">${tl(trans.new)}</div>
+                                            </div>
+                                            ` : html.node`<div class="badges"></div>`}
+                                            ${language.percent ? html.node`
+                                                        <div class="percent">
+                                                            <p data-percent=${language.percent}>${language.percent}%</p>
+                                                        </div>
+                                                    ` : ""}
+                                            <div class="date">
+                                                <p ref=${(el) => date = el}>${language.last_updated != "latest" ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
+                                            </div>
+                                        </div>
+                                    `;
             if (language.last_updated != "latest") {
               tippy_esm_default(date, {
                 content: DateTime.fromISO(
@@ -55040,6 +55040,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     load_settings();
     dynamic_theming();
     solarium();
+    translation_stats();
     load_dialogs();
     register_rabbit();
     try {
@@ -60311,6 +60312,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       body: {
         en: "Choose which services to display for artists, albums, and tracks"
       }
+    },
+    missing_keys: {
+      en: "{v} missing"
     }
   };
   var trans_legacy = {
@@ -63317,6 +63321,43 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       translation = translation.replace(regex, value);
     }
     return translation;
+  }
+  function collect_keys(object, prefix, out = []) {
+    for (const k in object) {
+      const val = object[k];
+      const key = prefix ? `${prefix}.${k}` : k;
+      if (typeof val == "object" && !Object.keys(lang_info).some((lang2) => lang2 in val)) {
+        collect_keys(val, key, out);
+      } else {
+        out.push(key);
+      }
+    }
+    return out;
+  }
+  function get_value_by_path(object, path) {
+    return path.split(".").reduce((acc, part) => acc?.[part], object);
+  }
+  function translation_stats() {
+    const keys2 = collect_keys(trans);
+    for (const lang2 of Object.keys(lang_info)) {
+      if (lang2 == "en") continue;
+      let translated = 0;
+      const missing = [];
+      for (const key of keys2) {
+        const value = get_value_by_path(trans, key);
+        if (value && value[lang2]) {
+          translated++;
+        } else {
+          missing.push(key);
+        }
+      }
+      lang_info[lang2].total = keys2.length;
+      lang_info[lang2].translated = translated;
+      lang_info[lang2].missing = missing.length;
+      lang_info[lang2].missing_keys = missing;
+      lang_info[lang2].percent = Math.round(translated / keys2.length * 100);
+    }
+    log("translation stats", "trans", "info", { lang_info });
   }
   function get_lang() {
     const path = window.location.pathname;

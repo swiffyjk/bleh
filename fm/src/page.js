@@ -23,7 +23,7 @@ import {
     sponsor_url
 } from './build/page';
 import { stored_season } from './build/seasonal';
-import { lang, lookup_lang, tl, trans } from './build/trans';
+import { lang, lookup_lang, tl, trans, translation_stats } from './build/trans';
 import { dialog, load_dialogs } from './components/dialog';
 import {
     correct_artist,
@@ -147,6 +147,8 @@ function bleh_main() {
     dynamic_theming();
 
     solarium();
+
+    translation_stats();
 
     // messaging
     load_dialogs();

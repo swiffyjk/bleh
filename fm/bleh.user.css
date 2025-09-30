@@ -3700,6 +3700,7 @@
                 width: 24px;
                 height: 24px;
                 border-radius: var(--item-med-radius);
+                flex-shrink: 0;
             }
 
             .name {
@@ -3728,13 +3729,22 @@
                 flex-shrink: 0;
                 color: hsl(var(--c3));
                 font-size: 13px;
-                display: -webkit-box;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                line-clamp: 1;
-                -webkit-line-clamp: 1;
-                -webkit-box-orient: vertical;
                 cursor: default;
+                width: 100px;
+                display: flex;
+                justify-content: end;
+
+                & > p {
+                    width: fit-content;
+                }
+            }
+
+            & > .percent {
+                width: 300px;
+                text-align: right;
+                cursor: default;
+                color: hsl(var(--l3-c));
+                font-weight: var(--font-weight-medium);
             }
 
             .badges {
