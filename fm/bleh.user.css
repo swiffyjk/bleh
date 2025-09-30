@@ -7321,6 +7321,16 @@
                 transform: scaleX(1);
             }
         }
+
+        & > .shout-user {
+            text-decoration: none !important;
+        }
+
+        &.link-block--hover {
+            & > .shout-user > a {
+                text-decoration: underline !important;
+            }
+        }
     }
     @keyframes slide_left {
         from {
