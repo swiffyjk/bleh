@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    https://last.fm/
-// @version      2025.0929
+// @version      2025.0930
 // @description  bleh!!! ^-^
 // @author       katelyn
 // @match        https://www.last.fm/*
@@ -47002,7 +47002,7 @@
             body: tl(trans.checked_for_updates),
             icon: "icon-16-update"
           });
-          render_setting_page("update");
+          render_setting_page("general");
         })}>${tl(trans.check)}</button>
                     ` : html.node`
                     <div class="update-center-icon">
@@ -47018,7 +47018,18 @@
                         <p class="last-checked">${tl(trans.never_checked)}</p>
                         `}
                     </div>
-                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
+                    <div class="button-group">
+                        <button class="btn icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
+          notify({
+            id: "update",
+            title: tl(trans.updates),
+            body: tl(trans.checked_for_updates),
+            icon: "icon-16-update"
+          });
+          render_setting_page("general");
+        })}>${tl(trans.check)}</button>
+                        <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
+                    </div>
                     `}
                     </div>
                     ${last_checked && paused === "false" && update_required === "true" ? html.node`
