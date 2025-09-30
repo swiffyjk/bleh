@@ -48901,7 +48901,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         },
         {
           sets: {
-            hue: 255,
+            hue: 254,
             sat: 1.07,
             lit: 1
           },

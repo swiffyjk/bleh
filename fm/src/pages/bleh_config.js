@@ -2406,7 +2406,7 @@ export function display_colour_presets() {
             },
             {
                 sets: {
-                    hue: 255,
+                    hue: 254,
                     sat: 1.07,
                     lit: 1
                 },
