@@ -4118,6 +4118,11 @@ export const trans = {
         pt: 'feito com {h} por {u} e {c}contribuidores{/c}',
         sv: 'skapad med {h} av {u} och {c}bidragsgivare{/c}'
     },
+    translations: {
+        en: '{l} translation by {u}',
+        de: 'Deutsche Übersetzung von {u}',
+        sv: 'Svensk översättning av {u}'
+    },
     love_lower: {
         // replaces the {h} in the above sentence
         // lowercase in design

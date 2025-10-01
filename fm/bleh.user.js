@@ -54563,18 +54563,26 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       footer,
       html`
             <div class="footer-credit">
-                ${{
-        html: tl2(trans2.made_with_love).replace(
-          "{u}",
-          `<a href="${root}user/${kate}">${kate}</a>`
-        ).replace(
-          "{c}",
-          '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">'
-        ).replace("{/c}", "</a>").replace(
-          "{h}",
-          `<span class="bleh-icon heart sponsor-related">${tl2(trans2.love_lower)}</span>`
-        )
+                <p>
+                    ${{
+        html: tl2(trans2.made_with_love, {
+          u: `<a href="${root}user/${kate}">${kate}</a>`,
+          c: '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">',
+          "/c": "</a>",
+          h: `<span class="bleh-icon heart sponsor-related">${tl2(trans2.love_lower)}</span>`
+        })
       }}
+                </p>
+                <p>
+                    ${{
+        html: tl2(trans2.translations, {
+          l: lang_info[lang].name,
+          u: lang_info[lang].by.map(
+            (user) => `<a href="${root}user/${user}">${user}</a>`
+          ).join(", ")
+        })
+      }}
+                </p>
             </div>
             <div class="footer-web music-links">
                 <a
@@ -59733,6 +59741,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "mit {h} gemacht von {u} und {c}mitwirkenden{/c}",
       pt: "feito com {h} por {u} e {c}contribuidores{/c}",
       sv: "skapad med {h} av {u} och {c}bidragsgivare{/c}"
+    },
+    translations: {
+      en: "{l} translation by {u}",
+      de: "Deutsche \xDCbersetzung von {u}",
+      sv: "Svensk \xF6vers\xE4ttning av {u}"
     },
     love_lower: {
       // replaces the {h} in the above sentence

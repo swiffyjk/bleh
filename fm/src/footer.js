@@ -5,7 +5,7 @@
 //
 
 import { html, render } from 'lighterhtml';
-import { tl, trans } from './build/trans.js';
+import { lang, lang_info, tl, trans } from './build/trans.js';
 import { sponsor_list } from './build/sponsor.js';
 import { root } from './build/page.js';
 import { sponsor } from './sponsor.js';
@@ -27,22 +27,29 @@ export function bleh_footer() {
         footer,
         html`
             <div class="footer-credit">
-                ${{
-                    html: tl(trans.made_with_love)
-                        .replace(
-                            '{u}',
-                            `<a href="${root}user/${kate}">${kate}</a>`
-                        )
-                        .replace(
-                            '{c}',
-                            '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">'
-                        )
-                        .replace('{/c}', '</a>')
-                        .replace(
-                            '{h}',
-                            `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`
-                        )
-                }}
+                <p>
+                    ${{
+                        html: tl(trans.made_with_love, {
+                            u: `<a href="${root}user/${kate}">${kate}</a>`,
+                            c: '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">',
+                            '/c': '</a>',
+                            h: `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`
+                        })
+                    }}
+                </p>
+                <p>
+                    ${{
+                        html: tl(trans.translations, {
+                            l: lang_info[lang].name,
+                            u: lang_info[lang].by
+                                .map(
+                                    (user) =>
+                                        `<a href="${root}user/${user}">${user}</a>`
+                                )
+                                .join(', ')
+                        })
+                    }}
+                </p>
             </div>
             <div class="footer-web music-links">
                 <a
