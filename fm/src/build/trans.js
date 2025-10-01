@@ -246,18 +246,19 @@ export const trans = {
         de: 'Playlists',
         sv: 'Spellistor'
     },
-    view_profile: {
-        en: 'View profile',
-        de: 'Profil anzeigen',
-        pt: 'Ver perfil',
-        sv: 'Visa profil'
-    },
     shouts: {
         en: 'Shouts',
         de: 'Shouts',
         pt: 'Mensagens',
         ja: 'シャウト',
         sv: 'Hojtningar'
+    },
+    send_quickly_with: {
+        // send a shout quickly with (keyboard shortcut)
+        en: 'Send quickly with {kbd}',
+        de: 'Schnell senden mit {kbd}',
+        pt: 'Enviar rapidamente com {kbd}',
+        sv: 'Skicka snabbt med {kbd}'
     },
     cant_shout: {
         en: 'You cannot leave shouts here',
@@ -287,6 +288,13 @@ export const trans = {
         de: 'Über',
         pt: 'Sobre',
         sv: 'Om'
+    },
+    about_me_preview: {
+        // About Me
+        en: 'About (preview)',
+        de: 'Über (Vorschau)',
+        pt: 'Sobre (preview)',
+        sv: 'Om (förhandsvisning)'
     },
     no_about: {
         // username
@@ -393,6 +401,7 @@ export const trans = {
         sv: 'Inget gemensamt (๑-﹏-๑)'
     },
     others_featured: {
+        // guest features on a song or album
         en: 'Others featured',
         de: 'Andere gefeatured',
         pt: 'Outros em destaque',
@@ -405,11 +414,13 @@ export const trans = {
         sv: 'Dina skrobblingar'
     },
     play: {
+        // play a song
         en: 'Play',
         de: 'Abspielen',
         sv: 'Spela upp'
     },
     plays: {
+        // your play count on a song or album or whatever
         en: 'Plays',
         de: 'Plays',
         pt: 'Reproduções',
@@ -566,16 +577,17 @@ export const trans = {
         pt: 'Edição em massa',
         sv: 'Bulkredigera'
     },
-    edit_profile: {
-        en: 'Edit profile',
-        de: 'Profil bearbeiten',
-        pt: 'Editar perfil',
-        sv: 'Redigera profil'
-    },
     scrobble: {
         en: 'Scrobble',
         de: 'Scrobble',
         sv: 'Skrobbla'
+    },
+    average: {
+        // scrobble average
+        en: 'Average',
+        de: 'Durchschnitt',
+        pt: 'Média',
+        sv: 'Genomsnitt'
     },
     scrobbles: {
         en: 'Scrobbles',
@@ -588,6 +600,19 @@ export const trans = {
         de: '{c} Scrobbles',
         pt: '{c} scrobbles',
         sv: '{c} skrobblingar'
+    },
+    listens: {
+        // base on native last.fm ui
+        en: 'listens',
+        de: 'Scrobbles',
+        pt: 'scrobbles',
+        sv: 'skrobblingar',
+        count: {
+            en: '{c} listens',
+            de: '{c} Scrobbles',
+            pt: '{c} scrobbles',
+            sv: '{c} skrobblingar'
+        }
     },
     new_scrobble: {
         en: 'New scrobble',
@@ -770,18 +795,6 @@ export const trans = {
         pt: 'Colorir',
         sv: 'Färger'
     },
-    change_my_colour_when: {
-        name: {
-            en: 'Use a context-based accent colour when',
-            de: 'Kontextbasierte Akzentfarbe verwenden, wenn',
-            sv: 'Använd kontextbaserad accentfärg när'
-        },
-        body: {
-            en: 'Temporarily override your selected accent to match album art',
-            de: 'Überschreibe vorübergehend deine ausgewählte Akzentfarbe, damit sie zum Albumcover passt',
-            sv: 'Ändra tillfälligt din valda accentfärg för att matcha albumkonsten'
-        }
-    },
     adaptive: {
         en: 'Adaptive',
         de: 'Adaptiv',
@@ -797,17 +810,32 @@ export const trans = {
         de: 'Zeitplan ändern',
         sv: 'Ändra schema'
     },
+    change_my_colour_when: {
+        name: {
+            en: 'Use a context-based accent colour when',
+            de: 'Kontextbasierte Akzentfarbe verwenden, wenn',
+            sv: 'Använd kontextbaserad accentfärg när'
+        },
+        body: {
+            en: 'Temporarily override your selected accent to match album art',
+            de: 'Überschreibe vorübergehend deine ausgewählte Akzentfarbe, damit sie zum Albumcover passt',
+            sv: 'Ändra tillfälligt din valda accentfärg för att matcha albumkonsten'
+        }
+    },
     hue_from_album: {
+        // a sub-option for change_my_colour_when
         en: 'Browsing album pages',
         de: 'Albumseiten angesehen werden',
         sv: 'Du är på albumsidor'
     },
     colourful_active: {
+        // a sub-option for change_my_colour_when
         en: 'Actively scrobbling a track',
         de: 'ein Titel aktiv gescrobbelt wird',
         sv: 'Aktivt skrobblar en låt'
     },
     colourful_all: {
+        // a sub-option for change_my_colour_when
         en: 'Viewing any track',
         de: 'ein beliebiger Titel angesehen wird',
         sv: 'Visar en låt'
@@ -883,6 +911,18 @@ export const trans = {
         pt: 'Perfil',
         pl: 'Profil',
         sv: 'Profil'
+    },
+    view_profile: {
+        en: 'View profile',
+        de: 'Profil anzeigen',
+        pt: 'Ver perfil',
+        sv: 'Visa profil'
+    },
+    edit_profile: {
+        en: 'Edit profile',
+        de: 'Profil bearbeiten',
+        pt: 'Editar perfil',
+        sv: 'Redigera profil'
     },
     current_season: {
         en: 'Current season',
@@ -962,6 +1002,7 @@ export const trans = {
         sv: 'Ny årstid!'
     },
     value_for_time: {
+        // e.g. Halloween for 3 days
         en: '{v} for {time}',
         pt: '{v} para {time}',
         sv: '{v} till {time}'
@@ -973,6 +1014,7 @@ export const trans = {
         sv: 'Tidslinje för årstider'
     },
     enable_seasons: {
+        // translate to seasons if it reads better
         name: {
             en: 'Automatically adapt to seasonal events',
             de: 'Automatisch an saisonale Events anpassen',
@@ -1012,21 +1054,21 @@ export const trans = {
         sv: 'Förskjutning kalkylerats från tidszon'
     },
     started: {
-        // eg. season started 1 day ago
+        // e.g. season started 1 day ago
         en: 'Started',
         de: 'Gestartet',
         pt: 'Começou',
         sv: 'Har börjat'
     },
     next_in: {
-        // eg. next season in 5 days
+        // e.g. next season in 5 days
         en: 'Next in',
         de: 'Nächste in',
         pt: 'Próximo em',
         sv: 'Nästa om'
     },
     ends_in: {
-        // eg. season ends in 3 days
+        // e.g. season ends in 3 days
         en: 'Ends in',
         de: 'Endet in',
         pt: 'Termina em',
@@ -1351,12 +1393,6 @@ export const trans = {
         pt: 'Enviar',
         sv: 'Skicka'
     },
-    send_quickly_with: {
-        en: 'Send quickly with {kbd}',
-        de: 'Schnell senden mit {kbd}',
-        pt: 'Enviar rapidamente com {kbd}',
-        sv: 'Skicka snabbt med {kbd}'
-    },
     done: {
         en: 'Done',
         de: 'Fertig',
@@ -1383,7 +1419,7 @@ export const trans = {
         sv: 'Tryck för mer alternativ'
     },
     right_click_for_more_options: {
-        en: 'Right click for more options',
+        en: 'Right-click for more options',
         de: 'Rechtsklick für weitere Optionen',
         pt: 'Clique esquerdo para mais opções',
         sv: 'Högerklicka för mer alternativ'
@@ -1442,23 +1478,8 @@ export const trans = {
         de: 'Vorschau',
         sv: 'Förhandsvisning'
     },
-    about_me_preview: {
-        // About Me
-        en: 'About (preview)',
-        de: 'Über (Vorschau)',
-        pt: 'Sobre (preview)',
-        sv: 'Om (förhandsvisning)'
-    },
-    markdown_tip: {
-        // use <br><br> to add a space between the first sentence and the next
-        // keep the alt text as "banner", english and lowercase as thats how its detected rn
-        // may change in the future
-        en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users.<br><br>Images are created via ![alt text](link). Changing the alt text to "banner" applies a profile banner.',
-        de: 'Du kannst Zeilenumbrüche, Fettdruck, Kursivschrift, Unterstreichungen, Bilder und Überschriften verwenden, die für andere bleh-Benutzer sichtbar sind.<br><br>Bilder werden mit ![Alt-Text](Link) eingefügt. Wenn du den Alt-Text in „banner“ änderst, wird ein Profilbanner angewendet.',
-        pt: 'Você pode usar quebras de linha, texto em negrito, itálico, sublinhado, imagens e cabeçalhos visíveis para outros usuários do bleh.<br><br>As imagens são criadas usando ![alt text](link). Alterar o alt text para "banner" aplica um banner no perfil.',
-        sv: 'Du kan använda radbrytningar, fetstilt text, kursiv, understrykt, bilder, och rubriker som syns av andra bleh-användare.<br><br>Bilder skapas via ![alt text](link). Ändras alt text till "banner" så tillämpas en banner på din profil.'
-    },
     find_on: {
+        // music services to find an artist/album/track on
         en: 'Find on',
         de: 'Hier zu finden',
         pt: 'Encontre em',
@@ -1704,21 +1725,24 @@ export const trans = {
         sv: 'Topplåt'
     },
     you_share_count_with: {
-        // as in your musical taste between you and someone else
+        // as in your musical taste % between you and someone else
         // you are {percentage%} compatible (in taste) {list of artists}
         en: 'You are {c} compatible',
         de: 'Ihr seid {c} kompatibel',
         pt: 'Voce é {c} compatível',
         sv: 'Du är {c} kompatibel',
-        one: {
-            en: '{artist}'
-        },
         two: {
             en: '{artist1}, {artist2}',
+            de: '{artist1}, {artist2}',
+            pt: '{artist1}, {artist2}',
+            sv: '{artist1}, {artist2}',
             ja: '{artist1}、{artist2}'
         },
         three: {
             en: '{artist1}, {artist2}, {artist3}',
+            de: '{artist1}, {artist2}, {artist3}',
+            pt: '{artist1}, {artist2}, {artist3}',
+            sv: '{artist1}, {artist2}, {artist3}',
             ja: '{artist1}、{artist2}、{artist3}'
         }
     },
@@ -1730,7 +1754,7 @@ export const trans = {
     },
     plays_lower: {
         // eg. 20 plays in artist/album grid
-        // copy from last.fm
+        // copy from last.fm without modifying
         en: ' plays',
         de: ' Plays',
         pt: ' reproduções',
@@ -1835,21 +1859,10 @@ export const trans = {
         sv: 'Nuvarande version'
     },
     labs: {
+        // labs by last.fm
         en: 'Labs',
         de: 'Labs',
         sv: 'Labs'
-    },
-    labs_by_last: {
-        en: 'Labs by Last.fm',
-        de: 'Labs von Last.fm',
-        pt: 'Labs da Last.fm',
-        sv: 'Labs av Last.fm',
-        tagline: {
-            en: 'Interactive tools and infographics',
-            de: 'Interaktive Tools und Infografiken',
-            pt: 'Ferramentas interativas e infográficos',
-            sv: 'Interaktiva verktyg och infografik'
-        }
     },
     sponsor_info: {
         en: 'This is a special bleh-managed profile to handle sponsors',
@@ -1863,6 +1876,7 @@ export const trans = {
         sv: 'Endast sponsorer'
     },
     downloaded_value: {
+        // filename
         en: 'Downloaded {v}',
         de: '{v} wurde heruntergeladen',
         sv: 'Laddat ned {v}'
@@ -2285,7 +2299,7 @@ export const trans = {
         // as in loved tracks, this can be seen
         // in the native last.fm ui
         en: 'Loved',
-        de: 'Als Lieblingssong markiert',
+        de: 'Lieblingssongs',
         pt: 'Favoritadas',
         sv: 'Älskade låtar'
     },
@@ -2321,19 +2335,6 @@ export const trans = {
         de: 'Auf {album}',
         pt: 'Do {album}',
         sv: 'Från {album}'
-    },
-    listens: {
-        // base on native last.fm ui
-        en: 'listens',
-        de: 'Scrobbles',
-        pt: 'scrobbles',
-        sv: 'skrobblingar',
-        count: {
-            en: '{c} listens',
-            de: '{c} Scrobbles',
-            pt: '{c} scrobbles',
-            sv: '{c} skrobblingar'
-        }
     },
     others_count: {
         // the amount of other users
@@ -2384,7 +2385,7 @@ export const trans = {
         sv: 'Denna sida har begränsats av Last.fm'
     },
     results_for: {
-        // used as a header above the actual search eg.
+        // used as a header above the actual search e.g.
         // Results for
         // "random search text"
         en: 'Results for',
@@ -2451,13 +2452,6 @@ export const trans = {
         en: '{v} by {u}',
         de: '{v} von {u}',
         pt: '{v} por {u}'
-    },
-    average: {
-        // scrobble average
-        en: 'Average',
-        de: 'Durchschnitt',
-        pt: 'Média',
-        sv: 'Genomsnitt'
     },
     from_user: {
         en: 'from {u}',
@@ -2534,7 +2528,7 @@ export const trans = {
         }
     },
     amount_to_display: {
-        // Amount of tracks to display in recent tracks
+        // amount of tracks to display in recent/top tracks
         en: 'Amount of tracks to display',
         de: 'Anzahl der anzuzeigenden Titel',
         pt: 'Quantidade a ser exibida',
@@ -2664,9 +2658,6 @@ export const trans = {
         de: 'Die Person kann weiterhin dein Profil ansehen',
         pt: 'Eles ainda podem ver seu perfil',
         sv: 'Dem kan fortfarande se din profil'
-    },
-    no_quote: {
-        en: '...'
     },
     shared_with_others: {
         en: 'Shared with others',
@@ -2912,6 +2903,7 @@ export const trans = {
         }
     },
     value_characters_max: {
+        // number/max (24/100) of characters allowed in e.g. your bio
         en: '{v} characters max',
         de: 'Maximal {v} Zeichen',
         pt: 'máximo de {v} caracteres',
@@ -2975,12 +2967,14 @@ export const trans = {
         }
     },
     notes: {
+        // profile notes
         en: 'Notes',
         de: 'Notizen',
         pt: 'Notas',
         sv: 'Anteckningar'
     },
     no_notes: {
+        // no profiles in your notes list
         en: 'No profiles here... (｡•́︿•̀｡)',
         de: 'Keine Profile hier... (｡•́︿•̀｡)',
         pt: 'Sem perfis aqui... (｡•́︿•̀｡)',
@@ -3050,6 +3044,8 @@ export const trans = {
             sv: 'Emoji-kompatibilitet'
         },
         body: {
+            // the trans flag is used to demonstrate the improper
+            // emoji font found in windows 10, whether people like it or not
             en: 'Required to render emoji properly before Windows 11 🏳️‍⚧️',
             de: 'Erforderlich, um Emojis vor Windows 11 richtig darzustellen 🏳️‍⚧️',
             pt: 'Necessário para renderizar emojis corretamente antes do Windows 11 🏳️‍⚧️',
@@ -3342,9 +3338,6 @@ export const trans = {
             de: 'Verknüpfe dein Konto, um API-Zugriffe wie Scrobbling zu ermöglichen',
             pt: 'Conecte sua conta para permitir o acesso à API, como o scrobbling',
             sv: 'Koppla ditt konto för att tillåta API-åtkomster, som att skrobbla'
-        },
-        short: {
-            en: 'API'
         }
     },
     api_status: {
@@ -4108,6 +4101,7 @@ export const trans = {
     },
     re_enable_style_loading: {
         en: 'Re-enable style loading',
+        de: 'Stylesheets neu laden und aktivieren',
         pt: 'Reativar carregamento de estilos',
         sv: 'Återaktivera att stiler laddas'
     },
@@ -4118,18 +4112,18 @@ export const trans = {
         pt: 'feito com {h} por {u} e {c}contribuidores{/c}',
         sv: 'skapad med {h} av {u} och {c}bidragsgivare{/c}'
     },
-    translations: {
-        en: '{l} translation by {u}',
-        de: 'Deutsche Übersetzung von {u}',
-        sv: 'Svensk översättning av {u}'
-    },
     love_lower: {
         // replaces the {h} in the above sentence
-        // lowercase in design
         en: 'love',
         de: 'liebe',
         pt: 'amor',
         sv: 'kärlek'
+    },
+    translations: {
+        // lowercase in design
+        en: '{l} translation by {u}',
+        de: 'Deutsche Übersetzung von {u}',
+        sv: 'Svensk översättning av {u}'
     },
     view_source: {
         en: 'View source',
@@ -4356,6 +4350,7 @@ export const trans = {
         sv: 'Anmäl'
     },
     auto: {
+        // automatic theme
         en: 'Auto',
         de: 'Automatisch',
         sv: 'Automatiskt'
@@ -4400,6 +4395,7 @@ export const trans = {
         de: 'Diesem Album fehlen wichtige Details, vielleicht kannst du helfen?'
     },
     updates: {
+        // links to the bleh updater
         en: 'Updates',
         de: 'Updates',
         pt: 'Atualizações',
@@ -4424,6 +4420,7 @@ export const trans = {
         sv: 'Ny uppdatering finns tillgänglig'
     },
     install_now: {
+        // install update
         en: 'Install now',
         de: 'Jetzt installieren',
         pt: 'Instale agora',
@@ -4649,13 +4646,22 @@ export const trans = {
         }
     },
     none: {
-        // used for no profile banner or no starred friends
-        // DE these need to be split for accurate translation. Banner -> "Keins", Starred friend -> "Kein:e"
         en: 'None',
         de: 'Keins',
-        sv: 'Ingen'
+        sv: 'Ingen',
+        banner: {
+            // no profile banner present
+            en: 'None',
+            de: 'Keins'
+        },
+        starred_friend: {
+            // no starred friend selected
+            en: 'None',
+            de: 'Kein:e'
+        }
     },
     current_banner_value: {
+        // uses none.banner from above
         en: 'Current banner: {v}',
         de: 'Aktuelles Banner: {v}',
         sv: 'Nuvarande banner: {v}'
@@ -4756,6 +4762,8 @@ export const trans = {
         sv: 'Grå'
     },
     minis: {
+        // 'Minis' is the word i eventually settled on for
+        // the games and tools integrated into bleh
         en: 'Minis',
         de: 'Minis',
         sv: 'Mini'
@@ -5181,6 +5189,7 @@ export const trans = {
         sv: 'Lita på länkar från {v} i framtiden'
     },
     visit: {
+        // visit site
         en: 'Visit',
         de: 'Besuchen',
         sv: 'Besök'

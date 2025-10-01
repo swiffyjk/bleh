@@ -495,7 +495,7 @@ export async function render_setting_page(page_id) {
                 ${auth.name ?
                     html.node`
             <section class="bleh--panel">
-                <h4>${tl(trans.api.short)}</h4>
+                <h4>API</h4>
                 <div class="setting-group">
                     <div class="setting" data-type="action">
                         <div class="heading">

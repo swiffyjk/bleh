@@ -39991,11 +39991,12 @@
         taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
         let artists = taste_meter.querySelectorAll("a");
         artists.forEach((artist) => {
-          taste_artists.push(correct_artist(artist.getAttribute("title")));
+          taste_artists.push(
+            correct_artist(artist.getAttribute("title"))
+          );
         });
         taste_percentage = taste_meter.querySelector(".tasteometer-viz").getAttribute("title");
-        if (taste_percentage == "99%")
-          taste_percentage = "100%";
+        if (taste_percentage == "99%") taste_percentage = "100%";
       }
     }
     let about_me = page.structure.container.querySelector(".about-me-sidebar");
@@ -40003,15 +40004,16 @@
         <section class="side-actions" />
     `;
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && auth.name) {
-      let follow_wrap = document.body.querySelector(".header-avatar .class > div");
+      let follow_wrap = document.body.querySelector(
+        ".header-avatar .class > div"
+      );
       if (follow_wrap) {
         let follow_btn = follow_wrap.querySelector("button");
         follow_btn.classList.add("btn", "side-action");
         follow_btn.classList.remove("toggle-button", "header-follower-btn");
         follow_btn.setAttribute("data-type", "follow");
         profile_header.appendChild(follow_wrap);
-        if (is_following)
-          follow_btn.setAttribute("data-followed", "true");
+        if (is_following) follow_btn.setAttribute("data-followed", "true");
         let mutual_text = document.createElement("i");
         mutual_text.textContent = tl2(trans2.following_mutuals);
         follow_btn.appendChild(mutual_text);
@@ -40123,9 +40125,15 @@
       }
     }
     if (!page.mobile)
-      page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+      page.structure.side.insertBefore(
+        profile_header,
+        page.structure.side.firstElementChild
+      );
     else
-      page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+      page.structure.main.insertBefore(
+        profile_header,
+        page.structure.main.firstElementChild
+      );
     let listen_container = page.structure.row.querySelector(".listen-panel");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune && auth.name) {
       if (taste == "") {
@@ -40146,10 +40154,13 @@
                     <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
                     <div class="info">
                         <h3>${html.node([
-        tl2(trans2.you_share_count_with).replace("{c}", `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`)
+        tl2(trans2.you_share_count_with).replace(
+          "{c}",
+          `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`
+        )
       ])}</h3>
                         <p>
-                            ${taste_artists.length == 1 ? tl2(trans2.you_share_count_with.one).replace("{artist}", taste_artists[0]) : ""}
+                            ${taste_artists.length == 1 ? taste_artists[0] : ""}
                             ${taste_artists.length == 2 ? tl2(trans2.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
                             ${taste_artists.length == 3 ? tl2(trans2.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
                         </p>
@@ -40209,7 +40220,18 @@
       row.after(taste_wrap);
     }
   }
-  function create_profile_top_item(parent, { name, link, text: text3 = "", type, new_release = false, updated = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
+  function create_profile_top_item(parent, {
+    name,
+    link,
+    text: text3 = "",
+    type,
+    new_release = false,
+    updated = false,
+    action = "",
+    tooltip = "",
+    allow_html = false,
+    tooltip_theme = ""
+  }) {
     log(`creating top item of ${name}, ${link}, ${text3}`, "profile");
     let side_action;
     if (action === "button") {
@@ -40264,7 +40286,9 @@
                             <button class="btn primary icon danger" data-type="minus" onclick=${() => {
             friend_state = false;
             star_state = false;
-            const new_list = settings.friends.filter((item) => item != page.name);
+            const new_list = settings.friends.filter(
+              (item) => item != page.name
+            );
             save_setting("friends", new_list);
             save_setting("starred_friend", "");
             dialog_rm({ id: "remove_friend" });
@@ -42329,7 +42353,9 @@
   function bleh_obsession() {
     let obsession_container = document.querySelector(".obsession-container");
     if (!obsession_container) return;
-    page.structure.container = document.body.querySelector(".page-content:not(.obsession-container .page-content)");
+    page.structure.container = document.body.querySelector(
+      ".page-content:not(.obsession-container .page-content)"
+    );
     try {
       page.structure.row = page.structure.container.querySelector(".row");
       page.structure.main = page.structure.row.querySelector(".col-main");
@@ -42343,17 +42369,29 @@
     update_page();
     page.structure.container.setAttribute("data-beret", "false");
     page.structure.container.setAttribute("data-short", "false");
-    let background = obsession_container.querySelector(".obsession-background-inner");
+    let background = obsession_container.querySelector(
+      ".obsession-background-inner"
+    );
     background = background.style.getPropertyValue("background-image").replace('url("', "").replace('")', "");
     if (!background.endsWith("/4128a6eb29f94943c9d206c08e625904.jpg")) {
       register_background(background);
       try {
         let bg = obsession_container.style.getPropertyValue("background").replace("rgb(", "").replace(")", "").split(", ");
-        let hsl = rgb_to_hsl(parseInt(bg[0]), parseInt(bg[1]), parseInt(bg[2]));
+        let hsl = rgb_to_hsl(
+          parseInt(bg[0]),
+          parseInt(bg[1]),
+          parseInt(bg[2])
+        );
         document.body.style.setProperty("--hue-album", hsl.h);
-        document.body.style.setProperty("--sat-album", clamp_sat2(hsl.s / 100 * 3));
+        document.body.style.setProperty(
+          "--sat-album",
+          clamp_sat2(hsl.s / 100 * 3)
+        );
         document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
-        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat2(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
+        log(
+          `sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat2(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`,
+          "hue from album"
+        );
       } catch (e) {
         console.error(e);
         log("no cover present", "hue from album");
@@ -42361,45 +42399,71 @@
     } else {
       register_background("");
     }
-    let track_title = obsession_container.querySelector(".obsession-meta-track");
-    let track_artist = obsession_container.querySelector(".obsession-meta-artist");
-    let scrobbles = obsession_container.querySelector(".obsession-meta-scrobbles");
+    let track_title = obsession_container.querySelector(
+      ".obsession-meta-track"
+    );
+    let track_artist = obsession_container.querySelector(
+      ".obsession-meta-artist"
+    );
+    let scrobbles = obsession_container.querySelector(
+      ".obsession-meta-scrobbles"
+    );
     let link = track_title.querySelector("a").getAttribute("href");
     let by = track_artist.querySelector(".obsession-meta-artist-by");
     track_artist.removeChild(by);
     let artist_name = track_artist.querySelector("a");
     if (artist_corrections.hasOwnProperty(artist_name.textContent)) {
       let corrected_artist = artist_corrections[artist_name.textContent];
-      log(`corrected ${artist_name.textContent} as ${corrected_artist}`, "lotus");
+      log(
+        `corrected ${artist_name.textContent} as ${corrected_artist}`,
+        "lotus"
+      );
       artist_name.textContent = corrected_artist;
     }
     artist_name.classList.add("header-new-crumb");
     if (settings.format_guest_features) {
-      let formatted_title = name_includes(track_title.textContent.trim(), artist_name.textContent);
+      let formatted_title = name_includes(
+        track_title.textContent.trim(),
+        artist_name.textContent
+      );
       let song_title = formatted_title[0];
       let song_tags = formatted_title[1];
       page.corrected = formatted_title[4];
-      render(track_title, html.node`
+      render(
+        track_title,
+        html.node`
             <div class="title">${song_title.trim()}</div>
-            ${song_tags.map((tag) => html.node`
+            ${song_tags.map(
+          (tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-            `)}
-        `);
+            `
+        )}
+        `
+      );
       let song_guests = formatted_title[3];
       page.sister_others = formatted_title[3];
       for (let guest in song_guests) {
         track_artist.innerHTML = `${track_artist.innerHTML},`;
         let guest_element = document.createElement("a");
         guest_element.classList.add("header-new-crumb");
-        guest_element.setAttribute("href", `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
+        guest_element.setAttribute(
+          "href",
+          `${root}music/${redirect()}${sanitise(song_guests[guest])}`
+        );
         guest_element.textContent = song_guests[guest];
         track_artist.appendChild(guest_element);
       }
     } else {
       if (!track_title.hasAttribute("data-kate-processed")) {
         track_title.setAttribute("data-kate-processed", "true");
-        let corrected_title = correct_item_by_artist(track_title.textContent.trim(), artist_name.textContent);
-        log(`corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`, "lotus");
+        let corrected_title = correct_item_by_artist(
+          track_title.textContent.trim(),
+          artist_name.textContent
+        );
+        log(
+          `corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`,
+          "lotus"
+        );
         if (corrected_title != track_title.textContent)
           page.corrected = true;
         track_title.textContent = corrected_title;
@@ -42417,7 +42481,10 @@
             </div>
         </section>
     `;
-    page.structure.container.insertBefore(track_header, page.structure.container.firstElementChild);
+    page.structure.container.insertBefore(
+      track_header,
+      page.structure.container.firstElementChild
+    );
     let video = obsession_container.querySelector(".obsession-video-container");
     if (video) track_header.after(video);
     let obsession_reason = obsession_container.querySelector(".obsession-reason");
@@ -42425,10 +42492,16 @@
       let obsession_reason_text = obsession_reason.textContent;
       obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
     }
-    let obsession_author = document.querySelector(".obsession-details-intro a").textContent;
-    let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar");
+    let obsession_author = document.querySelector(
+      ".obsession-details-intro a"
+    ).textContent;
+    let obsession_avatar = document.querySelector(
+      ".obsession-details-intro-avatar-wrap .avatar"
+    );
     page.name = obsession_author;
-    let date = obsession_container.querySelector(".obsession-details-date-short");
+    let date = obsession_container.querySelector(
+      ".obsession-details-date-short"
+    );
     let quote = html.node`
         <section class="obsession-quote sour">
             ${obsession_reason ? html.node`
@@ -42437,7 +42510,7 @@
             </div>
             ` : html.node`
             <div class="quote no-quote">
-                ${tl2(trans2.no_quote)}
+                ...
             </div>
             `}
             <div class="sub-text">
@@ -42462,12 +42535,24 @@
       quote.appendChild(manage);
       quote.querySelector("button").textContent = tl2(trans2.delete);
     }
-    page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
+    page.structure.main.insertBefore(
+      quote,
+      page.structure.main.firstElementChild
+    );
     let author = quote.querySelector(".obsession-author");
-    let badge = patch_avatar(obsession_avatar, obsession_author, "", author, "bottom");
+    let badge = patch_avatar(
+      obsession_avatar,
+      obsession_author,
+      "",
+      author,
+      "bottom"
+    );
     if (badge.type) {
       author.classList.add("colourful");
-      author.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${obsession_author}`);
+      author.classList.add(
+        `user-status--bleh-${badge.type}`,
+        `user-status--bleh-user-${obsession_author}`
+      );
     }
     let related = html.node`
         <section class="obsession-related sour" />
@@ -42475,7 +42560,10 @@
     let other_tracks = document.body.querySelector(".other-obsessions");
     if (other_tracks) {
       let header = document.createElement("h2");
-      header.textContent = tl2(trans2.others_from_profile).replace("{user}", obsession_author);
+      header.textContent = tl2(trans2.others_from_profile).replace(
+        "{user}",
+        obsession_author
+      );
       related.appendChild(header);
       let see_more = other_tracks.nextElementSibling;
       related.appendChild(other_tracks);
@@ -42505,8 +42593,7 @@
     }
     quote.after(related);
     let pages = obsession_container.querySelector(".obsession-pagination");
-    if (pages)
-      page.structure.container.appendChild(pages);
+    if (pages) page.structure.container.appendChild(pages);
   }
 
   // src/pages/profile.js
@@ -47152,7 +47239,7 @@
             ` : ""}
                 ${auth.name ? html.node`
             <section class="bleh--panel">
-                <h4>${tl2(trans2.api.short)}</h4>
+                <h4>API</h4>
                 <div class="setting-group">
                     <div class="setting" data-type="action">
                         <div class="heading">
@@ -55871,18 +55958,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Playlists",
       sv: "Spellistor"
     },
-    view_profile: {
-      en: "View profile",
-      de: "Profil anzeigen",
-      pt: "Ver perfil",
-      sv: "Visa profil"
-    },
     shouts: {
       en: "Shouts",
       de: "Shouts",
       pt: "Mensagens",
       ja: "\u30B7\u30E3\u30A6\u30C8",
       sv: "Hojtningar"
+    },
+    send_quickly_with: {
+      // send a shout quickly with (keyboard shortcut)
+      en: "Send quickly with {kbd}",
+      de: "Schnell senden mit {kbd}",
+      pt: "Enviar rapidamente com {kbd}",
+      sv: "Skicka snabbt med {kbd}"
     },
     cant_shout: {
       en: "You cannot leave shouts here",
@@ -55912,6 +56000,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "\xDCber",
       pt: "Sobre",
       sv: "Om"
+    },
+    about_me_preview: {
+      // About Me
+      en: "About (preview)",
+      de: "\xDCber (Vorschau)",
+      pt: "Sobre (preview)",
+      sv: "Om (f\xF6rhandsvisning)"
     },
     no_about: {
       // username
@@ -56018,6 +56113,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Inget gemensamt (\u0E51-\uFE4F-\u0E51)"
     },
     others_featured: {
+      // guest features on a song or album
       en: "Others featured",
       de: "Andere gefeatured",
       pt: "Outros em destaque",
@@ -56030,11 +56126,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Dina skrobblingar"
     },
     play: {
+      // play a song
       en: "Play",
       de: "Abspielen",
       sv: "Spela upp"
     },
     plays: {
+      // your play count on a song or album or whatever
       en: "Plays",
       de: "Plays",
       pt: "Reprodu\xE7\xF5es",
@@ -56191,16 +56289,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Edi\xE7\xE3o em massa",
       sv: "Bulkredigera"
     },
-    edit_profile: {
-      en: "Edit profile",
-      de: "Profil bearbeiten",
-      pt: "Editar perfil",
-      sv: "Redigera profil"
-    },
     scrobble: {
       en: "Scrobble",
       de: "Scrobble",
       sv: "Skrobbla"
+    },
+    average: {
+      // scrobble average
+      en: "Average",
+      de: "Durchschnitt",
+      pt: "M\xE9dia",
+      sv: "Genomsnitt"
     },
     scrobbles: {
       en: "Scrobbles",
@@ -56213,6 +56312,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "{c} Scrobbles",
       pt: "{c} scrobbles",
       sv: "{c} skrobblingar"
+    },
+    listens: {
+      // base on native last.fm ui
+      en: "listens",
+      de: "Scrobbles",
+      pt: "scrobbles",
+      sv: "skrobblingar",
+      count: {
+        en: "{c} listens",
+        de: "{c} Scrobbles",
+        pt: "{c} scrobbles",
+        sv: "{c} skrobblingar"
+      }
     },
     new_scrobble: {
       en: "New scrobble",
@@ -56395,18 +56507,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Colorir",
       sv: "F\xE4rger"
     },
-    change_my_colour_when: {
-      name: {
-        en: "Use a context-based accent colour when",
-        de: "Kontextbasierte Akzentfarbe verwenden, wenn",
-        sv: "Anv\xE4nd kontextbaserad accentf\xE4rg n\xE4r"
-      },
-      body: {
-        en: "Temporarily override your selected accent to match album art",
-        de: "\xDCberschreibe vor\xFCbergehend deine ausgew\xE4hlte Akzentfarbe, damit sie zum Albumcover passt",
-        sv: "\xC4ndra tillf\xE4lligt din valda accentf\xE4rg f\xF6r att matcha albumkonsten"
-      }
-    },
     adaptive: {
       en: "Adaptive",
       de: "Adaptiv",
@@ -56422,17 +56522,32 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Zeitplan \xE4ndern",
       sv: "\xC4ndra schema"
     },
+    change_my_colour_when: {
+      name: {
+        en: "Use a context-based accent colour when",
+        de: "Kontextbasierte Akzentfarbe verwenden, wenn",
+        sv: "Anv\xE4nd kontextbaserad accentf\xE4rg n\xE4r"
+      },
+      body: {
+        en: "Temporarily override your selected accent to match album art",
+        de: "\xDCberschreibe vor\xFCbergehend deine ausgew\xE4hlte Akzentfarbe, damit sie zum Albumcover passt",
+        sv: "\xC4ndra tillf\xE4lligt din valda accentf\xE4rg f\xF6r att matcha albumkonsten"
+      }
+    },
     hue_from_album: {
+      // a sub-option for change_my_colour_when
       en: "Browsing album pages",
       de: "Albumseiten angesehen werden",
       sv: "Du \xE4r p\xE5 albumsidor"
     },
     colourful_active: {
+      // a sub-option for change_my_colour_when
       en: "Actively scrobbling a track",
       de: "ein Titel aktiv gescrobbelt wird",
       sv: "Aktivt skrobblar en l\xE5t"
     },
     colourful_all: {
+      // a sub-option for change_my_colour_when
       en: "Viewing any track",
       de: "ein beliebiger Titel angesehen wird",
       sv: "Visar en l\xE5t"
@@ -56508,6 +56623,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Perfil",
       pl: "Profil",
       sv: "Profil"
+    },
+    view_profile: {
+      en: "View profile",
+      de: "Profil anzeigen",
+      pt: "Ver perfil",
+      sv: "Visa profil"
+    },
+    edit_profile: {
+      en: "Edit profile",
+      de: "Profil bearbeiten",
+      pt: "Editar perfil",
+      sv: "Redigera profil"
     },
     current_season: {
       en: "Current season",
@@ -56587,6 +56714,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Ny \xE5rstid!"
     },
     value_for_time: {
+      // e.g. Halloween for 3 days
       en: "{v} for {time}",
       pt: "{v} para {time}",
       sv: "{v} till {time}"
@@ -56598,6 +56726,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Tidslinje f\xF6r \xE5rstider"
     },
     enable_seasons: {
+      // translate to seasons if it reads better
       name: {
         en: "Automatically adapt to seasonal events",
         de: "Automatisch an saisonale Events anpassen",
@@ -56637,21 +56766,21 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "F\xF6rskjutning kalkylerats fr\xE5n tidszon"
     },
     started: {
-      // eg. season started 1 day ago
+      // e.g. season started 1 day ago
       en: "Started",
       de: "Gestartet",
       pt: "Come\xE7ou",
       sv: "Har b\xF6rjat"
     },
     next_in: {
-      // eg. next season in 5 days
+      // e.g. next season in 5 days
       en: "Next in",
       de: "N\xE4chste in",
       pt: "Pr\xF3ximo em",
       sv: "N\xE4sta om"
     },
     ends_in: {
-      // eg. season ends in 3 days
+      // e.g. season ends in 3 days
       en: "Ends in",
       de: "Endet in",
       pt: "Termina em",
@@ -56976,12 +57105,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Enviar",
       sv: "Skicka"
     },
-    send_quickly_with: {
-      en: "Send quickly with {kbd}",
-      de: "Schnell senden mit {kbd}",
-      pt: "Enviar rapidamente com {kbd}",
-      sv: "Skicka snabbt med {kbd}"
-    },
     done: {
       en: "Done",
       de: "Fertig",
@@ -57008,7 +57131,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Tryck f\xF6r mer alternativ"
     },
     right_click_for_more_options: {
-      en: "Right click for more options",
+      en: "Right-click for more options",
       de: "Rechtsklick f\xFCr weitere Optionen",
       pt: "Clique esquerdo para mais op\xE7\xF5es",
       sv: "H\xF6gerklicka f\xF6r mer alternativ"
@@ -57067,23 +57190,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Vorschau",
       sv: "F\xF6rhandsvisning"
     },
-    about_me_preview: {
-      // About Me
-      en: "About (preview)",
-      de: "\xDCber (Vorschau)",
-      pt: "Sobre (preview)",
-      sv: "Om (f\xF6rhandsvisning)"
-    },
-    markdown_tip: {
-      // use <br><br> to add a space between the first sentence and the next
-      // keep the alt text as "banner", english and lowercase as thats how its detected rn
-      // may change in the future
-      en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users.<br><br>Images are created via ![alt text](link). Changing the alt text to "banner" applies a profile banner.',
-      de: "Du kannst Zeilenumbr\xFCche, Fettdruck, Kursivschrift, Unterstreichungen, Bilder und \xDCberschriften verwenden, die f\xFCr andere bleh-Benutzer sichtbar sind.<br><br>Bilder werden mit ![Alt-Text](Link) eingef\xFCgt. Wenn du den Alt-Text in \u201Ebanner\u201C \xE4nderst, wird ein Profilbanner angewendet.",
-      pt: 'Voc\xEA pode usar quebras de linha, texto em negrito, it\xE1lico, sublinhado, imagens e cabe\xE7alhos vis\xEDveis para outros usu\xE1rios do bleh.<br><br>As imagens s\xE3o criadas usando ![alt text](link). Alterar o alt text para "banner" aplica um banner no perfil.',
-      sv: 'Du kan anv\xE4nda radbrytningar, fetstilt text, kursiv, understrykt, bilder, och rubriker som syns av andra bleh-anv\xE4ndare.<br><br>Bilder skapas via ![alt text](link). \xC4ndras alt text till "banner" s\xE5 till\xE4mpas en banner p\xE5 din profil.'
-    },
     find_on: {
+      // music services to find an artist/album/track on
       en: "Find on",
       de: "Hier zu finden",
       pt: "Encontre em",
@@ -57328,21 +57436,24 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Toppl\xE5t"
     },
     you_share_count_with: {
-      // as in your musical taste between you and someone else
+      // as in your musical taste % between you and someone else
       // you are {percentage%} compatible (in taste) {list of artists}
       en: "You are {c} compatible",
       de: "Ihr seid {c} kompatibel",
       pt: "Voce \xE9 {c} compat\xEDvel",
       sv: "Du \xE4r {c} kompatibel",
-      one: {
-        en: "{artist}"
-      },
       two: {
         en: "{artist1}, {artist2}",
+        de: "{artist1}, {artist2}",
+        pt: "{artist1}, {artist2}",
+        sv: "{artist1}, {artist2}",
         ja: "{artist1}\u3001{artist2}"
       },
       three: {
         en: "{artist1}, {artist2}, {artist3}",
+        de: "{artist1}, {artist2}, {artist3}",
+        pt: "{artist1}, {artist2}, {artist3}",
+        sv: "{artist1}, {artist2}, {artist3}",
         ja: "{artist1}\u3001{artist2}\u3001{artist3}"
       }
     },
@@ -57354,7 +57465,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     plays_lower: {
       // eg. 20 plays in artist/album grid
-      // copy from last.fm
+      // copy from last.fm without modifying
       en: " plays",
       de: " Plays",
       pt: " reprodu\xE7\xF5es",
@@ -57459,21 +57570,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Nuvarande version"
     },
     labs: {
+      // labs by last.fm
       en: "Labs",
       de: "Labs",
       sv: "Labs"
-    },
-    labs_by_last: {
-      en: "Labs by Last.fm",
-      de: "Labs von Last.fm",
-      pt: "Labs da Last.fm",
-      sv: "Labs av Last.fm",
-      tagline: {
-        en: "Interactive tools and infographics",
-        de: "Interaktive Tools und Infografiken",
-        pt: "Ferramentas interativas e infogr\xE1ficos",
-        sv: "Interaktiva verktyg och infografik"
-      }
     },
     sponsor_info: {
       en: "This is a special bleh-managed profile to handle sponsors",
@@ -57487,6 +57587,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Endast sponsorer"
     },
     downloaded_value: {
+      // filename
       en: "Downloaded {v}",
       de: "{v} wurde heruntergeladen",
       sv: "Laddat ned {v}"
@@ -57909,7 +58010,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       // as in loved tracks, this can be seen
       // in the native last.fm ui
       en: "Loved",
-      de: "Als Lieblingssong markiert",
+      de: "Lieblingssongs",
       pt: "Favoritadas",
       sv: "\xC4lskade l\xE5tar"
     },
@@ -57945,19 +58046,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Auf {album}",
       pt: "Do {album}",
       sv: "Fr\xE5n {album}"
-    },
-    listens: {
-      // base on native last.fm ui
-      en: "listens",
-      de: "Scrobbles",
-      pt: "scrobbles",
-      sv: "skrobblingar",
-      count: {
-        en: "{c} listens",
-        de: "{c} Scrobbles",
-        pt: "{c} scrobbles",
-        sv: "{c} skrobblingar"
-      }
     },
     others_count: {
       // the amount of other users
@@ -58008,7 +58096,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Denna sida har begr\xE4nsats av Last.fm"
     },
     results_for: {
-      // used as a header above the actual search eg.
+      // used as a header above the actual search e.g.
       // Results for
       // "random search text"
       en: "Results for",
@@ -58075,13 +58163,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "{v} by {u}",
       de: "{v} von {u}",
       pt: "{v} por {u}"
-    },
-    average: {
-      // scrobble average
-      en: "Average",
-      de: "Durchschnitt",
-      pt: "M\xE9dia",
-      sv: "Genomsnitt"
     },
     from_user: {
       en: "from {u}",
@@ -58158,7 +58239,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     },
     amount_to_display: {
-      // Amount of tracks to display in recent tracks
+      // amount of tracks to display in recent/top tracks
       en: "Amount of tracks to display",
       de: "Anzahl der anzuzeigenden Titel",
       pt: "Quantidade a ser exibida",
@@ -58288,9 +58369,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Die Person kann weiterhin dein Profil ansehen",
       pt: "Eles ainda podem ver seu perfil",
       sv: "Dem kan fortfarande se din profil"
-    },
-    no_quote: {
-      en: "..."
     },
     shared_with_others: {
       en: "Shared with others",
@@ -58536,6 +58614,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     },
     value_characters_max: {
+      // number/max (24/100) of characters allowed in e.g. your bio
       en: "{v} characters max",
       de: "Maximal {v} Zeichen",
       pt: "m\xE1ximo de {v} caracteres",
@@ -58599,12 +58678,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     },
     notes: {
+      // profile notes
       en: "Notes",
       de: "Notizen",
       pt: "Notas",
       sv: "Anteckningar"
     },
     no_notes: {
+      // no profiles in your notes list
       en: "No profiles here... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)",
       de: "Keine Profile hier... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)",
       pt: "Sem perfis aqui... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)",
@@ -58674,6 +58755,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         sv: "Emoji-kompatibilitet"
       },
       body: {
+        // the trans flag is used to demonstrate the improper
+        // emoji font found in windows 10, whether people like it or not
         en: "Required to render emoji properly before Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
         de: "Erforderlich, um Emojis vor Windows 11 richtig darzustellen \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
         pt: "Necess\xE1rio para renderizar emojis corretamente antes do Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
@@ -58966,9 +59049,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         de: "Verkn\xFCpfe dein Konto, um API-Zugriffe wie Scrobbling zu erm\xF6glichen",
         pt: "Conecte sua conta para permitir o acesso \xE0 API, como o scrobbling",
         sv: "Koppla ditt konto f\xF6r att till\xE5ta API-\xE5tkomster, som att skrobbla"
-      },
-      short: {
-        en: "API"
       }
     },
     api_status: {
@@ -59732,6 +59812,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     re_enable_style_loading: {
       en: "Re-enable style loading",
+      de: "Stylesheets neu laden und aktivieren",
       pt: "Reativar carregamento de estilos",
       sv: "\xC5teraktivera att stiler laddas"
     },
@@ -59742,18 +59823,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "feito com {h} por {u} e {c}contribuidores{/c}",
       sv: "skapad med {h} av {u} och {c}bidragsgivare{/c}"
     },
-    translations: {
-      en: "{l} translation by {u}",
-      de: "Deutsche \xDCbersetzung von {u}",
-      sv: "Svensk \xF6vers\xE4ttning av {u}"
-    },
     love_lower: {
       // replaces the {h} in the above sentence
-      // lowercase in design
       en: "love",
       de: "liebe",
       pt: "amor",
       sv: "k\xE4rlek"
+    },
+    translations: {
+      // lowercase in design
+      en: "{l} translation by {u}",
+      de: "Deutsche \xDCbersetzung von {u}",
+      sv: "Svensk \xF6vers\xE4ttning av {u}"
     },
     view_source: {
       en: "View source",
@@ -59980,6 +60061,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Anm\xE4l"
     },
     auto: {
+      // automatic theme
       en: "Auto",
       de: "Automatisch",
       sv: "Automatiskt"
@@ -60024,6 +60106,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Diesem Album fehlen wichtige Details, vielleicht kannst du helfen?"
     },
     updates: {
+      // links to the bleh updater
       en: "Updates",
       de: "Updates",
       pt: "Atualiza\xE7\xF5es",
@@ -60048,6 +60131,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Ny uppdatering finns tillg\xE4nglig"
     },
     install_now: {
+      // install update
       en: "Install now",
       de: "Jetzt installieren",
       pt: "Instale agora",
@@ -60273,13 +60357,22 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     },
     none: {
-      // used for no profile banner or no starred friends
-      // DE these need to be split for accurate translation. Banner -> "Keins", Starred friend -> "Kein:e"
       en: "None",
       de: "Keins",
-      sv: "Ingen"
+      sv: "Ingen",
+      banner: {
+        // no profile banner present
+        en: "None",
+        de: "Keins"
+      },
+      starred_friend: {
+        // no starred friend selected
+        en: "None",
+        de: "Kein:e"
+      }
     },
     current_banner_value: {
+      // uses none.banner from above
       en: "Current banner: {v}",
       de: "Aktuelles Banner: {v}",
       sv: "Nuvarande banner: {v}"
@@ -60380,6 +60473,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Gr\xE5"
     },
     minis: {
+      // 'Minis' is the word i eventually settled on for
+      // the games and tools integrated into bleh
       en: "Minis",
       de: "Minis",
       sv: "Mini"
@@ -60805,6 +60900,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Lita p\xE5 l\xE4nkar fr\xE5n {v} i framtiden"
     },
     visit: {
+      // visit site
       en: "Visit",
       de: "Besuchen",
       sv: "Bes\xF6k"
