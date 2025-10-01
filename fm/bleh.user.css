@@ -2189,6 +2189,15 @@
         }
     }
 
+    .flag {
+        background-position: center;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        width: 16px;
+        height: 18px;
+        display: inline-block;
+    }
+
     /*     NOTIFICATION DOT     */
     .auth-dropdown-menu .notification-count-badge,
     .masthead-nav .masthead-nav-item .notification-count-badge,
@@ -8511,12 +8520,6 @@
         --btn-left: calc(
             var(--button-sides) + var(--icon-size) + var(--icon-gap)
         ) !important;
-
-        &.lang-item {
-            --btn-left: calc(
-                var(--button-sides) + var(--icon-size) + var(--icon-gap)
-            ) !important;
-        }
     }
     .side-right .setting-item,
     .external,
@@ -10595,6 +10598,7 @@
 
             .auth-dropdown-item-left {
                 display: flex;
+                gap: var(--icon-gap);
                 max-width: 100px;
                 overflow: hidden;
             }

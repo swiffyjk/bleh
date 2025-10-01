@@ -51134,9 +51134,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let language_options = document.querySelectorAll(".footer-language-form");
     const language_menu = html.node`
         <div class="language-menu">
-            <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
+            <button class="dropdown-menu-clickable-item v2" aria-selected="true">
                 <div class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">
+                        <span class="flag" style="background-image: url(https://katelyynn.github.io/bleh/fm/flags/${lang}.svg)" />
                         ${selected_language}
                     </span>
                     <span class="auth-dropdown-item-right">
@@ -51153,29 +51154,28 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       button.classList.remove("mimic-link");
       button.classList.add(
         "dropdown-menu-clickable-item",
-        "lang-item",
+        "v2",
         "flex-button"
       );
-      button.setAttribute("data-lang", key);
-      button.style.setProperty(
-        "--flag-url",
-        `url('https://katelyynn.github.io/bleh/fm/flags/${key}.svg')`
+      render(
+        button,
+        html`
+                <div class="auth-dropdown-item-row">
+                    <span class="auth-dropdown-item-left">
+                        <span
+                            class="flag"
+                            style="background-image: url(https://katelyynn.github.io/bleh/fm/flags/${key}.svg)"
+                        />
+                        ${button.textContent}
+                    </span>
+                    ${lang_info.hasOwnProperty(key) ? html.node`
+                            <span class="auth-dropdown-item-right">
+                                <div class="bleh-icon checkmark" />
+                            </span>
+                        ` : ""}
+                </div>
+            `
       );
-      if (lang_info.hasOwnProperty(key)) {
-        render(
-          button,
-          html`
-                    <div class="auth-dropdown-item-row">
-                        <span class="auth-dropdown-item-left">
-                            ${button.textContent}
-                        </span>
-                        <span class="auth-dropdown-item-right">
-                            <div class="bleh-icon checkmark" />
-                        </span>
-                    </div>
-                `
-        );
-      }
       language_menu.appendChild(language_option);
     });
     let themes = [
