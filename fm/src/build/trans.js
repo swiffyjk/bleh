@@ -23,8 +23,8 @@ export let lang_info = {
     },
     de: {
         name: 'Deutsch',
-        by: ['evangelicgirl', 'clairedoll'],
-        last_updated: '2025-05-11'
+        by: ['evangelicgirl', 'clairedoll', 'Myrai'],
+        last_updated: '2025-10-01'
     },
     pl: {
         name: 'Polski',
@@ -68,13 +68,13 @@ export const trans = {
         missing: {
             name: {
                 en: 'No badges',
-                de: 'Kein Abzeichen',
+                de: 'Keine Abzeichen',
                 pt: 'Sem emblemas',
                 sv: 'Inga emblem'
             },
             reason: {
                 en: 'Become a sponsor to get a badge!',
-                de: 'Werde Sponsor und erhalte ein Abzeichen',
+                de: 'Werde Sponsor, um ein Abzeichen zu erhalten!',
                 pt: 'Se torne um apoiador para ganhar um emblema!',
                 sv: 'Bli en sponsor för att få ett emblem!'
             }
@@ -93,7 +93,7 @@ export const trans = {
         'user-status-staff': {
             name: {
                 en: 'Staff',
-                de: 'Angestellter',
+                de: 'Mitarbeiter',
                 pt: 'Equipe',
                 sv: 'Personal'
             },
@@ -107,6 +107,7 @@ export const trans = {
         'user-status-mod': {
             name: {
                 en: 'Mod',
+                de: 'Moderator',
                 pt: 'Moderador',
                 sv: 'Moderator'
             },
@@ -123,13 +124,14 @@ export const trans = {
             },
             reason: {
                 en: 'Former member of Last.fm',
+                de: 'Ehemaliger Mitarbeiter von Last.fm',
                 sv: 'Före-detta medlem på Last.fm'
             }
         },
         'label--fade': {
             reason: {
                 en: 'They follow you!',
-                de: 'Sie folgen dir!',
+                de: 'Diese Person folgt dir!',
                 pt: 'Ele(a) te segue!',
                 sv: 'Denna medlem följer dig!'
             }
@@ -167,6 +169,7 @@ export const trans = {
         sponsor: {
             name: {
                 en: 'Sponsor',
+                de: 'Sponsor',
                 pt: 'Apoiador',
                 sv: 'Sponsor'
             },
@@ -195,10 +198,12 @@ export const trans = {
         },
         plaster: {
             name: {
-                en: 'band-aid'
+                en: 'band-aid',
+                de: 'pflaster'
             },
             reason: {
-                en: 'the sillyness caught up to me'
+                en: 'the sillyness caught up to me',
+                de: 'der unsinn hat eingeholt'
             }
         },
         'bubble-tea': {
@@ -212,6 +217,7 @@ export const trans = {
     },
     requires_higher_bleh_version: {
         en: 'Requires higher bleh version',
+        de: 'Erfordert eine neuere bleh-Version',
         pt: 'Requer a versão mais recente do bleh',
         sv: 'Behöver en nyare version av bleh'
     },
@@ -230,6 +236,7 @@ export const trans = {
     },
     playlists: {
         en: 'Playlists',
+        de: 'Playlists',
         sv: 'Spellistor'
     },
     view_profile: {
@@ -240,21 +247,25 @@ export const trans = {
     },
     shouts: {
         en: 'Shouts',
+        de: 'Shouts',
         pt: 'Mensagens',
         ja: 'シャウト',
         sv: 'Hojtningar'
     },
     cant_shout: {
         en: 'You cannot leave shouts here',
+        de: 'Du kannst hier keine Shouts hinterlassen',
         sv: 'Du kan inte hojta här'
     },
     failed_to_send: {
         en: 'Failed to send',
+        de: 'Senden fehlgeschlagen',
         pt: 'Falha ao enviar',
         sv: 'Gick inte att skicka'
     },
     sent: {
         en: 'Sent',
+        de: 'Gesendet',
         pt: 'Enviado',
         sv: 'Skickat'
     },
@@ -271,12 +282,13 @@ export const trans = {
     },
     no_about: {
         en: '{u} is keeping quiet',
+        de: '{u} ist wohl etwas schweigsam',
         pt: '{u} está bem quietinho',
         sv: '{u} håller sig tyst'
     },
     edit_wiki: {
         en: 'Edit wiki',
-        de: 'Wiki editieren',
+        de: 'Wiki bearbeiten',
         pt: 'Editar wiki',
         sv: 'Redigera wiki'
     },
@@ -295,6 +307,7 @@ export const trans = {
     },
     refreshed: {
         en: 'Refreshed',
+        de: 'Aktualisiert',
         pt: 'Atualizado',
         sv: 'Laddats om'
     },
@@ -306,6 +319,7 @@ export const trans = {
     },
     unavailable: {
         en: 'Unavailable',
+        de: 'Nicht verfügbar',
         pt: 'Indisponível',
         sv: 'Otillgänglig'
     },
@@ -336,30 +350,36 @@ export const trans = {
     inverse_compare: {
         name: {
             en: 'Inverse comparison method',
+            de: 'Umgekehrte Vergleichsmethode',
             sv: 'Invertera jämförelse'
         },
         body: {
             en: 'Show items you do not share instead',
+            de: 'Zeige stattdessen Objekte, die ihr nicht teilt',
             sv: 'Visa istället objekt ni inte delar alls'
         }
     },
     one_page: {
         en: '1 page',
+        de: '1 Seite',
         pt: '1 página',
         sv: '1 sida'
     },
     count_pages: {
         en: '{c} pages',
+        de: '{c} Seiten',
         pt: '{c} páginas',
         sv: '{c} sidor'
     },
     gathering_plays_for_user_pages: {
         en: 'Gathering plays for {u} ({current_page}/{pages})',
+        de: 'Sammle Plays für {u} ({current_page}/{pages})',
         pt: 'Reunindo reproduções para {u} ({current_page}/{pages})',
         sv: 'Samlar spelningar av {u} ({current_page}/{pages})'
     },
     nothing_in_common: {
         en: 'Nothing in common (๑-﹏-๑)',
+        de: 'Nichts gemeinsam (๑-﹏-๑)',
         pt: 'Nada em comum (๑-﹏-๑)',
         sv: 'Inget gemensamt (๑-﹏-๑)'
     },
@@ -371,16 +391,18 @@ export const trans = {
     },
     your_scrobbles: {
         en: 'Your scrobbles',
-        de: 'Deine Scrobbels',
+        de: 'Deine Scrobbles',
         pt: 'Seus scrobbles',
         sv: 'Dina skrobblingar'
     },
     play: {
         en: 'Play',
+        de: 'Abspielen',
         sv: 'Spela upp'
     },
     plays: {
         en: 'Plays',
+        de: 'Plays',
         pt: 'Reproduções',
         sv: 'Spelningar'
     },
@@ -417,72 +439,87 @@ export const trans = {
     },
     friends_setting: {
         en: 'Keep up to date on what your friends are listening to',
+        de: 'Bleibe auf dem Laufenden, was deine Freunde hören',
         sv: 'Håll koll på vad dina vänner lyssnar på'
     },
     add_friends: {
         en: 'Add friends',
+        de: 'Freunde hinzufügen',
         sv: 'Lägg till vänner'
     },
     starred_friend: {
         name: {
             en: 'Starred friend',
+            de: 'Markierter Freund',
             sv: 'Stjärnmärkt vän'
         },
         body: {
             en: 'View their scrobbles alongside yours at all times',
-            de: 'Sehe ihre Scrobbels jederzeit neben deine an',
+            de: 'Sehe deren Scrobbles jederzeit neben deinen an',
             pt: 'Veja os scrobbles dele(a) junto aos seus o tempo todo',
             sv: 'Se deras skrobblingar bredvid dina hela tiden'
         },
         notice: {
             en: 'Not seeing the options you’re after? Fill out your friends list in the settings.',
+            de: 'Siehst du nicht die Optionen, die du suchst? Fülle deine Freundesliste in den Einstellungen aus.',
             sv: 'Ser du inte inställningar du letar efter? Fyll upp din vänlista i inställningarna.'
         }
     },
     friend_difference: {
         en: '‘Friends’ is a bleh-exclusive feature that allows you to keep up to date on your friend’s listening history, it is local and does not influence your following list.',
+        de: '"Freunde“ ist eine exklusive bleh-Funktion, mit der du auf dem Laufenden bleiben kannst, was deine Freunde hören. Freunde werden lokal verwaltet und beeinflussen nicht deine Follower-Liste.',
         sv: '’Vänner’ är en exklusiv del av bleh som tillåter dig att hålla koll på dina vänners lyssnarhistoria, det hanteras lokalt och rör inte din följarlista.'
     },
     add_as_friend: {
         en: 'Add as friend',
+        de: 'Als Freund hinzufügen',
         sv: 'Lägg till som vän'
     },
     remove_friend: {
         name: {
             en: 'Remove friend',
+            de: 'Freund entfernen',
             sv: 'Ta bort vän'
         },
         body: {
             en: 'Are you sure you want to remove {u} as a friend, you will stay following them - it‘s only local.',
+            de: 'Bist du sicher, dass du {u} als Freund entfernen möchtest? Du folgst der Person weiterhin - die Freundesliste wird lokal verwaltet.',
             sv: 'Är du säker på att du vill ta bort {u} som vän? Du följer dem fortfarande - vänlistan hanteras lokalt.'
         }
     },
     added_as_friend: {
         en: 'Added friend',
+        de: 'Freund hinzugefügt',
         sv: 'Lagt till som vän'
     },
     removed_friend: {
         en: 'Removed friend',
+        de: 'Freund entfernt',
         sv: 'Tagit bort vän'
     },
     added_star: {
         en: 'Added star status',
+        de: 'Markiert',
         sv: 'Stjärnmärkte'
     },
     add_as_starred_friend: {
         en: 'Star friend',
+        de: 'Freund markieren',
         sv: 'Stjärnmärk vän'
     },
     removed_star: {
         en: 'Removed star status',
+        de: 'Markierung entfernt',
         sv: 'Tog bort stjärnmärke'
     },
     remove_as_star_friend: {
         en: 'Remove star status',
+        de: 'Markierung entfernen',
         sv: 'Ta bort stjärnmärke'
     },
     aka: {
         en: 'aka.',
+        de: 'alias',
         pt: 'vulgo',
         sv: 'också känd som'
     },
@@ -509,64 +546,71 @@ export const trans = {
     },
     edit: {
         en: 'Edit',
-        de: 'Editieren',
+        de: 'Bearbeiten',
         pt: 'Editar',
         sv: 'Redigera'
     },
     bulk_edit: {
         // as in the last.fm 'Bulk Edit' open-source extension
         en: 'Bulk edit',
-        de: 'Massenbearbeitung',
+        de: 'Mehrere bearbeiten',
         pt: 'Edição em massa',
         sv: 'Bulkredigera'
     },
     edit_profile: {
         en: 'Edit profile',
-        de: 'Profil editieren',
+        de: 'Profil bearbeiten',
         pt: 'Editar perfil',
         sv: 'Redigera profil'
     },
     scrobble: {
         en: 'Scrobble',
+        de: 'Scrobble',
         sv: 'Skrobbla'
     },
     scrobbles: {
         en: 'Scrobbles',
-        de: 'Scrobbels',
+        de: 'Scrobbles',
         ja: 'Scrobble',
         sv: 'Skrobblingar'
     },
     count_scrobbles: {
         en: '{c} scrobbles',
-        de: '{c} scrobbels',
+        de: '{c} Scrobbles',
         pt: '{c} scrobbles',
         sv: '{c} skrobblingar'
     },
     new_scrobble: {
         en: 'New scrobble',
+        de: 'Neuer Scrobble',
         pt: 'Novo scrobble',
         sv: 'Ny skrobbel'
     },
     scrobble_failed: {
         en: 'Scrobble could not be sent',
+        de: 'Scrobble konnte nicht gesendet werden',
         sv: 'Skrobblingen kunde inte skickas'
     },
     scrobble_error_codes: {
         // https://www.last.fm/api/show/track.scrobble
         1: {
             en: 'Artist name was ignored',
+            de: 'Künstlername wurde ignoriert',
             sv: 'Artistnamnet var ignorerad'
         },
         2: {
             en: 'Track name was ignored',
+            de: 'Titelname wurde ignoriert',
             sv: 'Låttiteln var ignorerad'
         },
         3: {
             en: 'Timestamp is too old',
+            de: 'Zeitstempel ist zu alt',
             sv: 'Tidsstämpeln är för gammal'
         },
         4: {
             en: 'Timestamp is too new',
+            de: 'Zeitstempel ist zu neu',
             sv: 'Tidsstämpeln är för ny'
         },
         5: {
@@ -589,7 +633,7 @@ export const trans = {
     },
     artists_tooltip: {
         en: 'Multiple artists are grouped into this profile',
-        de: 'Mehrere Künstler sind in diesem Profil sortiert',
+        de: 'Mehrere Künstler sind auf diesem Profil gruppiert',
         pt: 'Múltiplos artistas estão agrupados neste perfil',
         sv: 'Flera artister delar denna profil'
     },
@@ -608,6 +652,7 @@ export const trans = {
     },
     album_artist: {
         en: 'Album Artist',
+        de: 'Albumkünstler',
         sv: 'Albumartist'
     },
     track: {
@@ -625,41 +670,48 @@ export const trans = {
     },
     appearance: {
         en: 'Appearance',
-        de: 'Aussehen',
+        de: 'Erscheinungsbild',
         pt: 'Aparência',
         sv: 'Utséende'
     },
     visual: {
         en: 'Visual',
+        de: 'Design',
         sv: 'Visuellt'
     },
     theme: {
         en: 'Theme',
+        de: 'Farbschema',
         pt: 'Tema',
         sv: 'Tema'
     },
     theme_day: {
         name: {
             en: 'Day',
+            de: 'Tag',
             sv: 'Dag'
         },
         body: {
             en: 'When your system reports light theme',
+            de: 'Wenn dein System ein helles Farbschema hat',
             sv: 'När ditt system rapporterar ett ljust tema'
         }
     },
     theme_night: {
         name: {
             en: 'Night',
+            de: 'Nacht',
             sv: 'Natt'
         },
         body: {
             en: 'When your system reports dark theme',
+            de: 'Wenn dein System ein dunkles Farbschema hat',
             sv: 'När ditt system rapporterar ett mörk tema'
         }
     },
     theme_schedule: {
         en: 'Choose which theme preference to apply based on your system theme.',
+        de: 'Wähle dein bevorzugtes Design basierend auf deinem Systemdesign.',
         sv: 'Välj föredraget tema att tillämpa utgående från ditt systemtema.'
     },
     themes: {
@@ -695,7 +747,7 @@ export const trans = {
         },
         oled: {
             en: 'Void',
-            de: 'Leere',
+            de: 'Nacht',
             pt: 'Vazio',
             sv: 'Tomhet'
         }
@@ -709,23 +761,28 @@ export const trans = {
     change_my_colour_when: {
         name: {
             en: 'Use a context-based accent colour when',
+            de: 'Kontextbasierte Akzentfarbe verwenden, wenn',
             sv: 'Använd kontextbaserad accentfärg när'
         },
         body: {
             en: 'Temporarily override your selected accent to match album art',
+            de: 'Überschreibe vorübergehend deine ausgewählte Akzentfarbe, damit sie zum Albumcover passt',
             sv: 'Ändra tillfälligt din valda accentfärg för att matcha albumkonsten'
         }
     },
     adaptive: {
         en: 'Adaptive',
+        de: 'Adaptiv',
         sv: 'Adaptiv'
     },
     adaptive_tip: {
         en: 'Your theme preference will be either {day} or {night}, based on your system. ',
+        de: 'Dein bevorzugtes Farbschema wird entweder {day} oder {night} sein, basierend auf deinem System. ',
         sv: 'Ditt föredragna tema blir antigen {day} eller {night}, beroende på ditt system. '
     },
     change_schedule: {
         en: 'Change schedule',
+        de: 'Zeitplan ändern',
         sv: 'Ändra schema'
     },
     hue_from_album: {
@@ -1841,7 +1898,7 @@ export const trans = {
     },
     copy_link: {
         en: 'Copy link',
-        sv: 'Kopiera länk,
+        sv: 'Kopiera länk'
     },
     copied_to_clipboard: {
         en: 'Copied to clipboard',
