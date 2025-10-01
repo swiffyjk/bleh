@@ -1234,13 +1234,15 @@ export let settings_store = {
         default: false,
         type: 'checkbox',
         title: trans.romanise_jp,
-        new_release: true
+        new_release: true,
+        incompatible: { format_guest_features: false, corrections: false }
     },
     romanise_ko: {
         default: false,
         type: 'checkbox',
         title: trans.romanise_ko,
-        new_release: true
+        new_release: true,
+        incompatible: { format_guest_features: false, corrections: false }
     },
     music_links: {
         default: [

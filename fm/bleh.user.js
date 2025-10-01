@@ -33819,14 +33819,16 @@
             ".chartlist-artist a"
           );
           if (song_artist_element) {
-            let corrected_title = correct_item_by_artist(
-              track_title.textContent,
-              song_artist_element.textContent
+            let corrected_title = romanise(
+              correct_item_by_artist(
+                track_title.textContent,
+                song_artist_element.textContent
+              )
             );
             track_title.textContent = corrected_title;
             track_title.setAttribute("data-name", corrected_title);
-            let corrected_artist = correct_artist(
-              song_artist_element.textContent
+            let corrected_artist = romanise(
+              correct_artist(song_artist_element.textContent)
             );
             song_artist_element.textContent = corrected_artist;
             song_artist_element.setAttribute("title", corrected_artist);
@@ -47826,6 +47828,10 @@
           (sum, album_tracks) => sum + Object.keys(album_tracks).length,
           0
         );
+      let corrections;
+      let format_guest_features;
+      let romanise_jp;
+      let romanise_ko;
       render(
         page.structure.main,
         html`
@@ -47844,7 +47850,13 @@
                         </div>
                     </div>
                     <div class="setting-group">
-                        ${setting({ id: "corrections" })}
+                        ${corrections = setting({
+          id: "corrections",
+          func: () => {
+            romanise_jp.compat();
+            romanise_ko.compat();
+          }
+        })}
                         <div
                             class="setting"
                             data-type="info"
@@ -47980,7 +47992,13 @@
                         </section>
                     </div>
                     <div class="setting-group">
-                        ${setting({ id: "format_guest_features" })}
+                        ${format_guest_features = setting({
+          id: "format_guest_features",
+          func: () => {
+            romanise_jp.compat();
+            romanise_ko.compat();
+          }
+        })}
                         ${setting({ id: "show_guest_features" })}
                         ${setting({ id: "show_remaster_tags" })}
                     </div>
@@ -47990,17 +48008,18 @@
                                 <h5>${tl2(trans2.romanise_titles)}</h5>
                             </div>
                             <div class="primary-selections">
-                                ${setting({
+                                ${romanise_jp = setting({
           id: "romanise_jp",
           standalone: true
         })}
-                                ${setting({
+                                ${romanise_ko = setting({
           id: "romanise_ko",
           standalone: true
         })}
                             </div>
                         </div>
                     </div>
+                    <div class="card-tip">${tl2(trans2.romanise_require)}</div>
                     <div class="setting-group">
                         ${setting({ id: "glacier_library_graphs" })}
                     </div>
@@ -61019,6 +61038,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "\uD55C\uAD6D\uC5B4 (Koreanisch)",
       sv: "\uD55C\uAD6D\uC5B4 (Koreanska)"
     },
+    romanise_require: {
+      en: "Romanisation requires either lotus corrections or smart song tags be enabled"
+    },
     disc_number: {
       en: "Disc {n}",
       de: "Disc {n}",
@@ -62291,13 +62313,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       default: false,
       type: "checkbox",
       title: trans2.romanise_jp,
-      new_release: true
+      new_release: true,
+      incompatible: { format_guest_features: false, corrections: false }
     },
     romanise_ko: {
       default: false,
       type: "checkbox",
       title: trans2.romanise_ko,
-      new_release: true
+      new_release: true,
+      incompatible: { format_guest_features: false, corrections: false }
     },
     music_links: {
       default: [

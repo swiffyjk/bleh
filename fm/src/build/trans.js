@@ -5339,6 +5339,9 @@ export const trans = {
         de: '한국어 (Koreanisch)',
         sv: '한국어 (Koreanska)'
     },
+    romanise_require: {
+        en: 'Romanisation requires either lotus corrections or smart song tags be enabled'
+    },
     disc_number: {
         en: 'Disc {n}',
         de: 'Disc {n}',

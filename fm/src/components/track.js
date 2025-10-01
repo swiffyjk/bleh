@@ -389,15 +389,17 @@ export function patch_titles(search = page.structure.main) {
                     '.chartlist-artist a'
                 );
                 if (song_artist_element) {
-                    let corrected_title = correct_item_by_artist(
-                        track_title.textContent,
-                        song_artist_element.textContent
+                    let corrected_title = romanise(
+                        correct_item_by_artist(
+                            track_title.textContent,
+                            song_artist_element.textContent
+                        )
                     );
                     track_title.textContent = corrected_title;
                     track_title.setAttribute('data-name', corrected_title);
 
-                    let corrected_artist = correct_artist(
-                        song_artist_element.textContent
+                    let corrected_artist = romanise(
+                        correct_artist(song_artist_element.textContent)
                     );
                     song_artist_element.textContent = corrected_artist;
                     song_artist_element.setAttribute('title', corrected_artist);

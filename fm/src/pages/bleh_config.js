@@ -1132,6 +1132,11 @@ export async function render_setting_page(page_id) {
                 0
             );
 
+        let corrections;
+        let format_guest_features;
+        let romanise_jp;
+        let romanise_ko;
+
         render(
             page.structure.main,
             html`
@@ -1150,7 +1155,13 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     <div class="setting-group">
-                        ${setting({ id: 'corrections' })}
+                        ${(corrections = setting({
+                            id: 'corrections',
+                            func: () => {
+                                romanise_jp.compat();
+                                romanise_ko.compat();
+                            }
+                        }))}
                         <div
                             class="setting"
                             data-type="info"
@@ -1296,7 +1307,13 @@ export async function render_setting_page(page_id) {
                         </section>
                     </div>
                     <div class="setting-group">
-                        ${setting({ id: 'format_guest_features' })}
+                        ${(format_guest_features = setting({
+                            id: 'format_guest_features',
+                            func: () => {
+                                romanise_jp.compat();
+                                romanise_ko.compat();
+                            }
+                        }))}
                         ${setting({ id: 'show_guest_features' })}
                         ${setting({ id: 'show_remaster_tags' })}
                     </div>
@@ -1306,17 +1323,18 @@ export async function render_setting_page(page_id) {
                                 <h5>${tl(trans.romanise_titles)}</h5>
                             </div>
                             <div class="primary-selections">
-                                ${setting({
+                                ${(romanise_jp = setting({
                                     id: 'romanise_jp',
                                     standalone: true
-                                })}
-                                ${setting({
+                                }))}
+                                ${(romanise_ko = setting({
                                     id: 'romanise_ko',
                                     standalone: true
-                                })}
+                                }))}
                             </div>
                         </div>
                     </div>
+                    <div class="card-tip">${tl(trans.romanise_require)}</div>
                     <div class="setting-group">
                         ${setting({ id: 'glacier_library_graphs' })}
                     </div>
