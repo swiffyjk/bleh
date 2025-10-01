@@ -47271,10 +47271,9 @@
                     <h4>${tl2(trans2.language)}</h4>
                     <div class="setting-group">
                         <div class="languages">
-                            ${Object.entries(lang_info).map(
-          ([key, language]) => {
-            let date;
-            const row = html.node`
+                            ${Object.entries(lang_info).sort(([, a], [, b]) => b.percent - a.percent).map(([key, language]) => {
+          let date;
+          const row = html.node`
                                         <div class="language-row${lang == key ? " active" : ""}">
                                             <div class="flag-container">
                                                 <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
@@ -47289,31 +47288,30 @@
                                             </div>
                                             ` : html.node`<div class="badges"></div>`}
                                             ${language.percent ? () => {
-              const elem = html.node`
+            const elem = html.node`
                                                             <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
                                                                 ${language.percent}%
                                                             </div>
                                                         `;
-              tippy_esm_default(elem, {
-                content: `${tl2(trans2.amount_translated, { c: language.translated })}, ${tl2(trans2.missing_translated, { c: language.missing })}`
-              });
-              return elem;
-            } : ""}
+            tippy_esm_default(elem, {
+              content: `${tl2(trans2.amount_translated, { c: language.translated })}, ${tl2(trans2.missing_translated, { c: language.missing })}`
+            });
+            return elem;
+          } : ""}
                                             <div class="date">
                                                 <p ref=${(el) => date = el}>${language.last_updated != "latest" ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
                                             </div>
                                         </div>
                                     `;
-            if (language.last_updated != "latest") {
-              tippy_esm_default(date, {
-                content: DateTime.fromISO(
-                  language.last_updated
-                ).toLocaleString(DateTime.DATE_MED)
-              });
-            }
-            return row;
+          if (language.last_updated != "latest") {
+            tippy_esm_default(date, {
+              content: DateTime.fromISO(
+                language.last_updated
+              ).toLocaleString(DateTime.DATE_MED)
+            });
           }
-        )}
+          return row;
+        })}
                         </div>
                     </div>
                     <div class="setting-group">

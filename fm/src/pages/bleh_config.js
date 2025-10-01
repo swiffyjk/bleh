@@ -532,8 +532,9 @@ export async function render_setting_page(page_id) {
                     <h4>${tl(trans.language)}</h4>
                     <div class="setting-group">
                         <div class="languages">
-                            ${Object.entries(lang_info).map(
-                                ([key, language]) => {
+                            ${Object.entries(lang_info)
+                                .sort(([, a], [, b]) => b.percent - a.percent)
+                                .map(([key, language]) => {
                                     let date;
 
                                     const row = html.node`
@@ -586,8 +587,7 @@ export async function render_setting_page(page_id) {
                                     }
 
                                     return row;
-                                }
-                            )}
+                                })}
                         </div>
                     </div>
                     <div class="setting-group">
