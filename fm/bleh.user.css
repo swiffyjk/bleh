@@ -5981,8 +5981,8 @@
         font-size: var(--font-size);
         line-height: var(--line-height);
         text-shadow: none;
-        filter: drop-shadow(0 0 6px var(--shadow))
-            drop-shadow(0 0 2px var(--shadow));
+        filter: drop-shadow(0 0 10px var(--shadow))
+            drop-shadow(0 0 4px var(--shadow));
         overflow: hidden;
         padding: 10px;
         left: 0;
