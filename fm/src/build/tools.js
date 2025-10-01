@@ -426,3 +426,10 @@ export function time(string = '') {
 
     return date.toFormat('HH:mm:ss Z');
 }
+
+export function int_from_string(string) {
+    const match = string.match(/\d+/);
+    if (match) return clean_number(match[0]);
+
+    return string;
+}

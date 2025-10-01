@@ -9,8 +9,8 @@ import { page, root } from '../build/page';
 import {
     clamp_lit,
     clamp_sat,
-    clean_number,
     copy,
+    int_from_string,
     rgb_to_hsl,
     romanise
 } from '../build/tools';
@@ -171,13 +171,15 @@ export function music_grids(search = page.structure.main, use_colour = true) {
             !grid.classList.contains('obsessions-item') &&
             !grid.classList.contains('compare-item')
         ) {
-            let plays = clean_number(
-                plays_elem.textContent
-                    .trim()
-                    .replace(`${tl(trans.plays_lower)}`, '')
-            );
+            let plays = int_from_string(plays_elem.textContent.trim());
             plays_elem.classList.add('grid-item-plays');
-            if (is_album) plays_elem.textContent = plays.toLocaleString(lang);
+            if (is_album) {
+                plays_elem.textContent = plays.toLocaleString(lang);
+            } else {
+                plays_elem.textContent = tl(trans.count_plays, {
+                    c: plays.toLocaleString(lang)
+                });
+            }
 
             if (!is_album) {
                 insights.artist.display = true;

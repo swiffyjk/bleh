@@ -522,7 +522,7 @@ export function collage({ host, sidebar } = {}) {
                                     : settings.collage_grid_plays ?
                                         html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
-                                    ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
+                                    ${tl(trans.count_plays, { c: data.plays.toLocaleString(lang) })}
                                 </a>
                                 `
                                     :   ''
@@ -535,7 +535,7 @@ export function collage({ host, sidebar } = {}) {
                                     html.node`
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
-                                    ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
+                                    ${tl(trans.count_plays, { c: data.plays.toLocaleString(lang) })}
                                 </a>
                             </p>
                             `

@@ -28039,6 +28039,11 @@
     const date = DateTime.fromJSDate(new Date(string));
     return date.toFormat("HH:mm:ss Z");
   }
+  function int_from_string(string) {
+    const match3 = string.match(/\d+/);
+    if (match3) return clean_number(match3[0]);
+    return string;
+  }
 
   // src/build/music.js
   var artist_corrections = {};
@@ -29995,11 +30000,15 @@
         );
       }
       if (plays_elem && !grid.classList.contains("obsessions-item") && !grid.classList.contains("compare-item")) {
-        let plays = clean_number(
-          plays_elem.textContent.trim().replace(`${tl2(trans2.plays_lower)}`, "")
-        );
+        let plays = int_from_string(plays_elem.textContent.trim());
         plays_elem.classList.add("grid-item-plays");
-        if (is_album) plays_elem.textContent = plays.toLocaleString(lang);
+        if (is_album) {
+          plays_elem.textContent = plays.toLocaleString(lang);
+        } else {
+          plays_elem.textContent = tl2(trans2.count_plays, {
+            c: plays.toLocaleString(lang)
+          });
+        }
         if (!is_album) {
           insights.artist.display = true;
           insights.artist.values.push(plays);
@@ -34777,7 +34786,7 @@
                                 ` : ""}
                                 ` : settings.collage_grid_plays ? html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}${tl2(trans2.plays_lower)}
+                                    ${tl2(trans2.count_plays, { c: data2.plays.toLocaleString(lang) })}
                                 </a>
                                 ` : ""}
                             </p>
@@ -34785,7 +34794,7 @@
                             ${settings.collage_grid_plays ? html.node`
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}${tl2(trans2.plays_lower)}
+                                    ${tl2(trans2.count_plays, { c: data2.plays.toLocaleString(lang) })}
                                 </a>
                             </p>
                             ` : ""}
@@ -56267,6 +56276,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ja: "Scrobble",
       sv: "Skrobblingar"
     },
+    count_plays: {
+      // e.g. 20 plays in a music grid
+      // this uses plays in english but scrobbles
+      // for ease of understanding elsewhere
+      en: "{c} plays",
+      de: "{c} Scrobbles",
+      pt: "{c} scrobbles",
+      sv: "{c} skrobblingar"
+    },
     count_scrobbles: {
       en: "{c} scrobbles",
       de: "{c} Scrobbles",
@@ -57456,15 +57474,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Musikgeschmack-\xC4hnlichkeit",
       pt: "Similaridade de gostos",
       sv: "Smaklikhet"
-    },
-    plays_lower: {
-      // eg. 20 plays in artist/album grid
-      // copy from last.fm without modifying
-      en: " plays",
-      de: " Plays",
-      pt: " reprodu\xE7\xF5es",
-      ja: "\u66F2\u3092\u518D\u751F",
-      sv: " spelningar"
     },
     message: {
       // as in a direct message

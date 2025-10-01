@@ -595,6 +595,15 @@ export const trans = {
         ja: 'Scrobble',
         sv: 'Skrobblingar'
     },
+    count_plays: {
+        // e.g. 20 plays in a music grid
+        // this uses plays in english but scrobbles
+        // for ease of understanding elsewhere
+        en: '{c} plays',
+        de: '{c} Scrobbles',
+        pt: '{c} scrobbles',
+        sv: '{c} skrobblingar'
+    },
     count_scrobbles: {
         en: '{c} scrobbles',
         de: '{c} Scrobbles',
@@ -1785,15 +1794,6 @@ export const trans = {
         de: 'Musikgeschmack-Ähnlichkeit',
         pt: 'Similaridade de gostos',
         sv: 'Smaklikhet'
-    },
-    plays_lower: {
-        // eg. 20 plays in artist/album grid
-        // copy from last.fm without modifying
-        en: ' plays',
-        de: ' Plays',
-        pt: ' reproduções',
-        ja: '曲を再生',
-        sv: ' spelningar'
     },
     message: {
         // as in a direct message
