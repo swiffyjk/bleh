@@ -29920,7 +29920,9 @@
         }
       }
     };
-    let grids = search.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
+    let grids = search.querySelectorAll(
+      ".grid-items-item:not([data-bleh-music-grids])"
+    );
     grids.forEach((grid, index3) => {
       let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
       if (is_loading) return;
@@ -29946,11 +29948,17 @@
             let thief = new import_color_thief_browser.default();
             let colour2 = thief.getColor(image);
             let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
-            grid_colour.style.setProperty("background", `rgb(${colour2})`);
+            grid_colour.style.setProperty(
+              "background",
+              `rgb(${colour2})`
+            );
+            let hue2 = hsl.h;
+            let sat = clamp_sat2(hsl.s / 100 * 3);
+            let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
             grid.classList.add("grid-items-item-has-colour");
-            grid.style.setProperty("--hue-over", hsl.h);
-            grid.style.setProperty("--sat-over", clamp_sat2(hsl.s / 100 * 3));
-            grid.style.setProperty("--lit-over", 1);
+            grid.style.setProperty("--hue-over", hue2);
+            grid.style.setProperty("--sat-over", sat);
+            grid.style.setProperty("--lit-over", lit);
           });
         } catch (e) {
         }
@@ -29981,13 +29989,16 @@
           aux_text.appendChild(plays_elem);
         }
       } else {
-        plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
+        plays_elem = grid.querySelector(
+          ".grid-items-item-aux-text a:last-child"
+        );
       }
       if (plays_elem && !grid.classList.contains("obsessions-item") && !grid.classList.contains("compare-item")) {
-        let plays = clean_number(plays_elem.textContent.trim().replace(`${tl2(trans2.plays_lower)}`, ""));
+        let plays = clean_number(
+          plays_elem.textContent.trim().replace(`${tl2(trans2.plays_lower)}`, "")
+        );
         plays_elem.classList.add("grid-item-plays");
-        if (is_album)
-          plays_elem.textContent = plays.toLocaleString(lang);
+        if (is_album) plays_elem.textContent = plays.toLocaleString(lang);
         if (!is_album) {
           insights.artist.display = true;
           insights.artist.values.push(plays);
@@ -30004,10 +30015,22 @@
         if (!is_album && settings.colourful_counts && page.type == "user") {
           if (!plays_elem.getAttribute("href").includes("?from=") && (!plays_elem.getAttribute("href").includes("?date_preset=") || plays_elem.getAttribute("href").endsWith("?date_preset=ALL") || plays_elem.getAttribute("href").endsWith("?date_preset=null"))) {
             let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
-            plays_elem.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-            plays_elem.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-            plays_elem.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-            plays_elem.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+            plays_elem.setAttribute(
+              "data-bleh--scrobble-milestone",
+              parsed_scrobble_as_rank.milestone
+            );
+            plays_elem.style.setProperty(
+              "--hue-over",
+              parsed_scrobble_as_rank.hue
+            );
+            plays_elem.style.setProperty(
+              "--sat-over",
+              parsed_scrobble_as_rank.sat
+            );
+            plays_elem.style.setProperty(
+              "--lit-over",
+              parsed_scrobble_as_rank.lit
+            );
           }
         }
       }
@@ -30015,17 +30038,23 @@
       if (!name) return;
       let artist;
       if (!is_album) {
-        name.textContent = romanise(correct_artist(name.textContent.trim()));
+        name.textContent = romanise(
+          correct_artist(name.textContent.trim())
+        );
         insights.artist.labels.push(name.textContent);
       } else {
         artist = grid.querySelector(".grid-items-item-aux-block");
-        if (!artist) artist = grid.querySelector(".grid-items-item-aux-text");
+        if (!artist)
+          artist = grid.querySelector(".grid-items-item-aux-text");
         if (!artist) return;
         if (settings.format_guest_features) {
           let name_elem = name;
           let artist_elem = artist;
           let song_title = name_elem.getAttribute("title");
-          let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
+          let formatted_title = name_includes(
+            song_title,
+            artist_elem.textContent.trim()
+          );
           let song_tags = {};
           if (formatted_title) {
             song_title = romanise(formatted_title[0].trim());
@@ -30033,15 +30062,27 @@
             song_tags = formatted_title[1];
             artist.textContent = romanise(formatted_title[2]);
           }
-          render(name_elem, html.node`
+          render(
+            name_elem,
+            html.node`
                     <span class="title">${song_title}</span>
-                    ${song_tags.map((tag) => html.node`
+                    ${song_tags.map(
+              (tag) => html.node`
                         <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
-                    `)}
-                `);
+                    `
+            )}
+                `
+          );
         } else {
-          artist.textContent = romanise(correct_artist(artist.textContent.trim()));
-          name.textContent = romanise(correct_item_by_artist(name.textContent.trim(), artist.textContent.trim()));
+          artist.textContent = romanise(
+            correct_artist(artist.textContent.trim())
+          );
+          name.textContent = romanise(
+            correct_item_by_artist(
+              name.textContent.trim(),
+              artist.textContent.trim()
+            )
+          );
         }
       }
       const menu = tippy_esm_default(grid, {
@@ -30138,7 +30179,9 @@
                 </a>
                 <div class="sep" />
                 <button class="dropdown-menu-clickable-item" data-type="expand" onclick=${() => {
-          expand_avatar(image.src.replace("/avatar300s/", "/ar0/").replace("/500x500/", "ar0"));
+          expand_avatar(
+            image.src.replace("/avatar300s/", "/ar0/").replace("/500x500/", "ar0")
+          );
         }}>
                     ${tl2(trans2.expand)}
                 </button>
@@ -30162,8 +30205,7 @@
       });
       register_menu(grid, menu);
     });
-    if (page.subpage.startsWith("library"))
-      bleh_glacier_insights(insights);
+    if (page.subpage.startsWith("library")) bleh_glacier_insights(insights);
   }
 
   // src/components/select.js
