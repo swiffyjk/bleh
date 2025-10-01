@@ -3739,7 +3739,7 @@
             }
 
             & > .percent {
-                width: 300px;
+                width: fit-content;
                 text-align: right;
                 cursor: default;
                 color: hsl(var(--l3-c));

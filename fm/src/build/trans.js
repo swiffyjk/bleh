@@ -4747,8 +4747,13 @@ export const trans = {
             en: 'Choose which services to display for artists, albums, and tracks'
         }
     },
-    missing_keys: {
-        en: '{v} missing'
+    amount_translated: {
+        // number of strings translated
+        en: '{c} translated'
+    },
+    missing_translated: {
+        // number of strings missing
+        en: '{c} missing'
     }
 };
 

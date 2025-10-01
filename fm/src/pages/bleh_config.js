@@ -556,11 +556,19 @@ export async function render_setting_page(page_id) {
                                             }
                                             ${
                                                 language.percent ?
-                                                    html.node`
-                                                        <div class="percent">
-                                                            <p data-percent=${language.percent}>${language.percent}%</p>
-                                                        </div>
-                                                    `
+                                                    () => {
+                                                        const elem = html.node`
+                                                            <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
+                                                                ${language.percent}%
+                                                            </div>
+                                                        `;
+
+                                                        tippy(elem, {
+                                                            content: `${tl(trans.amount_translated, { c: language.translated })}, ${tl(trans.missing_translated, { c: language.missing })}`
+                                                        });
+
+                                                        return elem;
+                                                    }
                                                 :   ''
                                             }
                                             <div class="date">

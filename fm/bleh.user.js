@@ -47188,11 +47188,17 @@
                                                 <div class="new-badge">${tl2(trans2.new)}</div>
                                             </div>
                                             ` : html.node`<div class="badges"></div>`}
-                                            ${language.percent ? html.node`
-                                                        <div class="percent">
-                                                            <p data-percent=${language.percent}>${language.percent}%</p>
-                                                        </div>
-                                                    ` : ""}
+                                            ${language.percent ? () => {
+              const elem = html.node`
+                                                            <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
+                                                                ${language.percent}%
+                                                            </div>
+                                                        `;
+              tippy_esm_default(elem, {
+                content: `${tl2(trans2.amount_translated, { c: language.translated })}, ${tl2(trans2.missing_translated, { c: language.missing })}`
+              });
+              return elem;
+            } : ""}
                                             <div class="date">
                                                 <p ref=${(el) => date = el}>${language.last_updated != "latest" ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
                                             </div>
@@ -60345,8 +60351,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Choose which services to display for artists, albums, and tracks"
       }
     },
-    missing_keys: {
-      en: "{v} missing"
+    amount_translated: {
+      // number of strings translated
+      en: "{c} translated"
+    },
+    missing_translated: {
+      // number of strings missing
+      en: "{c} missing"
     }
   };
   var trans_legacy = {
