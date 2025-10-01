@@ -282,12 +282,14 @@ export const trans = {
         sv: 'visar en enda hojtning'
     },
     about: {
+        // about me panel
         en: 'About',
         de: 'Über',
         pt: 'Sobre',
         sv: 'Om'
     },
     no_about: {
+        // username
         en: '{u} is keeping quiet',
         de: '{u} ist wohl etwas schweigsam',
         pt: '{u} está bem quietinho',
@@ -4562,21 +4564,6 @@ export const trans = {
         sv: '{i} är inte tillgänglig på {p}'
     },
     platforms: {
-        win32: {
-            en: 'Windows'
-        },
-        darwin: {
-            en: 'macOS'
-        },
-        ios: {
-            en: 'iOS'
-        },
-        android: {
-            en: 'Android'
-        },
-        linux: {
-            en: 'Linux'
-        },
         other: {
             en: 'Unknown',
             de: 'Unbekannt',
@@ -4791,7 +4778,7 @@ export const trans = {
     rainbow: {
         name: {
             en: 'Rainbow',
-            de: 'Regenbogen',
+            de: 'Regenbogen'
         },
         body: {
             en: 'Arrange your listening history into a swirl of colours',
@@ -4802,7 +4789,7 @@ export const trans = {
     receipt: {
         name: {
             en: 'Receipt',
-            de: 'Quittung',
+            de: 'Quittung'
         },
         body: {
             en: 'Print out your top tracks as a receipt',
@@ -4979,6 +4966,7 @@ export const trans = {
         // notifications can include text with valuable info such as:
         // and 7 others replied to your shout on
         // this is searching for the word "replied"
+        // dont re-translate this, as its copied from last.fm
         en: 'replied',
         de: 'hat geantwortet',
         fr: 'a répondu',

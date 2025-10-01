@@ -37314,8 +37314,19 @@
       let disabled = false;
       let disabled_reason = "";
       if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
+        const platforms = {
+          win32: "Windows",
+          darwin: "macOS",
+          ios: "iOS",
+          android: "Android",
+          linux: "Linux",
+          other: tl2(trans2.platforms.other)
+        };
         disabled = true;
-        disabled_reason = tl2(trans2.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl2(trans2.platforms[page.platform]));
+        disabled_reason = tl2(trans2.item_is_unavailable_on_platform, {
+          i: title,
+          p: platforms[page.platform]
+        });
       }
       if (disabled && disabled_reason)
         return setting_fail(id, {
@@ -55888,12 +55899,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "visar en enda hojtning"
     },
     about: {
+      // about me panel
       en: "About",
       de: "\xDCber",
       pt: "Sobre",
       sv: "Om"
     },
     no_about: {
+      // username
       en: "{u} is keeping quiet",
       de: "{u} ist wohl etwas schweigsam",
       pt: "{u} est\xE1 bem quietinho",
@@ -60167,21 +60180,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "{i} \xE4r inte tillg\xE4nglig p\xE5 {p}"
     },
     platforms: {
-      win32: {
-        en: "Windows"
-      },
-      darwin: {
-        en: "macOS"
-      },
-      ios: {
-        en: "iOS"
-      },
-      android: {
-        en: "Android"
-      },
-      linux: {
-        en: "Linux"
-      },
       other: {
         en: "Unknown",
         de: "Unbekannt",
@@ -60584,6 +60582,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       // notifications can include text with valuable info such as:
       // and 7 others replied to your shout on
       // this is searching for the word "replied"
+      // dont re-translate this, as its copied from last.fm
       en: "replied",
       de: "hat geantwortet",
       fr: "a r\xE9pondu",
