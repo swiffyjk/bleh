@@ -61079,7 +61079,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function translation_stats() {
     const keys2 = collect_keys(trans2);
     for (const lang2 of Object.keys(lang_info)) {
-      if (lang2 == "en") continue;
       let translated = 0;
       const missing = [];
       for (const key of keys2) {

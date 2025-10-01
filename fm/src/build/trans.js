@@ -5419,8 +5419,6 @@ export function translation_stats() {
     const keys = collect_keys(trans);
 
     for (const lang of Object.keys(lang_info)) {
-        if (lang == 'en') continue;
-
         let translated = 0;
         const missing = [];
 
