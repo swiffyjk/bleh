@@ -350,6 +350,8 @@ export function convert_gif_to_png(url) {
 }
 
 export function control_gif_pause(image, override = false) {
+    if (!image) return;
+
     let processed = image.getAttribute('data-gif-pause');
     if (processed) return;
     image.setAttribute('data-gif-pause', 'true');

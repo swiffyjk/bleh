@@ -30405,7 +30405,7 @@
                     class="share-input"
                     ref=${(el) => input2 = el}
                 />
-                <button 
+                <button
                     class="btn primary icon copy"
                     onclick=${() => {
         input2.select();
@@ -30418,12 +30418,12 @@
                 >${tl2(trans2.copy)}</button>
             </div>
             <div class="share-links">
-                <a 
+                <a
                     href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
                     target="_blank"
                     class="share-link share-link-twitter"
                 >Twitter</a>
-                <a 
+                <a
                     href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
                     target="_blank"
                     class="share-link share-link-facebook"
@@ -42605,7 +42605,7 @@
         </section>
     `;
     const avatar_img = avatar3.querySelector(":scope > img");
-    cache3.avatar = avatar_img.src;
+    if (avatar_img) cache3.avatar = avatar_img.src;
     if (page.name == auth.name && !settings.profile_header_own) {
       register_background(null, "hidden");
     } else if (page.name != auth.name && !settings.profile_header_others) {
@@ -43994,7 +43994,8 @@
       { threshold: 0.3, rootMargin: "0px" }
     );
   }
-  function bleh_profile_chart_render(panel = page.structure.side.querySelector(".listen-profile-panel"), table = null) {
+  function bleh_profile_chart_render(panel = page.structure.side?.querySelector(".listen-profile-panel"), table = null) {
+    if (!panel) return;
     if (!table) table = panel.querySelector("table");
     if (!table) return;
     let entries2 = table.querySelectorAll("tbody tr");
