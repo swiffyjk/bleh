@@ -1578,7 +1578,7 @@ export const trans = {
             en: 'This {t} is being re-capitalised, is it correct?',
             de: 'Die Groß-/Kleinschreibung dieses {t} wird korrigiert, ist das korrekt?',
             pt: '{t} teve a capitalização ajustada, está correto?',
-            sv: 'Nurvarande {t} har ändrad kapitalisering, stämmer det här?'
+            sv: 'Nuvarande {t} har ändrad kapitalisering, stämmer det här?'
         },
         false: {
             en: 'Is this {t} capitalised correctly?',
