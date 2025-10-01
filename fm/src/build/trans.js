@@ -4935,7 +4935,6 @@ export const trans = {
         // and 7 others replied to your shout on
         // this is searching for the word "replied"
         en: 'replied',
-        // DE: singular: hat geantwortet, plural: haben geantwortet
         de: 'hat geantwortet',
         fr: 'a répondu',
         ja: '返信しました',
