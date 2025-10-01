@@ -374,7 +374,7 @@ export function append_nav() {
             theme: 'seasonal-swatch',
             content: html.node`
                 <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
-                <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
+                <span class="season-exclusive">${tl(trans.seasonal.notice)}</span>
             `
         });
     }

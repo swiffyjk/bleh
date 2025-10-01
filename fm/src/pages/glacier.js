@@ -4,12 +4,12 @@
 // Licensed under GPLv3
 //
 
-import { html } from 'lighterhtml';
+import { html, render } from 'lighterhtml';
 import { settings } from '../build/config';
 import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
 import { desanitise, sanitise, sanitise_text } from '../build/tools';
-import { tl, trans, trans_legacy } from '../build/trans';
+import { tl, trans } from '../build/trans';
 import { prep_chart_colours } from '../chart';
 import { correct_artist, correct_item_by_artist } from '../components/lotus';
 import { refresh_all } from '../config';
@@ -29,18 +29,11 @@ export function bleh_user_library() {
     //let date_button_panel = document.createElement('section');
     //date_button_panel.classList.add('date-button-panel');
 
-    let date_panel = document.createElement('section');
-    date_panel.classList.add('date-panel');
-    date_panel.setAttribute(
-        'data-glacier-graphs',
-        settings.glacier_library_graphs
-    );
+    let date_panel = html.node`
+        <section class="date-panel" data-glacier-graphs=${settings.glacier_library_graphs} />
+    `;
 
     date_items.forEach((item, index) => {
-        /*if (index == 0)
-            date_button_panel.appendChild(item);
-        else
-            date_panel.appendChild(item);*/
         date_panel.appendChild(item);
 
         if (item.classList.contains('row')) item.classList = 'date-selector';
@@ -48,7 +41,6 @@ export function bleh_user_library() {
         if (index == 0) page.structure.glacier.selector = item;
     });
 
-    //page.structure.side.appendChild(date_button_panel);
     if (date_items.length > 0) {
         if (!page.mobile) page.structure.side.appendChild(date_panel);
         else
@@ -870,12 +862,14 @@ function bleh_glacier_insights_generate(type, item) {
         `.scrobble-insights-panel[data-type="${type}"]`
     );
     if (!scrobble_insights_panel) {
-        scrobble_insights_panel = document.createElement('section');
-        scrobble_insights_panel.classList.add('scrobble-insights-panel');
-        scrobble_insights_panel.setAttribute('data-type', type);
+        scrobble_insights_panel = html.node`
+            <section class="scrobble-insights-panel" data-type=${type} />
+        `;
         new_run = true;
     }
-    scrobble_insights_panel.innerHTML = `<h2>${trans_legacy.en[type].plural}</h2>`;
+
+    // converts to plural
+    render(scrobble_insights_panel, html` <h2>${tl(trans[`${type}s`])}</h2> `);
 
     let scrobble_canvas_container = document.createElement('div');
     scrobble_canvas_container.classList.add(
@@ -1279,7 +1273,7 @@ function bleh_glacier_library_focused() {
                     ${tl(trans[type])}
                 </div>
                 <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                    <a href="${link}">${type == 'artist' ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${type != 'artist' ? html`${{ html: trans_legacy.en.glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>`) }}` : ''}
+                    <a href="${link}">${type == 'artist' ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${type != 'artist' ? html`${{ html: tl(trans.by_artist, { a: `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>` }) }}` : ''}
                 </div>
             </div>
         </div>
@@ -1342,8 +1336,6 @@ function bleh_glacier_library_focused() {
                 if (action == 'EditScrobbleOpen') {
                     button.textContent = tl(trans.edit);
                 } else if (action == 'UnloveTrack' || action == 'LoveTrack') {
-                    //button.textContent = trans_legacy.en.glacier.love;
-
                     let listen_divider = document.createElement('div');
                     listen_divider.classList.add('listen-divider');
                     view_buttons.appendChild(listen_divider);
@@ -1535,7 +1527,7 @@ export function bleh_glacier_library_bulk_edit() {
         'glacier-library-button',
         'bulk-edit-button'
     );
-    bulk_edit.textContent = trans_legacy.en.glacier.bulk_edit;
+    bulk_edit.textContent = tl(trans.bulk_edit);
 
     if (!edit_form) view_buttons.insertBefore(bulk_edit, delete_button);
     else view_buttons.insertBefore(bulk_edit, edit_form);

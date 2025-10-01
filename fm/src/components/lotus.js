@@ -14,7 +14,7 @@ import {
 } from '../build/music';
 import { page, root } from '../build/page';
 import { return_artist_from_generic, romanise, sanitise } from '../build/tools';
-import { tl, trans, trans_legacy } from '../build/trans';
+import { tl, trans } from '../build/trans';
 import { prepare_corrections_page } from '../pages/bleh_config';
 import { dialog, dialog_rm } from './dialog';
 import { html, render } from 'lighterhtml';
@@ -165,11 +165,11 @@ unsafeWindow._lotus_check = function () {
 unsafeWindow._open_correction_modal = function () {
     dialog({
         id: 'corrections',
-        title: trans_legacy.en.settings.corrections.name,
+        title: tl(trans.music_corrections),
         body: html.node`
-            <h4>${trans_legacy.en.settings.corrections.listing.artists}</h4>
+            <h4>${tl(trans.artists)}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
-            <h4>${trans_legacy.en.settings.corrections.listing.albums_tracks}</h4>
+            <h4>${tl(trans.albums_and_tracks)}</h4>
             <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
         `,
         has_close: true,

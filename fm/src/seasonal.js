@@ -12,7 +12,7 @@ import {
     seasonal_timer,
     stored_season
 } from './build/seasonal';
-import { tl, trans, trans_legacy } from './build/trans';
+import { tl, trans } from './build/trans';
 import { load_chart_colours } from './chart';
 import { notify } from './components/notify';
 import { html } from 'lighterhtml';
@@ -233,7 +233,7 @@ export function seasonal_timer_start(bypass = false) {
 
     page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
-        <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
+        <span class="season-exclusive">${tl(trans.seasonal.live)}</span>
     `);
 
     page.header.season.classList.add('live');
@@ -251,7 +251,7 @@ export function seasonal_timer_end() {
 
     page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
-        <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
+        <span class="season-exclusive">${tl(trans.seasonal.notice)}</span>
     `);
 
     page.header.season.classList.remove('live');
@@ -283,7 +283,7 @@ function update_season_nav() {
 
         page.header.season_tooltip.setContent(html.node`
             <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
-            <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
+            <span class="season-exclusive">${tl(trans.seasonal.live)}</span>
         `);
     }
 }

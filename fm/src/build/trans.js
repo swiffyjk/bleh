@@ -44,6 +44,11 @@ export let lang_info = {
 
 export const trans = {
     page_templates: {
+        // these are used for browser tab titles
+        // {page} is something like 'Home' or 'Profile'
+        // {name} and {sister} is something like a profile name
+        // {brand} is bleh
+        // {build} and {sku} are version numbers
         type: {
             en: '{page} on {brand} {build}.{sku}',
             de: '{page} auf {brand} {build}.{sku}',
@@ -80,7 +85,10 @@ export const trans = {
         },
         'user-status-subscriber': {
             name: {
-                en: 'Last.fm Pro'
+                en: 'Last.fm Pro',
+                de: 'Last.fm Pro',
+                pt: 'Last.fm Pro',
+                sv: 'Last.fm Pro'
             },
             reason: {
                 en: 'Active Pro subscription',
@@ -595,6 +603,9 @@ export const trans = {
         ja: 'アルバム',
         sv: 'Album'
     },
+    albums_and_tracks: {
+        en: 'Albums and tracks'
+    },
     album_artist: {
         en: 'Album Artist',
         sv: 'Albumartist'
@@ -845,6 +856,12 @@ export const trans = {
                 pt: 'Ano Novo',
                 sv: 'Nyår'
             }
+        },
+        notice: {
+            en: 'Open the live counter'
+        },
+        live: {
+            en: 'Counter is updating live'
         }
     },
     new_season: {
@@ -1061,7 +1078,15 @@ export const trans = {
         en: 'News',
         de: 'Neuigkeiten',
         pt: 'Notícias',
-        sv: 'Nytt'
+        sv: 'Nytt',
+        type: {
+            major: {
+                en: 'Major release'
+            },
+            minor: {
+                en: 'Minor release'
+            }
+        }
     },
     news_from_user: {
         en: 'News from {user}',
@@ -1363,6 +1388,12 @@ export const trans = {
         de: 'Cover',
         pt: 'Arte de capa',
         sv: 'Konst'
+    },
+    gallery_sum: {
+        en: 'This is the sum of votes for ordering'
+    },
+    view_saved: {
+        en: 'View all saved photos'
     },
     dropzone: {
         en: 'Drag-and-drop an image or click here'
@@ -2489,6 +2520,9 @@ export const trans = {
         pt: 'Procurar atualizações',
         sv: 'Kolla efter uppdateringar'
     },
+    redirected_from: {
+        en: 'Redirected from'
+    },
     music_corrections: {
         en: 'Music corrections',
         pt: 'Correções de música',
@@ -3469,8 +3503,14 @@ export const trans = {
     title: {
         en: 'Title'
     },
+    no_title: {
+        en: 'No title'
+    },
     description: {
         en: 'Description'
+    },
+    no_description: {
+        en: 'No description'
     },
     change_avatar: {
         en: 'Change avatar',
@@ -3508,6 +3548,9 @@ export const trans = {
         en: 'Saved',
         pt: 'Salvo',
         sv: 'Sparade'
+    },
+    remove_save: {
+        en: 'Remove save'
     },
     no_images_saved: {
         en: 'No photos saved',

@@ -20289,14 +20289,6 @@
       document.body.appendChild(notification_host);
     }
   }
-  function deliver_notif(content, persist = false, has_icon = false, append_class = null, action = "") {
-    return notify({
-      id: "legacy_notification",
-      title: content,
-      icon: "icon-16-info",
-      classname: append_class
-    });
-  }
   function notify({
     id,
     title,
@@ -20337,7 +20329,7 @@
     actions.push({
       type: "close",
       action: () => notify_rm(notif),
-      text: tl(trans.close)
+      text: tl2(trans2.close)
     });
     if (progress && persist) persist = false;
     let information;
@@ -27930,7 +27922,7 @@
       log("copied", "copy", "info", { text: text3 });
       notify({
         id: "copy",
-        title: tl(trans.copied_to_clipboard),
+        title: tl2(trans2.copied_to_clipboard),
         icon: "icon-16-copy"
       });
     });
@@ -28832,8 +28824,7 @@
       colourful_bg,
       handle_escape_manually
     });
-    if (replace && replace_if_possible)
-      replace_if_possible = false;
+    if (replace && replace_if_possible) replace_if_possible = false;
     if (replace_if_possible && Object.keys(dialogs).length > 0) {
       replace = true;
       for (let dialog2 in dialogs) {
@@ -28868,7 +28859,10 @@
       modal_close.classList.add("modal-close-button");
       modal_close.setAttribute("onclick", `_dialog_rm({id: "${id}"})`);
       modal.appendChild(modal_close);
-      page.structure.dialogs.setAttribute("onclick", "_dialog_rm({all: true, modal_bg: true})");
+      page.structure.dialogs.setAttribute(
+        "onclick",
+        "_dialog_rm({all: true, modal_bg: true})"
+      );
     } else {
       page.structure.dialogs.removeAttribute("onclick");
     }
@@ -28907,16 +28901,11 @@
       modal_bg
     });
   };
-  function dialog_rm({
-    id,
-    all = false,
-    modal_bg = false
-  }) {
+  function dialog_rm({ id, all = false, modal_bg = false }) {
     if (all) {
       if (modal_bg) {
         console.log(event);
-        if (event.target.classList[0] != "bleh-modals")
-          return;
+        if (event.target.classList[0] != "bleh-modals") return;
       }
       log("requested kill all", "window");
       console.info(dialogs);
@@ -28931,8 +28920,7 @@
     if (!page.structure.dialogs) return;
     if (dialogs.hasOwnProperty(id)) {
       let dialog2 = dialogs[id];
-      if (!page.structure.dialogs.contains(dialog2.instance))
-        return;
+      if (!page.structure.dialogs.contains(dialog2.instance)) return;
       log(`queuing ${id} to kill`, "window");
       dialog2.instance.classList.add("to-remove");
       setTimeout(function() {
@@ -28944,30 +28932,6 @@
       }
     }
   }
-  function kill_window(id, replacing = false) {
-    try {
-      if (replacing) {
-        log(`killed ${id}`, "window");
-        document.body.removeChild(document.getElementById(`bleh--window-${id}--background`));
-        document.body.removeChild(document.getElementById(`bleh--window-${id}--wrapper`));
-      } else {
-        log(`queuing ${id} to kill`, "window");
-        let background = document.getElementById(`bleh--window-${id}--background`);
-        let window2 = document.getElementById(`bleh--window-${id}--wrapper`);
-        background.classList.add("window-removing");
-        window2.classList.add("window-removing");
-        setTimeout(function() {
-          document.body.removeChild(background);
-          document.body.removeChild(window2);
-        }, 270);
-      }
-    } catch (e) {
-      log(`kill failed, ${id} does not exist`, "window");
-    }
-  }
-  unsafeWindow._kill_window = function(id) {
-    kill_window(id);
-  };
 
   // src/sku.js
   function ff(flag) {
@@ -29066,7 +29030,7 @@
           }
           if (notify2)
             status({
-              title: tl(trans.downloaded_value).replace("{v}", tl(trans.sponsor_details))
+              title: tl2(trans2.downloaded_value).replace("{v}", tl2(trans2.sponsor_details))
             });
           localStorage.setItem("kat_sponsors", this.response);
         }
@@ -29088,22 +29052,22 @@
   function sponsor(replace = false) {
     dialog({
       id: "sponsor",
-      title: tl(trans.support_future_development),
+      title: tl2(trans2.support_future_development),
       body: html.node`
             <div class="modal-vertical-inner support-inner">
                 <div class="avatar">
-                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans2.your_avatar)}">
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
-                <h1>${tl(trans.support_future_development)}</h1>
+                <h1>${tl2(trans2.support_future_development)}</h1>
                 <p>${html.node([
-        tl(trans.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
+        tl2(trans2.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
       ])}</p>
             </div>
             <div class="modal-footer">
                 <div class="fill"></div>
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
-                    ${tl(trans.sponsor)}
+                    ${tl2(trans2.sponsor)}
                 </a>
                 <div class="fill"></div>
             </div>
@@ -29119,15 +29083,15 @@
     if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
       dialog({
         id: "sponsor_manage",
-        title: tl(trans.sponsor),
+        title: tl2(trans2.sponsor),
         body: html.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans2.your_avatar)}">
                         <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                     </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_no_badge)}</p>
+                    <h1>${tl2(trans2.you_are_a_sponsor)}</h1>
+                    <p>${tl2(trans2.sponsor_no_badge)}</p>
                 </div>
             `,
         type: "sponsor"
@@ -29135,20 +29099,20 @@
     } else {
       dialog({
         id: "sponsor_manage",
-        title: tl(trans.sponsor),
+        title: tl2(trans2.sponsor),
         body: html.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans2.your_avatar)}">
                         <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                     </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_get_badge)}</p>
+                    <h1>${tl2(trans2.you_are_a_sponsor)}</h1>
+                    <p>${tl2(trans2.sponsor_get_badge)}</p>
                 </div>
                 <div class="modal-footer">
                     <div class="fill"></div>
                     <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
-                        ${tl(trans.manage_sponsor)}
+                        ${tl2(trans2.manage_sponsor)}
                     </a>
                     <div class="fill"></div>
                 </div>
@@ -29196,23 +29160,23 @@
     badges.forEach((badge) => {
       badge.user = user;
       if (!badge.name) {
-        if (trans.badges[badge.type]) {
-          badge.name = tl(trans.badges[badge.type].name);
+        if (trans2.badges[badge.type]) {
+          badge.name = tl2(trans2.badges[badge.type].name);
         } else {
-          badge.name = tl(trans.unavailable);
-          badge.reason = tl(trans.requires_higher_bleh_version);
+          badge.name = tl2(trans2.unavailable);
+          badge.reason = tl2(trans2.requires_higher_bleh_version);
         }
       }
-      if (trans.badges[badge.type] && trans.badges[badge.type].reason)
-        badge.reason = tl(trans.badges[badge.type].reason);
-      else if (badge.reason && trans.badges[badge.reason] && trans.badges[badge.reason].reason)
-        badge.reason = tl(trans.badges[badge.reason].reason);
+      if (trans2.badges[badge.type] && trans2.badges[badge.type].reason)
+        badge.reason = tl2(trans2.badges[badge.type].reason);
+      else if (badge.reason && trans2.badges[badge.reason] && trans2.badges[badge.reason].reason)
+        badge.reason = tl2(trans2.badges[badge.reason].reason);
       if (badge.reason) return;
       if (badge.type == "sponsor" || badge.type == "contributor")
         badge.reason = badge.type;
       else if (badge.type == "cute" || badge.type == "queen")
-        badge.reason = tl(trans.badges.cute.reason);
-      else badge.reason = tl(trans.badges.reserved.reason);
+        badge.reason = tl2(trans2.badges.cute.reason);
+      else badge.reason = tl2(trans2.badges.reserved.reason);
     });
     log("final badge list", "sponsor", "info", badges);
     return badges;
@@ -29408,7 +29372,7 @@
         view.level = "manual";
         tooltip.show();
       }}>
-                ${tl(trans.manual_date)}
+                ${tl2(trans2.manual_date)}
             </button>
         `,
       placement: "right-start",
@@ -29436,7 +29400,7 @@
         inner = render_day_view();
       }
       tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
-      if (date_button) tippy_esm_default(date_button, { content: tl(trans.change_zoom) });
+      if (date_button) tippy_esm_default(date_button, { content: tl2(trans2.change_zoom) });
       if (manual_button)
         tippy_esm_default(manual_button, { content: manual_button.textContent });
       if (up_button) tippy_esm_default(up_button, { content: up_button.textContent });
@@ -29454,7 +29418,7 @@
         view.level = "manual";
         render_popup();
       }}>
-                    ${tl(trans.manual)}
+                    ${tl2(trans2.manual)}
                 </button>
                 <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled=${!can_prev()} type="button" onclick=${() => {
         if (!can_prev()) return;
@@ -29466,7 +29430,7 @@
         last_action = "prev";
         render_popup();
       }}>
-                    ${tl(trans.back)}
+                    ${tl2(trans2.back)}
                 </button>
                 <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled=${!can_next()} type="button" onclick=${() => {
         if (!can_next()) return;
@@ -29478,7 +29442,7 @@
         last_action = "next";
         render_popup();
       }}>
-                    ${tl(trans.next)}
+                    ${tl2(trans2.next)}
                 </button>
             </div>
             <div class="date-header">
@@ -29514,7 +29478,7 @@
         view.level = "manual";
         render_popup();
       }}>
-                    ${tl(trans.manual)}
+                    ${tl2(trans2.manual)}
                 </button>
                 <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} type="button" disabled=${view.year <= min_year} onclick=${() => {
         if (view.year < min_year) return;
@@ -29522,7 +29486,7 @@
         last_action = "prev";
         render_popup();
       }}>
-                    ${tl(trans.back)}
+                    ${tl2(trans2.back)}
                 </button>
                 <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} type="button" disabled=${view.year >= max_year} onclick=${() => {
         if (view.year > max_year) return;
@@ -29530,7 +29494,7 @@
         last_action = "next";
         render_popup();
       }}>
-                    ${tl(trans.next)}
+                    ${tl2(trans2.next)}
                 </button>
             </div>
             <div class="months" data-last-action=${last_action}>
@@ -29575,21 +29539,21 @@
         view.level = "manual";
         render_popup();
       }}>
-                    ${tl(trans.manual)}
+                    ${tl2(trans2.manual)}
                 </button>
                 <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled=${decade_start - 10 < min_year} onclick=${() => {
         if (decade_start - 10 < min_year) return;
         view.year -= 10;
         render_popup();
       }}>
-                    ${tl(trans.back)}
+                    ${tl2(trans2.back)}
                 </button>
                 <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled=${decade_start + 10 > max_year} onclick=${() => {
         if (decade_start + 10 > max_year) return;
         view.year += 10;
         render_popup();
       }}>
-                    ${tl(trans.next)}
+                    ${tl2(trans2.next)}
                 </button>
             </div>
             <div class="years">
@@ -29625,17 +29589,17 @@
       let elem = html.node`
             <div class="calendar-header">
                 <button class="month-year" ref=${(el) => date_button = el} onclick=${on_month_year_click}>
-                    ${tl(trans.manual)}
+                    ${tl2(trans2.manual)}
                 </button>
                 <div class="fill" />
                 <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" disabled>
-                    ${tl(trans.manual)}
+                    ${tl2(trans2.manual)}
                 </button>
                 <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled>
-                    ${tl(trans.back)}
+                    ${tl2(trans2.back)}
                 </button>
                 <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled>
-                    ${tl(trans.next)}
+                    ${tl2(trans2.next)}
                 </button>
             </div>
             <div class="manual">
@@ -29661,9 +29625,9 @@
           render_popup();
         }
       })}
-                <p>${tl(trans.enter_a_manual_date)}</p>
-                <p>${tl(trans.minimum_value).replace("{v}", `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
-                <p>${tl(trans.maximum_value).replace("{v}", `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
+                <p>${tl2(trans2.enter_a_manual_date)}</p>
+                <p>${tl2(trans2.minimum_value).replace("{v}", `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
+                <p>${tl2(trans2.maximum_value).replace("{v}", `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
             </div>
         `;
       manual_date.focus();
@@ -29834,20 +29798,20 @@
       error_tooltip.disable();
       if (type != "number" && !skip_most) {
         if (input_box.value == "" && warn_if_empty) {
-          error_input2(tl(trans.this_field_is_required));
+          error_input2(tl2(trans2.this_field_is_required));
         } else if (input_box.value.length > maxlength) {
-          error_input2(tl(trans.keep_within_the_range));
+          error_input2(tl2(trans2.keep_within_the_range));
         } else if (warn_if_matches_auth && input_box.value == auth.name) {
-          error_input2(tl(trans.please_dont_clone_yourself));
+          error_input2(tl2(trans2.please_dont_clone_yourself));
         } else if (warn_if_not_matching_lower != "" && input_box.value.toLowerCase() != warn_if_not_matching_lower) {
-          error_input2(tl(trans.please_match_the_format));
+          error_input2(tl2(trans2.please_match_the_format));
         }
       }
       if (type == "number" && !skip_most) {
         if (input_box.value == "") {
-          error_input2(tl(trans.only_numbers_are_allowed));
+          error_input2(tl2(trans2.only_numbers_are_allowed));
         } else if (parseInt(input_box.value) > max2 || parseInt(input_box.value) < min2) {
-          error_input2(tl(trans.keep_within_the_range));
+          error_input2(tl2(trans2.keep_within_the_range));
         }
       } else if (type == "colour") {
         if (!input_box.value.startsWith("#"))
@@ -30020,7 +29984,7 @@
         plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
       }
       if (plays_elem && !grid.classList.contains("obsessions-item") && !grid.classList.contains("compare-item")) {
-        let plays = clean_number(plays_elem.textContent.trim().replace(`${tl(trans.plays_lower)}`, ""));
+        let plays = clean_number(plays_elem.textContent.trim().replace(`${tl2(trans2.plays_lower)}`, ""));
         plays_elem.classList.add("grid-item-plays");
         if (is_album)
           plays_elem.textContent = plays.toLocaleString(lang);
@@ -30088,7 +30052,7 @@
                     ${() => {
           return html.node`
                             <a class="dropdown-menu-clickable-item" data-type="artist" href=${name.getAttribute("href")}>
-                                ${tl(trans.artist)}
+                                ${tl2(trans2.artist)}
                             </a>
                         `;
         }}
@@ -30096,11 +30060,11 @@
                     ${() => {
           let button = html.node`
                             <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${name.getAttribute("href")}">
-                                ${tl(trans.explore_in_library)}
+                                ${tl2(trans2.explore_in_library)}
                             </a>
                         `;
           tippy_esm_default(button, {
-            content: tl(trans.explore_in_library),
+            content: tl2(trans2.explore_in_library),
             delay: [500, 0],
             appendTo: document.body
           });
@@ -30112,7 +30076,7 @@
                     ${() => {
           return html.node`
                             <a class="dropdown-menu-clickable-item" data-type="album" href=${name.getAttribute("href")}>
-                                ${tl(trans.album)}
+                                ${tl2(trans2.album)}
                             </a>
                         `;
         }}
@@ -30120,11 +30084,11 @@
                     ${() => {
           let button = html.node`
                             <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${name.getAttribute("href")}">
-                                ${tl(trans.explore_in_library)}
+                                ${tl2(trans2.explore_in_library)}
                             </a>
                         `;
           tippy_esm_default(button, {
-            content: tl(trans.explore_in_library),
+            content: tl2(trans2.explore_in_library),
             delay: [500, 0],
             appendTo: document.body
           });
@@ -30135,7 +30099,7 @@
                     ${() => {
           return html.node`
                             <a class="dropdown-menu-clickable-item" data-type="artist" href=${artist.getAttribute("href")}>
-                                ${tl(trans.artist)}
+                                ${tl2(trans2.artist)}
                             </a>
                         `;
         }}
@@ -30143,11 +30107,11 @@
                     ${() => {
           let button = html.node`
                             <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${artist.getAttribute("href")}">
-                                ${tl(trans.explore_in_library)}
+                                ${tl2(trans2.explore_in_library)}
                             </a>
                         `;
           tippy_esm_default(button, {
-            content: tl(trans.explore_in_library),
+            content: tl2(trans2.explore_in_library),
             delay: [500, 0],
             appendTo: document.body
           });
@@ -30156,32 +30120,32 @@
                 </div>
                 `}
                 <a class="dropdown-menu-clickable-item" data-type="gallery" href="${name.getAttribute("href")}/+images">
-                    ${is_album ? tl(trans.artwork) : tl(trans.photos)}
+                    ${is_album ? tl2(trans2.artwork) : tl2(trans2.photos)}
                 </a>
                 <a class="dropdown-menu-clickable-item" data-type="wiki" href="${name.getAttribute("href")}/+wiki">
-                    ${is_album ? tl(trans.wiki) : tl(trans.biography)}
+                    ${is_album ? tl2(trans2.wiki) : tl2(trans2.biography)}
                 </a>
                 ${!is_album ? html.node`
                 <a class="dropdown-menu-clickable-item" data-type="listeners" href="${name.getAttribute("href")}/+listeners/you-know">
-                    ${tl(trans.listeners)}
+                    ${tl2(trans2.listeners)}
                 </a>
                 ` : ""}
                 <a class="dropdown-menu-clickable-item" data-type="shouts" href="${name.getAttribute("href")}/+shoutbox">
-                    ${tl(trans.shouts)}
+                    ${tl2(trans2.shouts)}
                 </a>
                 <a class="dropdown-menu-clickable-item" data-type="tags" href="${name.getAttribute("href")}/+tags">
-                    ${tl(trans.tags)}
+                    ${tl2(trans2.tags)}
                 </a>
                 <div class="sep" />
                 <button class="dropdown-menu-clickable-item" data-type="expand" onclick=${() => {
           expand_avatar(image.src.replace("/avatar300s/", "/ar0/").replace("/500x500/", "ar0"));
         }}>
-                    ${tl(trans.expand)}
+                    ${tl2(trans2.expand)}
                 </button>
                 <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
           copy(name.href);
         }}>
-                    ${tl(trans.copy)}
+                    ${tl2(trans2.copy)}
                 </button>
             `,
         placement: "right-start",
@@ -30389,7 +30353,7 @@
     let input2;
     dialog({
       id: "share",
-      title: tl(trans.share),
+      title: tl2(trans2.share),
       body: html.node`
             <div class="share-top content-form">
                 <input
@@ -30405,11 +30369,11 @@
         input2.select();
         document.execCommand("copy");
         notify({
-          title: tl(trans.copied_to_clipboard),
+          title: tl2(trans2.copied_to_clipboard),
           icon: "icon-16-copy"
         });
       }}
-                >${tl(trans.copy)}</button>
+                >${tl2(trans2.copy)}</button>
             </div>
             <div class="share-links">
                 <a 
@@ -30437,7 +30401,7 @@
     link.click();
     notify({
       id: "downloaded",
-      title: tl(trans.downloaded),
+      title: tl2(trans2.downloaded),
       body: filename,
       icon: "icon-16-download"
     });
@@ -30490,7 +30454,7 @@
     let image_date = image_details.querySelector(".gallery-image-uploaded-by");
     if (image_title.textContent.trim() == "") {
       image_title.classList.add("gallery-image-title-empty");
-      image_title.textContent = trans_legacy.en.gallery.empty.title;
+      image_title.textContent = tl2(trans2.no_title);
     }
     let breadcrumbs = document.body.querySelector(".content-top-lower-row");
     let breadcrumb_root = breadcrumbs.querySelector("a");
@@ -30526,7 +30490,7 @@
         "gallery-image-description",
         "gallery-image-description-empty"
       );
-      description.textContent = trans_legacy.en.gallery.empty.description;
+      description.textContent = tl2(trans2.no_description);
       image_details.querySelector("[data-image-url]").appendChild(description);
     }
     let buttons = image_details.querySelector(".gallery-image-buttons");
@@ -30535,26 +30499,21 @@
     button_container.appendChild(buttons);
     let vote_buttons = buttons.querySelector(".gallery-image-vote-buttons");
     vote_buttons.after(create_divider());
-    let positive_btn = vote_buttons.querySelector(
+    const positive_btn = vote_buttons.querySelector(
       ':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)'
     ).cloneNode(true);
-    let negative_btn = vote_buttons.querySelector(
+    const negative_btn = vote_buttons.querySelector(
       ':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)'
     ).cloneNode(true);
-    let positive = parseInt(
-      positive_btn.textContent.replace(trans_legacy.en.gallery.up, "")
-    );
-    let negative = parseInt(
-      negative_btn.textContent.replace(trans_legacy.en.gallery.down, "")
-    );
-    let number = positive - negative;
-    let is_negative = number < 0;
-    console.info(positive_btn, positive, negative_btn, negative, number);
+    const positive = parseInt(positive_btn.lastChild.textContent.trim());
+    const negative = parseInt(negative_btn.lastChild.textContent.trim());
+    const number = positive - negative;
+    const is_negative = number < 0;
     let vote_badge = image_title_container.querySelector(".vote-number");
     vote_badge.textContent = `${is_negative ? "" : "+"}${number}`;
     vote_badge.setAttribute("data-side", is_negative ? "neg" : "pos");
     tippy_esm_default(vote_badge, {
-      content: trans_legacy.en.gallery.vote
+      content: tl2(trans2.gallery_sum)
     });
     let buttons_extra = document.createElement("div");
     buttons_extra.classList.add(
@@ -30565,16 +30524,16 @@
     image_details.appendChild(button_container);
     let open_button = html.node`
         <button class="image-open-button" onclick=${() => expand_gallery_image()}>
-            ${tl(trans.expand)}
+            ${tl2(trans2.expand)}
         </button>
     `;
     tippy_esm_default(open_button, {
-      content: tl(trans.expand_to_full_resolution)
+      content: tl2(trans2.expand_to_full_resolution)
     });
     buttons_extra.appendChild(open_button);
     let share_button = html.node`
         <button class="image-share-button" onclick=${() => share(window.location.href)}>
-            ${tl(trans.share)}
+            ${tl2(trans2.share)}
         </button>
     `;
     buttons_extra.appendChild(share_button);
@@ -30588,7 +30547,7 @@
     tippy_esm_default(report_text, {
       content: report_text.textContent
     });
-    report_text.textContent = tl(trans.report);
+    report_text.textContent = tl2(trans2.report);
     buttons_extra.appendChild(report_button);
     let star_buttons = image_details.querySelectorAll(
       ".gallery-image-preferred-button :is(button, a)"
@@ -30596,7 +30555,7 @@
     star_buttons.forEach((star_button) => {
       star_button.removeAttribute("title");
       let text3 = star_button.querySelector(".gallery-image-preferred-states");
-      text3.textContent = tl(trans.star);
+      text3.textContent = tl2(trans2.star);
     });
     let view_all_container = page.structure.main.querySelector(
       ".more-link-fullwidth-right-flush-top"
@@ -30619,7 +30578,7 @@
           `${view_all.getAttribute("href")}?tab=saved`
         );
         view_saved.setAttribute("data-type", "gallery-saved");
-        view_saved.textContent = trans_legacy.en.gallery.bookmarks.link;
+        view_saved.textContent = tl2(trans2.view_saved);
         side_actions.appendChild(view_saved);
       }
     }
@@ -30689,7 +30648,7 @@
     }
     const panel = html.node`
         <section class="gallery-upload-panel bleh--panel">
-            <h4>${tl(trans.image_details)}</h4>
+            <h4>${tl2(trans2.image_details)}</h4>
             <form method="post" action=${form.getAttribute("action")} enctype=${form.getAttribute("enctype")}>
                 ${token}
                 <div style="display: none">
@@ -30698,7 +30657,7 @@
                 <div class="setting-group">
                     <div class="setting" data-type="text">
                         <div class="heading">
-                            <h5>${tl(trans.title)}</h5>
+                            <h5>${tl2(trans2.title)}</h5>
                         </div>
                         <div class="input-container content-form wide">
                             ${title}
@@ -30706,7 +30665,7 @@
                     </div>
                     <div class="setting" data-type="text">
                         <div class="heading">
-                            <h5>${tl(trans.description)}</h5>
+                            <h5>${tl2(trans2.description)}</h5>
                         </div>
                         <div class="input-container content-form textarea">
                             ${description}
@@ -30715,7 +30674,7 @@
                 </div>
                 <div class="settings-footer end">
                     <button class="btn primary icon" data-type="upload" type="submit">
-                        ${tl(trans.upload)}
+                        ${tl2(trans2.upload)}
                     </button>
                 </div>
             </form>
@@ -30730,7 +30689,7 @@
             <div class="dropzone" ref=${(el) => dropzone = el} onclick=${() => {
         file_input.click();
       }}>
-                <div class="dropzone-message">${tl(trans.dropzone)}</div>
+                <div class="dropzone-message">${tl2(trans2.dropzone)}</div>
                 <div class="card-tip">${formats.textContent}</div>
             </div>
             <div class="gallery-image-container" ref=${(el) => container = el}>
@@ -30850,12 +30809,12 @@
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
                         <a class="secondary-nav-item-link" onclick=${() => gallery_tab("all")}>
-                            ${tl(trans.photos)}
+                            ${tl2(trans2.photos)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
                         <a class="secondary-nav-item-link" onclick=${() => gallery_tab("saved")}>
-                            ${tl(trans.saved)}
+                            ${tl2(trans2.saved)}
                         </a>
                     </li>
                 </ul>
@@ -30887,7 +30846,7 @@
             theme: "context-menu",
             content: html.node`
                         <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
-                            ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
+                            ${tl2(trans2.remove_save)}
                         </button>
                     `,
             placement: "right-start",
@@ -30919,7 +30878,7 @@
         html`
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">
-                        ${tl(trans.no_images_saved)}
+                        ${tl2(trans2.no_images_saved)}
                     </div>
                 </div>
             `
@@ -30941,40 +30900,16 @@
         log("focused is bookmarked", "gallery");
       }
     }
-    let gallery_bookmark_button = document.createElement("button");
-    gallery_bookmark_button.classList.add(
-      "bleh--gallery-bookmark-image-btn",
-      "btn--has-icon"
-    );
-    gallery_bookmark_button.setAttribute(
-      "data-bleh--image-is-bookmarked",
-      image_is_bookmarked
-    );
-    gallery_bookmark_button.setAttribute(
-      "onclick",
-      `_update_image_bookmark(this, '${focused_image_id}')`
-    );
-    gallery_bookmark_button.textContent = trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.name;
-    unsafeWindow.bookmark_tooltip = tippy_esm_default(gallery_bookmark_button, {
-      content: image_is_bookmarked ? trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.bio : trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.bio
-    });
-    gallery_interactions.appendChild(gallery_bookmark_button);
+    const save_btn = html.node`
+        <button class="bleh--gallery-bookmark-image-btn btn--has-icon" data-bleh--image-is-bookmarked=${image_is_bookmarked} onclick=${() => update_image_bookmark(save_btn, focused_image_id)}>
+            ${tl2(trans2.save)}
+        </button>
+    `;
+    gallery_interactions.appendChild(save_btn);
   }
-  unsafeWindow._update_image_bookmark = function(button, id, tooltip = true) {
-    update_image_bookmark(button, id, tooltip);
-  };
-  function update_image_bookmark(button, id, tooltip = true) {
+  function update_image_bookmark(button, id) {
     let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    let is_bookmarked = button.getAttribute("data-bleh--image-is-bookmarked") === "true";
-    if (tooltip) {
-      unsafeWindow.bookmark_tooltip.setContent(
-        !is_bookmarked ? trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.bio : trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.bio
-      );
-    } else {
-      button = page.structure.container.querySelector(
-        `[data-image-id="${id}"]`
-      );
-    }
+    let is_bookmarked = button.getAttribute("data-bleh--image-is-bookmarked") == "true";
     if (!bookmarked_images.hasOwnProperty(page.name))
       bookmarked_images[page.name] = [];
     if (is_bookmarked) {
@@ -31005,7 +30940,7 @@
   function open_profile_shortcut_window() {
     let modal = dialog({
       id: "profile_shortcut",
-      title: tl(trans.profile_shortcut.name),
+      title: tl2(trans2.profile_shortcut.name),
       body: html.node`
             ${setting({ id: "profile_shortcut", text: false, focus: true, standalone: true })}
         `
@@ -31020,7 +30955,7 @@
     let submit;
     dialog({
       id: "other_listener",
-      title: tl(trans.view_others_library),
+      title: tl2(trans2.view_others_library),
       body: html.node`
         <div class="setting standalone" data-type="text">
             <div class="avatar-container">
@@ -31029,7 +30964,7 @@
                 </div>
             </div>
             <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
+                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl2(trans2.enter_username)}">
                 <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
         let name = input2.value;
         let link = id;
@@ -31037,7 +30972,7 @@
           id: "other_listener"
         });
         window.location.href = `${root}user/${name}/library/music/${link}`;
-      }}>${tl(trans.done)}</button>
+      }}>${tl2(trans2.done)}</button>
             </div>
         </div>
         `
@@ -31049,7 +30984,7 @@
       }
     });
     tippy_esm_default(submit, {
-      content: tl(trans.save)
+      content: tl2(trans2.save)
     });
     input2.focus();
   }
@@ -31076,16 +31011,16 @@
         document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
         notify({
           id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
+          title: tl2(trans2.profile_shortcut.name),
+          body: tl2(trans2.profile_shortcut.linked).replace("{u}", profile_name),
           icon: "icon-16-profile-shortcut"
         });
         save_setting("profile_shortcut", profile_name);
       } catch (e) {
         notify({
           id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.failed_to_find_profile),
+          title: tl2(trans2.profile_shortcut.name),
+          body: tl2(trans2.failed_to_find_profile),
           type: "error"
         });
         localStorage.removeItem("bleh_profile_shortcut_avi");
@@ -31190,41 +31125,41 @@
     max_date.setDate(max_date.getDate() + 1);
     dialog({
       id: "submit_scrobble",
-      title: tl(trans.new_scrobble),
+      title: tl2(trans2.new_scrobble),
       body: html.node`
             <div class="new-scrobble-form">
-                <p class="generic-label">${tl(trans.track)}</p>
+                <p class="generic-label">${tl2(trans2.track)}</p>
                 ${track = input({
         type: "text",
         value: pre_track,
-        placeholder: tl(trans.example, { v: random.track }),
+        placeholder: tl2(trans2.example, { v: random.track }),
         warn_if_empty: true
       })}
-                <p class="generic-label">${tl(trans.album)}</p>
+                <p class="generic-label">${tl2(trans2.album)}</p>
                 ${album = input({
         type: "text",
         value: pre_album,
-        placeholder: tl(trans.example, { v: random.album })
+        placeholder: tl2(trans2.example, { v: random.album })
       })}
-                <p class="generic-label">${tl(trans.artist)}</p>
+                <p class="generic-label">${tl2(trans2.artist)}</p>
                 ${artist = input({
         type: "text",
         value: pre_artist,
-        placeholder: tl(trans.example, { v: random.artist }),
+        placeholder: tl2(trans2.example, { v: random.artist }),
         warn_if_empty: true
       })}
-                <p class="generic-label">${tl(trans.album_artist)}</p>
+                <p class="generic-label">${tl2(trans2.album_artist)}</p>
                 ${album_artist = input({
         type: "text",
         value: pre_album_artist,
-        placeholder: tl(trans.example, { v: random.album_artist })
+        placeholder: tl2(trans2.example, { v: random.album_artist })
       })}
-                <p class="generic-label">${tl(trans.time)}</p>
+                <p class="generic-label">${tl2(trans2.time)}</p>
                 <div class="toggle-and-time">
                     ${use_current = toggle({
         value: true,
         type: "checkbox",
-        title: tl(trans.use_current_time),
+        title: tl2(trans2.use_current_time),
         func: (state) => {
           date.disabled(state);
         }
@@ -31238,15 +31173,15 @@
             </div>
             <div class="modal-footer">
                 <button class="see-more cancel" onclick=${() => dialog_rm({ id: "submit_scrobble" })}>
-                    ${tl(trans.cancel)}
+                    ${tl2(trans2.cancel)}
                 </button>
                 <div class="fill" />
                 <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
         if (track.value() == "" || artist.value() == "") {
           notify({
             id: "submit_scrobble",
-            title: tl(trans.new_scrobble),
-            body: tl(trans.missing_fields),
+            title: tl2(trans2.new_scrobble),
+            body: tl2(trans2.missing_fields),
             type: "error"
           });
           return;
@@ -31297,7 +31232,7 @@
           log("error", "submit scrobble", "error");
           notify({
             id: "submit_scrobble",
-            title: tl(trans.scrobble_failed),
+            title: tl2(trans2.scrobble_failed),
             body: json.message,
             type: "error",
             persist: true
@@ -31312,8 +31247,8 @@
           });
           notify({
             id: "submit_scrobble",
-            title: tl(trans.scrobble_failed),
-            body: tl(trans.scrobble_error_codes[error_code]),
+            title: tl2(trans2.scrobble_failed),
+            body: tl2(trans2.scrobble_error_codes[error_code]),
             type: "error",
             persist: true
           });
@@ -31322,14 +31257,14 @@
         }
         notify({
           id: "submit_scrobble",
-          title: tl(trans.new_scrobble),
+          title: tl2(trans2.new_scrobble),
           body: params.track,
           type: "success"
         });
         dialog_rm({ id: "submit_scrobble" });
         if (func) func();
       }}>
-                    ${tl(trans.new)}
+                    ${tl2(trans2.new)}
                 </button>
             </div>
         `
@@ -31353,7 +31288,7 @@
     if (page.type == "track") {
       releases_panel = html.node`
             <section class="oracle-releases">
-                <h3 class="text-18">${tl(trans.releases)}</h3>
+                <h3 class="text-18">${tl2(trans2.releases)}</h3>
                 <div class="source-albums">
                     <div class="source-album oracle-loading">
                         <div class="source-album-art">
@@ -31666,7 +31601,7 @@
         info_panel.appendChild(html.node`
                 <div class="sub-text music-small-header">
                     <span>
-                        ${tl(trans.label)}<span class="new-badge beta">${tl(trans.beta)}</span>
+                        ${tl2(trans2.label)}<span class="new-badge beta">${tl2(trans2.beta)}</span>
                     </span>
                 </div>
                 <div class="music-labels catalogue-tags">
@@ -31696,7 +31631,7 @@
       const discs = media.filter((item) => item.tracks != null);
       const track_panel = html.node`
             <section class="oracle-tracks">
-                <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
+                <h3 class="text-18">${tl2(trans2.tracklist)}<span class="new-badge beta">${tl2(trans2.beta)}</span></h3>
                 ${discs.map((disc) => render_tracklist(disc, discs.length, artist2))}
             </section>
         `;
@@ -31706,7 +31641,7 @@
                 ${length > 1 ? html.node`
                 <div class="sub-text normal disc-header">
                     <span class="bleh-icon" style="--icon: var(--mask)" />
-                    ${tl(trans.disc_number, { n: disc.position })}
+                    ${tl2(trans2.disc_number, { n: disc.position })}
                 </div>
                 ` : ""}
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
@@ -31792,8 +31727,8 @@
           releases_panel,
           html`
                     <h3 class="text-18">
-                        ${tl(trans.releases)}<span class="new-badge beta"
-                            >${tl(trans.beta)}</span
+                        ${tl2(trans2.releases)}<span class="new-badge beta"
+                            >${tl2(trans2.beta)}</span
                         >
                     </h3>
                     <div class="loading-data-container">
@@ -31842,8 +31777,8 @@
           releases_panel,
           html`
                     <h3 class="text-18">
-                        ${tl(trans.releases)}<span class="new-badge beta"
-                            >${tl(trans.beta)}</span
+                        ${tl2(trans2.releases)}<span class="new-badge beta"
+                            >${tl2(trans2.beta)}</span
                         >
                     </h3>
                     <div class="source-albums">
@@ -31929,7 +31864,7 @@
         if (recording.disambiguation == "explicit") {
           artist_elem.insertBefore(
             html.node`
-                    <span class="track-explicit">${tl(trans.explicit)}</span>
+                    <span class="track-explicit">${tl2(trans2.explicit)}</span>
                 `,
             artist_elem.firstChild
           );
@@ -31939,8 +31874,8 @@
           releases_panel,
           html`
                     <h3 class="text-18">
-                        ${tl(trans.releases)}<span class="new-badge beta"
-                            >${tl(trans.beta)}</span
+                        ${tl2(trans2.releases)}<span class="new-badge beta"
+                            >${tl2(trans2.beta)}</span
                         >
                     </h3>
                     <div class="loading-data-container">
@@ -32166,53 +32101,53 @@
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.home)}
+                            ${tl2(trans2.home)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tracks">
-                            ${tl(trans.tracks)}
+                            ${tl2(trans2.tracks)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
-                            ${tl(trans.albums)}
+                            ${tl2(trans2.albums)}
                         </a>
                     </li>
                     ${!page_is_blocked ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
-                            ${tl(trans.photos)}
+                            ${tl2(trans2.photos)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--similar">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+similar">
-                            ${tl(trans.similar_artists)}
+                            ${tl2(trans2.similar_artists)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            ${tl(trans.biography)}
+                            ${tl2(trans2.biography)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--listeners">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+listeners">
-                            ${tl(trans.listeners)}
+                            ${tl2(trans2.listeners)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            ${tl(trans.shouts)}
+                            ${tl2(trans2.shouts)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--events">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+events">
-                            ${tl(trans.events)}
+                            ${tl2(trans2.events)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            ${tl(trans.tags)}
+                            ${tl2(trans2.tags)}
                         </a>
                     </li>
                     ` : ""}
@@ -32223,28 +32158,28 @@
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.home)}
+                            ${tl2(trans2.home)}
                         </a>
                     </li>
                     ${!page_is_blocked ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            ${tl(trans.wiki)}
+                            ${tl2(trans2.wiki)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
-                            ${tl(trans.artwork)}
+                            ${tl2(trans2.artwork)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            ${tl(trans.shouts)}
+                            ${tl2(trans2.shouts)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            ${tl(trans.tags)}
+                            ${tl2(trans2.tags)}
                         </a>
                     </li>
                     ` : ""}
@@ -32255,28 +32190,28 @@
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.home)}
+                            ${tl2(trans2.home)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
-                            ${tl(trans.albums)}
+                            ${tl2(trans2.albums)}
                         </a>
                     </li>
                     ${!page_is_blocked ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            ${tl(trans.wiki)}
+                            ${tl2(trans2.wiki)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            ${tl(trans.shouts)}
+                            ${tl2(trans2.shouts)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            ${tl(trans.tags)}
+                            ${tl2(trans2.tags)}
                         </a>
                     </li>
                     ` : ""}
@@ -32379,7 +32314,7 @@
                         <div class="info">
                             <h3>${shortcut_listens.name}</h3>
                             <p class="colourful" ref=${(el) => p = el}>
-                                ${tl(trans.listens.count).replace(
+                                ${tl2(trans2.listens.count).replace(
             "{c}",
             listens.toLocaleString(lang)
           )}
@@ -32426,12 +32361,12 @@
         html.node`
             <div class="oracle">
                 <span class="bleh-icon" />
-                <p>${{ html: tl(trans.oracle_notice).replace("oracle", "<i>oracle</i>") }}</p>
+                <p>${{ html: tl2(trans2.oracle_notice).replace("oracle", "<i>oracle</i>") }}</p>
                 <button class="see-more left-icon" data-type="debug" onclick=${() => oracle_debug()}>
-                    ${tl(trans.debug)}
+                    ${tl2(trans2.debug)}
                 </button>
                 <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
-                    ${tl(trans.send_feedback)}
+                    ${tl2(trans2.send_feedback)}
                 </a>
             </div>
         `,
@@ -32485,7 +32420,7 @@
       if (button.classList[1] == "header-new-love-button") {
         button.setAttribute("data-type", "love");
         let new_text = document.createElement("span");
-        new_text.textContent = tl(trans.love);
+        new_text.textContent = tl2(trans2.love);
         button.appendChild(new_text);
       }
     });
@@ -32502,7 +32437,7 @@
       let obsession_btn = obsession_form.querySelector("button");
       obsession_btn.classList = "btn side-action";
       obsession_btn.setAttribute("data-type", "obsession");
-      obsession_btn.textContent = tl(trans.obsession);
+      obsession_btn.textContent = tl2(trans2.obsession);
       interact_container.appendChild(obsession_form);
     }
     if (ff("submit_scrobble")) {
@@ -32537,12 +32472,12 @@
         };
       const scrobble_btn = html.node`
             <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble(props)}>
-                ${tl(trans.scrobble)}
+                ${tl2(trans2.scrobble)}
             </button>
         `;
       if (!can_api) {
         tippy_esm_default(scrobble_btn, {
-          content: tl(trans.requires_api_in_settings)
+          content: tl2(trans2.requires_api_in_settings)
         });
       }
       interact_container.appendChild(scrobble_btn);
@@ -32568,7 +32503,7 @@
       let playlist_button = new_playlist.querySelector("button");
       playlist_button.classList = "btn side-action";
       playlist_button.setAttribute("data-type", "playlist");
-      playlist_button.textContent = tl(trans.create_playlist);
+      playlist_button.textContent = tl2(trans2.create_playlist);
       interact_container.appendChild(new_playlist);
     }
     const metadata = col_main.querySelector(".metadata-column");
@@ -32628,7 +32563,7 @@
       page.structure.main.insertBefore(
         html.node`
             <section class="cta blocked-cta">
-                <strong>${tl(trans.blocked_page)}</strong>
+                <strong>${tl2(trans2.blocked_page)}</strong>
             </section>
         `,
         page.structure.main.firstElementChild
@@ -32641,7 +32576,7 @@
     const link_group = html.node`
         <div class="metadata-group">
             <div class="sub-text music-small-header">
-                ${tl(trans.find_on)}
+                ${tl2(trans2.find_on)}
             </div>
             <div class="music-links" ref=${(el) => link_container = el} />
         </div>
@@ -32973,7 +32908,7 @@
             link.classList.add("music-link");
             let type = link.classList[1];
             if (type == "resource-external-link--homepage")
-              link.textContent = tl(trans.website);
+              link.textContent = tl2(trans2.website);
             else if (type == "resource-external-link--twitter")
               link.textContent = "Twitter";
             else if (type == "resource-external-link--facebook")
@@ -32988,7 +32923,7 @@
     if (tags) {
       let header_tags = document.createElement("div");
       header_tags.classList.add("sub-text", "music-small-header");
-      header_tags.textContent = tl(trans.tags);
+      header_tags.textContent = tl2(trans2.tags);
       col_main.appendChild(header_tags);
       col_main.appendChild(tags);
     }
@@ -33001,7 +32936,7 @@
         no_info,
         html`
                 <div class="loading-data-text info">
-                    ${tl(trans.missing_album_info)}
+                    ${tl2(trans2.missing_album_info)}
                 </div>
             `
       );
@@ -33009,11 +32944,11 @@
     if (!settings.corrections) return;
     page.structure.side.appendChild(html.node`
         <section class="lotus cta">
-            <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
+            <strong>${tl2(trans2.lotus_cta[page.corrected]).replace("{t}", tl2(trans2[`${page.type}_lower`]))}</strong>
             ${ff("refreshed_lotus") ? html.node`
-                <button class="see-more" onclick=${() => create_correction(page.type)}>${tl(trans.suggest_correction)}</button>
+                <button class="see-more" onclick=${() => create_correction(page.type)}>${tl2(trans2.suggest_correction)}</button>
             ` : html.node`
-                <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
+                <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl2(trans2.suggest_correction)}</a>
             `}
         </section>
     `);
@@ -33046,7 +32981,7 @@
                 <div class="info">
                     <h3>${name}</h3>
                     <p class="colourful" ref=${(el) => p = el}>
-                        ${tl(trans.listens.count).replace(
+                        ${tl2(trans2.listens.count).replace(
           "{c}",
           listens.toLocaleString(lang)
         )}
@@ -33058,7 +32993,7 @@
         theme: "context-menu",
         content: html.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${tl(trans.profile)}
+                    ${tl2(trans2.profile)}
                 </a>
             `,
         placement: "right-start",
@@ -33084,7 +33019,7 @@
                 <div class="info">
                     <h3>${name}</h3>
                     <p class="colourful" ref=${(el) => p = el}>
-                        ${tl(trans.listens)}
+                        ${tl2(trans2.listens)}
                     </p>
                 </div>
             `
@@ -33093,11 +33028,11 @@
         theme: "context-menu",
         content: html.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${tl(trans.profile)}
+                    ${tl2(trans2.profile)}
                 </a>
                 <div class="sep"></div>
                 <button class="dropdown-menu-clickable-item" onclick=${() => open_starred_friend_window()} data-menu-item="settings">
-                    ${tl(trans.settings)}
+                    ${tl2(trans2.settings)}
                 </button>
             `,
         placement: "right-start",
@@ -33117,7 +33052,7 @@
       listen_item.removeAttribute("href");
       listen_item.setAttribute("onclick", `_other_listener('${link}')`);
       tippy_esm_default(listen_item, {
-        content: tl(trans.view_others_library)
+        content: tl2(trans2.view_others_library)
       });
     } else {
       render(
@@ -33127,9 +33062,9 @@
                 ${avi[1] ? html.node`<img class="view-item-avatar" src=${avi[1].getAttribute("src")} alt="">` : ""}
                 ${avi[2] ? html.node`<img class="view-item-avatar" src=${avi[2].getAttribute("src")} alt="">` : ""}
                 <div class="info">
-                    <h3>${tl(trans.following)}</h3>
+                    <h3>${tl2(trans2.following)}</h3>
                     <p class="colourful" ref=${(el) => p = el}>
-                        ${tl(trans.others_count).replace("{c}", count)}
+                        ${tl2(trans2.others_count).replace("{c}", count)}
                     </p>
                 </div>
             `
@@ -33222,13 +33157,13 @@
         page.structure.main.firstElementChild
       );
     tippy_esm_default(row.querySelector(".listener-side p"), {
-      content: tl(trans.count_listeners).replace(
+      content: tl2(trans2.count_listeners).replace(
         "{c}",
         listeners.value.toLocaleString(lang)
       )
     });
     tippy_esm_default(row.querySelector(".scrobble-side p"), {
-      content: tl(trans.count_scrobbles).replace(
+      content: tl2(trans2.count_scrobbles).replace(
         "{c}",
         scrobbles.value.toLocaleString(lang)
       )
@@ -33298,9 +33233,9 @@
                 ${playlink}
             </div>
         `);
-      playlink.textContent = tl(trans.watch_video);
+      playlink.textContent = tl2(trans2.watch_video);
       playlink.removeAttribute("title");
-      replace.textContent = tl(trans.replace);
+      replace.textContent = tl2(trans2.replace);
     }
   }
   function video_unavailable(video_col = null) {
@@ -33311,7 +33246,7 @@
       html.node`
         <section class="video-placeholder">
             <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
-            ${tl(trans.video_removed)}
+            ${tl2(trans2.video_removed)}
         </section>
     `,
       page.structure.side.firstElementChild
@@ -33392,10 +33327,10 @@
     view_buttons.innerHTML = `
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${tl(trans.grid)}
+                ${tl2(trans2.grid)}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${tl(trans.list)}
+                ${tl2(trans2.list)}
             </button>
         </div>
     `;
@@ -33529,7 +33464,7 @@
         host: "genius.com"
       },
       website: {
-        name: tl(trans.website),
+        name: tl2(trans2.website),
         icon: "link"
       },
       twitter: {
@@ -33791,7 +33726,7 @@
           if (track.getAttribute("data-disambig") == "explicit") {
             song_artist_element.insertBefore(
               html.node`
-                        <span class="track-explicit">${tl(trans.explicit)}</span>
+                        <span class="track-explicit">${tl2(trans2.explicit)}</span>
                     `,
               song_artist_element.firstChild
             );
@@ -33871,11 +33806,11 @@
               menu.show();
             }
           }}>
-                        ${tl(trans.more)}
+                        ${tl2(trans2.more)}
                     </button>
                 `;
           tippy_esm_default(more_button, {
-            content: tl(trans.more),
+            content: tl2(trans2.more),
             appendTo: document.body
           });
           track.appendChild(html.node`
@@ -34032,7 +33967,7 @@
                                                 <input type="hidden" name="album_artist_name_original" value=${track.getAttribute("data-album-artist-name-original")}>
                                                 <input type="hidden" name="count" value=${track.getAttribute("data-count")}>
                                                 <button class="dropdown-menu-clickable-item" data-type="edit">
-                                                    ${tl(trans.edit)}
+                                                    ${tl2(trans2.edit)}
                                                 </button>
                                             </form>
                                         `;
@@ -34046,7 +33981,7 @@
                                             <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
                                             <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
                                             <button class="dropdown-menu-clickable-item" data-type="edit">
-                                                ${tl(trans.edit)}
+                                                ${tl2(trans2.edit)}
                                             </button>
                                         </form>
                                     `;
@@ -34058,15 +33993,15 @@
                   '[data-analytics-action="BulkEditScrobblesOpen"]'
                 );
                 button.classList = "dropdown-menu-clickable-item chibi";
-                button.textContent = tl(
-                  trans.bulk_edit
+                button.textContent = tl2(
+                  trans2.bulk_edit
                 );
                 button.setAttribute(
                   "data-type",
                   "bulk-edit"
                 );
                 tippy_esm_default(button, {
-                  content: tl(trans.bulk_edit),
+                  content: tl2(trans2.bulk_edit),
                   appendTo: document.body
                 });
                 return button;
@@ -34083,7 +34018,7 @@
                 );
                 if (!button) return;
                 button.classList = "dropdown-menu-clickable-item";
-                button.textContent = tl(trans.play);
+                button.textContent = tl2(trans2.play);
                 button.setAttribute("data-type", "play");
                 track.removeChild(container);
                 return button;
@@ -34093,7 +34028,7 @@
                                 ${() => {
                 return html.node`
                                         <a class="dropdown-menu-clickable-item" data-type="track" href=${track_title.getAttribute("href")}>
-                                            ${tl(trans.track)}
+                                            ${tl2(trans2.track)}
                                         </a>
                                     `;
               }}
@@ -34101,11 +34036,11 @@
                                 ${() => {
                 let button = html.node`
                                         <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute("href")}">
-                                            ${tl(trans.explore_in_library)}
+                                            ${tl2(trans2.explore_in_library)}
                                         </a>
                                     `;
                 tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library),
+                  content: tl2(trans2.explore_in_library),
                   delay: [500, 0],
                   appendTo: document.body
                 });
@@ -34118,7 +34053,7 @@
                                 ${() => {
                 return html.node`
                                         <a class="dropdown-menu-clickable-item" data-type="album" href=${album_link.getAttribute("href")}>
-                                            ${tl(trans.album)}
+                                            ${tl2(trans2.album)}
                                         </a>
                                     `;
               }}
@@ -34126,11 +34061,11 @@
                                 ${() => {
                 let button = html.node`
                                         <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${album_link.getAttribute("href")}">
-                                            ${tl(trans.explore_in_library)}
+                                            ${tl2(trans2.explore_in_library)}
                                         </a>
                                     `;
                 tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library),
+                  content: tl2(trans2.explore_in_library),
                   delay: [500, 0],
                   appendTo: document.body
                 });
@@ -34142,7 +34077,7 @@
                                 ${() => {
                 return html.node`
                                         <a class="dropdown-menu-clickable-item" data-type="album" href=${track_title.getAttribute("href")}>
-                                            ${tl(trans.album)}
+                                            ${tl2(trans2.album)}
                                         </a>
                                     `;
               }}
@@ -34150,11 +34085,11 @@
                                 ${() => {
                 let button = html.node`
                                         <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute("href")})}">
-                                            ${tl(trans.explore_in_library)}
+                                            ${tl2(trans2.explore_in_library)}
                                         </a>
                                     `;
                 tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library),
+                  content: tl2(trans2.explore_in_library),
                   delay: [500, 0],
                   appendTo: document.body
                 });
@@ -34166,7 +34101,7 @@
                                 ${() => {
                 return html.node`
                                         <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${redirect()}${sanitise(track_artist)}">
-                                            ${tl(trans.artist)}
+                                            ${tl2(trans2.artist)}
                                         </a>
                                     `;
               }}
@@ -34174,11 +34109,11 @@
                                 ${() => {
                 let button = html.node`
                                         <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}">
-                                            ${tl(trans.explore_in_library)}
+                                            ${tl2(trans2.explore_in_library)}
                                         </a>
                                     `;
                 tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library),
+                  content: tl2(trans2.explore_in_library),
                   delay: [500, 0],
                   appendTo: document.body
                 });
@@ -34199,7 +34134,7 @@
                                         <input type="hidden" name="name" value=${name}>
                                         <input type="hidden" name="artist_name" value=${artist}>
                                         <button class="dropdown-menu-clickable-item" data-type="obsession">
-                                            ${tl(trans.obsess)}
+                                            ${tl2(trans2.obsess)}
                                         </button>
                                     </form>
                                 `;
@@ -34207,13 +34142,13 @@
                             <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
                 copy(track_title.href);
               }}>
-                                ${tl(trans.copy)}
+                                ${tl2(trans2.copy)}
                             </button>
                             ${() => {
                 if (!is_own_profile || !can_delete) return;
                 let button = html.node`
                                     <button class="dropdown-menu-clickable-item more-item--delete" data-type="delete">
-                                        ${tl(trans.delete)}
+                                        ${tl2(trans2.delete)}
                                     </button>
                                 `;
                 let form;
@@ -34253,7 +34188,7 @@
                       );
                       notify({
                         id: "delete",
-                        title: tl(trans.deleted),
+                        title: tl2(trans2.deleted),
                         body: track_title.getAttribute(
                           "data-name"
                         ),
@@ -34393,8 +34328,8 @@
       setTimeout(() => {
         notify({
           id: "collage_redirect",
-          title: tl(trans.collage),
-          body: tl(trans.collage_redirect),
+          title: tl2(trans2.collage),
+          body: tl2(trans2.collage_redirect),
           icon: "icon-16-collage",
           persist: true
         });
@@ -34434,7 +34369,7 @@
                     ${type = select(
         [
           {
-            text: tl(trans.item_type)
+            text: tl2(trans2.item_type)
           },
           {
             value: "artists",
@@ -34442,7 +34377,7 @@
                                         class="bleh-icon"
                                         style="--icon: var(--icon-16-artist)"
                                     />
-                                    ${tl(trans.artists)}`
+                                    ${tl2(trans2.artists)}`
           },
           {
             value: "albums",
@@ -34450,7 +34385,7 @@
                                         class="bleh-icon"
                                         style="--icon: var(--icon-16-album)"
                                     />
-                                    ${tl(trans.albums)}`
+                                    ${tl2(trans2.albums)}`
           },
           {
             value: "tracks",
@@ -34458,7 +34393,7 @@
                                         class="bleh-icon"
                                         style="--icon: var(--icon-16-track)"
                                     />
-                                    ${tl(trans.tracks)}`
+                                    ${tl2(trans2.tracks)}`
           }
         ],
         default_type
@@ -34466,46 +34401,46 @@
                     ${timeframe = select(
         [
           {
-            text: tl(trans.timeframe)
+            text: tl2(trans2.timeframe)
           },
           {
             value: "date_preset=LAST_7_DAYS",
-            text: tl(trans.last_count_days).replace(
+            text: tl2(trans2.last_count_days).replace(
               "{c}",
               "7"
             )
           },
           {
             value: "date_preset=LAST_30_DAYS",
-            text: tl(trans.last_count_days).replace(
+            text: tl2(trans2.last_count_days).replace(
               "{c}",
               "30"
             )
           },
           {
             value: "date_preset=LAST_90_DAYS",
-            text: tl(trans.last_count_days).replace(
+            text: tl2(trans2.last_count_days).replace(
               "{c}",
               "90"
             )
           },
           {
             value: "date_preset=LAST_180_DAYS",
-            text: tl(trans.last_count_days).replace(
+            text: tl2(trans2.last_count_days).replace(
               "{c}",
               "180"
             )
           },
           {
             value: "date_preset=LAST_365_DAYS",
-            text: tl(trans.last_count_days).replace(
+            text: tl2(trans2.last_count_days).replace(
               "{c}",
               "365"
             )
           },
           {
             value: "date_preset=ALL",
-            text: tl(trans.all_time)
+            text: tl2(trans2.all_time)
           },
           {
             value: `from=${current_year}-01-01&rangetype=year`,
@@ -34524,7 +34459,7 @@
                         ref=${(el) => submit = el}
                         onclick=${() => make_collage()}
                     >
-                        ${tl(trans.generate)}
+                        ${tl2(trans2.generate)}
                     </button>
                 </div>
             </div>
@@ -34535,7 +34470,7 @@
             >
                 <div class="loading-data-container">
                     <div class="loading-data-text info">
-                        ${tl(trans.choose_a_timeframe_above)}
+                        ${tl2(trans2.choose_a_timeframe_above)}
                     </div>
                 </div>
             </div>
@@ -34546,18 +34481,18 @@
     render(
       sidebar,
       html`
-            <h2>${tl(trans.settings)}</h2>
+            <h2>${tl2(trans2.settings)}</h2>
             <div class="setting-group" ref=${(el) => setting_group = el}>
                 <div class="setting v" data-type="text">
                     <div class="heading">
-                        <h5>${tl(trans.profile)}</h5>
+                        <h5>${tl2(trans2.profile)}</h5>
                     </div>
                     <div class="input-container content-form">
                         <input
                             type="text"
                             class="input"
                             ref=${(el) => inputter2 = el}
-                            placeholder=${tl(trans.enter_a_profile)}
+                            placeholder=${tl2(trans2.enter_a_profile)}
                             value=${page.requested.profile}
                             onchange=${(e) => {
         page.requested.profile = e.target.value;
@@ -34583,10 +34518,10 @@
                             <button class="btn chibi icon" data-type="profile" onclick=${() => {
           inputter2.value = auth.name;
           inputter2.dispatchEvent(new Event("change"));
-        }}>${tl(trans.profile)}</button>
+        }}>${tl2(trans2.profile)}</button>
                         `;
         tippy_esm_default(btn, {
-          content: tl(trans.profile)
+          content: tl2(trans2.profile)
         });
         return btn;
       }}
@@ -34596,10 +34531,10 @@
           if (settings.starred_friend == "") return;
           inputter2.value = settings.starred_friend;
           inputter2.dispatchEvent(new Event("change"));
-        }}>${tl(trans.starred_friend.name)}</button>
+        }}>${tl2(trans2.starred_friend.name)}</button>
                         `;
         tippy_esm_default(btn, {
-          content: tl(trans.starred_friend.name)
+          content: tl2(trans2.starred_friend.name)
         });
         return btn;
       }}
@@ -34618,11 +34553,11 @@
       if (width.value() == "" || height.value() == "" || parseInt(width.value()) < min2 || parseInt(width.value()) > max2 || parseInt(height.value()) < min2 || parseInt(height.value()) > max2) {
         notify({
           id: "collage_failed",
-          title: tl(trans.name_failed).replace(
+          title: tl2(trans2.name_failed).replace(
             "{name}",
-            tl(trans.collage)
+            tl2(trans2.collage)
           ),
-          body: tl(trans.your_settings_are_invalid),
+          body: tl2(trans2.your_settings_are_invalid),
           type: "error"
         });
         return;
@@ -34630,11 +34565,11 @@
       if (!auth.name) {
         notify({
           id: "collage_failed",
-          title: tl(trans.name_failed).replace(
+          title: tl2(trans2.name_failed).replace(
             "{name}",
-            tl(trans.collage)
+            tl2(trans2.collage)
           ),
-          body: tl(trans.you_need_to_be_logged_in),
+          body: tl2(trans2.you_need_to_be_logged_in),
           type: "error"
         });
         return;
@@ -34644,8 +34579,8 @@
       if (pages > 4 && !bypass) {
         let warn = notify({
           id: "collage_warning",
-          title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace(
+          title: tl2(trans2.are_you_sure),
+          body: tl2(trans2.this_will_require_loading_count_pages).replace(
             "{c}",
             pages
           ),
@@ -34657,7 +34592,7 @@
                 notify_rm(warn);
                 make_collage(true);
               },
-              text: tl(trans.continue)
+              text: tl2(trans2.continue)
             }
           ],
           persist: true
@@ -34679,7 +34614,7 @@
         html`
                 <div class="loading-data-container">
                     <div class="loading-data-text">
-                        ${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}
+                        ${tl2(trans2.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}
                     </div>
                 </div>
             `
@@ -34713,11 +34648,11 @@
         } catch (e) {
           notify({
             id: "collage_failed",
-            title: tl(trans.name_failed).replace(
+            title: tl2(trans2.name_failed).replace(
               "{name}",
-              tl(trans.collage)
+              tl2(trans2.collage)
             ),
-            body: tl(trans.there_was_a_network_error),
+            body: tl2(trans2.there_was_a_network_error),
             type: "error"
           });
           console.error(e);
@@ -34737,7 +34672,7 @@
           html`
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">
-                            ${tl(trans.no_plays_in_range)}
+                            ${tl2(trans2.no_plays_in_range)}
                         </div>
                     </div>
                 `
@@ -34795,7 +34730,7 @@
                                 ` : ""}
                                 ` : settings.collage_grid_plays ? html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
+                                    ${data2.plays.toLocaleString(lang)}${tl2(trans2.plays_lower)}
                                 </a>
                                 ` : ""}
                             </p>
@@ -34803,7 +34738,7 @@
                             ${settings.collage_grid_plays ? html.node`
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
+                                    ${data2.plays.toLocaleString(lang)}${tl2(trans2.plays_lower)}
                                 </a>
                             </p>
                             ` : ""}
@@ -34822,12 +34757,12 @@
                         <div class="bleh-icon" />
                         <svg class="brand" xmlns="http://www.w3.org/2000/svg" viewBox="0.1 25.618 89.836 33.432" data-asc="1.16" width="89.836" height="33.432"><path d="M21.4 44.75q-.05.2-.17.37-.13.18-.23.38l.15 1.6q0 .35-.02.67-.03.33-.03.73-.05.2-.12.32-.08.13-.18.33.1.1.18.25.07.15.12.25.05.8-.3 1.5t-.45 1.55q-.4.2-.67.47-.28.28-.28.78-.2.25-.45.5t-.55.4q-.05.05-.25.15-.3.35-.62.67-.33.33-.73.58-.2.2-.32.47-.13.28-.33.53-.35.2-.72.35-.38.15-.68.3-.35.05-.5-.08-.15-.12-.35-.17-.2.05-.37.27-.18.23-.53.48-.05.05-.22.1-.18.05-.33.15-.2.05-.4.17-.2.13-.45.23-.5-.15-1-.28-.5-.12-1.05.08-.35-.1-.65-.23-.3-.12-.65-.12-.25 0-.7-.35-.2.1-.65.1-.25 0-.42-.23-.18-.22-.48-.12-.5-.15-.97-.38-.48-.22-.88-.42-.35-.15-.6-.43-.25-.27-.5-.52-.05-.1-.1-.18-.05-.07-.15-.17-.1-.4-.35-.7l-.5-.6q-.15-.55-.35-1-.05-.2-.22-.43-.18-.22-.28-.47-.05-.55-.22-1.03-.18-.47-.58-.82.05-.2.05-.35 0-.15.05-.35-.1-.35-.3-.85.1-.4.13-.88.02-.47.07-.97-.05-.3-.13-.63-.07-.32.08-.67V44.9Q0 43.75.3 42.7q.15-.4.05-.95 0-1 .03-2.03Q.4 38.7.3 37.7q-.05-.1 0-.15.1-.7.1-1.43v-1.47-.23q0-.12.05-.17.2-.35.22-.73.03-.37.03-.72.1-.4.07-.88-.02-.47.03-.97.2-.3.37-.68.18-.37.08-.77v-.2q.1-.1.1-.23 0-.12.05-.17.25-.55.35-1.13.1-.57.25-1.12.2-.3.4-.75.55-.15 1.1-.15.25 0 .5.02.25.03.45-.02.55-.1 1.13-.1.57 0 1.17.05.15.05.33.02.17-.02.32-.07.2 0 .38.05.17.05.32 0 .1 0 .18-.03.07-.02.12-.02.05.2.13.37.07.18.12.43-.15.8-.2 1.2-.05.4.03.77.07.38.17 1.18-.1.65-.2 1.27-.1.63.1 1.33-.15.85-.1 1.65 0 .65-.02 1.3-.03.65-.18 1.3.1.25-.07.42-.18.18-.28.43 0 .45-.1.92-.1.48-.2.98-.05.25-.08.55-.02.3-.12.6 0 .05.1.07.1.03.1.08.6-.25 1-.7.4-.45.65-1 .55-.15 1.05-.35.5-.2 1-.55.2.05.43.1.22.05.42 0 .25 0 .42.02.18.03.38.03.55 0 1 .15.45.15.95.3.55.2 1.1.42.55.23 1.1.38.45.05.8.6.1.2.28.4.17.2.42.35.4.2.7.55.3.35.6.75.1.1.5.3.25.55.6 1.17.35.63.4 1.33m-6.75 2.6q-.05-.1-.05-.2t-.1-.2q-.4-.3-.6-.8-.2-.5-.8-.4-.7.15-1.25-.05-.3-.1-.45-.1-.45.05-.87.1-.43.05-.83.1l-.2.1q-.1.05-.25.05-.35.35-.8.75-.45.4-.7.95-.05.65-.02 1 .02.35.17.85.05.05.1.17.05.13.1.23.25.15.33.45.07.3.32.45.1.1.18.22.07.13.12.23.05.7.5 1.15.1.05.18.07.07.03.12.08.4 0 .55-.15.3-.15.67-.23.38-.07.68-.27.3-.25.73-.25.42 0 .77-.2.05 0 .25-.1.25-.4.55-.73.3-.32.5-.77v-1.2q.05-.3.08-.65.02-.35.02-.65zm24.25 6.6q0 .45-.4.75-.4.4-.2.95.1.35.1.75v.8q-.05.1-.12.22-.08.13-.18.23-.2.1-.25.1-.4.05-.8.07-.4.03-.8.03H36q-.7-.2-1.37-.23-.68-.02-1.33-.12-.4-.1-.75-.1t-.7.1q-.5-.25-.97-.53-.48-.27-1.03-.52-.35-.55-.87-.93-.53-.37-.93-.92-.1-.25-.22-.5-.13-.25-.28-.45-.5-.75-.65-1.65 0-.35-.25-.6-.4-.75-.2-1.4.05-.1.03-.23-.03-.12.02-.17-.2-.25-.3-.4l-.2-.3q0-.35.05-.5l-.4-.5q.1-.55.18-1.13.07-.57.17-1.07l-.35-.5q0-.2.15-.33.15-.12.25-.32.2-.55.25-1.05.15-.6.15-1.15-.1-1.1 0-2.15.1-1.05.05-2.15.25-1.1.2-2.2-.05-1.1.15-2.15v-.25q-.15-.6 0-1.15.15-.55.35-1-.05-.1-.05-.25t-.1-.25q.1-.35.3-.58.2-.22.35-.42.1-.2.18-.43.07-.22.12-.42l.35-.35q.45-.1.95-.05.15.05.33.15.17.1.37.2.35.2.68.32.32.13.72.08.55.2 1.08.25.52.05 1.02 0h.2l.03.02q.02.03.07.03.25.05.45.25t.1.45q-.1.75-.12 1.5-.03.75-.13 1.5-.1.7-.2 1.42-.1.73-.25 1.43-.05 1.1-.17 2.17-.13 1.08-.13 2.13 0 .15.03.25.02.1.02.2-.25.5-.37 1-.13.5-.28 1.05-.1.4 0 .85.15.6.13 1.2-.03.6-.13 1.25v.3q.1.2.23.45.12.25.22.5-.05.15-.1.32-.05.18-.1.33.1.25.13.55.02.3.07.55.2.25.4.47.2.23.25.53 0 .1.1.25t.15.25q.1.25.33.4.22.15.42.25.35.05.65.15.3.1.65.2.2 0 .33-.03.12-.02.27-.02.1.05.28.1.17.05.32.1.05.05.1.12.05.08.1.13.1.4.55.85.25.2.48.42.22.23.32.53zm25.95-13.6q-.05.5-.07 1.02-.03.53-.13 1.03-.05.5-.05 1.07 0 .58-.2 1.18-.1.15-.25.32-.15.18-.3.43 0 .2.03.35.02.15.07.35-.1.25-.3.42-.2.18-.4.28-.5.15-.92.3-.43.15-.88.25-.7.1-1.45.02-.75-.07-1.5-.02-.65 0-1.37.02-.73.03-1.48.03h-2.8q-.2.15-.42.1-.23-.05-.43.05-.2-.1-.45-.03-.25.08-.5-.02-.2.05-.37.07-.18.03-.43.08-.2-.05-.35-.13-.15-.07-.35.08.1.15.23.32.12.18.17.43.15.2.25.4t.2.45q.1.2.15.42.05.23.1.43.25.25.55.5l.6.5q.25.05.53.1.27.05.52.1l.6.1q.3.05.65 0 .35-.1.65.02.3.13.65.18.45-.05.93-.1.47-.05.92-.1.2-.15.43-.28.22-.12.42-.27.65-.15 1.3.05.15.25.38.5.22.25.42.55.3.45.6.87.3.43.4.98.1.25.3.5.2.25.3.45.05.25-.02.45-.08.2-.13.45-.2.2-.5.35-.05 0-.1.1t-.15.15l-.6.4q-.3.2-.55.4-.7.6-1.45.6-.3 0-.45.05-.25.05-.5.2-.25.15-.55.25-.25 0-.5.07-.25.08-.5.13-.15 0-.35-.03-.2-.02-.4-.02-.45.05-.9-.05t-.9-.1l-.3-.1q-.15-.05-.3-.05-.85.05-1.6-.28-.75-.32-1.5-.67-.6-.15-.85-.55-.35-.4-.77-.68-.43-.27-.93-.47-.3-.1-.6-.28l-.65-.37q-.05-.2-.15-.4l-.2-.4q-.1-.15-.27-.3-.18-.15-.33-.3-.15-.15-.25-.35-.25-.85-.5-1.68-.25-.82-.65-1.62.05-.35.08-.73.02-.37-.08-.82-.05-.1-.05-.25v-.25q0-.25.03-.43.02-.17-.03-.32l-.1-.8q-.05-.4.05-.75l.2-.8q.1-.4.25-.85-.05-.1-.05-.3 0-.2-.05-.4l.2-1.1q.1-.55.25-1.05.15-.3.33-.58.17-.27.37-.57.35-.6.55-1.15.6-.3.73-.38.12-.07.22-.22t.65-.6q-.05-.15.25-.45.3-.3.2-.5.45-.85 1.3-1.35.3-.2.58-.43.27-.22.47-.42.25-.15.48-.13.22.03.42.03.15-.05.33-.08.17-.02.37-.07.1-.05.25-.1t.25-.15l.2-.1q.1-.05.2-.05.45-.05.85-.25.4-.2.75-.4.75.3 1.55.2.5-.05.98.05.47.1.87.25l.7-.2q.4.05.75.25l.7.4h.45q.05.05.1.07.05.03.1.08.55.5 1.05.92.5.43 1.05.88.75.5.95 1.2.2.3.35.45.6.5 1.05 1.35 0 .1.03.27.02.18.02.33-.05.25.1.5.15.25.2.55M58.5 42v-1.25q0-.25-.05-.3-.05-.15-.12-.3-.08-.15-.13-.2v-.85l-.15-.15q-.2 0-.5-.1-.1-.45-.25-.7-.15-.2-.4-.25-.25-.05-.55-.15-.65.2-1.4.35-.75.15-1.45.4-.35.05-.65.05-.3 0-.6.05-.5.2-.87.62-.38.43-.73.83-.2.25-.35.55-.15.3-.35.55-.05.05-.05.3.15.4.45.5.3.05.6.15.3.1.65.2.15-.05.28-.05.12 0 .27-.05.6-.25 1-.05.4.05.73 0 .32-.05.67-.1.3.15.63.2.32.05.62.15.65.2 1.25.2t1.2-.15q.25-.25.25-.45zm31.4 7.8q-.2.65-.12 1.27.07.63-.03 1.28-.05.35 0 .7t-.05.75q-.05.3-.02.62.02.33.02.63-.05.2-.05.5-.1.35-.12.67-.03.33-.13.73 0 .05-.02.12-.03.08-.03.18 0 .35-.4.35-.05-.05-.25-.05-.35-.15-.6-.05l-.5.2-.3.3q-.15.15-.3.35-.55.3-1.02.17-.48-.12-.98-.42-.3 0-.45.05h-.15q-.05-.05-.15-.05-.2-.15-.37-.3-.18-.15-.38-.3-.4-.4-.3-.8.05-.2.13-.38.07-.17.02-.37-.05-.25-.12-.5-.08-.25-.08-.5t.08-.5q.07-.25.12-.5-.1-.4-.3-.8-.2-.4-.3-.85-.05-.4-.12-.83-.08-.42-.08-.82-.05-.45-.07-.88-.03-.42-.03-.92-.1-.6-.5-.95-.35-.4-.6-.75t-.45-.8q-.25-.2-.65-.35l-.1-.2q-.05-.1-.15-.15-.05-.05-.05-.13 0-.07-.05-.12l-.3-.3q-.2-.1-.4 0t-.35.1q-.2.05-.35.05-.15 0-.4.05-.2.1-.32.22-.13.13-.38.23-.15.15-.35.22-.2.08-.4.18-.2.45-.05.85.1.5.13 1.05.02.55.12 1.1.05.5-.1 1.15 0 .15-.05.32-.05.18-.05.38.05.8-.1 1.57-.15.78-.4 1.58.05.5.1.97.05.48.1.98v1.05q0 .65-.7.75H74.6q-.5.05-.97.1-.48.05-.88.3-.2.05-.37.15-.18.1-.43.2l-.35.35q-.1 0-.22.02-.13.03-.23-.02-.5-.25-.95-.4-.5-.65-.6-1.4-.1-.75-.35-1.4.05-.3.13-.58.07-.27-.03-.52-.05-.15-.05-.55 0-.15.03-.28.02-.12-.03-.22-.15-.95.1-1.65.1-.45-.05-.95-.2-.9-.15-1.85.15-.8-.05-1.6-.15-.15 0-.4 0-.25.03-.53.02-.27.07-.47.05-.2.2-.33.15-.12.25-.22l.15-.9q.1-.15-.15-.5-.05-.1-.15-.03-.1.08-.2.13l-.05-.05q0-.55.03-1.03.02-.47-.03-.97-.05-.2 0-.35.05-.15.05-.35 0-.15-.05-.35-.05-.2-.05-.4v-.25q0-.15.05-.3l.1-.5q.05-.25.15-.55-.2-.4-.17-.85.02-.45-.08-.95-.05-.15.03-.35.07-.2.12-.45-.2-.45-.15-1.03.05-.57 0-1.12.1-.3.05-.58-.05-.27-.05-.57.05-.5 0-.95-.05-.45.05-.9.05-.15.03-.25-.03-.1-.03-.2-.1-.95.05-1.75.05-.15.05-.4v-.45q-.05-.2-.07-.35-.03-.15.02-.35.15-.3.13-.63-.03-.32.17-.62l.03-.05q.02-.05.02-.1l.1-.05q0-.05.15-.05.25-.1.48-.18.22-.07.47-.12l.3.2q.15.1.35.2h.8q.1-.1.2-.15.1-.05.15-.1l.5-.35q.2-.1.43-.13.22-.02.37.13.45.3.88.5.42.2.87.25.25.4.38.75.12.35.27.75.15.5.45 1.15 0 .25-.17.4-.18.15-.23.45 0 .1.03.3.02.2.07.45 0 .2-.05.4t0 .45q.1.8.05 1.6t-.15 1.55v.7q0 .5.25 1 .2.2.38.42.17.23.32.48.3.3.65.3.7 0 1.43.12.72.13 1.42.03.15-.05.25-.03.1.03.25.03.15.1.38.15.22.05.42.1.55.1.45.65l.05.02q.05.03.1.08.1-.05.2-.05t.15-.05q.65-.25 1.15.1.3.25.7.37.4.13.75.53.35.6.9 1.12.55.53 1.1 1.13.1.15.25.27.15.13.25.23.45.45.5.9.15.7.35 1.1.15.55.45 1.25v.5q.05.2.1.42.05.23.05.48l.1 1.2.1 1.2q0 .05.03.12.02.08-.03.18z" fill="#fff"/></svg>
                         <strong>${timeframe.querySelector("button").textContent}</strong>
-                        <strong>${tl(trans.top_type).replace("{type}", tl(trans[type.value()]))}</strong>
+                        <strong>${tl2(trans2.top_type).replace("{type}", tl2(trans2[type.value()]))}</strong>
                         <strong>${width.value()}×${height.value()}</strong>
                     </div>
                     <div class="user">
                         <div class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                            <img src="${page.avatar}" alt="${tl2(trans2.avatar_for_user).replace("{u}", page.name)}">
                         </div>
                         <strong>${page.name}</strong>
                     </div>
@@ -34841,7 +34776,7 @@
         html`
                 <div class="loading-data-container">
                     <div class="loading-data-text">
-                        ${tl(trans.waiting_for_images)}
+                        ${tl2(trans2.waiting_for_images)}
                     </div>
                 </div>
                 ${collage_dom}
@@ -34890,10 +34825,10 @@
         canvas.toBlob((blob) => {
           const blob_url = URL.createObjectURL(blob);
           const date = /* @__PURE__ */ new Date();
-          const filename = tl(trans.chart_template_filename).replace(
+          const filename = tl2(trans2.chart_template_filename).replace(
             "{timeframe}",
             timeframe.querySelector("button").textContent
-          ).replace("{user}", page.name).replace("{type}", tl(trans[type.value()])).replace("{size}", `${width.value()}\xD7${height.value()}`).replace("{brand}", version.brand).replace(
+          ).replace("{user}", page.name).replace("{type}", tl2(trans2[type.value()])).replace("{size}", `${width.value()}\xD7${height.value()}`).replace("{brand}", version.brand).replace(
             "{date}",
             `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
           );
@@ -34901,21 +34836,21 @@
             body,
             html`
                         <div class="collage-finished">
-                            <strong>${tl(trans.your_collage_is_ready)}</strong>
+                            <strong>${tl2(trans2.your_collage_is_ready)}</strong>
                             <div class="button-group">
                                 <button
                                     class="btn primary icon"
                                     data-type="download"
                                     onclick=${() => download(blob_url, filename)}
                                 >
-                                    ${tl(trans.download)}
+                                    ${tl2(trans2.download)}
                                 </button>
                                 <button
                                     class="btn open"
                                     data-type="open"
                                     onclick=${() => open(blob_url)}
                                 >
-                                    ${tl(trans.open)}
+                                    ${tl2(trans2.open)}
                                 </button>
                             </div>
                         </div>
@@ -34941,14 +34876,14 @@
     if (!host || !sidebar) return;
     let user_albums = [];
     render(sidebar, html`
-        <h2>${tl(trans.settings)}</h2>
+        <h2>${tl2(trans2.settings)}</h2>
         <div class="setting-group">
             <div class="setting v" data-type="text">
                 <div class="heading">
-                    <h5>${tl(trans.profile)}</h5>
+                    <h5>${tl2(trans2.profile)}</h5>
                 </div>
                 <div class="input-container content-form">
-                    <input type="text" class="input" ref=${(el) => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
+                    <input type="text" class="input" ref=${(el) => inputter = el} placeholder=${tl2(trans2.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
       page.requested.profile = e.target.value;
       page.name = page.requested.profile;
     }}>
@@ -34957,10 +34892,10 @@
                             <button class="btn chibi icon" data-type="profile" onclick=${() => {
         inputter.value = auth.name;
         inputter.dispatchEvent(new Event("change"));
-      }}>${tl(trans.profile)}</button>
+      }}>${tl2(trans2.profile)}</button>
                         `;
       tippy_esm_default(btn, {
-        content: tl(trans.profile)
+        content: tl2(trans2.profile)
       });
       return btn;
     }}
@@ -34970,10 +34905,10 @@
         if (settings.starred_friend == "") return;
         inputter.value = settings.starred_friend;
         inputter.dispatchEvent(new Event("change"));
-      }}>${tl(trans.starred_friend.name)}</button>
+      }}>${tl2(trans2.starred_friend.name)}</button>
                         `;
       tippy_esm_default(btn, {
-        content: tl(trans.starred_friend.name)
+        content: tl2(trans2.starred_friend.name)
       });
       return btn;
     }}
@@ -34981,7 +34916,7 @@
             </div>
         </div>
         <button class="primary icon jumbo" data-type="pixel" onclick=${() => pixel_prepare()}>
-            ${tl(trans.reset)}
+            ${tl2(trans2.reset)}
         </button>
     `);
     pixel_home();
@@ -34991,7 +34926,7 @@
                 <h1 class="pixel-logo">pixel</h1>
                 <div class="pixel-guess center">
                     <button class="primary jumbo continue" onclick=${() => pixel_prepare()}>
-                        ${tl(trans.begin)}
+                        ${tl2(trans2.begin)}
                     </button>
                 </div>
             </div>
@@ -35003,7 +34938,7 @@
             <div class="pixel-home">
                 <h1 class="pixel-logo">pixel</h1>
                 <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.loading_album_plays)}</div>
+                    <div class="loading-data-text">${tl2(trans2.loading_album_plays)}</div>
                 </div>
             </div>
         `);
@@ -35013,7 +34948,7 @@
             notify({
               id: "api-error",
               type: "error",
-              title: tl(trans.value_failed_to_load).replace("{v}", tl(trans.albums)),
+              title: tl2(trans2.value_failed_to_load).replace("{v}", tl2(trans2.albums)),
               body: res.statusText
             });
             throw new Error();
@@ -35089,16 +35024,16 @@
             </div>
             <div class="pixel-actions" ref=${(el) => actions = el}>
                 <button class="icon" data-type="add" onclick=${() => pixel_hint()}>
-                    ${tl(trans.add_hint)}
+                    ${tl2(trans2.add_hint)}
                 </button>
                 <button class="icon" data-type="jumble" onclick=${() => {
         title_elem.textContent = jumble_string(name);
         guess_input.focus();
       }}>
-                    ${tl(trans.re_jumble)}
+                    ${tl2(trans2.re_jumble)}
                 </button>
                 <button class="icon" data-type="minus" onclick=${() => pixel_give_up()}>
-                    ${tl(trans.give_up)}
+                    ${tl2(trans2.give_up)}
                     ${keybind(["ESC"])}
                 </button>
             </div>
@@ -35106,7 +35041,7 @@
             <div class="pixel-guess">
                 ${guess_input = input({
         type: "text",
-        placeholder: tl(trans.enter_a_guess),
+        placeholder: tl2(trans2.enter_a_guess),
         func: (value) => {
           pixel_make_a_guess(value);
         },
@@ -35117,7 +35052,7 @@
                 ${() => {
         const btn = html.node`
                         <button class="primary icon guess" data-type="send" ref=${(el) => guess_btn = el} onclick=${() => guess_input.submit()}>
-                            ${tl(trans.guess)}
+                            ${tl2(trans2.guess)}
                         </button>
                     `;
         tippy_esm_default(btn, {
@@ -35127,7 +35062,7 @@
       }}
             </div>
             <div class="pixel-info">
-                <h2>${tl(trans.hints)}</h2>
+                <h2>${tl2(trans2.hints)}</h2>
                 <div class="hints" ref=${(el) => hints_container = el}></div>
             </div>
         `);
@@ -35194,7 +35129,7 @@
       function pixel_make_a_guess(guess) {
         if (clean_pixel_name(guess) == clean_pixel_name(name)) {
           status({
-            title: tl(trans.you_guessed_correctly)
+            title: tl2(trans2.you_guessed_correctly)
           });
           timer_end(true);
           pixel_end();
@@ -35218,7 +35153,7 @@
         guess_btn.disabled = true;
         render(actions, html`
                 <button class="icon" data-type="pixel" onclick=${() => pixel_random()}>
-                    ${tl(trans.continue)}
+                    ${tl2(trans2.continue)}
                 </button>
             `);
         let i = 0.1;
@@ -35267,39 +35202,39 @@
     if (mini == "minis") mini = null;
     valid_minis = {
       collage: {
-        name: tl(trans.collage),
-        body: tl(trans.collage_description),
+        name: tl2(trans2.collage),
+        body: tl2(trans2.collage_description),
         func: bleh_minis_collage,
         by: ["clairedoll"]
       },
       compare: {
-        name: tl(trans.compare),
-        body: tl(trans.compare_description),
+        name: tl2(trans2.compare),
+        body: tl2(trans2.compare_description),
         func: bleh_minis_compare,
         by: ["clairedoll"]
       },
       pixel: {
-        name: tl(trans.pixel?.name),
-        body: tl(trans.pixel?.body),
+        name: tl2(trans2.pixel?.name),
+        body: tl2(trans2.pixel?.body),
         func: bleh_minis_pixel,
         hide_if: !ff("unlock_minis"),
         by: ["clairedoll"]
       },
       lyrics: {
-        name: tl(trans.lyrics?.name),
-        body: tl(trans.lyrics?.body),
+        name: tl2(trans2.lyrics?.name),
+        body: tl2(trans2.lyrics?.body),
         func: bleh_minis_lyrics,
         hide_if: !ff("unlock_minis")
       },
       rainbow: {
-        name: tl(trans.rainbow?.name),
-        body: tl(trans.rainbow?.body),
+        name: tl2(trans2.rainbow?.name),
+        body: tl2(trans2.rainbow?.body),
         func: bleh_minis_rainbow,
         hide_if: !ff("unlock_minis")
       },
       receipt: {
-        name: tl(trans.receipt?.name),
-        body: tl(trans.receipt?.body),
+        name: tl2(trans2.receipt?.name),
+        body: tl2(trans2.receipt?.body),
         func: bleh_minis_receipt,
         hide_if: !ff("unlock_minis")
       }
@@ -35312,7 +35247,7 @@
                     ${return_to_minis()}
                     <div class="loading-data-container">
                         <div class="loading-data-text error">
-                            ${tl(trans.no_mini_found).replace("{v}", mini)}
+                            ${tl2(trans2.no_mini_found).replace("{v}", mini)}
                         </div>
                     </div>
                 </section>
@@ -35334,8 +35269,8 @@
       html`
             <section class="minis">
                 <div class="minis-header main">
-                    <h2>${tl(trans.minis)}</h2>
-                    <p>${tl(trans.minis_description)}</p>
+                    <h2>${tl2(trans2.minis)}</h2>
+                    <p>${tl2(trans2.minis_description)}</p>
                 </div>
                 <div class="mini-list">
                     ${Object.entries(valid_minis).map(([id, mini2]) => {
@@ -35368,7 +35303,7 @@
                 </div>
                 <p class="card-tip">
                     ${{
-        html: tl(trans.labs_cta).replace(
+        html: tl2(trans2.labs_cta).replace(
           "{a}",
           `<a class="see-more" href="${root}labs">`
         ).replace("{/a}", "</a>")
@@ -35384,9 +35319,9 @@
             <h2 class="previous" onclick=${() => {
       window.history.replaceState(null, "", `${root}bleh/minis`);
       bleh_minis(true);
-    }}>${tl(trans.minis)}</h2>
+    }}>${tl2(trans2.minis)}</h2>
             <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
-            <h2>${mini ? valid_minis[mini].name : tl(trans.error)}</h2>
+            <h2>${mini ? valid_minis[mini].name : tl2(trans2.error)}</h2>
         </div>
     `;
   }
@@ -35411,7 +35346,7 @@
             />
             <section class="mini-faq">
                 <p class="card-tip">
-                    ${tl(trans.value_by_user, {
+                    ${tl2(trans2.value_by_user, {
         v: valid_minis.collage.name,
         u: valid_minis.collage.by.join(",")
       })}
@@ -35445,7 +35380,7 @@
             />
             <section class="mini-faq">
                 <p class="card-tip">
-                    ${tl(trans.value_by_user, {
+                    ${tl2(trans2.value_by_user, {
         v: valid_minis.compare.name,
         u: valid_minis.compare.by.join(",")
       })}
@@ -35482,7 +35417,7 @@
             />
             <section class="mini-faq">
                 <p class="card-tip">
-                    ${tl(trans.value_by_user, {
+                    ${tl2(trans2.value_by_user, {
         v: valid_minis.pixel.name,
         u: valid_minis.pixel.by.join(",")
       })}
@@ -35546,7 +35481,7 @@
         <div class="avatar">
             <img
                 src=${avatar3}
-                alt=${tl(trans.avatar_for_user).replace("{u}", name)}
+                alt=${tl2(trans2.avatar_for_user).replace("{u}", name)}
             />
         </div>
         <strong>${name}</strong>
@@ -35583,7 +35518,7 @@
         "/avatar42s/",
         "/avatar170s/"
       )}"
-                                alt="${tl(trans.your_avatar)}"
+                                alt="${tl2(trans2.your_avatar)}"
                             />
                         </div>
                         <strong>${auth.name}</strong>
@@ -35597,7 +35532,7 @@
                     ${pages = select(
         [
           {
-            text: tl(trans.page_count)
+            text: tl2(trans2.page_count)
           },
           {
             value: "1",
@@ -35629,7 +35564,7 @@
                     ${type = select(
         [
           {
-            text: tl(trans.item_type)
+            text: tl2(trans2.item_type)
           },
           {
             value: "artists",
@@ -35637,7 +35572,7 @@
                                         class="bleh-icon"
                                         style="--icon: var(--icon-16-artist)"
                                     />
-                                    ${tl(trans.artists)}`
+                                    ${tl2(trans2.artists)}`
           },
           {
             value: "albums",
@@ -35645,7 +35580,7 @@
                                         class="bleh-icon"
                                         style="--icon: var(--icon-16-album)"
                                     />
-                                    ${tl(trans.albums)}`
+                                    ${tl2(trans2.albums)}`
           },
           {
             value: "tracks",
@@ -35653,7 +35588,7 @@
                                         class="bleh-icon"
                                         style="--icon: var(--icon-16-track)"
                                     />
-                                    ${tl(trans.tracks)}`
+                                    ${tl2(trans2.tracks)}`
           }
         ],
         default_type
@@ -35661,46 +35596,46 @@
                     ${timeframe = select(
         [
           {
-            text: tl(trans.timeframe)
+            text: tl2(trans2.timeframe)
           },
           {
             value: "date_preset=LAST_7_DAYS",
-            text: tl(trans.last_count_days).replace(
+            text: tl2(trans2.last_count_days).replace(
               "{c}",
               "7"
             )
           },
           {
             value: "date_preset=LAST_30_DAYS",
-            text: tl(trans.last_count_days).replace(
+            text: tl2(trans2.last_count_days).replace(
               "{c}",
               "30"
             )
           },
           {
             value: "date_preset=LAST_90_DAYS",
-            text: tl(trans.last_count_days).replace(
+            text: tl2(trans2.last_count_days).replace(
               "{c}",
               "90"
             )
           },
           {
             value: "date_preset=LAST_180_DAYS",
-            text: tl(trans.last_count_days).replace(
+            text: tl2(trans2.last_count_days).replace(
               "{c}",
               "180"
             )
           },
           {
             value: "date_preset=LAST_365_DAYS",
-            text: tl(trans.last_count_days).replace(
+            text: tl2(trans2.last_count_days).replace(
               "{c}",
               "365"
             )
           },
           {
             value: "date_preset=ALL",
-            text: tl(trans.all_time)
+            text: tl2(trans2.all_time)
           },
           {
             value: `from=${current_year}-01-01&rangetype=year`,
@@ -35718,7 +35653,7 @@
                         ref=${(el) => submit = el}
                         onclick=${() => begin_comparing()}
                     >
-                        ${tl(trans.compare)}
+                        ${tl2(trans2.compare)}
                     </button>
                 </div>
             </div>
@@ -35729,7 +35664,7 @@
             >
                 <div class="loading-data-container">
                     <div class="loading-data-text info">
-                        ${tl(trans.choose_a_timeframe_above)}
+                        ${tl2(trans2.choose_a_timeframe_above)}
                     </div>
                 </div>
             </div>
@@ -35740,18 +35675,18 @@
     render(
       sidebar,
       html`
-            <h2>${tl(trans.settings)}</h2>
+            <h2>${tl2(trans2.settings)}</h2>
             <div class="setting-group" ref=${(el) => setting_group = el}>
                 <div class="setting v" data-type="text">
                     <div class="heading">
-                        <h5>${tl(trans.compare_with)}</h5>
+                        <h5>${tl2(trans2.compare_with)}</h5>
                     </div>
                     <div class="input-container content-form">
                         <input
                             type="text"
                             class="input"
                             ref=${(el) => inputter = el}
-                            placeholder=${tl(trans.enter_a_profile)}
+                            placeholder=${tl2(trans2.enter_a_profile)}
                             value=${page.requested.profile}
                             onchange=${(e) => {
         page.requested.profile = e.target.value;
@@ -35778,10 +35713,10 @@
           if (settings.starred_friend == "") return;
           inputter.value = settings.starred_friend;
           inputter.dispatchEvent(new Event("change"));
-        }}>${tl(trans.starred_friend.name)}</button>
+        }}>${tl2(trans2.starred_friend.name)}</button>
                         `;
         tippy_esm_default(btn, {
-          content: tl(trans.starred_friend.name)
+          content: tl2(trans2.starred_friend.name)
         });
         return btn;
       }}
@@ -35799,8 +35734,8 @@
       if (parseInt(pages.value()) > 3 && !bypass) {
         let warn = notify({
           id: "compare_warning",
-          title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace(
+          title: tl2(trans2.are_you_sure),
+          body: tl2(trans2.this_will_require_loading_count_pages).replace(
             "{c}",
             parseInt(pages.value()) * 2
           ),
@@ -35812,7 +35747,7 @@
                 notify_rm(warn);
                 begin_comparing(true);
               },
-              text: tl(trans.continue)
+              text: tl2(trans2.continue)
             }
           ],
           persist: true
@@ -35822,11 +35757,11 @@
       if (!auth.name) {
         notify({
           id: "compare_failed",
-          title: tl(trans.name_failed).replace(
+          title: tl2(trans2.name_failed).replace(
             "{name}",
-            tl(trans.compare)
+            tl2(trans2.compare)
           ),
-          body: tl(trans.you_need_to_be_logged_in),
+          body: tl2(trans2.you_need_to_be_logged_in),
           type: "error"
         });
         return;
@@ -35851,7 +35786,7 @@
         html`
                 <div class="loading-data-container">
                     <div class="loading-data-text">
-                        ${tl(trans.gathering_plays_for_user_pages).replace("{u}", user2).replace("{current_page}", current_page).replace("{pages}", page_count)}
+                        ${tl2(trans2.gathering_plays_for_user_pages).replace("{u}", user2).replace("{current_page}", current_page).replace("{pages}", page_count)}
                     </div>
                 </div>
             `
@@ -35886,8 +35821,8 @@
         } catch (e) {
           notify({
             id: "compare",
-            title: tl(trans.failed),
-            body: tl(trans.there_was_a_network_error),
+            title: tl2(trans2.failed),
+            body: tl2(trans2.there_was_a_network_error),
             type: "error"
           });
           console.error(e);
@@ -35944,7 +35879,7 @@
           html`
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">
-                            ${tl(trans.nothing_in_common)}
+                            ${tl2(trans2.nothing_in_common)}
                         </div>
                     </div>
                 `
@@ -35985,13 +35920,13 @@
                                 <p class="grid-items-item-aux-text">
                                     <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value()}" target="_blank">
                                         <span class="avatar">
-                                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                            <img src="${auth.avatar}" alt="${tl2(trans2.your_avatar)}">
                                         </span>
                                         ${data2.plays.you.toLocaleString(lang)}
                                     </a>
                                     <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value()}" target="_blank">
                                         <span class="avatar">
-                                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                            <img src="${page.avatar}" alt="${tl2(trans2.avatar_for_user).replace("{u}", page.name)}">
                                         </span>
                                         ${data2.plays.other.toLocaleString(lang)}
                                     </a>
@@ -36049,7 +35984,7 @@
                                     <span class="chartlist-count-bar-value">${data2.plays.you}</span>
                                 </a>
                                 <span class="avatar">
-                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                    <img src="${auth.avatar}" alt="${tl2(trans2.your_avatar)}">
                                 </span>
                             </span>
                             <span class="chartlist-count-bar">
@@ -36058,7 +35993,7 @@
                                     <span class="chartlist-count-bar-value">${data2.plays.other}</span>
                                 </a>
                                 <span class="avatar">
-                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                    <img src="${page.avatar}" alt="${tl2(trans2.avatar_for_user).replace("{u}", page.name)}">
                                 </span>
                             </span>
                         </td>
@@ -36074,30 +36009,32 @@
   // src/news.js
   function news() {
     let changelog = localStorage.getItem("bleh_changelog");
-    let changelog_expire = new Date(localStorage.getItem("bleh_changelog_expire"));
+    let changelog_expire = new Date(
+      localStorage.getItem("bleh_changelog_expire")
+    );
     let current_time = /* @__PURE__ */ new Date();
     if (!changelog) {
       log("not cached, fetching", "changelog");
       request_changelog();
       dialog_rm({ id: "rabbit" });
     } else {
-      if (changelog_expire < current_time)
-        request_changelog();
-      else
-        open_changelog(JSON.parse(changelog));
+      if (changelog_expire < current_time) request_changelog();
+      else open_changelog(JSON.parse(changelog));
     }
   }
   function request_changelog(open_after = true) {
     let button = page.state.navigation_menu_news;
-    if (button)
-      button.setAttribute("disabled", "");
+    if (button) button.setAttribute("disabled", "");
     let xhr = new XMLHttpRequest();
     let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
     xhr.open("GET", url, true);
     xhr.onload = function() {
       log(`responded with ${xhr.status}`, "changelog");
       if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "changelog");
+        log(
+          "request has been cancelled, will request again in 1h",
+          "changelog"
+        );
         api_expire.setHours(api_expire.getHours() + 1);
       }
       let api_expire = /* @__PURE__ */ new Date();
@@ -36110,24 +36047,29 @@
             log(`cached until ${api_expire}`, "changelog");
             localStorage.setItem("bleh_changelog_expire", api_expire);
           } catch (e) {
-            deliver_notif("The changelog is currently unavailable due to errors, try again later.", true);
+            deliver_notif(
+              "The changelog is currently unavailable due to errors, try again later.",
+              true
+            );
             console.error(e);
           }
         }
       }
-      if (button != null)
-        button.removeAttribute("disabled");
+      if (button != null) button.removeAttribute("disabled");
     };
     xhr.send();
   }
   function open_changelog(changelog) {
     const window2 = dialog({
       id: "changelog",
-      title: tl(trans.news_from_user).replace("{user}", sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"),
+      title: tl2(trans2.news_from_user).replace(
+        "{user}",
+        sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"
+      ),
       body: html.node`
             <div class="cta first sponsor colourful margin-bottom">
-                <strong>${tl(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
+                <strong>${tl2(trans2.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor(true)">${tl2(trans2.sponsor)}</a>
             </div>
             <div class="changelog-list"></div>
         `,
@@ -36143,14 +36085,14 @@
             <div class="changelog-version-item" data-changelog-type="${changelog[version3].type}" data-changelog-latest="${index3 == 0 ? "true" : "false"}" data-changelog-version="${version3}">
                 <div class="version-item-header">
                     <div class="sub-text">
-                    <div class="breadcrumb">
-                        <div class="breadcrumb-origin">
-                        ${version3}
+                        <div class="breadcrumb">
+                            <div class="breadcrumb-origin">
+                                ${version3}
+                            </div>
+                            <div class="breadcrumb-name">
+                                ${tl2(trans2.news.type[changelog[version3].type])}
+                            </div>
                         </div>
-                        <div class="breadcrumb-name">
-                        ${trans_legacy.en.changelog.type[changelog[version3].type]}
-                        </div>
-                    </div>
                     </div>
                     <h3>${changelog[version3].name}</h3>
                     ${version3 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version3].name}</h4>` : ""}
@@ -36289,7 +36231,7 @@
                 ${() => {
           input_box = input({
             maxlength: 100,
-            placeholder: tl(trans.switch_placeholder),
+            placeholder: tl2(trans2.switch_placeholder),
             focus: true
           });
           input_box.classList.add("rabbit-search");
@@ -36322,8 +36264,8 @@
       if (depth < 2) {
         input_box.querySelector("input").style.removeProperty("display");
         fake.style.display = "none";
-        input_box.querySelector("input").placeholder = tl(
-          trans.switch_placeholder
+        input_box.querySelector("input").placeholder = tl2(
+          trans2.switch_placeholder
         );
         input_box.setAttribute("data-showing-fake", false);
       }
@@ -36332,16 +36274,16 @@
         feed = [
           {
             type: "search",
-            text: tl(trans.search),
-            body: tl(trans.search_for_music_or_user),
+            text: tl2(trans2.search),
+            body: tl2(trans2.search_for_music_or_user),
             keywords: ["user", "music", "tag", "discover", "explore"],
             action: () => search(),
             keybind: ["\u2318", settings.rabbit_search.toUpperCase()]
           },
           {
             type: "on_this_page",
-            text: tl(trans.on_this_page),
-            body: tl(trans.use_current_page_as_context),
+            text: tl2(trans2.on_this_page),
+            body: tl2(trans2.use_current_page_as_context),
             keywords: ["ctx", "context"],
             action: () => use_page_as_ctx(),
             keybind: ["\u2318", "\u21E7", settings.rabbit_primary.toUpperCase()],
@@ -36350,9 +36292,9 @@
           {
             type: "profile",
             text: auth.name,
-            body: tl(trans.opens_your_value).replace(
+            body: tl2(trans2.opens_your_value).replace(
               "{v}",
-              tl(trans.profile)
+              tl2(trans2.profile)
             ),
             keywords: ["profile", "user", "me"],
             action: () => window.location.href = `${root}user/${auth.name}`,
@@ -36361,9 +36303,9 @@
           {
             type: "starred_friend",
             text: settings.starred_friend,
-            body: tl(trans.opens_your_value).replace(
+            body: tl2(trans2.opens_your_value).replace(
               "{v}",
-              tl(trans.starred_friend.name)
+              tl2(trans2.starred_friend.name)
             ),
             keywords: [
               "profile",
@@ -36378,30 +36320,30 @@
           },
           {
             type: "notifications",
-            text: tl(trans.notifications),
-            body: tl(trans.opens_your_value).replace(
+            text: tl2(trans2.notifications),
+            body: tl2(trans2.opens_your_value).replace(
               "{v}",
-              tl(trans.notifications)
+              tl2(trans2.notifications)
             ),
             keywords: ["bell", "updates"],
             action: () => window.location.href = `${root}inbox/notifications`
           },
           {
             type: "messages",
-            text: tl(trans.messages),
-            body: tl(trans.opens_your_value).replace(
+            text: tl2(trans2.messages),
+            body: tl2(trans2.opens_your_value).replace(
               "{v}",
-              tl(trans.messages)
+              tl2(trans2.messages)
             ),
             keywords: ["messages", "direct", "dms"],
             action: () => window.location.href = `${root}inbox`
           },
           {
             type: "theme",
-            text: tl(trans.themes.name),
-            body: tl(trans.opens_the_value).replace(
+            text: tl2(trans2.themes.name),
+            body: tl2(trans2.opens_the_value).replace(
               "{v}",
-              tl(trans.theme_picker)
+              tl2(trans2.theme_picker)
             ),
             keywords: [
               "themes",
@@ -36424,10 +36366,10 @@
           },
           {
             type: "minis",
-            text: tl(trans.minis),
-            body: tl(trans.opens_your_value).replace(
+            text: tl2(trans2.minis),
+            body: tl2(trans2.opens_your_value).replace(
               "{v}",
-              tl(trans.minis)
+              tl2(trans2.minis)
             ),
             keywords: [
               "bleh",
@@ -36442,20 +36384,20 @@
           },
           {
             type: "news",
-            text: tl(trans.news),
-            body: tl(trans.opens_the_value).replace(
+            text: tl2(trans2.news),
+            body: tl2(trans2.opens_the_value).replace(
               "{v}",
-              tl(trans.news)
+              tl2(trans2.news)
             ),
             keywords: ["bleh", "extension", "changelog", "feed"],
             action: () => news()
           },
           {
             type: "settings",
-            text: tl(trans.settings),
-            body: tl(trans.opens_your_value_settings).replace(
+            text: tl2(trans2.settings),
+            body: tl2(trans2.opens_your_value_settings).replace(
               "{v}",
-              tl(trans.profile)
+              tl2(trans2.profile)
             ),
             keywords: [
               "profile",
@@ -36473,10 +36415,10 @@
           },
           {
             type: "bleh_settings",
-            text: tl(trans.settings),
-            body: tl(trans.opens_the_value).replace(
+            text: tl2(trans2.settings),
+            body: tl2(trans2.opens_the_value).replace(
               "{v}",
-              tl(trans.bleh_settings)
+              tl2(trans2.bleh_settings)
             ),
             keywords: [
               "bleh",
@@ -36530,7 +36472,7 @@
             return button;
           }) : html.node`
                     <div class="loading-data-container">
-                        <div class="loading-data-text failed">${tl(trans.nothing_matches_your_search)}</div>
+                        <div class="loading-data-text failed">${tl2(trans2.nothing_matches_your_search)}</div>
                     </div>
                 `}
                 `
@@ -36541,7 +36483,7 @@
       }
     }
     function rabbit_select(click = false, with_mouse = false) {
-      rabbit_tip(tl(trans.select_an_option));
+      rabbit_tip(tl2(trans2.select_an_option));
       if (depth == 3 && click) {
         searching[selected_search].name = input_box.querySelector("input").value;
         input_box.querySelector("input").value = "";
@@ -36578,9 +36520,9 @@
         html`
                 <div class="left">
                     ${depth == 0 ? html.node`
-            <kbd>Esc</kbd> ${tl(trans.close)}
+            <kbd>Esc</kbd> ${tl2(trans2.close)}
             ` : html.node`
-            <kbd>Esc</kbd> ${tl(trans.back)}
+            <kbd>Esc</kbd> ${tl2(trans2.back)}
             `}
                 </div>
                 <div class="right">${text3}</div>
@@ -36594,8 +36536,8 @@
       if (id == "artist" || id == "user" || id == "tag")
         selected_search = "primary";
       else selected_search = "secondary";
-      input_box.querySelector("input").placeholder = tl(trans.rabbit_search, {
-        v: tl(trans[id])
+      input_box.querySelector("input").placeholder = tl2(trans2.rabbit_search, {
+        v: tl2(trans2[id])
       });
       depth = 3;
       searching[selected_search].type = id;
@@ -36609,8 +36551,8 @@
       rabbit_search("internal:theme_picker", [
         {
           type: "theme_adaptive",
-          text: tl(trans.auto),
-          body: tl(trans.changes_your_theme),
+          text: tl2(trans2.auto),
+          body: tl2(trans2.changes_your_theme),
           keywords: ["system"],
           action: () => {
             save_setting("theme_schedule", true);
@@ -36620,8 +36562,8 @@
         },
         {
           type: "theme_light",
-          text: tl(trans.themes.light),
-          body: tl(trans.changes_your_theme),
+          text: tl2(trans2.themes.light),
+          body: tl2(trans2.changes_your_theme),
           keywords: ["sun", "day"],
           action: () => {
             save_setting("theme_schedule", false);
@@ -36630,8 +36572,8 @@
         },
         {
           type: "theme_ink",
-          text: tl(trans.themes.ink),
-          body: tl(trans.changes_your_theme),
+          text: tl2(trans2.themes.ink),
+          body: tl2(trans2.changes_your_theme),
           keywords: ["sun", "day", "light", "e-ink"],
           action: () => {
             save_setting("theme_schedule", false);
@@ -36640,8 +36582,8 @@
         },
         {
           type: "theme_ash",
-          text: tl(trans.themes.dark),
-          body: tl(trans.changes_your_theme),
+          text: tl2(trans2.themes.dark),
+          body: tl2(trans2.changes_your_theme),
           keywords: ["dark", "night", "grey", "gray"],
           action: () => {
             save_setting("theme_schedule", false);
@@ -36650,8 +36592,8 @@
         },
         {
           type: "theme_dark",
-          text: tl(trans.themes.darker),
-          body: tl(trans.changes_your_theme),
+          text: tl2(trans2.themes.darker),
+          body: tl2(trans2.changes_your_theme),
           keywords: ["dark", "night", "grey", "gray"],
           action: () => {
             save_setting("theme_schedule", false);
@@ -36660,8 +36602,8 @@
         },
         {
           type: "theme_void",
-          text: tl(trans.themes.oled),
-          body: tl(trans.changes_your_theme),
+          text: tl2(trans2.themes.oled),
+          body: tl2(trans2.changes_your_theme),
           keywords: ["dark", "night", "black"],
           action: () => {
             save_setting("theme_schedule", false);
@@ -36686,15 +36628,15 @@
         rabbit_search("internal:ctx", [
           {
             type: "overview",
-            text: tl(trans.home),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.home)).replace("{t}", page.name),
+            text: tl2(trans2.home),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.home)).replace("{t}", page.name),
             keywords: ["home"],
             action: () => window.location.href = url_start
           },
           {
             type: "reports",
-            text: tl(trans.reports),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.reports)).replace("{t}", page.name),
+            text: tl2(trans2.reports),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.reports)).replace("{t}", page.name),
             keywords: [
               "listening report",
               "reports",
@@ -36706,8 +36648,8 @@
           },
           {
             type: "library",
-            text: tl(trans.library),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.library)).replace("{t}", page.name),
+            text: tl2(trans2.library),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.library)).replace("{t}", page.name),
             keywords: [
               "library",
               "music",
@@ -36721,8 +36663,8 @@
           },
           {
             type: "friends",
-            text: tl(trans.friends),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.friends)).replace("{t}", page.name),
+            text: tl2(trans2.friends),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.friends)).replace("{t}", page.name),
             keywords: [
               "friends",
               "following",
@@ -36734,36 +36676,36 @@
           },
           {
             type: "following",
-            text: tl(trans.following),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.following)).replace("{t}", page.name),
+            text: tl2(trans2.following),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.following)).replace("{t}", page.name),
             keywords: ["friends", "following"],
             action: () => window.location.href = url_start + "/following"
           },
           {
             type: "followers",
-            text: tl(trans.followers),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.followers)).replace("{t}", page.name),
+            text: tl2(trans2.followers),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.followers)).replace("{t}", page.name),
             keywords: ["friends", "followers"],
             action: () => window.location.href = url_start + "/followers"
           },
           {
             type: "neighbours",
-            text: tl(trans.neighbours),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.neighbours)).replace("{t}", page.name),
+            text: tl2(trans2.neighbours),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.neighbours)).replace("{t}", page.name),
             keywords: ["friends", "neighbours", "similar"],
             action: () => window.location.href = url_start + "/neighbours"
           },
           {
             type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            text: tl2(trans2.shouts),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.shouts)).replace("{t}", page.name),
             keywords: ["shout", "shoutbox", "shouts", "comments"],
             action: () => window.location.href = url_start + "/shoutbox"
           },
           {
             type: "loved",
-            text: tl(trans.loved),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.loved)).replace("{t}", page.name),
+            text: tl2(trans2.loved),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.loved)).replace("{t}", page.name),
             keywords: [
               "loved",
               "hearted",
@@ -36775,8 +36717,8 @@
           },
           {
             type: "obsessions",
-            text: tl(trans.obsessions),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.obsessions)).replace("{t}", page.name),
+            text: tl2(trans2.obsessions),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.obsessions)).replace("{t}", page.name),
             keywords: [
               "loved",
               "hearted",
@@ -36789,22 +36731,22 @@
           },
           {
             type: "events",
-            text: tl(trans.events),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
+            text: tl2(trans2.events),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.events)).replace("{t}", page.name),
             keywords: ["events", "festivals", "tour", "live"],
             action: () => window.location.href = url_start + "/events"
           },
           {
             type: "playlists",
-            text: tl(trans.playlists),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.playlists)).replace("{t}", page.name),
+            text: tl2(trans2.playlists),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.playlists)).replace("{t}", page.name),
             keywords: ["playlists", "folders"],
             action: () => window.location.href = url_start + "/playlists"
           },
           {
             type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            text: tl2(trans2.tags),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.tags)).replace("{t}", page.name),
             keywords: [
               "tags",
               "tagged",
@@ -36816,8 +36758,8 @@
           },
           {
             type: "compare",
-            text: tl(trans.compare),
-            body: tl(trans.compares_your_taste).replace(
+            text: tl2(trans2.compare),
+            body: tl2(trans2.compares_your_taste).replace(
               "{v}",
               page.name
             ),
@@ -36827,8 +36769,8 @@
           },
           {
             type: "collage",
-            text: tl(trans.collage),
-            body: tl(trans.create_a_collage),
+            text: tl2(trans2.collage),
+            body: tl2(trans2.create_a_collage),
             keywords: ["taste", "music", "chart", "5x5", "topster"],
             action: () => collage()
           }
@@ -36837,29 +36779,29 @@
         rabbit_search("internal:ctx", [
           {
             type: "overview",
-            text: tl(trans.home),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.home)).replace("{t}", page.name),
+            text: tl2(trans2.home),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.home)).replace("{t}", page.name),
             keywords: ["home"],
             action: () => window.location.href = url_start
           },
           {
             type: "tracks",
-            text: tl(trans.tracks),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
+            text: tl2(trans2.tracks),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.tracks)).replace("{t}", page.name),
             keywords: ["music", "top"],
             action: () => window.location.href = url_start + "/+tracks"
           },
           {
             type: "albums",
-            text: tl(trans.albums),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            text: tl2(trans2.albums),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.albums)).replace("{t}", page.name),
             keywords: ["music", "top"],
             action: () => window.location.href = url_start + "/+albums"
           },
           {
             type: "photos",
-            text: tl(trans.photos),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.photos)).replace("{t}", page.name),
+            text: tl2(trans2.photos),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.photos)).replace("{t}", page.name),
             keywords: [
               "gallery",
               "artwork",
@@ -36871,50 +36813,50 @@
           },
           {
             type: "similar",
-            text: tl(trans.similar_artists),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.similar_artists)).replace("{t}", page.name),
+            text: tl2(trans2.similar_artists),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.similar_artists)).replace("{t}", page.name),
             keywords: ["music"],
             action: () => window.location.href = url_start + "/+similar"
           },
           {
             type: "wiki",
-            text: tl(trans.biography),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.biography)).replace("{t}", page.name),
+            text: tl2(trans2.biography),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.biography)).replace("{t}", page.name),
             keywords: ["wiki", "about", "text"],
             action: () => window.location.href = url_start + "/+wiki"
           },
           {
             type: "listeners",
-            text: tl(trans.listeners),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners)).replace("{t}", page.name),
+            text: tl2(trans2.listeners),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.listeners)).replace("{t}", page.name),
             keywords: ["top"],
             action: () => window.location.href = url_start + "/+listeners"
           },
           {
             type: "listeners_you_know",
-            text: tl(trans.listeners_you_know),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners_you_know)).replace("{t}", page.name),
+            text: tl2(trans2.listeners_you_know),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.listeners_you_know)).replace("{t}", page.name),
             keywords: ["friends"],
             action: () => window.location.href = url_start + "/+listeners/you-know"
           },
           {
             type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            text: tl2(trans2.shouts),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.shouts)).replace("{t}", page.name),
             keywords: ["shout", "shoutbox", "shouts", "comments"],
             action: () => window.location.href = url_start + "/+shoutbox"
           },
           {
             type: "events",
-            text: tl(trans.events),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
+            text: tl2(trans2.events),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.events)).replace("{t}", page.name),
             keywords: ["events", "festivals", "tour", "live"],
             action: () => window.location.href = url_start + "/+events"
           },
           {
             type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            text: tl2(trans2.tags),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.tags)).replace("{t}", page.name),
             keywords: [
               "tags",
               "tagged",
@@ -36929,22 +36871,22 @@
         rabbit_search("internal:ctx", [
           {
             type: "overview",
-            text: tl(trans.home),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.home)).replace("{t}", page.name),
+            text: tl2(trans2.home),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.home)).replace("{t}", page.name),
             keywords: ["home"],
             action: () => window.location.href = url_start
           },
           {
             type: "wiki",
-            text: tl(trans.wiki),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            text: tl2(trans2.wiki),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.wiki)).replace("{t}", page.name),
             keywords: ["wiki", "about", "text"],
             action: () => window.location.href = url_start + "/+wiki"
           },
           {
             type: "photos",
-            text: tl(trans.artwork),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artwork)).replace("{t}", page.name),
+            text: tl2(trans2.artwork),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.artwork)).replace("{t}", page.name),
             keywords: [
               "gallery",
               "artwork",
@@ -36956,15 +36898,15 @@
           },
           {
             type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            text: tl2(trans2.shouts),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.shouts)).replace("{t}", page.name),
             keywords: ["shout", "shoutbox", "shouts", "comments"],
             action: () => window.location.href = url_start + "/+shoutbox"
           },
           {
             type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            text: tl2(trans2.tags),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.tags)).replace("{t}", page.name),
             keywords: [
               "tags",
               "tagged",
@@ -36979,36 +36921,36 @@
         rabbit_search("internal:ctx", [
           {
             type: "overview",
-            text: tl(trans.home),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.home)).replace("{t}", page.name),
+            text: tl2(trans2.home),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.home)).replace("{t}", page.name),
             keywords: ["home"],
             action: () => window.location.href = url_start
           },
           {
             type: "albums",
-            text: tl(trans.albums),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            text: tl2(trans2.albums),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.albums)).replace("{t}", page.name),
             keywords: ["music", "top"],
             action: () => window.location.href = url_start + "/+albums"
           },
           {
             type: "wiki",
-            text: tl(trans.wiki),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            text: tl2(trans2.wiki),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.wiki)).replace("{t}", page.name),
             keywords: ["wiki", "about", "text"],
             action: () => window.location.href = url_start + "/+wiki"
           },
           {
             type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            text: tl2(trans2.shouts),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.shouts)).replace("{t}", page.name),
             keywords: ["shout", "shoutbox", "shouts", "comments"],
             action: () => window.location.href = url_start + "/+shoutbox"
           },
           {
             type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            text: tl2(trans2.tags),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.tags)).replace("{t}", page.name),
             keywords: [
               "tags",
               "tagged",
@@ -37023,43 +36965,43 @@
         rabbit_search("internal:ctx", [
           {
             type: "overview",
-            text: tl(trans.home),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.home)).replace("{t}", page.name),
+            text: tl2(trans2.home),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.home)).replace("{t}", page.name),
             keywords: ["home"],
             action: () => window.location.href = url_start
           },
           {
             type: "artists",
-            text: tl(trans.artists),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artists)).replace("{t}", page.name),
+            text: tl2(trans2.artists),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.artists)).replace("{t}", page.name),
             keywords: ["music", "top"],
             action: () => window.location.href = url_start + "/artists"
           },
           {
             type: "albums",
-            text: tl(trans.albums),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            text: tl2(trans2.albums),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.albums)).replace("{t}", page.name),
             keywords: ["music", "top"],
             action: () => window.location.href = url_start + "/albums"
           },
           {
             type: "tracks",
-            text: tl(trans.tracks),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
+            text: tl2(trans2.tracks),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.tracks)).replace("{t}", page.name),
             keywords: ["music", "top"],
             action: () => window.location.href = url_start + "/tracks"
           },
           {
             type: "wiki",
-            text: tl(trans.wiki),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            text: tl2(trans2.wiki),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.wiki)).replace("{t}", page.name),
             keywords: ["wiki", "about", "text"],
             action: () => window.location.href = url_start + "/wiki"
           },
           {
             type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            text: tl2(trans2.shouts),
+            body: tl2(trans2.opens_the_value_for_type).replace("{v}", tl2(trans2.shouts)).replace("{t}", page.name),
             keywords: ["shout", "shoutbox", "shouts", "comments"],
             action: () => window.location.href = url_start + "/shoutbox"
           }
@@ -37105,43 +37047,43 @@
                 `
         );
       } else {
-        render(fake, html` <i>${tl(trans.choose_a_search_type)}</i> `);
+        render(fake, html` <i>${tl2(trans2.choose_a_search_type)}</i> `);
       }
       if (searching.primary.type == "artist") {
         rabbit_search("internal:search", [
           {
             type: "finish",
-            text: tl(trans.finish),
-            body: tl(trans.finish_search),
+            text: tl2(trans2.finish),
+            body: tl2(trans2.finish_search),
             keywords: ["finish"],
             action: () => search_finish()
           },
           {
             type: "artist",
-            text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.artist),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.artist)
+              tl2(trans2.artist)
             ),
             keywords: ["profile"],
             action: () => append_search("artist")
           },
           {
             type: "album",
-            text: tl(trans.album),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.album),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.album)
+              tl2(trans2.album)
             ),
             keywords: ["record"],
             action: () => append_search("album")
           },
           {
             type: "track",
-            text: tl(trans.track),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.track),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.track)
+              tl2(trans2.track)
             ),
             keywords: ["song"],
             action: () => append_search("track")
@@ -37151,17 +37093,17 @@
         rabbit_search("internal:search", [
           {
             type: "search",
-            text: tl(trans.search),
-            body: tl(trans.finish_search),
+            text: tl2(trans2.search),
+            body: tl2(trans2.finish_search),
             keywords: ["finish"],
             action: () => search_finish()
           },
           {
             type: "user",
-            text: tl(trans.profile),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.profile),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.profile)
+              tl2(trans2.profile)
             ),
             keywords: [],
             action: () => append_search("user")
@@ -37171,17 +37113,17 @@
         rabbit_search("internal:search", [
           {
             type: "finish",
-            text: tl(trans.finish),
-            body: tl(trans.finish_search),
+            text: tl2(trans2.finish),
+            body: tl2(trans2.finish_search),
             keywords: ["finish"],
             action: () => search_finish()
           },
           {
             type: "tag",
-            text: tl(trans.tag),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.tag),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.tag)
+              tl2(trans2.tag)
             ),
             keywords: ["genre"],
             action: () => append_search("tag")
@@ -37191,10 +37133,10 @@
         rabbit_search("internal:search", [
           {
             type: "artist",
-            text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.artist),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.artist)
+              tl2(trans2.artist)
             ),
             keywords: ["profile"],
             action: () => append_search("artist")
@@ -37204,50 +37146,50 @@
         rabbit_search("internal:search", [
           {
             type: "artist",
-            text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.artist),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.artist)
+              tl2(trans2.artist)
             ),
             keywords: ["profile"],
             action: () => append_search("artist")
           },
           {
             type: "album",
-            text: tl(trans.album),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.album),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.album)
+              tl2(trans2.album)
             ),
             keywords: ["record"],
             action: () => append_search("album")
           },
           {
             type: "track",
-            text: tl(trans.track),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.track),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.track)
+              tl2(trans2.track)
             ),
             keywords: ["song"],
             action: () => append_search("track")
           },
           {
             type: "user",
-            text: tl(trans.profile),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.profile),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.profile)
+              tl2(trans2.profile)
             ),
             keywords: [],
             action: () => append_search("user")
           },
           {
             type: "tag",
-            text: tl(trans.tag),
-            body: tl(trans.search_for_value).replace(
+            text: tl2(trans2.tag),
+            body: tl2(trans2.search_for_value).replace(
               "{v}",
-              tl(trans.tag)
+              tl2(trans2.tag)
             ),
             keywords: ["genre"],
             action: () => append_search("tag")
@@ -37315,8 +37257,8 @@
           message: "No settings store entry present"
         });
       const type = settings_store[id].type || "toggle";
-      const title = settings_store[id].title ? tl(settings_store[id].title) : id;
-      let body = settings_store[id].body ? tl(settings_store[id].body) : null;
+      const title = settings_store[id].title ? tl2(settings_store[id].title) : id;
+      let body = settings_store[id].body ? tl2(settings_store[id].body) : null;
       const icon = settings_store[id].icon;
       const incompatible_with = settings_store[id].incompatible;
       const hide_if_incompatible = settings_store[id].hide_if_incompatible || false;
@@ -37326,7 +37268,7 @@
       let disabled_reason = "";
       if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
         disabled = true;
-        disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
+        disabled_reason = tl2(trans2.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl2(trans2.platforms[page.platform]));
       }
       if (disabled && disabled_reason)
         return setting_fail(id, {
@@ -37336,17 +37278,17 @@
       let html_title = html.node`${title}`;
       if (settings_store[id].beta)
         html_title.appendChild(
-          html.node`<span class="new-badge beta">${tl(trans.beta)}</span>`
+          html.node`<span class="new-badge beta">${tl2(trans2.beta)}</span>`
         );
       if (settings_store[id].new_release)
         html_title.appendChild(
-          html.node`<span class="new-badge new">${tl(trans.new)}</span>`
+          html.node`<span class="new-badge new">${tl2(trans2.new)}</span>`
         );
       if (type === "toggle") {
         let update_toggle = function() {
           if (elem.getAttribute("disabled") == "true") {
             status({
-              title: tl(trans.incompatible_alert)
+              title: tl2(trans2.incompatible_alert)
             });
             return;
           }
@@ -37379,9 +37321,9 @@
                                 </div>
                             `;
             tippy_esm_default(container, {
-              content: tl(
-                trans.requires_extension_value
-              ).replace("{v}", tl(extension))
+              content: tl2(
+                trans2.requires_extension_value
+              ).replace("{v}", tl2(extension))
             });
             return container;
           }
@@ -37428,7 +37370,7 @@
         }, reset_range = function() {
           update_range(settings_store[id].default);
           status({
-            title: tl(trans.reset_item_to_default)
+            title: tl2(trans2.reset_item_to_default)
           });
         };
         let option;
@@ -37448,7 +37390,7 @@
                 <div class="setting v2 ${standalone ? "standalone" : ""} ${settings_store[id].vertical ? "v" : ""}" data-type="range" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_range()}>${tl2(trans2.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -37462,9 +37404,9 @@
                                 </div>
                             `;
             tippy_esm_default(container, {
-              content: tl(
-                trans.requires_extension_value
-              ).replace("{v}", tl(extension))
+              content: tl2(
+                trans2.requires_extension_value
+              ).replace("{v}", tl2(extension))
             });
             return container;
           }
@@ -37497,7 +37439,7 @@
         };
         elem.compat();
         tippy_esm_default(reset_btn, {
-          content: tl(trans.reset)
+          content: tl2(trans2.reset)
         });
         elem.set = (val) => {
           update_range(val);
@@ -37520,7 +37462,7 @@
         let error_tooltip;
         let placeholder = settings_store[id].placeholder;
         if (placeholder && placeholder != "empty")
-          placeholder = tl(placeholder);
+          placeholder = tl2(placeholder);
         let container = html.node`
                 <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
@@ -37530,7 +37472,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl2(trans2.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -37544,9 +37486,9 @@
                                 </div>
                             `;
             tippy_esm_default(container2, {
-              content: tl(
-                trans.requires_extension_value
-              ).replace("{v}", tl(extension))
+              content: tl2(
+                trans2.requires_extension_value
+              ).replace("{v}", tl2(extension))
             });
             return container2;
           }
@@ -37563,7 +37505,7 @@
                     ` : ""}
                     <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${(el) => input_container = el}>
                         <input type="text" maxlength=${max2} value=${value} style="--max: ${max2}px" ref=${(el) => input2 = el} placeholder=${placeholder} />
-                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
+                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl2(trans2.save)}</button>
                     </div>
                 </div>
             `;
@@ -37588,10 +37530,10 @@
           }
         });
         tippy_esm_default(reset_btn, {
-          content: tl(trans.reset)
+          content: tl2(trans2.reset)
         });
         tippy_esm_default(submit, {
-          content: tl(trans.save)
+          content: tl2(trans2.save)
         });
         if (focus) input2.focus();
         error_tooltip = tippy_esm_default(input2, {
@@ -37607,14 +37549,14 @@
           if (type == "number") {
             if (input2.value == "") {
               error_input(
-                tl(trans.only_numbers_are_allowed),
+                tl2(trans2.only_numbers_are_allowed),
                 input_container,
                 error_tooltip,
                 submit
               );
             } else if (parseInt(input2.value) > max2 || parseInt(input2.value) < min2) {
               error_input(
-                tl(trans.keep_within_the_range),
+                tl2(trans2.keep_within_the_range),
                 input_container,
                 error_tooltip,
                 submit
@@ -37623,14 +37565,14 @@
           } else if (type == "text") {
             if (settings_store[id].warn_if_empty && input2.value == "") {
               error_input(
-                tl(trans.this_field_is_required),
+                tl2(trans2.this_field_is_required),
                 input_container,
                 error_tooltip,
                 submit
               );
             } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
               error_input(
-                tl(trans.please_dont_clone_yourself),
+                tl2(trans2.please_dont_clone_yourself),
                 input_container,
                 error_tooltip,
                 submit
@@ -37643,7 +37585,7 @@
         let update_toggle = function() {
           if (elem.getAttribute("disabled") == "true") {
             status({
-              title: tl(trans.incompatible_alert)
+              title: tl2(trans2.incompatible_alert)
             });
             return;
           }
@@ -37676,9 +37618,9 @@
                                 </div>
                             `;
             tippy_esm_default(container, {
-              content: tl(
-                trans.requires_extension_value
-              ).replace("{v}", tl(extension))
+              content: tl2(
+                trans2.requires_extension_value
+              ).replace("{v}", tl2(extension))
             });
             return container;
           }
@@ -37727,7 +37669,7 @@
               });
               if (func) func(key);
             }} aria-checked=${value == key}>
-                                ${tl(val.name)}
+                                ${tl2(val.name)}
                             </button>
                         `;
             buttons.push(button);
@@ -37754,7 +37696,7 @@
         }, reset_radio = function() {
           update_radio(settings_store[id].default);
           status({
-            title: tl(trans.reset_item_to_default)
+            title: tl2(trans2.reset_item_to_default)
           });
         };
         if (func) func(value);
@@ -37769,7 +37711,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_radio()}>${tl(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_radio()}>${tl2(trans2.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -37783,9 +37725,9 @@
                                 </div>
                             `;
             tippy_esm_default(container, {
-              content: tl(
-                trans.requires_extension_value
-              ).replace("{v}", tl(extension))
+              content: tl2(
+                trans2.requires_extension_value
+              ).replace("{v}", tl2(extension))
             });
             return container;
           }
@@ -37801,7 +37743,7 @@
                                 <button class="btn primary-selection no-icon" data-type=${icon2} data-value=${key} onclick=${() => {
               update_radio(key);
             }} aria-checked=${value == key}>
-                                    <h5>${typeof val.name === "object" ? tl(val.name) : val.name}</h5>
+                                    <h5>${typeof val.name === "object" ? tl2(val.name) : val.name}</h5>
                                 </button>
                             `;
             buttons.push(button);
@@ -37826,7 +37768,7 @@
         };
         elem.compat();
         tippy_esm_default(reset_btn, {
-          content: tl(trans.reset)
+          content: tl2(trans2.reset)
         });
         return elem;
       } else if (type == "list") {
@@ -37857,7 +37799,7 @@
                                     ` : ""}
                                     <div class="info">
                                         ${list[val]?.name || val}
-                                        ${list[val]?.new_release ? html.node`<span class="new-badge new">${tl(trans.new)}</span>` : ""}
+                                        ${list[val]?.new_release ? html.node`<span class="new-badge new">${tl2(trans2.new)}</span>` : ""}
                                     </div>
                                     <div class="bleh-icon indicator" data-type="minus" />
                                 </button>
@@ -37878,11 +37820,11 @@
                 })}
                                         <div class="modal-footer">
                                             <button class="see-more cancel" onclick=${() => dialog_rm({ id: `add_to_list_${id}` })}>
-                                                ${tl(trans.cancel)}
+                                                ${tl2(trans2.cancel)}
                                             </button>
                                             <div class="fill"></div>
                                             <button class="btn primary icon" data-type="add" onclick=${() => complete_add(input_box.value())}>
-                                                ${tl(trans.add)}
+                                                ${tl2(trans2.add)}
                                             </button>
                                         </div>
                                     `
@@ -37901,7 +37843,7 @@
               }
             }}>
                                 <div class="info">
-                                    ${tl(trans.add)}
+                                    ${tl2(trans2.add)}
                                 </div>
                                 <div class="bleh-icon indicator" data-type="add" />
                             </button>
@@ -37920,7 +37862,7 @@
                                     ` : ""}
                                     <div class="info">
                                         ${formal.name}
-                                        ${formal.new_release ? html.node`<span class="new-badge new">${tl(trans.new)}</span>` : ""}
+                                        ${formal.new_release ? html.node`<span class="new-badge new">${tl2(trans2.new)}</span>` : ""}
                                     </div>
                                     <div class="bleh-icon indicator" data-type="add" />
                                 </button>
@@ -37979,7 +37921,7 @@
         }, reset_select = function() {
           menu.set(settings_store[id].default);
           status({
-            title: tl(trans.reset_item_to_default)
+            title: tl2(trans2.reset_item_to_default)
           });
         };
         if (!list)
@@ -38000,7 +37942,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_select()}>${tl(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_select()}>${tl2(trans2.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -38014,9 +37956,9 @@
                                 </div>
                             `;
             tippy_esm_default(container, {
-              content: tl(
-                trans.requires_extension_value
-              ).replace("{v}", tl(extension))
+              content: tl2(
+                trans2.requires_extension_value
+              ).replace("{v}", tl2(extension))
             });
             return container;
           }
@@ -38044,7 +37986,7 @@
         };
         elem.compat();
         tippy_esm_default(reset_btn, {
-          content: tl(trans.reset)
+          content: tl2(trans2.reset)
         });
         return elem;
       }
@@ -38074,9 +38016,9 @@
                     </div>
                 `;
       tippy_esm_default(container, {
-        content: tl(trans.incompatible_with_value).replace(
+        content: tl2(trans2.incompatible_with_value).replace(
           "{v}",
-          tl(settings_store[incompatible.setting].title)
+          tl2(settings_store[incompatible.setting].title)
         )
       });
       return container;
@@ -38097,7 +38039,7 @@
     return html.node`
         <div class="setting">
             <div class="alert alert-error no-margin">
-                ${tl(trans.value_failed_to_load).replace("{v}", id)}
+                ${tl2(trans2.value_failed_to_load).replace("{v}", id)}
                 ${e && e.message ? html`<br />${e.message}` : ""}
             </div>
         </div>
@@ -38117,8 +38059,8 @@
         change_settings_page("sku");
         notify({
           id: "unlocked",
-          title: tl(trans.development),
-          body: tl(trans.unlocked),
+          title: tl2(trans2.development),
+          body: tl2(trans2.unlocked),
           type: "success"
         });
       }
@@ -38138,8 +38080,8 @@
     );
     notify({
       id: "reset_setting",
-      title: tl(trans.settings),
-      body: tl(trans.reset_item_to_default),
+      title: tl2(trans2.settings),
+      body: tl2(trans2.reset_item_to_default),
       icon: "icon-16-settings"
     });
   }
@@ -38425,14 +38367,14 @@
     log("requesting reload", "settings");
     reload_pending.state = true;
     notify({
-      title: tl(trans.refresh_pending.name),
-      body: tl(trans.refresh_pending.body),
+      title: tl2(trans2.refresh_pending.name),
+      body: tl2(trans2.refresh_pending.body),
       icon: "icon-16-settings",
       persist: true,
       actions: [
         {
           action: () => invoke_reload(),
-          text: tl(trans.refresh),
+          text: tl2(trans2.refresh),
           type: "refresh"
         }
       ]
@@ -38549,12 +38491,9 @@
     let date_items = page.structure.side.querySelectorAll(
       ":scope > :is(div, figure)"
     );
-    let date_panel = document.createElement("section");
-    date_panel.classList.add("date-panel");
-    date_panel.setAttribute(
-      "data-glacier-graphs",
-      settings.glacier_library_graphs
-    );
+    let date_panel = html.node`
+        <section class="date-panel" data-glacier-graphs=${settings.glacier_library_graphs} />
+    `;
     date_items.forEach((item, index3) => {
       date_panel.appendChild(item);
       if (item.classList.contains("row")) item.classList = "date-selector";
@@ -38581,7 +38520,7 @@
       );
       velocity_tab.innerHTML = `
             <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
-                ${tl(trans.velocity)}
+                ${tl2(trans2.velocity)}
             </a>
         `;
       tabs.appendChild(velocity_tab);
@@ -38589,7 +38528,7 @@
       tabs.appendChild(html.node`
             <li class="navlist-item secondary-nav-item secondary-nav-item--compare">
                 <a class="secondary-nav-item-link" href="${root}bleh/minis/compare?profile=${page.name}">
-                    ${tl(trans.compare)}
+                    ${tl2(trans2.compare)}
                 </a>
             </li>
         `);
@@ -38618,13 +38557,13 @@
       );
       chart_view_selector.innerHTML = `
             <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
-                ${tl(trans.line)}
+                ${tl2(trans2.line)}
             </button>
             <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
-                ${tl(trans.pie)}
+                ${tl2(trans2.pie)}
             </button>
             <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
-                ${tl(trans.bar)}
+                ${tl2(trans2.bar)}
             </button>
         `;
       page.structure.glacier.selector.after(chart_view_selector);
@@ -38636,10 +38575,10 @@
       );
       chart_axis_selector.innerHTML = `
             <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
-                ${tl(trans.horizontal)}
+                ${tl2(trans2.horizontal)}
             </button>
             <button class="btn view-item" id="toggle-chart_bar_axis-vertical" data-toggle="chart_bar_axis" data-toggle-value="vertical" onclick="_update_item('chart_bar_axis', 'vertical')">
-                ${tl(trans.vertical)}
+                ${tl2(trans2.vertical)}
             </button>
         `;
       chart_view_selector.after(chart_axis_selector);
@@ -38873,16 +38812,16 @@
       if (text3) {
         text3 = text3.textContent;
         if (page.subpage == "library_overview") {
-          if (index3 == 1) text3 = tl(trans.average);
+          if (index3 == 1) text3 = tl2(trans2.average);
         } else if (page.subpage == "library_artists") {
-          text3 = tl(trans.artists);
+          text3 = tl2(trans2.artists);
         } else if (page.subpage == "library_albums") {
-          text3 = tl(trans.albums);
+          text3 = tl2(trans2.albums);
         } else if (page.subpage == "library_tracks") {
-          text3 = tl(trans.tracks);
+          text3 = tl2(trans2.tracks);
         }
       } else {
-        text3 = tl(trans.results_for);
+        text3 = tl2(trans2.results_for);
         value = meta.querySelector(".metadata-display").textContent;
         let start2 = value.indexOf("\u201C") + 1;
         let end2 = value.indexOf("\u201D");
@@ -38932,10 +38871,10 @@
       add_divider = true;
       if (top_wrap.getAttribute("data-current-format") == "grid") {
         format_button.setAttribute("data-glacier-view", "grid");
-        format_button.textContent = tl(trans.grid);
+        format_button.textContent = tl2(trans2.grid);
       } else {
         format_button.setAttribute("data-glacier-view", "list");
-        format_button.textContent = tl(trans.list);
+        format_button.textContent = tl2(trans2.list);
       }
       view_buttons.appendChild(format_button);
     }
@@ -38952,9 +38891,9 @@
       "glacier-configure-button",
       "panel-settings-button"
     );
-    configure_button.textContent = tl(trans.settings);
+    configure_button.textContent = tl2(trans2.settings);
     tippy_esm_default(configure_button, {
-      content: tl(trans.settings)
+      content: tl2(trans2.settings)
     });
     tippy_esm_default(configure_button, {
       theme: "window",
@@ -38964,8 +38903,8 @@
                     ${page.subpage == "library_artists" ? html.node`
                     <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
                         <div class="heading">
-                            <h5>${tl(trans.colourful_counts.name)}</h5>
-                            <p>${tl(trans.colourful_counts.body)}</p>
+                            <h5>${tl2(trans2.colourful_counts.name)}</h5>
+                            <p>${tl2(trans2.colourful_counts.body)}</p>
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
@@ -39007,10 +38946,10 @@
     format.click();
     if (format.getAttribute("href") && format.getAttribute("href").endsWith("reset")) {
       page.structure.glacier.format.setAttribute("data-glacier-view", "list");
-      page.structure.glacier.format.textContent = tl(trans.list);
+      page.structure.glacier.format.textContent = tl2(trans2.list);
     } else {
       page.structure.glacier.format.setAttribute("data-glacier-view", "grid");
-      page.structure.glacier.format.textContent = tl(trans.grid);
+      page.structure.glacier.format.textContent = tl2(trans2.grid);
     }
   };
   function bleh_glacier_date_graph(static_page = false, own_table = null) {
@@ -39160,12 +39099,12 @@
       `.scrobble-insights-panel[data-type="${type}"]`
     );
     if (!scrobble_insights_panel) {
-      scrobble_insights_panel = document.createElement("section");
-      scrobble_insights_panel.classList.add("scrobble-insights-panel");
-      scrobble_insights_panel.setAttribute("data-type", type);
+      scrobble_insights_panel = html.node`
+            <section class="scrobble-insights-panel" data-type=${type} />
+        `;
       new_run = true;
     }
-    scrobble_insights_panel.innerHTML = `<h2>${trans_legacy.en[type].plural}</h2>`;
+    render(scrobble_insights_panel, html` <h2>${tl2(trans2[`${type}s`])}</h2> `);
     let scrobble_canvas_container = document.createElement("div");
     scrobble_canvas_container.classList.add(
       "scrobble-insights-canvas-container"
@@ -39520,10 +39459,10 @@
             </div>
             <div class="glacier-library-metadata-item">
                 <div class="sub-text">
-                    ${tl(trans[type])}
+                    ${tl2(trans2[type])}
                 </div>
                 <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                    <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? html`${{ html: trans_legacy.en.glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>`) }}` : ""}
+                    <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? html`${{ html: tl2(trans2.by_artist, { a: `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>` }) }}` : ""}
                 </div>
             </div>
         </div>
@@ -39567,7 +39506,7 @@
         let action = button.getAttribute("data-analytics-action");
         if (action) {
           if (action == "EditScrobbleOpen") {
-            button.textContent = tl(trans.edit);
+            button.textContent = tl2(trans2.edit);
           } else if (action == "UnloveTrack" || action == "LoveTrack") {
             let listen_divider = document.createElement("div");
             listen_divider.classList.add("listen-divider");
@@ -39582,7 +39521,7 @@
           }
         } else {
           if (button.classList.contains("delete-icon")) {
-            button.textContent = tl(trans.delete);
+            button.textContent = tl2(trans2.delete);
           }
         }
       });
@@ -39600,13 +39539,13 @@
         "glacier-library-button",
         "glacier-search-button"
       );
-      search.textContent = tl(trans.search);
+      search.textContent = tl2(trans2.search);
       search.setAttribute(
         "href",
         `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist(header_title))}`
       );
       tippy_esm_default(search, {
-        content: tl(trans.search_guest)
+        content: tl2(trans2.search_guest)
       });
       let divider = view_buttons.querySelector(".listen-divider");
       if (divider) view_buttons.insertBefore(search, divider);
@@ -39619,9 +39558,9 @@
       "glacier-configure-button",
       "panel-settings-button"
     );
-    configure_button.textContent = tl(trans.settings);
+    configure_button.textContent = tl2(trans2.settings);
     tippy_esm_default(configure_button, {
-      content: tl(trans.settings)
+      content: tl2(trans2.settings)
     });
     tippy_esm_default(configure_button, {
       theme: "window",
@@ -39724,7 +39663,7 @@
       "glacier-library-button",
       "bulk-edit-button"
     );
-    bulk_edit.textContent = trans_legacy.en.glacier.bulk_edit;
+    bulk_edit.textContent = tl2(trans2.bulk_edit);
     if (!edit_form) view_buttons.insertBefore(bulk_edit, delete_button);
     else view_buttons.insertBefore(bulk_edit, edit_form);
   }
@@ -40016,7 +39955,7 @@
         if (is_following)
           follow_btn.setAttribute("data-followed", "true");
         let mutual_text = document.createElement("i");
-        mutual_text.textContent = tl(trans.following_mutuals);
+        mutual_text.textContent = tl2(trans2.following_mutuals);
         follow_btn.appendChild(mutual_text);
         if (!katsune)
           tippy_esm_default(follow_btn, {
@@ -40031,7 +39970,7 @@
         let follow_placeholder = document.createElement("button");
         follow_placeholder.classList.add("btn", "side-action");
         follow_placeholder.setAttribute("data-type", "follow");
-        follow_placeholder.textContent = tl(trans.blocked);
+        follow_placeholder.textContent = tl2(trans2.blocked);
         follow_placeholder.setAttribute("disabled", "true");
         follow_placeholder.setAttribute("data-ignored", "true");
         profile_header.appendChild(follow_placeholder);
@@ -40104,8 +40043,8 @@
           type: "labs",
           link: `${root}labs`,
           tooltip: `
-                    <strong>${tl(trans.labs_by_last)}</strong>
-                    <p>${tl(trans.labs_by_last.tagline)}</p>
+                    <strong>${tl2(trans2.labs_by_last)}</strong>
+                    <p>${tl2(trans2.labs_by_last.tagline)}</p>
                 `,
           tooltip_style: "stack",
           allow_html: true
@@ -40121,7 +40060,7 @@
           name: page.name,
           type: "collage",
           link: `${root}bleh/minis/collage`,
-          text: tl(trans.collage)
+          text: tl2(trans2.collage)
         });
       }
     }
@@ -40134,7 +40073,7 @@
       if (taste == "") {
         listen_container.appendChild(html.node`
                 <div class="loading-data-container">
-                    <div class="loading-data-text error">${tl(trans.missing_component)}</div>
+                    <div class="loading-data-text error">${tl2(trans2.missing_component)}</div>
                 </div>
             `);
         return;
@@ -40149,12 +40088,12 @@
                     <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
                     <div class="info">
                         <h3>${html.node([
-        tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`)
+        tl2(trans2.you_share_count_with).replace("{c}", `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`)
       ])}</h3>
                         <p>
-                            ${taste_artists.length == 1 ? tl(trans.you_share_count_with.one).replace("{artist}", taste_artists[0]) : ""}
-                            ${taste_artists.length == 2 ? tl(trans.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
-                            ${taste_artists.length == 3 ? tl(trans.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
+                            ${taste_artists.length == 1 ? tl2(trans2.you_share_count_with.one).replace("{artist}", taste_artists[0]) : ""}
+                            ${taste_artists.length == 2 ? tl2(trans2.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
+                            ${taste_artists.length == 3 ? tl2(trans2.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
                         </p>
                     </div>
                 </div>
@@ -40164,16 +40103,16 @@
         theme: "stack",
         content: html.node`
                 <span>
-                    ${tl(trans.taste_similarity)}
+                    ${tl2(trans2.taste_similarity)}
                 </span>
-                <div class="hint">${tl(trans.click_for_more_options)}</div>
+                <div class="hint">${tl2(trans2.click_for_more_options)}</div>
             `
       });
       if (taste_artists.length > 1) {
         tippy_esm_default(taste_wrap, {
           theme: "context-menu",
           content: html.node`
-                    <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
+                    <h4 class="menu-header">${tl2(trans2.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
                     </a>
@@ -40199,7 +40138,7 @@
                     </a>
                     ` : ""}
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl(trans.compare)}</a>
+                    <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl2(trans2.compare)}</a>
                 `,
           trigger: "click",
           placement: "bottom",
@@ -40222,9 +40161,9 @@
                 data-type=${type}
                 onclick=${link}
             >
-                ${tl(trans[type])}
-                ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
-                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ""}
+                ${tl2(trans2[type])}
+                ${new_release ? html.node`<div class="new-badge">${tl2(trans2.new)}</div>` : ""}
+                ${updated ? html.node`<div class="new-badge">${tl2(trans2.updated)}</div>` : ""}
             </button>
         `;
     } else {
@@ -40234,9 +40173,9 @@
                 data-type=${type}
                 href=${link}
             >
-                ${tl(trans[type])}
-                ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
-                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ""}
+                ${tl2(trans2[type])}
+                ${new_release ? html.node`<div class="new-badge">${tl2(trans2.new)}</div>` : ""}
+                ${updated ? html.node`<div class="new-badge">${tl2(trans2.updated)}</div>` : ""}
             </a>
         `;
     }
@@ -40256,12 +40195,12 @@
       if (friend_state) {
         dialog({
           id: "remove_friend",
-          title: tl(trans.remove_friend.name),
+          title: tl2(trans2.remove_friend.name),
           body: html.node`
-                        <p>${tl(trans.remove_friend.body).replace("{u}", page.name)}</p>
+                        <p>${tl2(trans2.remove_friend.body).replace("{u}", page.name)}</p>
                         <div class="modal-footer">
                             <button class="see-more cancel" onclick=${() => dialog_rm({ id: "remove_friend" })}>
-                                ${tl(trans.cancel)}
+                                ${tl2(trans2.cancel)}
                             </button>
                             <div class="fill"></div>
                             <button class="btn primary icon danger" data-type="minus" onclick=${() => {
@@ -40274,13 +40213,13 @@
             update_visual();
             notify({
               id: "friends",
-              title: tl(trans.removed_friend),
+              title: tl2(trans2.removed_friend),
               body: page.name,
               icon: "icon-16-minus",
               type: "error"
             });
           }}>
-                                ${tl(trans.remove)}
+                                ${tl2(trans2.remove)}
                             </button>
                         </div>
                     `
@@ -40292,7 +40231,7 @@
         update_visual();
         notify({
           id: "friends",
-          title: tl(trans.added_as_friend),
+          title: tl2(trans2.added_as_friend),
           body: page.name,
           icon: "icon-16-users",
           type: "success"
@@ -40301,7 +40240,7 @@
     }} />
     `;
     tippy_esm_default(elem, {
-      content: tl(trans.friend_difference)
+      content: tl2(trans2.friend_difference)
     });
     const menu = tippy_esm_default(elem, {
       theme: "context-menu",
@@ -40323,7 +40262,7 @@
             update_visual();
             notify({
               id: "friends",
-              title: tl(trans.removed_star),
+              title: tl2(trans2.removed_star),
               body: page.name,
               icon: "icon-16-minus",
               type: "error"
@@ -40334,13 +40273,13 @@
             update_visual();
             notify({
               id: "friends",
-              title: tl(trans.added_star),
+              title: tl2(trans2.added_star),
               body: page.name,
               icon: "icon-16-starred-friend"
             });
           }
         }}>
-                    ${star_state ? tl(trans.remove_as_star_friend) : tl(trans.add_as_starred_friend)}
+                    ${star_state ? tl2(trans2.remove_as_star_friend) : tl2(trans2.add_as_starred_friend)}
                 </button>
             `);
       }
@@ -40351,11 +40290,11 @@
       elem.setAttribute("data-friends", friend_state);
       elem.setAttribute("data-starred", star_state);
       if (star_state) {
-        elem.textContent = tl(trans.starred_friend.name);
+        elem.textContent = tl2(trans2.starred_friend.name);
       } else if (friend_state) {
-        elem.textContent = tl(trans.friends);
+        elem.textContent = tl2(trans2.friends);
       } else {
-        elem.textContent = tl(trans.add_as_friend);
+        elem.textContent = tl2(trans2.add_as_friend);
       }
     }
     parent.appendChild(elem);
@@ -40438,7 +40377,7 @@
           const href = overview.getAttribute("href").replace(root, "");
           if (href == "settings" || href == "inbox" || href == "charts") overview = null;
         }
-        if (overview) overview.textContent = tl(trans.home);
+        if (overview) overview.textContent = tl2(trans2.home);
       }
       if (is_subpage) {
         let content_top = document.body.querySelector(".content-top");
@@ -40513,7 +40452,7 @@
               page.structure.main.appendChild(side_actions);
             btn_add.classList = "btn side-action";
             btn_add.setAttribute("data-type", "add");
-            btn_add.textContent = tl(trans.add);
+            btn_add.textContent = tl2(trans2.add);
             side_actions.appendChild(btn_add);
           }
           let radio = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
@@ -40527,8 +40466,8 @@
             radio.classList = "btn stationlink js-playlink-station radio-button";
             let type = radio.getAttribute("data-analytics-label");
             render(radio, html`
-                        <h3 class="sub-text">${tl(trans.radio)}</h3>
-                        <h4>${tl(trans[type])}</h4>
+                        <h3 class="sub-text">${tl2(trans2.radio)}</h3>
+                        <h4>${tl2(trans2[type])}</h4>
                     `);
             radio.removeAttribute("title");
             side_actions.appendChild(radio);
@@ -40585,7 +40524,7 @@
     nav.insertBefore(html.node`
         <li class="navlist-item secondary-nav-item secondary-nav-item--back">
             <a class="secondary-nav-item-link" href="${root}settings/subscription">
-                ${tl(trans.back)}
+                ${tl2(trans2.back)}
             </a>
         </li>
     `, nav.firstElementChild);
@@ -40658,7 +40597,7 @@
             <div class="tag-icon cog-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${tl(trans.settings)}</div>
+            <div class="sub-text">${tl2(trans2.settings)}</div>
             <h1>${header_text}</h1>
         </div>
     `;
@@ -40707,7 +40646,7 @@
       }
     };
     charts_panel.innerHTML = `
-        <h4>${tl(trans.recent_tracks)}</h4>
+        <h4>${tl2(trans2.recent_tracks)}</h4>
         <form action="${root}settings#update-chart" name="chart-form" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <div class="inner-preview pad">
@@ -40747,7 +40686,7 @@
             <div class="setting-group">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.amount_to_display)}</h5>
+                        <h5>${tl2(trans2.amount_to_display)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                         ${original_chart_settings.recent.count}
@@ -40756,7 +40695,7 @@
                 <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                     <div class="heading">
-                        <h5>${tl(trans.recent_artwork)}</h5>
+                        <h5>${tl2(trans2.recent_artwork)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
@@ -40768,8 +40707,8 @@
                 <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                     <div class="heading">
-                        <h5>${tl(trans.recent_realtime.name)}</h5>
-                        <p>${tl(trans.recent_realtime.body)}</p>
+                        <h5>${tl2(trans2.recent_realtime.name)}</h5>
+                        <p>${tl2(trans2.recent_realtime.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
@@ -40779,7 +40718,7 @@
                     </div>
                 </div>
             </div>
-            <h4>${tl(trans.top_artists)}</h4>
+            <h4>${tl2(trans2.top_artists)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid artist">
                     <div class="grid-primary artist">
@@ -40841,7 +40780,7 @@
             <div class="setting-group">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
+                        <h5>${tl2(trans2.default_timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                         ${original_chart_settings.artists.timeframe}
@@ -40849,14 +40788,14 @@
                 </div>
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.chart_style)}</h5>
+                        <h5>${tl2(trans2.chart_style)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
                         ${original_chart_settings.artists.style}
                     </div>
                 </div>
             </div>
-            <h4>${tl(trans.top_albums)}</h4>
+            <h4>${tl2(trans2.top_albums)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid album">
                     <div class="grid-primary album">
@@ -40918,7 +40857,7 @@
             <div class="setting-group">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
+                        <h5>${tl2(trans2.default_timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                         ${original_chart_settings.albums.timeframe}
@@ -40926,14 +40865,14 @@
                 </div>
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.chart_style)}</h5>
+                        <h5>${tl2(trans2.chart_style)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
                         ${original_chart_settings.albums.style}
                     </div>
                 </div>
             </div>
-            <h4>${tl(trans.top_tracks)}</h4>
+            <h4>${tl2(trans2.top_tracks)}</h4>
             <div class="inner-preview pad">
                 <div class="tracks">
                     <div class="track">
@@ -40981,7 +40920,7 @@
             <div class="setting-group">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
+                        <h5>${tl2(trans2.default_timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                         ${original_chart_settings.tracks.timeframe}
@@ -40989,7 +40928,7 @@
                 </div>
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.amount_to_display)}</h5>
+                        <h5>${tl2(trans2.amount_to_display)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                         ${original_chart_settings.tracks.count}
@@ -40998,7 +40937,7 @@
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
-                    ${tl(trans.save)}
+                    ${tl2(trans2.save)}
                 </button>
                 <input type="hidden" value="chart" name="submit">
             </div>
@@ -41085,7 +41024,7 @@
     render(
       update_picture,
       html`
-            <h4>${tl(trans.profile)}</h4>
+            <h4>${tl2(trans2.profile)}</h4>
             <div class="banner-preview"></div>
             <div class="profile-container">
                 <div class="avatar-side">
@@ -41095,7 +41034,7 @@
                     >
                         <img
                             src=${avatar_url}
-                            alt=${tl(trans.your_avatar)}
+                            alt=${tl2(trans2.your_avatar)}
                             loading="lazy"
                         />
                         <div class="avatar-overlay"></div>
@@ -41134,7 +41073,7 @@
                             <div class="info-grid">
                                 <div class="info-row">
                                     <div class="title">
-                                        ${tl(trans.subtitle)}
+                                        ${tl2(trans2.subtitle)}
                                     </div>
                                     <div class="input">
                                         <input
@@ -41147,13 +41086,13 @@
                                             data-form-type="other"
                                         />
                                         <div class="tip">
-                                            ${tl(trans.pronoun_tip)}
+                                            ${tl2(trans2.pronoun_tip)}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="info-row">
                                     <div class="title">
-                                        ${tl(trans.country)}
+                                        ${tl2(trans2.country)}
                                     </div>
                                     ${select(
         select_prepare(form_country),
@@ -41162,12 +41101,12 @@
       )}
                                 </div>
                                 <div class="info-row">
-                                    <div class="title">${tl(trans.about)}</div>
+                                    <div class="title">${tl2(trans2.about)}</div>
                                     <div class="input about-me" id="about_me">
                                         <textarea
                                             name="about_me"
-                                            placeholder=${tl(
-        trans.anything_you_can_imagine
+                                            placeholder=${tl2(
+        trans2.anything_you_can_imagine
       )}
                                             cols="40"
                                             rows="10"
@@ -41188,14 +41127,14 @@
         markdown_settings
       )}
                                             >
-                                                ${tl(trans.supports_markdown)}
+                                                ${tl2(trans2.supports_markdown)}
                                             </div>
                                             <div
                                                 class="tip characters"
                                                 ref=${(el) => chars = el}
                                             >
-                                                ${tl(
-        trans.value_characters_max,
+                                                ${tl2(
+        trans2.value_characters_max,
         { v: "500" }
       )}
                                             </div>
@@ -41204,7 +41143,7 @@
                                 </div>
                                 <div class="info-row">
                                     <div class="title">
-                                        ${tl(trans.about_me_preview)}
+                                        ${tl2(trans2.about_me_preview)}
                                     </div>
                                     <span
                                         class="bleh--about-me-preview markdown-body"
@@ -41213,7 +41152,7 @@
                                 </div>
                                 <div class="info-row" style="display: none">
                                     <div class="title">
-                                        ${tl(trans.website)}
+                                        ${tl2(trans2.website)}
                                     </div>
                                     <div class="input">
                                         <input
@@ -41233,7 +41172,7 @@
                                         class="btn-primary save"
                                         data-form-type="action"
                                     >
-                                        ${tl(trans.save)}
+                                        ${tl2(trans2.save)}
                                     </button>
                                     <input
                                         type="hidden"
@@ -41269,7 +41208,7 @@
     function update_about() {
       log("re-rendering", "about", "log");
       const value = about.value;
-      chars.textContent = tl(trans.value_characters_max, {
+      chars.textContent = tl2(trans2.value_characters_max, {
         v: `${value.length}/500`
       });
       chars.setAttribute("data-exceeded", value.length >= 500);
@@ -41281,17 +41220,17 @@
         banner_setting,
         html`
                 <div class="heading">
-                    <h5>${tl(trans.profile_banner.name)}</h5>
-                    <p>${tl(trans.profile_banner.body)}</p>
+                    <h5>${tl2(trans2.profile_banner.name)}</h5>
+                    <p>${tl2(trans2.profile_banner.body)}</p>
                     ${cache3.banner ? html.node`
-                <p>${tl(trans.current_banner_value).replace("{v}", cache3.banner)}</p>
+                <p>${tl2(trans2.current_banner_value).replace("{v}", cache3.banner)}</p>
                 ` : ""}
                 </div>
                 ${() => {
           if (!cache3.banner)
             return html.node`
                         <div class="info">
-                            <p>${tl(trans.none)}</p>
+                            <p>${tl2(trans2.none)}</p>
                         </div>
                     `;
           let banner_image = html.node`
@@ -41318,12 +41257,12 @@
         html`
                 <div class="heading">
                     <h5>
-                        ${tl(trans.profile_accent.name)}<span
+                        ${tl2(trans2.profile_accent.name)}<span
                             class="new-badge sponsor-related"
-                            >${tl(trans.sponsors_only)}</span
-                        ><span class="new-badge beta">${tl(trans.new)}</span>
+                            >${tl2(trans2.sponsors_only)}</span
+                        ><span class="new-badge beta">${tl2(trans2.new)}</span>
                     </h5>
-                    <p>${tl(trans.profile_accent.body)}</p>
+                    <p>${tl2(trans2.profile_accent.body)}</p>
                 </div>
                 <div class="info">
                     <div
@@ -41360,12 +41299,12 @@
           let accent_preview;
           dialog({
             id: "profile_accent",
-            title: tl(trans.profile_accent.name),
+            title: tl2(trans2.profile_accent.name),
             body: html.node`
                                 <div class="setting-group">
                                     <div class="setting" data-type="info">
                                         <div class="heading">
-                                            <h5>${tl(trans.preview)}</h5>
+                                            <h5>${tl2(trans2.preview)}</h5>
                                         </div>
                                         <div class="info">
                                             <div class="colour-tile colourful" ref=${(el) => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
@@ -41374,7 +41313,7 @@
                                     ${ff("colour_based_on_hex") ? html.node`
                                     <div class="setting" data-type="text">
                                         <div class="heading">
-                                            <h5>${tl(trans.convert_from_hex)}</h5>
+                                            <h5>${tl2(trans2.convert_from_hex)}</h5>
                                         </div>
                                         <div class="input-container content-form">
                                             ${colour = input({
@@ -41393,7 +41332,7 @@
               lit_range.set(
                 hsl.l / 100 + 0.35
               );
-            }}>${tl(trans.convert)}</button>
+            }}>${tl2(trans2.convert)}</button>
                                         </div>
                                     </div>
                                     ` : ""}
@@ -41403,7 +41342,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_accent" })}>
-                                        ${tl(trans.back)}
+                                        ${tl2(trans2.back)}
                                     </button>
                                     <div class="fill"></div>
                                     <button class="btn primary continue" onclick=${() => {
@@ -41429,12 +41368,12 @@
               );
               dialog_rm({ id: "profile_accent" });
               status({
-                title: tl(
-                  trans.profile_accent.reminder
+                title: tl2(
+                  trans2.profile_accent.reminder
                 )
               });
             }}>
-                                        ${tl(trans.change)}
+                                        ${tl2(trans2.change)}
                                     </button>
                                 </div>
                             `
@@ -41454,7 +41393,7 @@
             `
       );
       tippy_esm_default(edit, {
-        content: tl(trans.edit)
+        content: tl2(trans2.edit)
       });
     }
     update_display_name(form_display_name);
@@ -41465,7 +41404,7 @@
   function update_display_name(value) {
     document.getElementById("header-title-display-name").textContent = value;
     let pronouns = use_pronouns(value);
-    document.getElementById("header-title-display-name--pre").textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
+    document.getElementById("header-title-display-name--pre").textContent = pronouns ? tl2(trans2.account_pronouns) : tl2(trans2.aka);
   }
   function use_pronouns(value) {
     value = value.replaceAll(" ", "");
@@ -41478,7 +41417,7 @@
     else page.token = token;
     page.state.avatar_changer = dialog({
       id: "edit_avatar",
-      title: tl(trans.change_avatar),
+      title: tl2(trans2.change_avatar),
       body: html.node`
             <div class="forms">
                 <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
@@ -41486,27 +41425,27 @@
                     <div class="form-group form-group--avatar js-form-group upload-avatar">
                         <div class="js-form-group-controls form-group-controls">
                             <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
-                                ${tl(trans.upload)}
-                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
+                                ${tl2(trans2.upload)}
+                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl2(trans2.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
                             </span>
                         </div>
                     </div>
                     <button type="submit" class="btn-primary save" id="avatar_saver">
-                        ${tl(trans.save)}
+                        ${tl2(trans2.save)}
                     </button>
                     <input type="hidden" value="avatar" name="submit">
                 </form>
                 <form action="${root}settings/avatar/delete" method="post">
                     <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                     <div class="form-group delete-avatar">
-                        <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl(trans.delete)}</button>
+                        <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl2(trans2.delete)}</button>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_avatar" })}>${tl(trans.cancel)}</button>
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_avatar" })}>${tl2(trans2.cancel)}</button>
                 <div class="fill"></div>
-                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl(trans.save)}</button>
+                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl2(trans2.save)}</button>
             </div>
         `
     });
@@ -41547,20 +41486,20 @@
       let save;
       const crop_dialog = dialog({
         id: "crop",
-        title: tl(trans.crop_avatar),
+        title: tl2(trans2.crop_avatar),
         body: html.node`
                 <div class="crop">
                     <img src=${file} ref=${(el) => crop_image = el}>
                 </div>
                 <div class="alert alert-info">
-                    ${tl(trans.crop_notice)}
+                    ${tl2(trans2.crop_notice)}
                 </div>
                 <div class="modal-footer">
                     <button class="see-more cancel" onclick=${() => {
           if (cropper && cropper.destroy) cropper.destroy();
           cropper = null;
           avatar2();
-        }}>${tl(trans.cancel)}</button>
+        }}>${tl2(trans2.cancel)}</button>
                     <div class="fill"></div>
                     <button class="btn primary save" onclick=${() => {
           if (!cropper) return;
@@ -41584,7 +41523,7 @@
             file_input.files = data_transfer.files;
             inner_form.querySelector("#avatar_saver").click();
           }, "image/png");
-        }} ref=${(el) => save = el} disabled>${tl(trans.save)}</button>
+        }} ref=${(el) => save = el} disabled>${tl2(trans2.save)}</button>
                 </div>
             `
       });
@@ -41665,7 +41604,7 @@
         expand.style.display = "none";
         new_list.setAttribute("data-expanded", "true");
       }}>
-                ${tl(trans.view_count_more).replace("{c}", remainder.toString())}
+                ${tl2(trans2.view_count_more).replace("{c}", remainder.toString())}
             </button>
         `;
       new_list.appendChild(expand);
@@ -41676,7 +41615,7 @@
     render(
       panel,
       html`
-            <h4>${tl(trans.block_list)}</h4>
+            <h4>${tl2(trans2.block_list)}</h4>
             <div class="user-top-panel">
                 <div class="user-top-avatar user-top-avatar-side-left">
                     <div class="bleh-icon"></div>
@@ -41692,7 +41631,7 @@
             </div>
             <div class="setting" data-type="text">
                 <div class="heading">
-                    <h5>${tl(trans.profile)}</h5>
+                    <h5>${tl2(trans2.profile)}</h5>
                     <form
                         action="${root}settings/privacy#ignorelist"
                         name="ignorelist"
@@ -41709,7 +41648,7 @@
                                 maxlength="80"
                                 id="id_user"
                                 name="user"
-                                placeholder=${tl(trans.enter_username)}
+                                placeholder=${tl2(trans2.enter_username)}
                             />
                             <input
                                 type="hidden"
@@ -41725,27 +41664,27 @@
                                 class="bleh--btn primary icon block"
                                 type="submit"
                             >
-                                ${tl(trans.block)}
+                                ${tl2(trans2.block)}
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="alert alert-info">
-                ${tl(trans.blocked_count).replace("{c}", amount)}
+                ${tl2(trans2.blocked_count).replace("{c}", amount)}
             </div>
             ${new_list}
             <div class="sep" />
-            <h5>${tl(trans.when_blocked)}</h5>
+            <h5>${tl2(trans2.when_blocked)}</h5>
             <div class="to-consider">
                 <ul class="to-consider-good">
-                    <li>${tl(trans.blocked_user_public)}</li>
-                    <li>${tl(trans.blocked_user_message)}</li>
-                    <li>${tl(trans.blocked_user_new_shouts)}</li>
+                    <li>${tl2(trans2.blocked_user_public)}</li>
+                    <li>${tl2(trans2.blocked_user_message)}</li>
+                    <li>${tl2(trans2.blocked_user_new_shouts)}</li>
                 </ul>
                 <ul class="to-consider-bad">
-                    <li>${tl(trans.blocked_user_old_shouts)}</li>
-                    <li>${tl(trans.blocked_user_view_profile)}</li>
+                    <li>${tl2(trans2.blocked_user_old_shouts)}</li>
+                    <li>${tl2(trans2.blocked_user_view_profile)}</li>
                 </ul>
             </div>
         `
@@ -41759,7 +41698,7 @@
       disable_shoutbox: document.getElementById("id_shoutbox_disabled").checked
     };
     privacy_panel.innerHTML = `
-        <h4>${tl(trans.privacy)}</h4>
+        <h4>${tl2(trans2.privacy)}</h4>
         <form action="${root}settings/privacy" name="privacy" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <div class="inner-preview pad">
@@ -41800,8 +41739,8 @@
                 <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                     <div class="heading">
-                        <h5>${tl(trans.recent_listening.name)}</h5>
-                        <p>${tl(trans.recent_listening.body)}</p>
+                        <h5>${tl2(trans2.recent_listening.name)}</h5>
+                        <p>${tl2(trans2.recent_listening.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
@@ -41812,18 +41751,18 @@
                 </div>
                 <div class="setting" data-type="options">
                     <div class="heading">
-                        <h5>${tl(trans.allow_messages_from)}</h5>
+                        <h5>${tl2(trans2.allow_messages_from)}</h5>
                     </div>
                     <div class="primary-selections">
                         ${original_privacy_settings.receiving_msgs}
                         <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
-                            <h5>${tl(trans.everyone)}</h5>
+                            <h5>${tl2(trans2.everyone)}</h5>
                         </div>
                         <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
-                            <h5>${tl(trans.following_and_neighbours)}</h5>
+                            <h5>${tl2(trans2.following_and_neighbours)}</h5>
                         </div>
                         <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
-                            <h5>${tl(trans.following)}</h5>
+                            <h5>${tl2(trans2.following)}</h5>
                         </div>
                     </div>
                 </div>
@@ -41875,8 +41814,8 @@
                 <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
                     <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                     <div class="heading">
-                        <h5>${tl(trans.close_shouts.name)}</h5>
-                        <p>${tl(trans.close_shouts.body)}</p>
+                        <h5>${tl2(trans2.close_shouts.name)}</h5>
+                        <p>${tl2(trans2.close_shouts.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
@@ -41888,7 +41827,7 @@
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
-                    ${tl(trans.save)}
+                    ${tl2(trans2.save)}
                 </button>
                 <input type="hidden" value="privacy" name="submit">
             </div>
@@ -41920,7 +41859,7 @@
       page.structure.main,
       html`
             <section class="bleh--panel">
-                <h4>${tl(trans.information)}</h4>
+                <h4>${tl2(trans2.information)}</h4>
                 <div class="setting-group">
                     <form
                         action="${root}settings/change-username/send-email"
@@ -41933,10 +41872,10 @@
                         />
                         <div class="setting" data-type="text">
                             <div class="heading">
-                                <h5>${tl(trans.username.name)}</h5>
+                                <h5>${tl2(trans2.username.name)}</h5>
                                 <p>
                                     ${{
-        html: tl(trans.username.body).replace(
+        html: tl2(trans2.username.body).replace(
           "{a}",
           `<a href="https://support.last.fm/" target="_blank">`
         ).replace("{/a}", "</a>")
@@ -41953,7 +41892,7 @@
                                     required
                                 />
                                 <button class="btn chibi icon primary submit">
-                                    ${tl(trans.send)}
+                                    ${tl2(trans2.send)}
                                 </button>
                                 <input
                                     type="hidden"
@@ -41975,7 +41914,7 @@
                         />
                         <div class="setting" data-type="text">
                             <div class="heading">
-                                <h5>${tl(trans.email)}</h5>
+                                <h5>${tl2(trans2.email)}</h5>
                             </div>
                             <div class="input-container content-form">
                                 <input
@@ -41986,7 +41925,7 @@
                                     required
                                 />
                                 <button class="btn chibi icon primary submit">
-                                    ${tl(trans.save)}
+                                    ${tl2(trans2.save)}
                                 </button>
                                 <input
                                     type="hidden"
@@ -42011,7 +41950,7 @@
                     <div class="setting-group">
                         <div class="setting" data-type="text">
                             <div class="heading">
-                                <h5>${tl(trans.password)}</h5>
+                                <h5>${tl2(trans2.password)}</h5>
                             </div>
                             <div class="input-container content-form">
                                 <input
@@ -42024,7 +41963,7 @@
                         </div>
                         <div class="setting" data-type="text">
                             <div class="heading">
-                                <h5>${tl(trans.new_password)}</h5>
+                                <h5>${tl2(trans2.new_password)}</h5>
                             </div>
                             <div class="input-container content-form">
                                 <input
@@ -42037,7 +41976,7 @@
                         </div>
                         <div class="setting" data-type="text">
                             <div class="heading">
-                                <h5>${tl(trans.confirm_password)}</h5>
+                                <h5>${tl2(trans2.confirm_password)}</h5>
                             </div>
                             <div class="input-container content-form">
                                 <input
@@ -42052,13 +41991,13 @@
                     </div>
                     <div class="settings-footer end">
                         <button class="btn-primary save" type="submit">
-                            ${tl(trans.change)}
+                            ${tl2(trans2.change)}
                         </button>
                     </div>
                 </form>
             </section>
             <section class="bleh--panel">
-                <h4>${tl(trans.communication)}</h4>
+                <h4>${tl2(trans2.communication)}</h4>
                 <form
                     action="${root}settings/account"
                     name="email-settings"
@@ -42072,7 +42011,7 @@
                     <div class="setting-group">
                         <div class="setting" data-type="select">
                             <div class="heading">
-                                <h5>${tl(trans.email_language)}</h5>
+                                <h5>${tl2(trans2.email_language)}</h5>
                             </div>
                             <div class="select-wrap custom-selector">
                                 ${select(
@@ -42087,14 +42026,14 @@
                         ${toggle({
         value: original_settings.marketing_emails.checked,
         name: original_settings.marketing_emails.name,
-        title: tl(trans.marketing_emails.name),
-        body: tl(trans.marketing_emails.body),
+        title: tl2(trans2.marketing_emails.name),
+        body: tl2(trans2.marketing_emails.body),
         standalone: false
       })}
                     </div>
                     <div class="settings-footer end">
                         <button class="btn-primary save" type="submit">
-                            ${tl(trans.save)}
+                            ${tl2(trans2.save)}
                         </button>
                         <input
                             type="hidden"
@@ -42105,7 +42044,7 @@
                 </form>
             </section>
             <section class="bleh--panel">
-                <h4>${tl(trans.security)}</h4>
+                <h4>${tl2(trans2.security)}</h4>
                 <form
                     action="${root}settings/account"
                     name="email-settings"
@@ -42119,29 +42058,29 @@
                     <div class="setting-group">
                         <div class="setting" data-type="action">
                             <div class="heading">
-                                <h5>${tl(trans.logout_everywhere)}</h5>
+                                <h5>${tl2(trans2.logout_everywhere)}</h5>
                             </div>
                             <div class="toggle-wrap">
                                 <a
                                     class="see-more danger logout"
                                     href="${root}settings/account/logout-everywhere"
                                 >
-                                    ${tl(trans.logout)}
+                                    ${tl2(trans2.logout)}
                                 </a>
                             </div>
                         </div>
                         <div class="setting" data-type="action">
                             <div class="heading">
-                                <h5>${tl(trans.delete_account.name)}</h5>
-                                <p>${tl(trans.delete_account.body)}</p>
+                                <h5>${tl2(trans2.delete_account.name)}</h5>
+                                <p>${tl2(trans2.delete_account.body)}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <a
                                     class="see-more danger delete-account"
                                     href="${root}settings/account/delete"
                                 >
-                                    ${tl(
-        trans.delete_account_permanently
+                                    ${tl2(
+        trans2.delete_account_permanently
       ).replace("{u}", auth.name)}
                                 </a>
                             </div>
@@ -42176,26 +42115,26 @@
         <form class="dont-move" action="${root}settings/website" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <section class="bleh--panel">
-                <h4>${tl(trans.website)}</h4>
+                <h4>${tl2(trans2.website)}</h4>
                 <div class="setting-group">
                     ${toggle({
         value: auto_correct.checked,
         name: auto_correct.name,
-        title: tl(trans.auto_correct_scrobbles.name),
-        body: tl(trans.auto_correct_scrobbles.body),
+        title: tl2(trans2.auto_correct_scrobbles.name),
+        body: tl2(trans2.auto_correct_scrobbles.body),
         standalone: false
       })}
                 </div>
                 <div class="alert alert-danger">
-                    ${tl(trans.auto_correct_scrobbles.warning)}
+                    ${tl2(trans2.auto_correct_scrobbles.warning)}
                 </div>
             </section>
             <section class="bleh--panel">
-                <h4>${tl(trans.events)}</h4>
+                <h4>${tl2(trans2.events)}</h4>
                 <div class="setting-group">
                     <div class="setting v2" data-type="select">
                         <div class="heading">
-                            <h5>${tl(trans.timezone)}</h5>
+                            <h5>${tl2(trans2.timezone)}</h5>
                             <p ref=${(el) => timezone_text = el}>${help_text.textContent.trim()}</p>
                         </div>
                         ${select(
@@ -42227,8 +42166,8 @@
                     </div>
                     <div class="setting v2" data-type="action">
                         <div class="heading">
-                            <h5>${tl(trans.location.name)}</h5>
-                            <p>${tl(trans.location.body)}</p>
+                            <h5>${tl2(trans2.location.name)}</h5>
+                            <p>${tl2(trans2.location.body)}</p>
                         </div>
                         <div class="toggle-wrap">
                             ${location}
@@ -42236,14 +42175,14 @@
                     </div>
                     <div class="setting v2" data-type="select">
                         <div class="heading">
-                            <h5>${tl(trans.event_radius)}</h5>
+                            <h5>${tl2(trans2.event_radius)}</h5>
                         </div>
                         ${select(select_prepare(radius), radius.value, radius.name)}
                     </div>
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
+                        ${tl2(trans2.save)}
                     </button>
                     <input type="hidden" value="website" name="submit">
                 </div>
@@ -42412,7 +42351,7 @@
     let track_header = html.node`
         <section class="redesigned-header redesigned-track-header no-background obsession-track-header">
             <div class="info-side">
-                <div class="sub-text">${tl(trans.obsession)}</div>
+                <div class="sub-text">${tl2(trans2.obsession)}</div>
                 <div class="title-container">
                     <h1><a href="${link}">${track_title}</a></h1>
                 </div>
@@ -42440,7 +42379,7 @@
             </div>
             ` : html.node`
             <div class="quote no-quote">
-                ${tl(trans.no_quote)}
+                ${tl2(trans2.no_quote)}
             </div>
             `}
             <div class="sub-text">
@@ -42463,7 +42402,7 @@
     let manage = obsession_container.querySelector("form");
     if (manage) {
       quote.appendChild(manage);
-      quote.querySelector("button").textContent = tl(trans.delete);
+      quote.querySelector("button").textContent = tl2(trans2.delete);
     }
     page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
     let author = quote.querySelector(".obsession-author");
@@ -42478,7 +42417,7 @@
     let other_tracks = document.body.querySelector(".other-obsessions");
     if (other_tracks) {
       let header = document.createElement("h2");
-      header.textContent = tl(trans.others_from_profile).replace("{user}", obsession_author);
+      header.textContent = tl2(trans2.others_from_profile).replace("{user}", obsession_author);
       related.appendChild(header);
       let see_more = other_tracks.nextElementSibling;
       related.appendChild(other_tracks);
@@ -42497,7 +42436,7 @@
         related.appendChild(sep);
       }
       let header = document.createElement("h2");
-      header.textContent = tl(trans.shared_with_others);
+      header.textContent = tl2(trans2.shared_with_others);
       related.appendChild(header);
       let users = shared_users.querySelectorAll(".avatar");
       users.forEach((user) => {
@@ -42548,8 +42487,8 @@
         delete cache3.lit;
         about_me_sidebar = html.node`
                 <section class="about-me-sidebar">
-                    <h2>${tl(trans.about)}</h2>
-                    <p class="subtle">${tl(trans.no_about).replace("{u}", page.name)}</p>
+                    <h2>${tl2(trans2.about)}</h2>
+                    <p class="subtle">${tl2(trans2.no_about).replace("{u}", page.name)}</p>
                 </section>
             `;
         page.structure.side.insertBefore(
@@ -42589,20 +42528,20 @@
                 ${avatar3}
             </div>
             <div class="info-side">
-                <div class="sub-text">${tl(trans.profile)}</div>
+                <div class="sub-text">${tl2(trans2.profile)}</div>
                 ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
                 ${sub_wrap ? sub_wrap : cache3.aka || cache3.created ? html.node`
                 <p class="header-title-secondary">
                     ${cache3.aka ? html.node`
                     <span class="header-title-secondary--pre">
-                        ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+                        ${pronouns ? tl2(trans2.account_pronouns) : tl2(trans2.aka)}
                     </span>
                     <span class="header-title-display-name">
                         ${cache3.aka}
                     </span>
                     ` : ""}
                     <span class="header-title-secondary--pre">
-                        ${tl(trans.account_created)}
+                        ${tl2(trans2.account_created)}
                     </span>
                     <span class="header-scrobble-since">
                         ${cache3.created}
@@ -42615,7 +42554,7 @@
       let current = settings.profile_header_expand;
       expander.setAttribute("aria-expanded", !current);
       save_setting("profile_header_expand", !current);
-    }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
+    }} aria-expanded=${settings.profile_header_expand}>${tl2(trans2.expand)}</button>
             </div>
         </section>
     `;
@@ -42663,14 +42602,14 @@
     let library_tab = page.structure.nav.querySelector(
       ".secondary-nav-item--library a"
     );
-    library_tab.textContent = tl(trans.library);
+    library_tab.textContent = tl2(trans2.library);
     let is_own_profile = page.name == auth.name;
     if (is_own_profile)
       profile_header.setAttribute("data-is-own-profile", "true");
     let loved_tab = page.structure.nav.querySelector(
       ".secondary-nav-item--loved a"
     );
-    if (loved_tab) loved_tab.textContent = tl(trans.loved);
+    if (loved_tab) loved_tab.textContent = tl2(trans2.loved);
     if (!is_subpage) {
       let is_following = page.structure.container.querySelector(".label.user-follow");
       profile_recents();
@@ -42680,10 +42619,10 @@
       if (is_own_profile && settings.activities) {
         let recent_activity_section = html.node`
                 <section class="recent-activity-section">
-                    <h2>${tl(trans.activity)}</h2>
+                    <h2>${tl2(trans2.activity)}</h2>
                     ${render_activity_list()}
                     <div class="more-link">
-                        <a href="${root}bleh/profile">${tl(trans.activity_settings)}</a>
+                        <a href="${root}bleh/profile">${tl2(trans2.activity_settings)}</a>
                     </div>
                 </section>
             `;
@@ -42695,7 +42634,7 @@
         page.structure.side.innerHTML = "";
         page.structure.main.appendChild(html.node`
                 <section class="cta">
-                    <strong>${tl(trans.sponsor_info)}</strong>
+                    <strong>${tl2(trans2.sponsor_info)}</strong>
                 </section>
             `);
       }
@@ -42708,7 +42647,7 @@
           recent_tracks.classList = "recent-tracks-section";
           recent_tracks.innerHTML = `
                     <h2>
-                        <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
+                        <a class="text-colour-link" href="${window.location.href}/library">${tl2(trans2.recent_tracks)}</a>
                     </h2>
                     <div class="loading-data-container">
                         <div class="loading-data-text private">
@@ -42744,33 +42683,33 @@
             <section class="listen-panel listen-profile-panel">
                 <div class="listener-row">
                     <div class="scrobble-side">
-                        <h3>${tl(trans.scrobbles)}</h3>
+                        <h3>${tl2(trans2.scrobbles)}</h3>
                         <p ref=${(el) => scrobble_text = el}><a href="${root}user/${page.name}/library">${scrobbles.toLocaleString(lang)}</a></p>
                     </div>
                     <div class="artist-side">
-                        <h3>${tl(trans.artists)}</h3>
+                        <h3>${tl2(trans2.artists)}</h3>
                         <p><a href="${root}user/${page.name}/library/artists">${artists.toLocaleString(lang)}</a></p>
                     </div>
                     <div class="loved-side">
-                        <h3>${tl(trans.loved)}</h3>
+                        <h3>${tl2(trans2.loved)}</h3>
                         <p><a href="${root}user/${page.name}/loved">${loved.toLocaleString(lang)}</a></p>
                     </div>
                 </div>
                 ${scrobbles > 0 ? html.node`
                 <div class="scrobble-canvas-container mini">
                     <div class="loading-data-container">
-                        <div class="loading-data-text">${tl(trans.loading_count_days).replace("{c}", "90")}</div>
+                        <div class="loading-data-text">${tl2(trans2.loading_count_days).replace("{c}", "90")}</div>
                     </div>
                 </div>
                 <div class="more-link">
                     <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
-                        ${tl(trans.explore_in_library)}
+                        ${tl2(trans2.explore_in_library)}
                     </a>
                 </div>
                 ` : auth.name ? html.node`
                 <div class="scrobble-canvas-container mini">
                     <div class="loading-data-container">
-                        <div class="loading-data-text failed">${tl(trans.profile_does_not_have_enough_scrobbles)}</div>
+                        <div class="loading-data-text failed">${tl2(trans2.profile_does_not_have_enough_scrobbles)}</div>
                     </div>
                 </div>
                 ` : html.node``}
@@ -42818,7 +42757,7 @@
         html.node`
             <div class="top-container">
                 <h2>
-                    ${tl(trans.about)}
+                    ${tl2(trans2.about)}
                     <span class="info-tip" ref=${(el) => info_tip = el}>
                         <span class="bleh-icon" data-type="info" style="--icon: var(--mask)" />
                     </span>
@@ -42826,18 +42765,18 @@
                 <div class="view-buttons blend blend-v2">
                     ${is_own_profile ? html.node`
                     <a class="left-icon blend-v2-btn" data-type="edit" href="${root}settings#id_about_me">
-                        ${tl(trans.edit)}
+                        ${tl2(trans2.edit)}
                     </a>
                     ` : !profile_note ? html.node`
                     <button class="left-icon blend-v2-btn" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
           create_profile_note_panel(page.name, profile_note);
           add_note.remove();
         }}>
-                        ${tl(trans.add_note)}
+                        ${tl2(trans2.add_note)}
                     </button>
                     ` : ""}
                     <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </button>
                 </div>
             </div>
@@ -42869,13 +42808,13 @@
                         ${cache3.banner ? html.node`
                         <div class="profile-item" data-type="banner">
                             <span class="bleh-icon" style="--icon: var(--mask)" />
-                            <p>${tl(trans.profile_banner.name)}</p>
+                            <p>${tl2(trans2.profile_banner.name)}</p>
                         </div>
                         ` : ""}
                         ${cache3.hue > -1 && cache3.sat > -1 && cache3.lit > -1 ? html.node`
                         <div class="profile-item" data-type="accent">
                             <span class="bleh-icon" style="--icon: var(--mask)" />
-                            <p>${tl(trans.profile_accent.name)}</p>
+                            <p>${tl2(trans2.profile_accent.name)}</p>
                             <p class="subtle">${cache3.hue}, ${cache3.sat}, ${cache3.lit}</p>
                         </div>
                         ` : ""}
@@ -42978,7 +42917,7 @@
             tippy_esm_default(button, {
               content: button.textContent
             });
-            button.textContent = tl(trans.obsess);
+            button.textContent = tl2(trans2.obsess);
           }
           button.classList.add(
             "btn",
@@ -43044,7 +42983,7 @@
           if (obsession_is_first) {
             grid_item.classList.add("first");
             tippy_esm_default(grid_item, {
-              content: tl(trans.obsession_first)
+              content: tl2(trans2.obsession_first)
             });
           }
           grid.appendChild(grid_item);
@@ -43088,7 +43027,7 @@
           buttons.forEach((button) => {
             if (button.getAttribute("data-analytics-action") == "create") {
               button.classList.add("primary");
-              button.innerHTML = `${tl(trans.new)} <div class="new-badge">${tl(trans.beta)}</div>`;
+              button.innerHTML = `${tl2(trans2.new)} <div class="new-badge">${tl2(trans2.beta)}</div>`;
             }
             button.classList.add(
               "btn",
@@ -43143,7 +43082,7 @@
           placement: "bottom",
           content: html.node`
                     <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
+                    <div class="badge-reason">${tl2(trans2.badges[badge.classList[1]].reason)}</div>
                 `
         });
       });
@@ -43168,9 +43107,9 @@
     let note;
     about_me_sidebar.after(html.node`
         <section class="bleh--panel bleh--profile-note-panel">
-            <h2>${tl(trans.notes)}</h2>
+            <h2>${tl2(trans2.notes)}</h2>
             <div class="content-form">
-                <textarea id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)} ref=${(el) => note = el}>${has_note ?? has_note}</textarea>
+                <textarea id="bleh--profile-note" placeholder=${tl2(trans2.anything_you_can_imagine)} ref=${(el) => note = el}>${has_note ?? has_note}</textarea>
             </div>
             <div class="actions">
                 <button class="see-more cancel" onclick=${() => {
@@ -43183,7 +43122,7 @@
         "bleh_profile_notes",
         JSON.stringify(notes)
       );
-    }}>${tl(trans.clear)}</button>
+    }}>${tl2(trans2.clear)}</button>
                 <button class="btn primary icon" data-type="save" onclick=${() => {
       let notes = JSON.parse(
         localStorage.getItem("bleh_profile_notes")
@@ -43193,7 +43132,7 @@
         "bleh_profile_notes",
         JSON.stringify(notes)
       );
-    }}>${tl(trans.save)}</button>
+    }}>${tl2(trans2.save)}</button>
             </div>
         </section>
     `);
@@ -43204,7 +43143,7 @@
     let link = following_tab.querySelector("a");
     if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours") {
       link.href = `${root}user/${page.name}/friends`;
-      link.textContent = tl(trans.friends);
+      link.textContent = tl2(trans2.friends);
       return;
     }
     if (page.subpage != "following")
@@ -43227,7 +43166,7 @@
         </div>
     `;
     link.href = `${root}user/${page.name}/friends`;
-    link.textContent = tl(trans.friends);
+    link.textContent = tl2(trans2.friends);
     page.structure.content_top.after(friends_nav);
     page.structure.row.classList.add("col-main-is-primary");
     following_tab = friends_nav.querySelector(
@@ -43260,10 +43199,10 @@
     view_buttons.innerHTML = `
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${tl(trans.grid)}
+                ${tl2(trans2.grid)}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${tl(trans.list)}
+                ${tl2(trans2.list)}
             </button>
         </div>
     `;
@@ -43291,10 +43230,10 @@
       if (!tracklist_panel) {
         if (!quiet) {
           status({
-            title: tl(trans.recent_tracks),
-            body: tl(trans.value_failed_to_load).replace(
+            title: tl2(trans2.recent_tracks),
+            body: tl2(trans2.value_failed_to_load).replace(
               "{v}",
-              tl(trans.library)
+              tl2(trans2.library)
             ),
             type: "error"
           });
@@ -43303,8 +43242,8 @@
       }
       if (!quiet) {
         status({
-          title: tl(trans.recent_tracks),
-          body: tl(trans.refreshed)
+          title: tl2(trans2.recent_tracks),
+          body: tl2(trans2.refreshed)
         });
       }
       panel.classList.add("has-refreshed");
@@ -43376,7 +43315,7 @@
       let button = form.querySelector("button");
       button.classList = "featured-item-manage";
       button.setAttribute("data-type", "delete");
-      button.textContent = tl(trans.remove);
+      button.textContent = tl2(trans2.remove);
     }
     let img = art.querySelector(".cover-art");
     let panel = html.node`
@@ -43385,13 +43324,13 @@
                 ${form ? html.node`
                 <a class="has-icon" data-type="obsession" href=${link}>
                     <div class="bleh-icon" style="--icon: var(--mask)" />
-                    ${tl(trans.obsession)}
+                    ${tl2(trans2.obsession)}
                 </a>
                 ${form}
                 ` : html.node`
                 <div class="has-icon" data-type="track">
                     <div class="bleh-icon" style="--icon: var(--mask)" />
-                    ${tl(trans.top_track)}
+                    ${tl2(trans2.top_track)}
                 </div>
                 `}
             </div>
@@ -43439,19 +43378,19 @@
           }, 200);
         }
       })}>
-                ${tl(trans.new)}
+                ${tl2(trans2.new)}
             </button>
         `;
       view_buttons.appendChild(submit_btn);
       if (!can_api) {
         tippy_esm_default(submit_btn, {
-          content: tl(trans.requires_api_in_settings)
+          content: tl2(trans2.requires_api_in_settings)
         });
       }
     }
     refresh_btn = html.node`
         <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn, {})}>
-            ${tl(trans.refresh)}
+            ${tl2(trans2.refresh)}
         </button>
     `;
     view_buttons.appendChild(refresh_btn);
@@ -43463,7 +43402,7 @@
     let original_chart_settings = {};
     let settings_btn = html.node`
         <button class="left-icon blend-v2-btn" data-type="settings">
-            ${tl(trans.settings)}
+            ${tl2(trans2.settings)}
         </button>
     `;
     let count = form.querySelector('[name="chart_length_recent_tracks"]');
@@ -43483,7 +43422,7 @@
             <div class="setting-group blend">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.amount_to_display)}</h5>
+                        <h5>${tl2(trans2.amount_to_display)}</h5>
                     </div>
                     ${select(
         select_prepare(count),
@@ -43498,7 +43437,7 @@
                     onclick="_update_inbuilt_item('recent_artwork')"
                 >
                     <div class="heading">
-                        <h5>${tl(trans.recent_artwork)}</h5>
+                        <h5>${tl2(trans2.recent_artwork)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <input
@@ -43523,8 +43462,8 @@
                     onclick="_update_inbuilt_item('recent_realtime')"
                 >
                     <div class="heading">
-                        <h5>${tl(trans.recent_realtime.name)}</h5>
-                        <p>${tl(trans.recent_realtime.body)}</p>
+                        <h5>${tl2(trans2.recent_realtime.name)}</h5>
+                        <p>${tl2(trans2.recent_realtime.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <input
@@ -43547,13 +43486,13 @@
                 ${setting({ id: "stacked_chartlist_info" })}
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
+                        ${tl2(trans2.save)}
                     </button>
                     <a
                         class="btn icon settings not-a-view-button"
                         href="${root}bleh"
                     >
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </a>
                 </div>
             </div>
@@ -43617,10 +43556,10 @@
         );
         let selected = link.searchParams.get("artists_date_preset");
         window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
-      }}>${tl(trans.collage)}</button>
+      }}>${tl2(trans2.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl(trans.settings)}
+                    ${tl2(trans2.settings)}
                 </button>
                 ` : ""}
             </div>
@@ -43649,7 +43588,7 @@
             <div class="setting-group blend">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
+                        <h5>${tl2(trans2.default_timeframe)}</h5>
                     </div>
                     ${select(
         select_prepare(timeframe),
@@ -43659,7 +43598,7 @@
                 </div>
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.chart_style)}</h5>
+                        <h5>${tl2(trans2.chart_style)}</h5>
                     </div>
                     ${select(
         select_prepare(style),
@@ -43669,7 +43608,7 @@
                 </div>
                 <div class="setting hide-if-artist-list" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
+                        <h5>${tl2(trans2.chart_size)}</h5>
                     </div>
                     ${select(
         select_prepare(grid_length),
@@ -43679,7 +43618,7 @@
                 </div>
                 <div class="setting hide-if-artist-grid" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
+                        <h5>${tl2(trans2.chart_size)}</h5>
                     </div>
                     ${select(
         select_prepare(chartlist_length),
@@ -43689,7 +43628,7 @@
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
+                        ${tl2(trans2.save)}
                     </button>
                 </div>
             </div>
@@ -43742,10 +43681,10 @@
         );
         let selected = link.searchParams.get("albums_date_preset");
         window.location.href = `${root}bleh/minis/collage?type=albums&timeframe=date_preset=${selected}`;
-      }}>${tl(trans.collage)}</button>
+      }}>${tl2(trans2.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl(trans.settings)}
+                    ${tl2(trans2.settings)}
                 </button>
                 ` : ""}
             </div>
@@ -43774,7 +43713,7 @@
             <div class="setting-group blend">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
+                        <h5>${tl2(trans2.default_timeframe)}</h5>
                     </div>
                     ${select(
         select_prepare(timeframe),
@@ -43784,7 +43723,7 @@
                 </div>
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.chart_style)}</h5>
+                        <h5>${tl2(trans2.chart_style)}</h5>
                     </div>
                     ${select(
         select_prepare(style),
@@ -43794,7 +43733,7 @@
                 </div>
                 <div class="setting hide-if-album-list" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
+                        <h5>${tl2(trans2.chart_size)}</h5>
                     </div>
                     ${select(
         select_prepare(grid_length),
@@ -43804,7 +43743,7 @@
                 </div>
                 <div class="setting hide-if-album-grid" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
+                        <h5>${tl2(trans2.chart_size)}</h5>
                     </div>
                     ${select(
         select_prepare(chartlist_length),
@@ -43814,7 +43753,7 @@
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
+                        ${tl2(trans2.save)}
                     </button>
                 </div>
             </div>
@@ -43867,10 +43806,10 @@
         );
         let selected = link.searchParams.get("tracks_date_preset");
         window.location.href = `${root}bleh/minis/collage?type=tracks&timeframe=date_preset=${selected}`;
-      }}>${tl(trans.collage)}</button>
+      }}>${tl2(trans2.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl(trans.settings)}
+                    ${tl2(trans2.settings)}
                 </button>
                 ` : ""}
             </div>
@@ -43897,7 +43836,7 @@
             <div class="setting-group blend">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
+                        <h5>${tl2(trans2.default_timeframe)}</h5>
                     </div>
                     ${select(
         select_prepare(timeframe),
@@ -43907,7 +43846,7 @@
                 </div>
                 <div class="setting hide-if-track-grid" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
+                        <h5>${tl2(trans2.chart_size)}</h5>
                     </div>
                     ${select(
         select_prepare(chartlist_length),
@@ -43919,11 +43858,11 @@
                 ${setting({ id: "format_guest_features" })}
                 ${setting({ id: "show_guest_features" })}
                 <div class="more-link">
-                    <a href="${root}bleh/music">${tl(trans.settings)}</a>
+                    <a href="${root}bleh/music">${tl2(trans2.settings)}</a>
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
+                        ${tl2(trans2.save)}
                     </button>
                 </div>
             </div>
@@ -44101,13 +44040,13 @@
   function open_starred_friend_window() {
     dialog({
       id: "starred_friend",
-      title: tl(trans.friends),
+      title: tl2(trans2.friends),
       body: html.node`
             <div class="setting-group">
-                ${starred = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl(trans.none) }, ...settings.friends]) })}
+                ${starred = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl2(trans2.none) }, ...settings.friends]) })}
             </div>
             <div class="alert alert-info">
-                ${tl(trans.starred_friend.notice)}
+                ${tl2(trans2.starred_friend.notice)}
             </div>
         `
     });
@@ -44196,12 +44135,12 @@
     const scrobble_since = profile_sub_text.querySelector(
       ".header-scrobble-since"
     );
-    scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), "");
+    scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl2(trans2.account_scrobbling_since_replace), "");
     const pronouns = use_pronouns(display_name.textContent);
     profile_sub_text.insertBefore(
       html.node`
         <span class="header-title-secondary--pre">
-            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+            ${pronouns ? tl2(trans2.account_pronouns) : tl2(trans2.aka)}
         </span>
     `,
       display_name
@@ -44209,7 +44148,7 @@
     profile_sub_text.insertBefore(
       html.node`
         <span class="header-title-secondary--pre">
-            ${tl(trans.account_created)}
+            ${tl2(trans2.account_created)}
         </span>
     `,
       scrobble_since
@@ -44223,7 +44162,7 @@
     );
     let value_panel = html.node`
         <section class="value-panel">
-            <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
+            <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl2(trans2.events)}</h2>
         </section>
     `;
     if (page.structure.toolbar) {
@@ -44246,8 +44185,8 @@
         <div class="glacier-library-metadata" />
     `;
     values.forEach((value, index3) => {
-      let text3 = tl(trans.going);
-      if (index3 == 1) text3 = tl(trans.interested);
+      let text3 = tl2(trans2.going);
+      if (index3 == 1) text3 = tl2(trans2.interested);
       value_header.appendChild(html.node`
             <div class="glacier-library-metadata-item">
                 <div class="sub-text">${text3}</div>
@@ -44259,10 +44198,10 @@
     let total_value = page.structure.side.querySelector(".metadata-display");
     if (total_value) {
       value_panel.appendChild(html.node`
-            <h2 class="text-18">${tl(trans.all_time)}</h2>
+            <h2 class="text-18">${tl2(trans2.all_time)}</h2>
             <div class="glacier-library-metadata">
                 <div class="glacier-library-metadata-item">
-                    <div class="sub-text">${tl(trans.total)}</div>
+                    <div class="sub-text">${tl2(trans2.total)}</div>
                     <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
                 </div>
             </div>
@@ -44311,8 +44250,8 @@
                         ${badges.map((badge, index3) => create_badge(badge, false, index3 == badges.length - 1))}
                         ${pre_existing_badge ? create_badge({
         type: pre_existing_badge_type,
-        name: tl(trans.badges[pre_existing_badge_type].name),
-        reason: tl(trans.badges[pre_existing_badge_type].reason),
+        name: tl2(trans2.badges[pre_existing_badge_type].name),
+        reason: tl2(trans2.badges[pre_existing_badge_type].reason),
         inbuilt: true
       }) : ""}
                     </div>
@@ -44320,8 +44259,8 @@
                     <div class="badges">
                         ${create_badge({
         type: pre_existing_badge_type,
-        name: tl(trans.badges[pre_existing_badge_type].name),
-        reason: tl(trans.badges[pre_existing_badge_type].reason),
+        name: tl2(trans2.badges[pre_existing_badge_type].name),
+        reason: tl2(trans2.badges[pre_existing_badge_type].reason),
         inbuilt: true
       })}
                     </div>
@@ -44329,16 +44268,16 @@
                 </div>
             </div>
             <a class="dropdown-menu-clickable-item" data-type="profile" href="${root}user/${name}">
-                ${tl(trans.profile)}
+                ${tl2(trans2.profile)}
             </a>
             <a class="dropdown-menu-clickable-item" data-type="library" href="${root}user/${name}/library">
-                ${tl(trans.library)}
+                ${tl2(trans2.library)}
             </a>
             <a class="dropdown-menu-clickable-item" data-type="friends" href="${root}user/${name}/friends">
-                ${tl(trans.friends)}
+                ${tl2(trans2.friends)}
             </a>
             <a class="dropdown-menu-clickable-item" data-type="shouts" href="${root}user/${name}/shoutbox">
-                ${tl(trans.shouts)}
+                ${tl2(trans2.shouts)}
             </a>
         `,
       placement: side,
@@ -44357,9 +44296,9 @@
       return;
     if (!avatar3.hasAttribute("alt"))
       return;
-    if (avatar3.getAttribute("alt") == tl(trans.your_avatar))
+    if (avatar3.getAttribute("alt") == tl2(trans2.your_avatar))
       return auth;
-    return avatar3.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
+    return avatar3.getAttribute("alt").replace(tl2(trans2.avatar_for_user), "");
   }
   unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
@@ -44387,7 +44326,7 @@
                     <div class="fill"></div>
                     <div class="button-group">
                         <a class="btn primary open" href=${src} target="_blank">
-                            ${tl(trans.open_new_tab)}
+                            ${tl2(trans2.open_new_tab)}
                         </a>
                     </div>
                     <div class="fill"></div>
@@ -44420,7 +44359,7 @@
       side_edit.classList.add("btn", "side-action");
       side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
       side_edit.setAttribute("data-type", "edit");
-      side_edit.textContent = tl(trans.edit);
+      side_edit.textContent = tl2(trans2.edit);
       side_actions.appendChild(side_edit);
     }
     if (original_version_history) {
@@ -44428,7 +44367,7 @@
       side_history.classList.add("btn", "side-action");
       side_history.setAttribute("href", original_version_history.getAttribute("href"));
       side_history.setAttribute("data-type", "history");
-      side_history.textContent = tl(trans.timeline);
+      side_history.textContent = tl2(trans2.timeline);
       side_actions.appendChild(side_history);
     }
     let wiki_author = wiki_panel.querySelector(".wiki-author");
@@ -44496,7 +44435,7 @@
     let side_actions = html.node`
         <section class="side-actions">
             <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-                ${tl(trans.view_latest)}
+                ${tl2(trans2.view_latest)}
             </a>
         </section>
     `;
@@ -44560,7 +44499,7 @@
     const side_actions = html.node`
         <section class="side-actions">
             <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-                ${tl(trans.view_latest)}
+                ${tl2(trans2.view_latest)}
             </a>
         </section>
     `;
@@ -44570,13 +44509,13 @@
       page.structure.main.appendChild(side_actions);
     const presets = [`\u201C`, `\u201D`, `\u2014`, `\u2018`, `\u2019`, `-`];
     const standards = [
-      tl(trans.wiki_standard_tracks),
-      tl(trans.wiki_standard_artists),
-      tl(trans.wiki_standard_quotations)
+      tl2(trans2.wiki_standard_tracks),
+      tl2(trans2.wiki_standard_artists),
+      tl2(trans2.wiki_standard_quotations)
     ];
     page.structure.side.appendChild(html.node`
         <section class="wiki-presets-panel">
-            <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
+            <h3 class="text-18">${tl2(trans2.symbol_presets)}</h3>
             <div class="presets">
                 ${presets.map((preset) => {
       let item = html.node`
@@ -44585,7 +44524,7 @@
                         </div>
                     `;
       tippy_esm_default(item, {
-        content: tl(trans.click_to_copy),
+        content: tl2(trans2.click_to_copy),
         delay: [500, 0]
       });
       return item;
@@ -44598,41 +44537,41 @@
     `);
     page.structure.side.appendChild(html.node`
         <section class="wiki-syntax-panel bleh--blank-panel">
-            <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
+            <h3 class="text-18">${tl2(trans2.fancy_syntax)}</h3>
             <div class="syntax-listing">
                 <div class="syntax-listing-item">
                     <div class="code-side">[artist]julie[/artist]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`) }}</div>
+                    <div class="detail-side">${{ html: tl2(trans2.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`) }}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`) }}</div>
+                    <div class="detail-side">${{ html: tl2(trans2.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`) }}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`) }}</div>
+                    <div class="detail-side">${{ html: tl2(trans2.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`) }}</div>
                 </div>
             </div>
             <div class="sep"></div>
             <div class="syntax-listing">
                 <div class="syntax-listing-item">
                     <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`) }}</div>
+                    <div class="detail-side">${{ html: tl2(trans2.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`) }}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`) }}</div>
+                    <div class="detail-side">${{ html: tl2(trans2.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`) }}</div>
                 </div>
             </div>
             <div class="sep"></div>
             <div class="syntax-listing">
                 <div class="syntax-listing-item">
                     <div class="code-side">[tag]grunge[/tag]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`) }}</div>
+                    <div class="detail-side">${{ html: tl2(trans2.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`) }}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[user]${auth.name}[/user]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`) }}</div>
+                    <div class="detail-side">${{ html: tl2(trans2.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`) }}</div>
                 </div>
             </div>
         </section>
@@ -44659,13 +44598,13 @@
       let read_more = wiki_block.querySelector("a:last-child");
       if (read_more) {
         read_more.classList.add("read-more");
-        read_more.textContent = tl(trans.read_more).toLowerCase();
+        read_more.textContent = tl2(trans2.read_more).toLowerCase();
       }
       wiki_col.insertBefore(html.node`
             <div class="sub-text">
-                <p>${tl(trans.about)}</p>
+                <p>${tl2(trans2.about)}</p>
                 <span class="right-links">
-                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
+                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl2(trans2.edit_wiki).toLowerCase()}</a></p>
                     ${!wiki_empty && read_more ? html.node`<p>${read_more}</p>` : ""}
                 </span>
             </div>
@@ -44721,7 +44660,7 @@
                                     ` : ""}
                                 </span>
                             </span>
-                            <span class="sister">${tl(trans.external)}</span>
+                            <span class="sister">${tl2(trans2.external)}</span>
                         `
             });
           }
@@ -46010,7 +45949,7 @@
       body.appendChild(html.node`
             <div class="social-links-container">
                 <div class="sub-text music-small-header">
-                    ${tl(trans.links)}
+                    ${tl2(trans2.links)}
                 </div>
                 <div class="music-links social-links">
                     ${links.map((link) => {
@@ -46118,25 +46057,25 @@
     if (!line_breaks) allow_alignment = false;
     const examples = [
       {
-        name: tl(trans.supports_markdown.header.name),
-        string: tl(trans.supports_markdown.header.string),
+        name: tl2(trans2.supports_markdown.header.name),
+        string: tl2(trans2.supports_markdown.header.string),
         hide_if: !allow_headers
       },
       {
-        name: tl(trans.supports_markdown.bold.name),
-        string: tl(trans.supports_markdown.bold.string)
+        name: tl2(trans2.supports_markdown.bold.name),
+        string: tl2(trans2.supports_markdown.bold.string)
       },
       {
-        name: tl(trans.supports_markdown.italics.name),
-        string: tl(trans.supports_markdown.italics.string)
+        name: tl2(trans2.supports_markdown.italics.name),
+        string: tl2(trans2.supports_markdown.italics.string)
       },
       {
-        name: tl(trans.supports_markdown.bold_italics.name),
-        string: tl(trans.supports_markdown.bold_italics.string)
+        name: tl2(trans2.supports_markdown.bold_italics.name),
+        string: tl2(trans2.supports_markdown.bold_italics.string)
       },
       {
-        name: tl(trans.supports_markdown.underlined.name),
-        string: tl(trans.supports_markdown.underlined.string)
+        name: tl2(trans2.supports_markdown.underlined.name),
+        string: tl2(trans2.supports_markdown.underlined.string)
       },
       {
         name: "Fancy link",
@@ -46176,7 +46115,7 @@
     ];
     dialog({
       id: "markdown",
-      title: tl(trans.supports_markdown),
+      title: tl2(trans2.supports_markdown),
       body: html.node`
             <p>You can write fancy text here using Markdown, which lets you make your words pretty with simple shortcuts.</p>
             <table class="fancy-table">
@@ -46242,7 +46181,7 @@
     if (!line_breaks) allow_alignment = false;
     dialog({
       id: "markdown",
-      title: tl(trans.preview),
+      title: tl2(trans2.preview),
       body: html.node`
             <div class="shout-container">
                 <div class="shout" style="--delay: 0s">
@@ -46250,7 +46189,7 @@
                         <a href="${root}user/${auth.name}">${auth.name}</a>
                     </h3>
                     <span class="avatar shout-user-avatar">
-                        <img src=${auth.avatar} alt=${tl(trans.your_avatar)} loading="lazy">
+                        <img src=${auth.avatar} alt=${tl2(trans2.your_avatar)} loading="lazy">
                     </span>
                     <a class="shout-user-avatar-link js-link-block-cover-link" href="${root}user/${auth.name}" tabindex="-1" />
                     <div class="shout-body">
@@ -46295,11 +46234,11 @@
       body: html.node`
             <div class="modal-vertical-inner leaving-site-inner">
                 ${!dangerous ? html.node`
-                <h1>${tl(trans.leaving_site.name)}</h1>
-                <p>${tl(trans.leaving_site.body)}</p>
+                <h1>${tl2(trans2.leaving_site.name)}</h1>
+                <p>${tl2(trans2.leaving_site.body)}</p>
                 ` : html.node`
-                <h1>${tl(trans.leaving_site_dangerous.name)}</h1>
-                <p>${tl(trans.leaving_site_dangerous.body)}</p>
+                <h1>${tl2(trans2.leaving_site_dangerous.name)}</h1>
+                <p>${tl2(trans2.leaving_site_dangerous.body)}</p>
                 `}
                 <div class="external-warn-input" data-dangerous=${dangerous}>
                     <span class="scheme">
@@ -46323,7 +46262,7 @@
                 ${hostname != "" ? html.node`
                 ${trust_site = toggle({
         type: "checkbox",
-        title: tl(trans.leaving_site_checkbox).replace(
+        title: tl2(trans2.leaving_site_checkbox).replace(
           "{v}",
           hostname
         )
@@ -46332,7 +46271,7 @@
             </div>
             <div class="modal-footer">
                 <button class="see-more cancel" onclick=${() => dialog_rm({ id: "external_url" })}>
-                    ${tl(trans.back)}
+                    ${tl2(trans2.back)}
                 </button>
                 <div class="fill"></div>
                 <button class="btn primary continue" onclick=${() => {
@@ -46346,7 +46285,7 @@
         open(url, "_blank");
         dialog_rm({ id: "external_url" });
       }}>
-                    ${tl(trans.visit)}
+                    ${tl2(trans2.visit)}
                 </button>
             </div>
         `
@@ -46441,8 +46380,8 @@
         if (last_season_seen != "" && last_season_seen != season.id) {
           notify({
             id: "new_season",
-            title: tl(trans.new_season),
-            body: tl(trans.value_for_time).replace("{v}", tl(trans.seasonal.listing[season.id])).replace(
+            title: tl2(trans2.new_season),
+            body: tl2(trans2.value_for_time).replace("{v}", tl2(trans2.seasonal.listing[season.id])).replace(
               "{time}",
               DateTime.fromISO(
                 season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)
@@ -46501,8 +46440,8 @@
     log("started interval", "season", "info");
     if (!page.header.season_tooltip) return;
     page.header.season_tooltip.setContent(html.node`
-        <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
-        <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
+        <span class="season-colour-name">${tl2(trans2.seasonal.listing[stored_season.id])}</span>
+        <span class="season-exclusive">${tl2(trans2.seasonal.live)}</span>
     `);
     page.header.season.classList.add("live");
   }
@@ -46514,8 +46453,8 @@
     log("ended interval", "season", "info");
     if (!page.header.season_tooltip) return;
     page.header.season_tooltip.setContent(html.node`
-        <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
-        <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
+        <span class="season-colour-name">${tl2(trans2.seasonal.listing[stored_season.id])}</span>
+        <span class="season-exclusive">${tl2(trans2.seasonal.notice)}</span>
     `);
     page.header.season.classList.remove("live");
   }
@@ -46533,8 +46472,8 @@
       let time_until = new Date(next) - /* @__PURE__ */ new Date();
       page.header.season.textContent = countdown_to(time_until);
       page.header.season_tooltip.setContent(html.node`
-            <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
-            <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
+            <span class="season-colour-name">${tl2(trans2.seasonal.listing[stored_season.id])}</span>
+            <span class="season-exclusive">${tl2(trans2.seasonal.live)}</span>
         `);
     }
   }
@@ -46725,17 +46664,17 @@
   function prompt_for_update() {
     dialog({
       id: "bleh_update",
-      title: tl(trans.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
+      title: tl2(trans2.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
       body: html.node`
             <div class="forms">
                 <div class="form">
                     <div class="form-group proceed">
-                        <button class="btn primary icon" data-type="update" onclick=${() => start_update()}>${tl(trans.update_now)}</button>
+                        <button class="btn primary icon" data-type="update" onclick=${() => start_update()}>${tl2(trans2.update_now)}</button>
                     </div>
                 </div>
                 <div class="form">
                     <div class="form-group deny">
-                        <button class="btn icon" data-type="ignore" onclick=${() => ignore_update()}>${tl(trans.ignore_for_now)}</button>
+                        <button class="btn icon" data-type="ignore" onclick=${() => ignore_update()}>${tl2(trans2.ignore_for_now)}</button>
                     </div>
                 </div>
             </div>
@@ -46754,12 +46693,12 @@
     open(`https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js`);
     dialog({
       id: "bleh_update",
-      title: tl(trans.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
+      title: tl2(trans2.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
       body: html.node`
             <div class="forms">
                 <div class="form">
                     <div class="form-group proceed">
-                        <button class="btn primary icon" data-type="finish" onclick=${() => finish_update()}>${tl(trans.finish)}</button>
+                        <button class="btn primary icon" data-type="finish" onclick=${() => finish_update()}>${tl2(trans2.finish)}</button>
                     </div>
                 </div>
             </div>
@@ -46772,10 +46711,10 @@
   function finish_update() {
     dialog({
       id: "bleh_wait",
-      title: tl(trans.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
+      title: tl2(trans2.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
       body: html.node`
             <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
+                <div class="loading-data-text">${tl2(trans2.downloading_styles)}</div>
             </div>
         `,
       type: "wait",
@@ -46808,40 +46747,40 @@
     if (page.requested.tab && !tab) tab = page.requested.tab;
     const tabs = {
       general: {
-        name: tl(trans.general),
+        name: tl2(trans2.general),
         icon: "general"
       },
       visual: {
-        name: tl(trans.visual),
+        name: tl2(trans2.visual),
         icon: "visual"
       },
       interface: {
-        name: tl(trans.interface),
+        name: tl2(trans2.interface),
         icon: "layout"
       },
       profile: {
-        name: tl(trans.profile),
+        name: tl2(trans2.profile),
         icon: "user"
       },
       playback: {
-        name: tl(trans.playback),
+        name: tl2(trans2.playback),
         icon: "album"
       },
       seasonal: {
-        name: tl(trans.seasonal.name)
+        name: tl2(trans2.seasonal.name)
       },
       accessibility: {
-        name: tl(trans.accessibility)
+        name: tl2(trans2.accessibility)
       },
       fill: {
         type: "fill"
       },
       performance: {
-        name: tl(trans.troubleshooting),
+        name: tl2(trans2.troubleshooting),
         icon: "advanced"
       },
       sku: {
-        name: tl(trans.flags),
+        name: tl2(trans2.flags),
         password: settings.hu_tao
       }
     };
@@ -46873,11 +46812,11 @@
       html`
             <div class="cta first priority sponsor colourful">
                 ${auth.sponsor ? html.node`
-            <strong>${tl(trans.you_are_a_sponsor)}</strong>
-            <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+            <strong>${tl2(trans2.you_are_a_sponsor)}</strong>
+            <a class="see-more" onclick="_sponsor_manage()">${tl2(trans2.manage_sponsor)}</a>
             ` : html.node`
-            <strong>${tl(trans.news_sponsor_cta)}</strong>
-            <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+            <strong>${tl2(trans2.news_sponsor_cta)}</strong>
+            <a class="see-more" onclick="_sponsor()">${tl2(trans2.sponsor)}</a>
             `}
             </div>
             <section class="side-actions">
@@ -46886,26 +46825,26 @@
                     data-type="import"
                     onclick=${() => import_settings20()}
                 >
-                    ${tl(trans.import)}
+                    ${tl2(trans2.import)}
                 </button>
                 <button
                     class="btn side-action"
                     data-type="export"
                     onclick=${() => export_settings()}
                 >
-                    ${tl(trans.export)}
+                    ${tl2(trans2.export)}
                 </button>
                 <button
                     class="btn side-action"
                     data-type="reset"
                     onclick="_reset_settings()"
                 >
-                    ${tl(trans.reset)}
+                    ${tl2(trans2.reset)}
                 </button>
             </section>
             ${ff("skip_to_setting") ? html.node`
         <div class="bleh--panel">
-            <h4>${tl(trans.skip_to)}</h4>
+            <h4>${tl2(trans2.skip_to)}</h4>
             <div class="skip-to-list"></div>
         </div>
         ` : ""}
@@ -46927,7 +46866,7 @@
       html`
             <div class="bleh--panel">
                 <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.loading)}</div>
+                    <div class="loading-data-text">${tl2(trans2.loading)}</div>
                 </div>
             </div>
         `
@@ -46971,10 +46910,10 @@
                         </div>
                     </div>
                     <div class="update-center-details">
-                        <h2>${tl(trans.updates_paused)}</h2>
-                        <p class="last-checked">${tl(trans.paused_until_date).replace("{d}", DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
+                        <h2>${tl2(trans2.updates_paused)}</h2>
+                        <p class="last-checked">${tl2(trans2.paused_until_date).replace("{d}", DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
                     </div>
-                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl(trans.check)}</button>
+                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl2(trans2.check)}</button>
                     ` : update_required === "false" ? html.node`
                     <div class="update-center-icon">
                         <div class="update-container">
@@ -46988,22 +46927,22 @@
                     </div>
                     <div class="update-center-details">
                         ${last_checked ? html.node`
-                        <h2>${tl(trans.you_are_up_to_date)}</h2>
-                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
+                        <h2>${tl2(trans2.you_are_up_to_date)}</h2>
+                        <p class="last-checked">${tl2(trans2.last_checked_date).replace("{d}", DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
                         ` : html.node`
-                        <h2>${tl(trans.missing_updates)}</h2>
-                        <p class="last-checked">${tl(trans.never_checked)}</p>
+                        <h2>${tl2(trans2.missing_updates)}</h2>
+                        <p class="last-checked">${tl2(trans2.never_checked)}</p>
                         `}
                     </div>
                     <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
           notify({
             id: "update",
-            title: tl(trans.updates),
-            body: tl(trans.checked_for_updates),
+            title: tl2(trans2.updates),
+            body: tl2(trans2.checked_for_updates),
             icon: "icon-16-update"
           });
           render_setting_page("general");
-        })}>${tl(trans.check)}</button>
+        })}>${tl2(trans2.check)}</button>
                     ` : html.node`
                     <div class="update-center-icon">
                         <div class="update-container">
@@ -47011,35 +46950,35 @@
                         </div>
                     </div>
                     <div class="update-center-details">
-                        <h2>${tl(trans.update_available_to_install)}</h2>
+                        <h2>${tl2(trans2.update_available_to_install)}</h2>
                         ${last_checked ? html.node`
-                        <p class="last-checked">${tl(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
+                        <p class="last-checked">${tl2(trans2.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
                         ` : html.node`
-                        <p class="last-checked">${tl(trans.never_checked)}</p>
+                        <p class="last-checked">${tl2(trans2.never_checked)}</p>
                         `}
                     </div>
                     <div class="button-group">
                         <button class="btn icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
           notify({
             id: "update",
-            title: tl(trans.updates),
-            body: tl(trans.checked_for_updates),
+            title: tl2(trans2.updates),
+            body: tl2(trans2.checked_for_updates),
             icon: "icon-16-update"
           });
           render_setting_page("general");
-        })}>${tl(trans.check)}</button>
-                        <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
+        })}>${tl2(trans2.check)}</button>
+                        <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => start_update()}>${tl2(trans2.install_now)}</button>
                     </div>
                     `}
                     </div>
                     ${last_checked && paused === "false" && update_required === "true" ? html.node`
-                <div class="alert alert-info">${tl(trans.you_are_installing_version, { v: version_to_install })}</div>
+                <div class="alert alert-info">${tl2(trans2.you_are_installing_version, { v: version_to_install })}</div>
                 ` : html.node`
-                <div class="alert alert-info">${tl(trans.you_are_running_version, { v: version.build })}</div>
+                <div class="alert alert-info">${tl2(trans2.you_are_running_version, { v: version.build })}</div>
                 `}
                 </section>
                 <section class="bleh--panel">
-                    <h4>${tl(trans.profile)}</h4>
+                    <h4>${tl2(trans2.profile)}</h4>
                     <div class="setting-group">
                         ${auth.name ? html.node`
                     <div class="setting" data-type="info">
@@ -47052,7 +46991,7 @@
                             <h5>${auth.name}</h5>
                         </div>
                         <div class="info">
-                            <p>${tl(trans.profile_and_badges, { c: badge_count.toString() })}</p>
+                            <p>${tl2(trans2.profile_and_badges, { c: badge_count.toString() })}</p>
                             ${badge_count > 0 ? html.node`
                             <button class="see-more" onclick=${() => {
           dialog({
@@ -47088,17 +47027,17 @@
                                                         <div class="bleh-icon" style="--icon: var(--mask)" />
                                                     </div>
                                                     <div class="name colourful user-status-subscriber">
-                                                        ${tl(trans.badges["user-status-subscriber"].name)}
+                                                        ${tl2(trans2.badges["user-status-subscriber"].name)}
                                                     </div>
                                                     <div class="text">
-                                                        ${tl(trans.badges["user-status-subscriber"].reason)}
+                                                        ${tl2(trans2.badges["user-status-subscriber"].reason)}
                                                     </div>
                                                 </div>
                                             ` : ""}
                                         </div>
                                     `
           });
-        }}>${tl(trans.view)}</button>
+        }}>${tl2(trans2.view)}</button>
                             ` : ""}
                         </div>
                     </div>
@@ -47106,38 +47045,38 @@
                         ${auth.sponsor ? html.node`
                     <div class="setting" data-type="action">
                         <div class="heading">
-                            <h5>${tl(trans.you_are_a_sponsor)}</h5>
-                            <p>${tl(trans.sponsor_get_badge)}</p>
+                            <h5>${tl2(trans2.you_are_a_sponsor)}</h5>
+                            <p>${tl2(trans2.sponsor_get_badge)}</p>
                         </div>
                         <div class="toggle-wrap">
                             <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
-                                ${tl(trans.manage_sponsor)}
+                                ${tl2(trans2.manage_sponsor)}
                             </button>
                         </div>
                     </div>
                     ` : html.node`
                     <div class="setting" data-type="action">
                         <div class="heading">
-                            <h5>${tl(trans.news_sponsor_cta)}</h5>
-                            <p>${tl(trans.api.body)}</p>
+                            <h5>${tl2(trans2.news_sponsor_cta)}</h5>
+                            <p>${tl2(trans2.api.body)}</p>
                         </div>
                         <div class="toggle-wrap">
                             <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
-                                ${tl(trans.sponsor)}
+                                ${tl2(trans2.sponsor)}
                             </button>
                         </div>
                     </div>
                     `}
                         <div class="setting" data-type="info">
                             <div class="heading">
-                                <h5>${tl(trans.current_version)}</h5>
+                                <h5>${tl2(trans2.current_version)}</h5>
                             </div>
                             <div class="info">
                                 <button
                                     class="see-more update-check sponsor-related"
                                     onclick="_sponsor_check()"
                                 >
-                                    ${tl(trans.update_check)}
+                                    ${tl2(trans2.update_check)}
                                 </button>
                                 <p>${sponsor_list.latest}</p>
                             </div>
@@ -47146,7 +47085,7 @@
                 </section>
                 ${!page.mobile ? html.node`
             <section class="bleh--panel">
-                <h4>${tl(trans.branding)}</h4>
+                <h4>${tl2(trans2.branding)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "branding_type" })}
                 </div>
@@ -47154,28 +47093,28 @@
             ` : ""}
                 ${auth.name ? html.node`
             <section class="bleh--panel">
-                <h4>${tl(trans.api.short)}</h4>
+                <h4>${tl2(trans2.api.short)}</h4>
                 <div class="setting-group">
                     <div class="setting" data-type="action">
                         <div class="heading">
-                            <h5>${tl(trans.api.name)}</h5>
-                            <p>${tl(trans.api.body)}</p>
+                            <h5>${tl2(trans2.api.name)}</h5>
+                            <p>${tl2(trans2.api.body)}</p>
                         </div>
                         <div class="toggle-wrap">
                             <a class="btn ${auth_key && auth_valid == "true" ? "" : "primary"} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
-                                ${tl(trans.connect)}
+                                ${tl2(trans2.connect)}
                             </a>
                         </div>
                     </div>
                     <div class="setting" data-type="info">
                         <div class="heading">
-                            <h5>${tl(trans.api_status)}</h5>
+                            <h5>${tl2(trans2.api_status)}</h5>
                         </div>
                         <div class="info">
                             ${auth_key && auth_valid == "true" ? html.node`
-                            <p>${tl(trans.connected)}</p>
+                            <p>${tl2(trans2.connected)}</p>
                             ` : html.node`
-                            <p>${tl(trans.not_connected)}</p>
+                            <p>${tl2(trans2.not_connected)}</p>
                             `}
                         </div>
                     </div>
@@ -47183,7 +47122,7 @@
             </section>
             ` : ""}
                 <section class="bleh--panel">
-                    <h4>${tl(trans.language)}</h4>
+                    <h4>${tl2(trans2.language)}</h4>
                     <div class="setting-group">
                         <div class="languages">
                             ${Object.entries(lang_info).map(
@@ -47196,11 +47135,11 @@
                                             </div>
                                             <div class="name">
                                                 <h5>${language.name}</h5>
-                                                <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(", ") }) }}</p>
+                                                <p>${{ html: tl2(trans2.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(", ") }) }}</p>
                                             </div>
                                             ${language.new ? html.node`
                                             <div class="badges">
-                                                <div class="new-badge">${tl(trans.new)}</div>
+                                                <div class="new-badge">${tl2(trans2.new)}</div>
                                             </div>
                                             ` : html.node`<div class="badges"></div>`}
                                             ${language.percent ? html.node`
@@ -47228,15 +47167,15 @@
                     <div class="setting-group">
                         <div class="setting" data-type="action">
                             <div class="heading">
-                                <h5>${tl(trans.submit_language.name)}</h5>
-                                <p>${tl(trans.submit_language.body)}</p>
+                                <h5>${tl2(trans2.submit_language.name)}</h5>
+                                <p>${tl2(trans2.submit_language.body)}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <a
                                     class="see-more"
                                     href="https://github.com/katelyynn/bleh/wiki"
                                     target="_blank"
-                                    >${tl(trans.help_contribute)}</a
+                                    >${tl2(trans2.help_contribute)}</a
                                 >
                             </div>
                         </div>
@@ -47250,14 +47189,14 @@
         render(
           adaptive_tip,
           html`
-                    ${tl(trans.adaptive_tip, {
-            day: tl(trans.themes[settings.theme_day]),
-            night: tl(trans.themes[settings.theme_night])
+                    ${tl2(trans2.adaptive_tip, {
+            day: tl2(trans2.themes[settings.theme_day]),
+            night: tl2(trans2.themes[settings.theme_night])
           })}<a
                         onclick=${() => {
             dialog({
               id: "auto_theme",
-              title: tl(trans.themes.name),
+              title: tl2(trans2.themes.name),
               body: html.node`
                             <div class="setting-group">
                                 ${theme_day = setting({
@@ -47265,23 +47204,23 @@
                 list: [
                   {
                     value: "light",
-                    text: tl(trans.themes.light)
+                    text: tl2(trans2.themes.light)
                   },
                   {
                     value: "ink",
-                    text: tl(trans.themes.ink)
+                    text: tl2(trans2.themes.ink)
                   },
                   {
                     value: "dark",
-                    text: tl(trans.themes.dark)
+                    text: tl2(trans2.themes.dark)
                   },
                   {
                     value: "darker",
-                    text: tl(trans.themes.darker)
+                    text: tl2(trans2.themes.darker)
                   },
                   {
                     value: "oled",
-                    text: tl(trans.themes.oled)
+                    text: tl2(trans2.themes.oled)
                   }
                 ],
                 func: () => {
@@ -47295,23 +47234,23 @@
                 list: [
                   {
                     value: "light",
-                    text: tl(trans.themes.light)
+                    text: tl2(trans2.themes.light)
                   },
                   {
                     value: "ink",
-                    text: tl(trans.themes.ink)
+                    text: tl2(trans2.themes.ink)
                   },
                   {
                     value: "dark",
-                    text: tl(trans.themes.dark)
+                    text: tl2(trans2.themes.dark)
                   },
                   {
                     value: "darker",
-                    text: tl(trans.themes.darker)
+                    text: tl2(trans2.themes.darker)
                   },
                   {
                     value: "oled",
-                    text: tl(trans.themes.oled)
+                    text: tl2(trans2.themes.oled)
                   }
                 ],
                 func: () => {
@@ -47321,11 +47260,11 @@
                 }
               })}
                             </div>
-                            <p class="card-tip">${tl(trans.theme_schedule)}</p>
+                            <p class="card-tip">${tl2(trans2.theme_schedule)}</p>
                         `
             });
           }}
-                        >${tl(trans.change_schedule)}</a
+                        >${tl2(trans2.change_schedule)}</a
                     >
                 `
         );
@@ -47347,11 +47286,11 @@
         page.structure.main,
         html`
                 <section class="bleh--panel">
-                    <h4>${tl(trans.appearance)}</h4>
+                    <h4>${tl2(trans2.appearance)}</h4>
                     <div class="setting-group">
                         <div class="setting" data-type="action">
                             <div class="heading">
-                                <h5>${tl(trans.themes.name)}</h5>
+                                <h5>${tl2(trans2.themes.name)}</h5>
                             </div>
                             <div class="info v">
                                 ${bubbles = theme_bubbles(() => {
@@ -47369,7 +47308,7 @@
                         ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
                         <div class="setting" data-type="action">
                             <div class="heading">
-                                <h5>${tl(trans.hue)}</h5>
+                                <h5>${tl2(trans2.hue)}</h5>
                             </div>
                             <div class="info swatch-info">
                                 <div
@@ -47385,8 +47324,8 @@
                         </div>
                         <div class="setting" data-type="options">
                             <div class="heading">
-                                <h5>${tl(trans.change_my_colour_when.name)}</h5>
-                                <p>${tl(trans.change_my_colour_when.body)}</p>
+                                <h5>${tl2(trans2.change_my_colour_when.name)}</h5>
+                                <p>${tl2(trans2.change_my_colour_when.body)}</p>
                             </div>
                             <div class="primary-selections">
                                 ${setting({
@@ -47415,7 +47354,7 @@
                     </div>
                 </section>
                 <section class="bleh--panel">
-                    <h4>${tl(trans.fonts)}</h4>
+                    <h4>${tl2(trans2.fonts)}</h4>
                     <div class="setting-group">
                         ${setting({ id: "font" })}
                         ${setting({ id: "font_weight" })}
@@ -47425,7 +47364,7 @@
                     </div>
                 </section>
                 <section class="bleh--panel">
-                    <h4>${tl(trans.artwork)}</h4>
+                    <h4>${tl2(trans2.artwork)}</h4>
                     <div class="inner-preview pad">
                         <div class="palette albums" style="height: fit-content">
                             <div
@@ -47463,7 +47402,7 @@
                     </div>
                 </section>
                 <section class="bleh--panel">
-                    <h4>${tl(trans.other)}</h4>
+                    <h4>${tl2(trans2.other)}</h4>
                     <div class="setting-group">${setting({ id: "rain" })}</div>
                 </section>
             `
@@ -47515,7 +47454,7 @@
         page.structure.main,
         html`
                 <section class="bleh--panel">
-                    <h4>${tl(trans.tracklist)}</h4>
+                    <h4>${tl2(trans2.tracklist)}</h4>
                     <div class="inner-preview pad">
                         <div class="tracks">
                             <div class="track realtime">
@@ -47596,7 +47535,7 @@
                     </div>
                 </section>
                 <section class="bleh--panel">
-                    <h4>${tl(trans.overview)}</h4>
+                    <h4>${tl2(trans2.overview)}</h4>
                     <div class="setting-group">
                         ${setting({
           id: "music_links",
@@ -47606,7 +47545,7 @@
                 </section>
                 ${!page.mobile ? html.node`
             <section class="bleh--panel">
-                <h4>${tl(trans.navigation_items.name)}</h4>
+                <h4>${tl2(trans2.navigation_items.name)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "navigation_items", list: page.state.quick_access_items })}
                     ${setting({ id: "navigation_language" })}
@@ -47614,7 +47553,7 @@
             </section>
             ` : ""}
                 <section class="bleh--panel">
-                    <h4>${tl(trans.shouts)}</h4>
+                    <h4>${tl2(trans2.shouts)}</h4>
                     <div class="inner-preview pad flex">
                         <div
                             class="shout js-shout js-link-block"
@@ -47625,14 +47564,14 @@
                             <a>${auth.name}</a>
                         </h3>
                         <span class="avatar shout-user-avatar">
-                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}" loading="lazy">
+                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans2.your_avatar)}" loading="lazy">
                         </span>
                         ` : html.node`
                         <h3 class="shout-user">
-                            <a>${tl(trans.profile)}</a>
+                            <a>${tl2(trans2.profile)}</a>
                         </h3>
                         <span class="avatar shout-user-avatar">
-                            <img class="missing-avatar" alt="${tl(trans.your_avatar)}" loading="lazy">
+                            <img class="missing-avatar" alt="${tl2(trans2.your_avatar)}" loading="lazy">
                         </span>
                         `}
                             <a class="shout-permalink shout-timestamp">
@@ -47644,10 +47583,10 @@
                                 </time>
                             </a>
                             <div class="shout-body if-markdown-on">
-                                ${markdown(tl(trans.markdown_shouts.preview))}
+                                ${markdown(tl2(trans2.markdown_shouts.preview))}
                             </div>
                             <div class="shout-body if-markdown-off">
-                                <p>${tl(trans.markdown_shouts.preview)}</p>
+                                <p>${tl2(trans2.markdown_shouts.preview)}</p>
                             </div>
                         </div>
                     </div>
@@ -47657,18 +47596,18 @@
                 </section>
                 ${!page.mobile ? html.node`
             <section class="bleh--panel">
-                <h4>${tl(trans.quick_switcher)}</h4>
+                <h4>${tl2(trans2.quick_switcher)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "rabbit" })}
                     <div class="setting" data-type="action">
                         <div class="heading">
-                            <h5>${tl(trans.quick_switcher_keybinds)}</h5>
+                            <h5>${tl2(trans2.quick_switcher_keybinds)}</h5>
                         </div>
                         <div class="toggle-wrap">
                             <button class="btn see-more" onclick=${() => {
           dialog({
             id: "quick_switcher_keybinds",
-            title: tl(trans.quick_switcher),
+            title: tl2(trans2.quick_switcher),
             body: html.node`
                                         <div class="setting-group">
                                             ${setting({ id: "rabbit_primary" })}
@@ -47680,7 +47619,7 @@
                                     `
           });
         }}>
-                                ${tl(trans.change_now)}
+                                ${tl2(trans2.change_now)}
                             </button>
                         </div>
                     </div>
@@ -47734,7 +47673,7 @@
         page.structure.main,
         html`
                 <section class="bleh--panel">
-                    <h4>${tl(trans.music_corrections)}</h4>
+                    <h4>${tl2(trans2.music_corrections)}</h4>
                     <div class="inner-preview pad">
                         <div class="lotus-preview">
                             <div class="before">
@@ -47755,17 +47694,17 @@
                             disabled=${!artist_corrections.version || !album_track_corrections.version}
                         >
                             <div class="heading">
-                                <h5>${tl(trans.corrections_loaded)}</h5>
+                                <h5>${tl2(trans2.corrections_loaded)}</h5>
                             </div>
                             <div class="info">
                                 <p>
-                                    ${tl(trans.corrections_loaded_value).replace("{c1}", total_artists).replace("{c2}", total_album_tracks)}
+                                    ${tl2(trans2.corrections_loaded_value).replace("{c1}", total_artists).replace("{c2}", total_album_tracks)}
                                 </p>
                                 <button
                                     class="see-more"
                                     onclick="_open_correction_modal()"
                                 >
-                                    ${tl(trans.view_all)}
+                                    ${tl2(trans2.view_all)}
                                 </button>
                             </div>
                         </div>
@@ -47775,7 +47714,7 @@
                             disabled=${!artist_corrections.version || !album_track_corrections.version}
                         >
                             <div class="heading">
-                                <h5>${tl(trans.current_version)}</h5>
+                                <h5>${tl2(trans2.current_version)}</h5>
                             </div>
                             <div class="info">
                                 <p>
@@ -47785,7 +47724,7 @@
                                     class="see-more update-check"
                                     onclick="_lotus_check()"
                                 >
-                                    ${tl(trans.update_check)}
+                                    ${tl2(trans2.update_check)}
                                 </button>
                             </div>
                         </div>
@@ -47795,7 +47734,7 @@
                             disabled=${!artist_corrections.version || !album_track_corrections.version}
                         >
                             <div class="heading">
-                                <h5>${tl(trans.help_contribute)}</h5>
+                                <h5>${tl2(trans2.help_contribute)}</h5>
                             </div>
                             <div class="info">
                                 <a
@@ -47803,7 +47742,7 @@
                                     href="https://github.com/katelyynn/lotus/issues/new/choose"
                                     target="_blank"
                                 >
-                                    ${tl(trans.suggest_correction)}
+                                    ${tl2(trans2.suggest_correction)}
                                 </a>
                             </div>
                         </div>
@@ -47812,8 +47751,8 @@
                         ${setting({ id: "prefer_no_redirect" })}
                         <div class="setting" data-type="action">
                             <div class="heading">
-                                <h5>${tl(trans.legacy_redirects.name)}</h5>
-                                <p>${tl(trans.legacy_redirects.body)}</p>
+                                <h5>${tl2(trans2.legacy_redirects.name)}</h5>
+                                <p>${tl2(trans2.legacy_redirects.body)}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <a
@@ -47821,7 +47760,7 @@
                                     href="${root}settings/website"
                                     target="_blank"
                                 >
-                                    ${tl(trans.change_now)}
+                                    ${tl2(trans2.change_now)}
                                 </a>
                             </div>
                         </div>
@@ -47840,7 +47779,7 @@
                                 />
                             </div>
                             <div class="info-side">
-                                <div class="sub-text">${tl(trans.track)}</div>
+                                <div class="sub-text">${tl2(trans2.track)}</div>
                                 <div class="title-container">
                                     <h1 class="bleh--name-with-features">
                                         <div class="title">California Love</div>
@@ -47891,7 +47830,7 @@
                     <div class="setting-group">
                         <div class="setting" data-type="options">
                             <div class="heading">
-                                <h5>${tl(trans.romanise_titles)}</h5>
+                                <h5>${tl2(trans2.romanise_titles)}</h5>
                             </div>
                             <div class="primary-selections">
                                 ${setting({
@@ -47911,7 +47850,7 @@
                 </section>
                 ${ff("oracle") ? html.node`
             <section class="bleh--panel">
-                <h4>${tl(trans.oracle_heading)}</h4>
+                <h4>${tl2(trans2.oracle_heading)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "oracle_beta" })}
                     <div
@@ -47920,7 +47859,7 @@
                         disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
                     >
                         <div class="heading">
-                            <h5>${tl(trans.current_version)}</h5>
+                            <h5>${tl2(trans2.current_version)}</h5>
                         </div>
                         <div class="info">
                             <p>
@@ -47930,7 +47869,7 @@
                                 class="see-more update-check"
                                 onclick=${() => oracle_data(true)}
                             >
-                                ${tl(trans.update_check)}
+                                ${tl2(trans2.update_check)}
                             </button>
                         </div>
                     </div>
@@ -47965,7 +47904,7 @@
                     <div class="sep"></div>
                 </div>
                 <div class="bleh--panel check-artist-hover">
-                    <h4 class="top-header">${tl(trans.layout)}</h4>
+                    <h4 class="top-header">${tl2(trans2.layout)}</h4>
                     <h4>${trans_legacy.en.settings.layout.header}</h4>
                     <div class="inner-preview pad">
                         <div class="profile-mockup artist">
@@ -48008,7 +47947,7 @@
                 <div class="bleh--panel">
                     <div class="seasonal-inner">
                         <div class="sub-text">
-                            ${tl(trans.seasonal_timeline)}
+                            ${tl2(trans2.seasonal_timeline)}
                         </div>
                         <h4>
                             ${DateTime.fromJSDate(
@@ -48020,7 +47959,7 @@
                         ${setting({ id: "seasonal" })}
                         <div class="setting" data-type="info">
                             <div class="heading">
-                                <h5>${tl(trans.current_season)}</h5>
+                                <h5>${tl2(trans2.current_season)}</h5>
                             </div>
                             <div class="info">
                                 <div
@@ -48031,8 +47970,8 @@
                                         class="bleh-icon bleh-seasonal-icon"
                                     ></div>
                                     <p>
-                                        ${tl(
-          trans.seasonal.listing[stored_season.id]
+                                        ${tl2(
+          trans2.seasonal.listing[stored_season.id]
         )}
                                     </p>
                                 </div>
@@ -48041,7 +47980,7 @@
                         ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
                     <div class="setting" data-type="info">
                         <div class="heading">
-                            <h5>${tl(trans.started)}</h5>
+                            <h5>${tl2(trans2.started)}</h5>
                         </div>
                         <div class="info">
                             <p id="current_season_start">${DateTime.fromISO(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
@@ -48049,7 +47988,7 @@
                     </div>
                     <div class="setting" data-type="info">
                         <div class="heading">
-                            <h5>${tl(trans.ends_in)}</h5>
+                            <h5>${tl2(trans2.ends_in)}</h5>
                         </div>
                         <div class="info">
                             <p id="current_season">${DateTime.fromISO(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
@@ -48058,7 +47997,7 @@
                     ` : settings.seasonal ? html.node`
                     <div class="setting" data-type="info">
                         <div class="heading">
-                            <h5>${tl(trans.next_in)}</h5>
+                            <h5>${tl2(trans2.next_in)}</h5>
                         </div>
                         <div class="info">
                             <p id="next_season_start">${DateTime.fromISO(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}</p>
@@ -48068,7 +48007,7 @@
                         ${settings.seasonal ? html.node`
                     <div class="setting" data-type="info">
                         <div class="heading">
-                            <h5>${tl(trans.calculated_offset)}</h5>
+                            <h5>${tl2(trans2.calculated_offset)}</h5>
                         </div>
                         <div class="info">
                             <p>${stored_season.offset}</p>
@@ -48076,12 +48015,12 @@
                     </div>
                     ` : ""}
                     </div>
-                    <h4>${tl(trans.settings)}</h4>
+                    <h4>${tl2(trans2.settings)}</h4>
                     <div class="setting-group">
                         <div class="setting" data-type="options">
                             <div class="heading">
-                                <h5>${tl(trans.seasonal_particles.name)}</h5>
-                                <p>${tl(trans.seasonal_particles.body)}</p>
+                                <h5>${tl2(trans2.seasonal_particles.name)}</h5>
+                                <p>${tl2(trans2.seasonal_particles.body)}</p>
                             </div>
                             <div class="primary-selections">
                                 <div
@@ -48091,7 +48030,7 @@
                                     data-toggle-value="all"
                                     onclick="_update_item('seasonal_particles', 'all')"
                                 >
-                                    <h5>${tl(trans.all_particles)}</h5>
+                                    <h5>${tl2(trans2.all_particles)}</h5>
                                 </div>
                                 <div
                                     class="btn primary-selection no-icon"
@@ -48100,7 +48039,7 @@
                                     data-toggle-value="less"
                                     onclick="_update_item('seasonal_particles', 'less')"
                                 >
-                                    <h5>${tl(trans.less_particles)}</h5>
+                                    <h5>${tl2(trans2.less_particles)}</h5>
                                 </div>
                                 <div
                                     class="btn primary-selection no-icon"
@@ -48109,7 +48048,7 @@
                                     data-toggle-value="none"
                                     onclick="_update_item('seasonal_particles', 'none')"
                                 >
-                                    <h5>${tl(trans.no_particles)}</h5>
+                                    <h5>${tl2(trans2.no_particles)}</h5>
                                 </div>
                             </div>
                         </div>
@@ -48124,7 +48063,7 @@
                                 class="btn reset"
                                 onclick="_reset_item('seasonal_overlays')"
                             >
-                                ${tl(trans.reset)}
+                                ${tl2(trans2.reset)}
                             </button>
                             <div class="heading">
                                 <h5>
@@ -48156,8 +48095,8 @@
           body: html.node`
                     <div class="modal-vertical-inner error-inner">
                         <div class="bleh-icon" style="--icon: var(--icon-16-warning)"></div>
-                        <h1>${tl(trans.intended_for_development.name)}</h1>
-                        <p>${tl(trans.intended_for_development.body)}</p>
+                        <h1>${tl2(trans2.intended_for_development.name)}</h1>
+                        <p>${tl2(trans2.intended_for_development.body)}</p>
                     </div>
                 `,
           theme: "error"
@@ -48168,21 +48107,21 @@
         html`
                 <section class="bleh--panel">
                     <div class="alert alert-danger">
-                        ${tl(trans.beware_notice)}
+                        ${tl2(trans2.beware_notice)}
                     </div>
                     <div class="setting-group">
                         ${setting({ id: "dev" })}
                         <div class="setting" data-type="action">
                             <div class="heading">
-                                <h5>${tl(trans.force_refresh_style.name)}</h5>
-                                <p>${tl(trans.force_refresh_style.body)}</p>
+                                <h5>${tl2(trans2.force_refresh_style.name)}</h5>
+                                <p>${tl2(trans2.force_refresh_style.body)}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button
                                     class="btn see-more update-check"
                                     onclick=${() => force_refresh_style()}
                                 >
-                                    ${tl(trans.refresh)}
+                                    ${tl2(trans2.refresh)}
                                 </button>
                             </div>
                         </div>
@@ -48248,7 +48187,7 @@
                         </li>
                     </ul>
                     <div class="sep"></div>
-                    <h4>${tl(trans.development)}</h4>
+                    <h4>${tl2(trans2.development)}</h4>
                     <button
                         class="see-more"
                         onclick=${() => {
@@ -48257,7 +48196,7 @@
           } else {
             dialog({
               id: "hu_tao",
-              title: tl(trans.development),
+              title: tl2(trans2.development),
               body: html.node`
                                 ${setting({ id: "hu_tao", text: false, focus: true })}
                             `
@@ -48265,7 +48204,7 @@
           }
         }}
                     >
-                        ${tl(trans.manage_feature_flags)}
+                        ${tl2(trans2.manage_feature_flags)}
                     </button>
                 </section>
             `
@@ -48278,7 +48217,7 @@
                     <div class="bleh--panel">
                         <div class="loading-data-container">
                             <div class="loading-data-text error">
-                                ${tl(trans.not_logged_in)}
+                                ${tl2(trans2.not_logged_in)}
                             </div>
                         </div>
                     </div>
@@ -48295,7 +48234,7 @@
         page.structure.main,
         html`
                 <section class="bleh--panel">
-                    <h4>${tl(trans.banners)}</h4>
+                    <h4>${tl2(trans2.banners)}</h4>
                     <div class="inner-preview pad">
                         <div class="profile-mockup">
                             <div class="mockup-header">
@@ -48344,7 +48283,7 @@
                     <div class="setting-group">
                         <div class="setting" data-type="options">
                             <div class="heading">
-                                <h5>${tl(trans.view_backgrounds_on)}</h5>
+                                <h5>${tl2(trans2.view_backgrounds_on)}</h5>
                             </div>
                             <div class="primary-selections">
                                 ${setting({
@@ -48362,7 +48301,7 @@
                 </section>
                 ${ff("friends") ? html.node`
             <section class="bleh--panel">
-                <h4>${tl(trans.friends)}</h4>
+                <h4>${tl2(trans2.friends)}</h4>
                 <div class="setting-group">
                     ${friends = setting({
           id: "friends",
@@ -48374,13 +48313,13 @@
             render_setting_page("profile");
           }
         })}
-                    ${starred2 = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl(trans.none) }, ...settings.friends]) })}
+                    ${starred2 = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl2(trans2.none) }, ...settings.friends]) })}
                 </div>
-                <p class="card-tip">${tl(trans.friend_difference)}</p>
+                <p class="card-tip">${tl2(trans2.friend_difference)}</p>
             </section>
             ` : ""}
                 <section class="bleh--panel">
-                    <h4>${tl(trans.other)}</h4>
+                    <h4>${tl2(trans2.other)}</h4>
                     <div class="setting-group">
                         ${setting({ id: "bio_markdown" })}
                         ${setting({ id: "show_your_progress" })}
@@ -48403,7 +48342,7 @@
                                     data-toggle-value="expand"
                                     onclick="_update_item('default_avatar_action', 'expand')"
                                 >
-                                    <h5>${tl(trans.expand)}</h5>
+                                    <h5>${tl2(trans2.expand)}</h5>
                                 </div>
                                 <div
                                     class="btn primary-selection"
@@ -48412,27 +48351,27 @@
                                     data-toggle-value="gallery"
                                     onclick="_update_item('default_avatar_action', 'gallery')"
                                 >
-                                    <h5>${tl(trans.photos)}</h5>
+                                    <h5>${tl2(trans2.photos)}</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
                 <section class="bleh--panel">
-                    <h4>${tl(trans.notes)}</h4>
+                    <h4>${tl2(trans2.notes)}</h4>
                     <div class="setting-group">
                         <div class="profile-notes">
                             <div class="loading-data-container">
                                 <div class="loading-data-text failed">
-                                    ${tl(trans.no_notes)}
+                                    ${tl2(trans2.no_notes)}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
                 <section class="bleh--panel">
-                    <h4>${tl(trans.activity)}</h4>
-                    <p>${tl(trans.what_are_activities)}</p>
+                    <h4>${tl2(trans2.activity)}</h4>
+                    <p>${tl2(trans2.what_are_activities)}</p>
                     <div class="inner-preview pad">
                         <div class="preview-card activity-preview" />
                     </div>
@@ -48440,7 +48379,7 @@
                         ${setting({ id: "activities" })}
                         <div class="setting" data-type="action">
                             <div class="heading">
-                                <h5>${tl(trans.clear_history)}</h5>
+                                <h5>${tl2(trans2.clear_history)}</h5>
                             </div>
                             <div class="toggle-wrap">
                                 <button
@@ -48451,14 +48390,14 @@
           );
           notify({
             id: "cleared_history",
-            title: tl(
-              trans.cleared_activity_history
+            title: tl2(
+              trans2.cleared_activity_history
             ),
             type: "success"
           });
         }}
                                 >
-                                    ${tl(trans.clear)}
+                                    ${tl2(trans2.clear)}
                                 </button>
                             </div>
                         </div>
@@ -48483,7 +48422,7 @@
         page.structure.main,
         html`
                 <section class="bleh--panel">
-                    <h4>${tl(trans.accessibility)}</h4>
+                    <h4>${tl2(trans2.accessibility)}</h4>
                     <div class="setting-group">
                         ${setting({ id: "reduced_motion" })}
                         ${setting({ id: "accessible_name_colours" })}
@@ -48492,12 +48431,12 @@
                 </section>
                 ${ff("static_gifs") ? html.node`
             <section class="bleh--panel">
-                <h4>${tl(trans.images)}</h4>
+                <h4>${tl2(trans2.images)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "static_gifs" })}
                     <div class="setting" data-type="options">
                         <div class="heading">
-                            <h5>${tl(trans.apply_to)}<div class="new-badge">${tl(trans.new)}</div></h5>
+                            <h5>${tl2(trans2.apply_to)}<div class="new-badge">${tl2(trans2.new)}</div></h5>
                         </div>
                         <div class="primary-selections">
                             ${setting({ id: "static_avatars", standalone: true })}
@@ -48523,9 +48462,9 @@
                         <h1>☆⌒(>w<)</h1>
                     </div>
                     <div class="sep" />
-                    <h4>${tl(trans.manage_feature_flags)}</h4>
+                    <h4>${tl2(trans2.manage_feature_flags)}</h4>
                     <div class="alert alert-danger">
-                        ${tl(trans.beware_notice)}
+                        ${tl2(trans2.beware_notice)}
                     </div>
                     <div class="setting-group">
                         ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
@@ -48568,44 +48507,44 @@
       register_skip_to([
         {
           id: "corrections",
-          name: tl(trans.correct_titles_with_lotus)
+          name: tl2(trans2.correct_titles_with_lotus)
         },
         {
           id: "format_guest_features",
-          name: tl(trans.format_guest_features.name)
+          name: tl2(trans2.format_guest_features.name)
         },
         {
           id: "stacked_chartlist_info",
-          name: tl(trans.track_column_view)
+          name: tl2(trans2.track_column_view)
         },
         {
           id: "colourful_counts",
-          name: tl(trans.colourful_counts.name)
+          name: tl2(trans2.colourful_counts.name)
         },
         {
           id: "travis",
-          name: tl(trans.redirect_messages.name)
+          name: tl2(trans2.redirect_messages.name)
         },
         {
           id: "gloss",
           type: "slider",
-          name: tl(trans.gloss.name)
+          name: tl2(trans2.gloss.name)
         },
         {
           id: "grid_glow",
-          name: tl(trans.grid_glow.name)
+          name: tl2(trans2.grid_glow.name)
         },
         {
           id: "gendered_tags",
-          name: tl(trans.gendered_tags.name)
+          name: tl2(trans2.gendered_tags.name)
         }
       ]);
       render(
         page.structure.main,
         html`
                 <div class="bleh--panel">
-                    <h4 class="top-header">${tl(trans.music)}</h4>
-                    <h4>${tl(trans.tracklist)}</h4>
+                    <h4 class="top-header">${tl2(trans2.music)}</h4>
+                    <h4>${tl2(trans2.tracklist)}</h4>
                     <div class="inner-preview pad">
                         <div class="tracks">
                             <div class="track realtime">
@@ -48745,9 +48684,9 @@
                 <div class="bleh--panel">
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">
-                            ${tl(trans.value_failed_to_load).replace(
+                            ${tl2(trans2.value_failed_to_load).replace(
           "{v}",
-          tl(trans.settings)
+          tl2(trans2.settings)
         )}
                         </div>
                         <pre class="error-info">
@@ -48860,7 +48799,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             sat: 1.2,
             lit: 0.9
           },
-          label: trans.red
+          label: trans2.red
         },
         {
           sets: {
@@ -48868,7 +48807,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             sat: 1.275,
             lit: 0.95
           },
-          label: trans.orange
+          label: trans2.orange
         },
         {
           sets: {
@@ -48876,7 +48815,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             sat: 1.5,
             lit: 1
           },
-          label: trans.yellow
+          label: trans2.yellow
         },
         {
           sets: {
@@ -48884,7 +48823,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             sat: 1.05,
             lit: 1.025
           },
-          label: trans.lime
+          label: trans2.lime
         },
         {
           sets: {
@@ -48892,7 +48831,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             sat: 1,
             lit: 0.925
           },
-          label: trans.green
+          label: trans2.green
         },
         {
           sets: {
@@ -48900,7 +48839,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             sat: 1,
             lit: 1.1
           },
-          label: trans.aqua
+          label: trans2.aqua
         },
         {
           sets: {
@@ -48908,7 +48847,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             sat: 1.3,
             lit: 0.9
           },
-          label: trans.blue
+          label: trans2.blue
         },
         {
           sets: {
@@ -48916,7 +48855,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             sat: 1.07,
             lit: 1
           },
-          label: trans.purple
+          label: trans2.purple
         },
         {
           sets: {
@@ -48924,7 +48863,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             sat: 1.1,
             lit: 1
           },
-          label: trans.pink
+          label: trans2.pink
         },
         {
           sets: {
@@ -48932,7 +48871,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             sat: 0,
             lit: 1
           },
-          label: trans.grey
+          label: trans2.grey
         }
       ]
     };
@@ -48991,7 +48930,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         }
         if (colour2.type == "avatar" && !auth.name) return;
         let text3;
-        if (colour2.label) text3 = tl(colour2.label);
+        if (colour2.label) text3 = tl2(colour2.label);
         if (!colour2.type) colour2.type = "colour";
         if (!colour2.displays && colour2.sets) colour2.displays = colour2.sets;
         let blob;
@@ -49007,9 +48946,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <strong ref=${(el) => text_elem = el} />
                 </button>
             `;
-        if (type == "custom") text3 = tl(trans[colour2.type]);
+        if (type == "custom") text3 = tl2(trans2[colour2.type]);
         if (colour2.type == "customise") {
-          text3 = tl(trans.edit);
+          text3 = tl2(trans2.edit);
           let colour3;
           tippy_esm_default(swatch, {
             theme: "window",
@@ -49019,7 +48958,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                 ${ff("colour_based_on_hex") ? html.node`
                                 <div class="setting" data-type="text">
                                     <div class="heading">
-                                        <h5>${tl(trans.convert_from_hex)}</h5>
+                                        <h5>${tl2(trans2.convert_from_hex)}</h5>
                                     </div>
                                     <div class="input-container content-form">
                                         ${colour3 = input({
@@ -49036,7 +48975,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 clamp_sat2(hsl.s / 100 * 3)
               );
               lit_range.set(hsl.l / 100 + 0.35);
-            }}>${tl(trans.convert)}</button>
+            }}>${tl2(trans2.convert)}</button>
                                     </div>
                                 </div>
                                 ` : ""}
@@ -49060,13 +48999,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           blob.style.setProperty("--lit-over", colour2.displays.lit);
         }
         if (colour2.type == "default" && stored_season.id != "none") {
-          text3 = tl(trans.seasonal.name);
+          text3 = tl2(trans2.seasonal.name);
           if (exclusives.hasOwnProperty(stored_season.id)) {
             delete colour2.sets;
             exclusives[stored_season.id] = [
               {
                 type: "default",
-                name: tl(trans.default),
+                name: tl2(trans2.default),
                 sets: {
                   hue: 255,
                   sat: 1,
@@ -49149,10 +49088,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </div>
                 <div class="actions">
                     <button class="icon chibi edit" onclick=${() => edit_profile_note(user)}>
-                        ${tl(trans.delete)}
+                        ${tl2(trans2.delete)}
                     </button>
                     <button class="icon chibi delete danger-subtle" onclick=${() => delete_profile_note(user)}>
-                        ${tl(trans.delete)}
+                        ${tl2(trans2.delete)}
                     </button>
                 </div>
             </div>
@@ -49169,16 +49108,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     let modal = dialog({
       id: "edit_profile_note",
-      title: tl(trans.edit_profile_note),
+      title: tl2(trans2.edit_profile_note),
       body: html.node`
-            <textarea class="modal-text" id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)}>${profile_notes[user]}</textarea>
+            <textarea class="modal-text" id="bleh--profile-note" placeholder=${tl2(trans2.anything_you_can_imagine)}>${profile_notes[user]}</textarea>
             <div class="modal-footer">
                 <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_profile_note" })}>
-                    ${tl(trans.cancel)}
+                    ${tl2(trans2.cancel)}
                 </button>
                 <div class="fill"></div>
                 <button class="btn primary save" onclick=${() => save_profile_note_in_window(modal, user)}>
-                    ${tl(trans.save)}
+                    ${tl2(trans2.save)}
                 </button>
             </div>
         `
@@ -49236,14 +49175,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let text3;
     const modal = dialog({
       id: "import_settings",
-      title: tl(trans.import_settings),
+      title: tl2(trans2.import_settings),
       body: html.node`
-            <p class="big-modal-alert alert-danger">${tl(trans.import_notice)}</p>
+            <p class="big-modal-alert alert-danger">${tl2(trans2.import_notice)}</p>
             <br>
             <textarea class="modal-text" ref=${(el) => text3 = el} />
             <div class="modal-footer">
                 <button class="see-more cancel" onclick="_dialog_rm({id: 'import_settings'})">
-                    ${tl(trans.cancel)}
+                    ${tl2(trans2.cancel)}
                 </button>
                 <div class="fill"></div>
                 <button class="btn primary download" onclick=${() => {
@@ -49264,7 +49203,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                 <div class="modal-footer">
                                     <div class="fill"></div>
                                     <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
-                                        ${tl(trans.done)}
+                                        ${tl2(trans2.done)}
                                     </button>
                                 </div>
                             `
@@ -49273,7 +49212,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         } finally {
         }
       }}>
-                    ${tl(trans.import)}
+                    ${tl2(trans2.import)}
                 </button>
             </div>
         `
@@ -49285,19 +49224,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   unsafeWindow._reset_settings = function() {
     dialog({
       id: "reset_settings",
-      title: tl(trans.reset_settings),
+      title: tl2(trans2.reset_settings),
       body: html.node`
             <div class="big-modal-alert alert-error">
-                <strong>${tl(trans.reset_notice)}</strong>
-                <a class="see-more" onclick=${() => export_settings()}>${tl(trans.make_a_backup)}</a>
+                <strong>${tl2(trans2.reset_notice)}</strong>
+                <a class="see-more" onclick=${() => export_settings()}>${tl2(trans2.make_a_backup)}</a>
             </div>
             <div class="modal-footer">
                 <button class="see-more cancel" onclick="_dialog_rm({id: 'reset_settings'})">
-                    ${tl(trans.cancel)}
+                    ${tl2(trans2.cancel)}
                 </button>
                 <div class="fill"></div>
                 <button class="btn primary icon" data-type="reset" onclick="_confirm_reset()">
-                    ${tl(trans.reset)}
+                    ${tl2(trans2.reset)}
                 </button>
             </div>
         `
@@ -49550,14 +49489,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const themes = [
       {
         id: "adaptive",
-        name: tl(trans.auto),
+        name: tl2(trans2.auto),
         hide: !ff("adaptive_theme"),
         new_release: true
       },
       {
         id: "glass",
         type: "light",
-        name: tl(trans.glass),
+        name: tl2(trans2.glass),
         hide: !ff("glass"),
         new_release: true
       },
@@ -49568,12 +49507,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       {
         id: "light",
         type: "light",
-        name: tl(trans.themes.light)
+        name: tl2(trans2.themes.light)
       },
       {
         id: "ink",
         type: "light",
-        name: tl(trans.themes.ink)
+        name: tl2(trans2.themes.ink)
       },
       {
         type: "sep"
@@ -49582,19 +49521,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         id: "dark",
         formal: "ash",
         type: "dark",
-        name: tl(trans.themes.dark)
+        name: tl2(trans2.themes.dark)
       },
       {
         id: "darker",
         formal: "dark",
         type: "darker",
-        name: tl(trans.themes.darker)
+        name: tl2(trans2.themes.darker)
       },
       {
         id: "oled",
         formal: "void",
         type: "oled",
-        name: tl(trans.themes.oled)
+        name: tl2(trans2.themes.oled)
       }
     ];
     let buttons = [];
@@ -49626,7 +49565,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         </div>
                         <strong>
                             ${theme.name}
-                            ${theme.new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                            ${theme.new_release ? html.node`<div class="new-badge">${tl2(trans2.new)}</div>` : ""}
                         </strong>
                     </button>
                 `;
@@ -49774,9 +49713,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         }
         if (send_notify)
           status({
-            title: tl(trans.downloaded_value).replace(
+            title: tl2(trans2.downloaded_value).replace(
               "{v}",
-              tl(trans.lotus[type])
+              tl2(trans2.lotus[type])
             )
           });
         localStorage.setItem(`lotus_${type}`, this.response);
@@ -49794,11 +49733,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   unsafeWindow._open_correction_modal = function() {
     dialog({
       id: "corrections",
-      title: trans_legacy.en.settings.corrections.name,
+      title: tl2(trans2.music_corrections),
       body: html.node`
-            <h4>${trans_legacy.en.settings.corrections.listing.artists}</h4>
+            <h4>${tl2(trans2.artists)}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
-            <h4>${trans_legacy.en.settings.corrections.listing.albums_tracks}</h4>
+            <h4>${tl2(trans2.albums_and_tracks)}</h4>
             <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
         `,
       has_close: true,
@@ -50162,17 +50101,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     dialog({
       id: "lotus_correction",
-      title: tl(trans.suggest_correction),
+      title: tl2(trans2.suggest_correction),
       body: html.node`
             <div class="new-scrobble-form">
-                <p class="generic-label">${tl(trans.current)}</p>
+                <p class="generic-label">${tl2(trans2.current)}</p>
                 ${input({
         type: "text",
         value: current,
         disabled: true
       })}
-                <p class="form-tip">${tl(trans.current_tip)}</p>
-                <p class="generic-label">${tl(trans.correction)}</p>
+                <p class="form-tip">${tl2(trans2.current_tip)}</p>
+                <p class="generic-label">${tl2(trans2.correction)}</p>
                 ${correction = input({
         type: "text",
         value: current,
@@ -50180,16 +50119,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         warn_if_empty: true,
         warn_if_not_matching_lower: current.toLowerCase()
       })}
-                <p class="form-tip">${tl(trans.correction_tip)}</p>
-                <p class="generic-label">${tl(trans.sources)}</p>
+                <p class="form-tip">${tl2(trans2.correction_tip)}</p>
+                <p class="generic-label">${tl2(trans2.sources)}</p>
                 ${sources = input({
         type: "textarea"
       })}
-                <p class="form-tip">${tl(trans.sources_tip)}</p>
+                <p class="form-tip">${tl2(trans2.sources_tip)}</p>
             </div>
             <div class="modal-footer">
                 <button class="see-more cancel" onclick=${() => dialog_rm({ id: "lotus_correction" })}>
-                    ${tl(trans.cancel)}
+                    ${tl2(trans2.cancel)}
                 </button>
                 <div class="fill" />
                 <button class="btn primary continue" onclick=${() => {
@@ -50198,7 +50137,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${sanitise(title, " ")}&current=${sanitise(current, " ")}&correction=${sanitise(correction.value(), " ")}&link=${link}&sources=${sanitise(sources.value(), " ")}`
         );
       }}>
-                    ${tl(trans.suggest)}
+                    ${tl2(trans2.suggest)}
                 </button>
             </div>
         `
@@ -50274,7 +50213,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       activity_item,
       html`
             <div class="type">
-                ${tl(trans.activity.listing[activity.type])}
+                ${tl2(trans2.activity.listing[activity.type])}
                 <div class="date">
                     ${DateTime.fromISO(activity.date).toRelative()}
                 </div>
@@ -50314,7 +50253,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             setTimeout(() => {
               if (!btn.querySelector("span")) {
                 let new_text = document.createElement("span");
-                new_text.textContent = tl(trans.love);
+                new_text.textContent = tl2(trans2.love);
                 btn.appendChild(new_text);
               }
             }, 1);
@@ -50521,7 +50460,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         if (!settings.travis) {
           notify({
             id: "corrections",
-            title: trans_legacy.en.nag_bar.corrections.title,
+            title: tl(trans.redirected_from),
             body: active_nag.querySelector("strong"),
             icon: "icon-16-refresh",
             long: true
@@ -50662,11 +50601,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <div class="notification-title">
                         ${type == "shoutbox" ? html.node`
                     ${others_included == 0 ? html.node`
-                        ${is_reply ? tl(trans.user_replied).replace("{u}", involved.join(", ")) : tl(trans.user_commented).replace("{u}", involved.join(", "))}
+                        ${is_reply ? tl2(trans2.user_replied).replace("{u}", involved.join(", ")) : tl2(trans2.user_commented).replace("{u}", involved.join(", "))}
                     ` : html.node`
-                        ${is_reply ? tl(trans.users_replied).replace("{u}", involved.join(", ")).replace("{c}", others_included) : tl(trans.users_commented).replace("{u}", involved.join(", ")).replace("{c}", others_included)}
+                        ${is_reply ? tl2(trans2.users_replied).replace("{u}", involved.join(", ")).replace("{c}", others_included) : tl2(trans2.users_commented).replace("{u}", involved.join(", ")).replace("{c}", others_included)}
                     `}
-                    ` : type == "obsession" ? tl(trans.obsession_expired) : type == "listening-report" ? tl(trans.listening_report_available).replace(
+                    ` : type == "obsession" ? tl2(trans2.obsession_expired) : type == "listening-report" ? tl2(trans2.listening_report_available).replace(
           "{m}",
           involved[0]
         ) : ""}
@@ -50685,7 +50624,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                 style="--icon: var(--mask)"
                             />
                             <span
-                                >${context.sister ? `${context.name} ${tl(trans.by)} ${context.sister}` : context.name}</span
+                                >${context.sister ? `${context.name} ${tl2(trans2.by)} ${context.sister}` : context.name}</span
                             >
                         </span>
                     </div>
@@ -50700,9 +50639,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       function obtain_additional_info(text3, backup_text = null) {
         const match3 = text3.match(/\d+/);
         if (match3) others_included = parseInt(match3[0]);
-        if (text3.includes(tl(trans.notification_replied_ctx)))
+        if (text3.includes(tl2(trans2.notification_replied_ctx)))
           is_reply = true;
-        else if (backup_text && backup_text.trim().includes(tl(trans.notification_replied_ctx)))
+        else if (backup_text && backup_text.trim().includes(tl2(trans2.notification_replied_ctx)))
           is_reply = true;
       }
     });
@@ -50787,7 +50726,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </a>
         `;
       tippy_esm_default(link, {
-        content: tl(trans.update_available_to_install)
+        content: tl2(trans2.update_available_to_install)
       });
     }
     const last_checked = localStorage.getItem("bleh_update_checked") || null;
@@ -50795,12 +50734,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       theme: "context-menu",
       content: html.node`
             <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
-                ${last_checked ? tl(trans.last_checked_date).replace(
+                ${last_checked ? tl2(trans2.last_checked_date).replace(
         "{d}",
         DateTime.fromJSDate(
           new Date(last_checked)
         ).toRelative()
-      ) : tl(trans.never_checked)}
+      ) : tl2(trans2.never_checked)}
             </a>
         `,
       placement: "right-start",
@@ -50839,11 +50778,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (!page.structure.style_warning) {
       const style_warning = html.node`
             <div class="style-warning" style="position: fixed; top: 0; left: 0; right: 0; padding: 20px; background: #fff; z-index: 1000000000; display: flex; align-items: center; gap: 30px">
-                <strong>${tl(trans.style_warning)}</strong>
+                <strong>${tl2(trans2.style_warning)}</strong>
                 <button class="btn-primary" onclick=${() => {
         save_setting("dev", false);
         window.location.reload();
-      }}>${tl(trans.re_enable_style_loading)}</button>
+      }}>${tl2(trans2.re_enable_style_loading)}</button>
             </div>
         `;
       document.body.appendChild(style_warning);
@@ -50851,62 +50790,62 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     page.state.quick_access_items = {
       home: {
-        name: tl(trans.home),
+        name: tl2(trans2.home),
         icon: "home",
         url: `${root}music`
       },
       reports: {
-        name: tl(trans.reports),
+        name: tl2(trans2.reports),
         icon: "reports",
         url: `${root}user/${auth.name}/listening-report`
       },
       library: {
-        name: tl(trans.library),
+        name: tl2(trans2.library),
         icon: "library",
         url: `${root}user/${auth.name}/library`
       },
       shouts: {
-        name: tl(trans.shouts),
+        name: tl2(trans2.shouts),
         icon: "shouts",
         url: `${root}user/${auth.name}/shoutbox`
       },
       obsessions: {
-        name: tl(trans.obsessions),
+        name: tl2(trans2.obsessions),
         icon: "obsessions",
         url: `${root}user/${auth.name}/obsessionss`
       },
       bookmarks: {
-        name: tl(trans.bookmarks),
+        name: tl2(trans2.bookmarks),
         icon: "bookmark",
         url: `${root}music/+bookmarks`
       },
       friends: {
-        name: tl(trans.friends),
+        name: tl2(trans2.friends),
         icon: "friends",
         url: `${root}user/${auth.name}/friends`
       },
       notifications: {
-        name: tl(trans.notifications),
+        name: tl2(trans2.notifications),
         icon: "notifications",
         url: `${root}inbox/notifications`
       },
       messages: {
-        name: tl(trans.messages),
+        name: tl2(trans2.messages),
         icon: "messages",
         url: `${root}inbox`
       },
       collage: {
-        name: tl(trans.collage),
+        name: tl2(trans2.collage),
         icon: "collage",
         url: `${root}bleh/minis/collage`
       },
       compare: {
-        name: tl(trans.compare),
+        name: tl2(trans2.compare),
         icon: "compare",
         url: `${root}bleh/minis/compare`
       },
       scrobble: {
-        name: tl(trans.scrobble),
+        name: tl2(trans2.scrobble),
         icon: "add",
         action: () => submit_scrobble(),
         new_release: true
@@ -50917,7 +50856,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const navs = inner.querySelector(".masthead-nav-wrap");
     const search = inner.querySelector(".masthead-search-form");
     const form = search.querySelector(".masthead-search-field");
-    form.placeholder = tl(trans.search);
+    form.placeholder = tl2(trans2.search);
     inner.insertBefore(
       html.node`
         <div class="masthead-search-wrap">
@@ -50940,12 +50879,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           const elem = html.node`
                     <li class="masthead-nav-item">
                         <a class="masthead-nav-control chibi" href="${root}bleh" data-label="bleh_no_auth">
-                            ${tl(trans.bleh_settings)}
+                            ${tl2(trans2.bleh_settings)}
                         </a>
                     </li>
                 `;
           tippy_esm_default(elem, {
-            content: tl(trans.bleh_settings)
+            content: tl2(trans2.bleh_settings)
           });
           return elem;
         }}
@@ -50963,26 +50902,26 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       auth_link2.appendChild(create_badge(badges[0], false, false, true));
     } else if (auth.pro) {
       auth_link2.appendChild(html.node`
-            <span class="label user-status-subscriber auth-badge">${tl(trans.badges["user-status-subscriber"].name)}</span>
+            <span class="label user-status-subscriber auth-badge">${tl2(trans2.badges["user-status-subscriber"].name)}</span>
         `);
     }
     let bleh_container = html.node`
         <li class="masthead-nav-item">
             <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "/seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-                ${stored_season.id == "none" ? tl(trans.bleh_settings) : DateTime.fromISO(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}
+                ${stored_season.id == "none" ? tl2(trans2.bleh_settings) : DateTime.fromISO(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}
             </a>
         </li>
     `;
     if (stored_season.id == "none") {
       tippy_esm_default(bleh_container, {
-        content: tl(trans.bleh_settings)
+        content: tl2(trans2.bleh_settings)
       });
     } else {
       page.header.season_tooltip = tippy_esm_default(bleh_container, {
         theme: "seasonal-swatch",
         content: html.node`
-                <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
-                <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
+                <span class="season-colour-name">${tl2(trans2.seasonal.listing[stored_season.id])}</span>
+                <span class="season-exclusive">${tl2(trans2.seasonal.notice)}</span>
             `
       });
     }
@@ -50990,7 +50929,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page.header.season = bleh_container.querySelector("a");
     const more_button = html.node`
         <button class="masthead-nav-control chibi icon" data-type="more">
-            ${tl(trans.more)}
+            ${tl2(trans2.more)}
         </button>
     `;
     tippy_esm_default(more_button, {
@@ -50999,23 +50938,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const more_menu = tippy_esm_default(more_button, {
       content: html.node`
             <a class="dropdown-menu-clickable-item accent" data-type="discord" href="https://discord.gg/${discord}" target="_blank">
-                ${tl(trans.join_discord)}
+                ${tl2(trans2.join_discord)}
             </a>
             <button class="dropdown-menu-clickable-item sponsor" onclick=${() => sponsor()}>
-                ${tl(trans.sponsor)}
+                ${tl2(trans2.sponsor)}
             </button>
             <a class="dropdown-menu-clickable-item lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                ${tl(trans.suggest_correction)}
+                ${tl2(trans2.suggest_correction)}
             </a>
             <div class="sep" />
             <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
-                ${tl(trans.updates)}
+                ${tl2(trans2.updates)}
             </a>
             <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
-                ${tl(trans.news)}
+                ${tl2(trans2.news)}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${tl(trans.report_issue)}
+                ${tl2(trans2.report_issue)}
             </a>
         `,
       theme: "menu",
@@ -51049,7 +50988,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     tippy_esm_default(inbox, {
       theme: "stack",
       content: html.node`
-            <strong>${tl(trans.inbox)}</strong>
+            <strong>${tl2(trans2.inbox)}</strong>
             <div class="inbox-info">
                 <div class="inbox-info-item">
                     <div class="bleh-icon" data-type="notifications" />
@@ -51073,7 +51012,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       content: html.node`
             <div class="window-header">
                 <div class="bleh-icon" data-type="inbox" style="--icon: var(--mask)" />
-                <div class="window-title">${tl(trans.inbox)}</div>
+                <div class="window-title">${tl2(trans2.inbox)}</div>
             </div>
             ${setting({ id: "inbox_view", func: render_inbox })}
             <div class="window-content" ref=${(el) => content = el} />
@@ -51098,7 +51037,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     ${notifications}
                     <p class="more-link">
                         <a href="${root}inbox/notifications"
-                            >${tl(trans.read_more)}</a
+                            >${tl2(trans2.read_more)}</a
                         >
                     </p>
                 </div>
@@ -51115,7 +51054,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         This is a work in progress, sorry! >_<
                     </div>
                     <p class="more-link">
-                        <a href="${root}inbox">${tl(trans.read_more)}</a>
+                        <a href="${root}inbox">${tl2(trans2.read_more)}</a>
                     </p>
                 </div>
             `
@@ -51127,7 +51066,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="mini-notifications">
                     ${messages}
                     <p class="more-link">
-                        <a href="${root}inbox">${tl(trans.read_more)}</a>
+                        <a href="${root}inbox">${tl2(trans2.read_more)}</a>
                     </p>
                 </div>
             `
@@ -51144,7 +51083,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <div class="mini-notifications content-loading">
                         <div class="loading-data-container">
                             <div class="loading-data-text">
-                                ${tl(trans.loading)}
+                                ${tl2(trans2.loading)}
                             </div>
                         </div>
                     </div>
@@ -51216,44 +51155,44 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let themes = [
       {
         id: "adaptive",
-        name: tl(trans.auto),
+        name: tl2(trans2.auto),
         hide: !ff("adaptive_theme"),
         new_release: true
       },
       {
         id: "glass",
         type: "light",
-        name: tl(trans.glass),
+        name: tl2(trans2.glass),
         hide: !ff("glass"),
         new_release: true
       },
       {
         id: "light",
         type: "light",
-        name: tl(trans.themes.light)
+        name: tl2(trans2.themes.light)
       },
       {
         id: "ink",
         type: "light",
-        name: tl(trans.themes.ink)
+        name: tl2(trans2.themes.ink)
       },
       {
         id: "dark",
         formal: "ash",
         type: "dark",
-        name: tl(trans.themes.dark)
+        name: tl2(trans2.themes.dark)
       },
       {
         id: "darker",
         formal: "dark",
         type: "darker",
-        name: tl(trans.themes.darker)
+        name: tl2(trans2.themes.darker)
       },
       {
         id: "oled",
         formal: "void",
         type: "oled",
-        name: tl(trans.themes.oled)
+        name: tl2(trans2.themes.oled)
       }
     ];
     const token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
@@ -51299,15 +51238,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                     ${auth.pro ? () => {
           let el = html.node`
                                             <span class="label user-status-subscriber no-hover">
-                                                ${tl(trans.badges["user-status-subscriber"].name)}
+                                                ${tl2(trans2.badges["user-status-subscriber"].name)}
                                             </span>
                                         `;
           tippy_esm_default(el, {
             theme: "badge",
             placement: "bottom",
             content: html.node`
-                                                <div class="badge-name">${tl(trans.badges["user-status-subscriber"].name)}</div>
-                                                <div class="badge-reason">${tl(trans.badges["user-status-subscriber"].reason)}</div>
+                                                <div class="badge-name">${tl2(trans2.badges["user-status-subscriber"].name)}</div>
+                                                <div class="badge-reason">${tl2(trans2.badges["user-status-subscriber"].reason)}</div>
                                             `
           });
           return el;
@@ -51323,12 +51262,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                     <form>
                                         <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                                         <a class="dropdown-menu-clickable-item chibi" ref=${(el) => button = el} data-menu-item="logout" href="${root}logout">
-                                            ${tl(trans.logout)}
+                                            ${tl2(trans2.logout)}
                                         </a>
                                     </form>
                                 `;
           tippy_esm_default(button, {
-            content: tl(trans.logout)
+            content: tl2(trans2.logout)
           });
           return form2;
         }}
@@ -51342,11 +51281,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           return button;
         } : () => {
           let button = html.node`
-                                    <button class="dropdown-menu-clickable-item chibi" data-type="starred_friend" data-is-shortcut="false" onclick=${() => open_starred_friend_window()}>${tl(trans.starred_friend.name)}</button>
+                                    <button class="dropdown-menu-clickable-item chibi" data-type="starred_friend" data-is-shortcut="false" onclick=${() => open_starred_friend_window()}>${tl2(trans2.starred_friend.name)}</button>
                                 `;
           tippy_esm_default(button, {
-            content: tl(
-              trans.starred_friend.name
+            content: tl2(
+              trans2.starred_friend.name
             )
           });
           return button;
@@ -51392,7 +51331,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         })}
                             <div class="button-combo">
                                 <button class="dropdown-menu-clickable-item" data-menu-item="themes" disabled=${themes_disabled} onclick=${() => toggle_theme()}>
-                                    ${tl(trans.themes.name)}
+                                    ${tl2(trans2.themes.name)}
                                 </button>
                                 <div class="button-combo-sep" />
                                 <button class="dropdown-menu-clickable-item chibi" data-type="continue" disabled=${themes_disabled} onclick=${() => {
@@ -51411,7 +51350,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
               );
             }}
                                             >
-                                                ${tl(trans.back)}
+                                                ${tl2(trans2.back)}
                                             </button>
                                             ${themes.map((theme) => {
               if (theme.hide)
@@ -51470,7 +51409,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           );
           side.setAttribute("data-page", "2");
         }}>
-                                    ${tl(trans.more)}
+                                    ${tl2(trans2.more)}
                                 </button>
                             </div>
                             ${show_language ? html.node`
@@ -51489,14 +51428,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
               );
             }}
                                             >
-                                                ${tl(trans.back)}
+                                                ${tl2(trans2.back)}
                                             </button>
                                             ${language_menu}
                                         `
           );
           side.setAttribute("data-page", "2");
         }}>
-                                    ${tl(trans.language)}
+                                    ${tl2(trans2.language)}
                                 </button>
                                 <div class="button-combo-sep" />
                                 <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
@@ -51513,37 +51452,37 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
               );
             }}
                                             >
-                                                ${tl(trans.back)}
+                                                ${tl2(trans2.back)}
                                             </button>
                                             ${language_menu}
                                         `
           );
           side.setAttribute("data-page", "2");
         }}>
-                                    ${tl(trans.more)}
+                                    ${tl2(trans2.more)}
                                 </button>
                             </div>
                             ` : ""}
                             <div class="button-combo">
                                 <a class="dropdown-menu-clickable-item" data-type="mini" href="${root}bleh/minis">
-                                    ${tl(trans.minis)}
+                                    ${tl2(trans2.minis)}
                                 </a>
                                 <div class="button-combo-sep" />
                                 <button class="dropdown-menu-clickable-item chibi" data-menu-item="news" onclick=${() => {
           news();
           instance.hide();
         }}>
-                                    ${tl(trans.news)}
+                                    ${tl2(trans2.news)}
                                 </button>
                             </div>
 
                             <div class="button-combo">
                                 <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                                    ${tl(trans.settings)}
+                                    ${tl2(trans2.settings)}
                                 </a>
                                 <div class="button-combo-sep" />
                                 <a class="dropdown-menu-clickable-item chibi" data-type="settings" href="${root}settings">
-                                    ${tl(trans.settings)}
+                                    ${tl2(trans2.settings)}
                                 </a>
                             </div>
                         </div>
@@ -51554,7 +51493,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="auth-menu-status" ref=${(el) => status_container = el}>
                     <div class="status">
                         <div class="loading-data-container">
-                            <div class="loading-data-text">${tl(trans.loading)}</div>
+                            <div class="loading-data-text">${tl2(trans2.loading)}</div>
                         </div>
                     </div>
                 </div>
@@ -51572,7 +51511,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                 style="background-image: url(${status2.avatar})"
                             />
                             <div class="status-text">
-                                ${status2.name} ${tl(trans.by)} ${status2.artist}
+                                ${status2.name} ${tl2(trans2.by)} ${status2.artist}
                             </div>
                         </div>
                     `
@@ -51594,13 +51533,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       theme: "context-menu",
       content: html.node`
             <a class="dropdown-menu-clickable-item" data-type="quick_access" href="${root}bleh/interface">
-                ${tl(trans.edit_quick_access)}
+                ${tl2(trans2.edit_quick_access)}
             </a>
             <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => copy(auth.name)}>
-                ${tl(trans.copy_username)}
+                ${tl2(trans2.copy_username)}
             </button>
             <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => copy(`https://www.last.fm${root}user/${auth.name}`)}>
-                ${tl(trans.copy_link)}
+                ${tl2(trans2.copy_link)}
             </button>
         `,
       placement: "right-start",
@@ -51628,20 +51567,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     masthead.appendChild(html.node`
         <div class="mobile-controls">
             <a class="btn mobile-control" aria-checked="${page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts"}" data-menu-item="home" href="${root}music">
-                ${tl(trans.home)}
+                ${tl2(trans2.home)}
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == "search"}" data-menu-item="search" href="${root}search">
-                ${tl(trans.search)}
+                ${tl2(trans2.search)}
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == "user" && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
                 ${auth.name}
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-type="inbox" href="${root}inbox/notifications">
-                ${tl(trans.inbox)}
+                ${tl2(trans2.inbox)}
                 ${inbox_count > 0 || notif_count > 0 ? html.node`<div class="notification-count-badge"></div>` : ""}
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == "settings" || page.type == "bleh_settings"}" data-menu-item="settings" href="${root}bleh">
-                ${tl(trans.settings)}
+                ${tl2(trans2.settings)}
             </a>
         </div>
     `);
@@ -51660,7 +51599,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const doc = parser.parseFromString(dom, "text/html");
       const intro = doc.querySelector(".user-now-intro");
       let active = true;
-      if (intro.textContent.trim() === tl(trans.last_scrobbled_replace).replace("{u}", auth.name))
+      if (intro.textContent.trim() === tl2(trans2.last_scrobbled_replace).replace("{u}", auth.name))
         active = false;
       const track = doc.querySelector(".user-now-track a");
       const links = doc.querySelectorAll(".user-now-artist-and-album a");
@@ -51769,7 +51708,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 `}
             </div>
             <div class="info-side">
-                <div class="sub-text">${tl(trans.about)}</div>
+                <div class="sub-text">${tl2(trans2.about)}</div>
                 <h1>
                     <a href="${root}music/${redirect()}${sanitise(page.sister)}">${correct_artist(page.sister)}</a>
                 </h1>
@@ -51778,7 +51717,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 ${wiki}
             </div>
         </div>
-        ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl(trans.others_featured)}</div>` : ""}
+        ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl2(trans2.others_featured)}</div>` : ""}
     `);
     if (page.sister_others.length > 0) {
       about_artist_container.appendChild(html.node`
@@ -51828,7 +51767,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="tag-icon"></div>
             </div>
             <div class="info-side">
-                <div class="sub-text">${tl(trans.tag)}</div>
+                <div class="sub-text">${tl2(trans2.tag)}</div>
                 <h1>${title}</h1>
             </div>
         `;
@@ -51850,7 +51789,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         tags.appendChild(related);
         let header_tags = document.createElement("div");
         header_tags.classList.add("sub-text", "music-small-header");
-        header_tags.textContent = tl(trans.related_to);
+        header_tags.textContent = tl2(trans2.related_to);
         col_main.appendChild(header_tags);
         col_main.appendChild(tags);
       }
@@ -51888,7 +51827,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     tags.forEach((tag) => {
       tag.classList.add("user-created-tag");
       tippy_esm_default(tag, {
-        content: tl(trans.personal_tag)
+        content: tl2(trans2.personal_tag)
       });
     });
   }
@@ -51938,7 +51877,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </div>
                 ` : ""}
                 <div class="info-side">
-                    <div class="sub-text">${tl(trans.album)}</div>
+                    <div class="sub-text">${tl2(trans2.album)}</div>
                     <div class="title-container">
                         ${title}
                         ${position ? position : ""}
@@ -51948,8 +51887,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 ${page.suggest ? html.node`
                 <div class="suggest-side">
                     <div class="cta suggest">
-                        <strong>${tl(trans.suggest_title.name)}</strong>
-                        <a class="see-more" href="${root}music/${redirect()}${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace("{v}", desanitise(page.suggest, "+"))}</a>
+                        <strong>${tl2(trans2.suggest_title.name)}</strong>
+                        <a class="see-more" href="${root}music/${redirect()}${sanitise(page.sister)}/${page.suggest}">${tl2(trans2.suggest_title.body).replace("{v}", desanitise(page.suggest, "+"))}</a>
                     </div>
                 </div>
                 ` : ""}
@@ -51972,15 +51911,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           content: html.node`
                     ${avatar3 ? html.node`
                     <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar3.getAttribute("content"))} data-menu-item="expand">
-                        ${tl(trans.expand)}
+                        ${tl2(trans2.expand)}
                     </button>
                     ` : ""}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${tl(trans.artwork)}
+                        ${tl2(trans2.artwork)}
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </a>
                 `,
           placement: "right-start",
@@ -52060,7 +51999,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </div>
             <div class="view-buttons blend blend-v2">
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl(trans.settings)}
+                    ${tl2(trans2.settings)}
                 </button>
             </div>
         `);
@@ -52069,10 +52008,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (!top_overview) return;
       let top2 = html.node`
             <div class="top-container">
-                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                <h3 class="text-18">${tl2(trans2.tracklist)}</h3>
                 <div class="view-buttons blend blend-v2">
                     <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </button>
                 </div>
             </div>
@@ -52081,7 +52020,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <section>
                 ${top2}
                 <div class="loading-data-container">
-                    <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
+                    <p class="loading-data-text">${tl2(trans2.gathering_your_plays)}</p>
                 </div>
             </section>
         `;
@@ -52094,8 +52033,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         render(tracklist, html`
                 ${top2}
                 <div class="loading-data-container">
-                    <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
-                    <a class="see-more" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
+                    <p class="loading-data-text failed">${tl2(trans2.failed_to_find_tracks)}</p>
+                    <a class="see-more" href="${album_as_track_url}">${tl2(trans2.open_album_as_track)}</a>
                 </div>
             `);
         return;
@@ -52115,8 +52054,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           render(tracklist, html`
                         ${top2}
                         <div class="loading-data-container">
-                            <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
-                            <a class="see-more" href=${album_as_track_url}>${tl(trans.open_album_as_track)}</a>
+                            <p class="loading-data-text failed">${tl2(trans2.failed_to_find_tracks)}</p>
+                            <a class="see-more" href=${album_as_track_url}>${tl2(trans2.open_album_as_track)}</a>
                         </div>
                     `);
           return;
@@ -52124,7 +52063,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         inner_tracklist.classList.remove("chartlist--with-image");
         render(tracklist, html`
                     ${top2}
-                    <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
+                    <div class="alert alert-info">${tl2(trans2.sourced_from_own_plays)}</div>
                     ${inner_tracklist}
                 `);
       });
@@ -52217,13 +52156,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="info-side">
                     ${page.multi ? html.node`
                     <div class="sub-text">
-                        ${tl(trans.artists)}
+                        ${tl2(trans2.artists)}
                         <div class="info-tip" ref=${(el) => multi_info_box = el}>
                             <div class="bleh-icon bleh-info-icon"></div>
                         </div>
                     </div>
                     ` : html.node`
-                    <div class="sub-text">${tl(trans.artist)}</div>
+                    <div class="sub-text">${tl2(trans2.artist)}</div>
                     `}
                     <div class="title-container" data-multi=${page.multi}>
                         ${title}
@@ -52239,7 +52178,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         `;
       if (multi_info_box) {
         tippy_esm_default(multi_info_box, {
-          content: tl(trans.artists_tooltip)
+          content: tl2(trans2.artists_tooltip)
         });
       }
       if (position) {
@@ -52270,15 +52209,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           content: html.node`
                     ${avatar3 != null ? html.node`
                     <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar3.getAttribute("content"))} data-menu-item="expand">
-                        ${tl(trans.expand)}
+                        ${tl2(trans2.expand)}
                     </button>
                     ` : ""}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${tl(trans.photos)}
+                        ${tl2(trans2.photos)}
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </a>
                 `,
           placement: "right-start",
@@ -52301,7 +52240,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             theme: "context-menu",
             content: html.node`
                         <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                            ${tl(trans.settings)}
+                            ${tl2(trans2.settings)}
                         </a>
                     `,
             placement: "right-start",
@@ -52356,7 +52295,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="view-buttons blend blend-v2">
                     ${play}
                     <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </button>
                 </div>
             `);
@@ -52408,8 +52347,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
               "artist-header-featured-items-item-wrap--video-thumbnail"
             );
             let type = item.getAttribute("itemprop");
-            let text3 = tl(trans.latest_album);
-            if (type == "track") text3 = tl(trans.popular_now);
+            let text3 = tl2(trans2.latest_album);
+            if (type == "track") text3 = tl2(trans2.popular_now);
             let header = item.querySelector(
               ".artist-header-featured-items-item-header"
             );
@@ -52500,11 +52439,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         );
         overview.classList.remove("secondary-nav-item--overview");
         overview.classList.add("secondary-nav-item--global");
-        overview.querySelector("a").textContent = tl(trans.global);
+        overview.querySelector("a").textContent = tl2(trans2.global);
         let mutuals = toolbar.querySelector(
           ".secondary-nav-item--you-know a"
         );
-        mutuals.textContent = tl(trans.mutuals);
+        mutuals.textContent = tl2(trans2.mutuals);
         if (page.subpage == "listeners_overview") bleh_top_listeners();
         else if (page.subpage == "listeners_you-know") bleh_listeners();
       }
@@ -52558,7 +52497,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </div>
                 <div class="view-buttons blend blend-v2">
                     <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </button>
                 </div>
             `);
@@ -52616,7 +52555,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       html`
             <section class="similar-panel">
                 <h2 class="text-18">
-                    ${tl(trans.artists_similar_to_name, {
+                    ${tl2(trans2.artists_similar_to_name, {
         n: romanise(correct_artist(page.name))
       })}
                 </h2>
@@ -52641,7 +52580,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       p.remove();
       buffer.insertBefore(
         html.node`
-            <h2>${tl(trans.count_mutual_listeners).replace("{c}", count.toString())}</h2>
+            <h2>${tl2(trans2.count_mutual_listeners).replace("{c}", count.toString())}</h2>
         `,
         buffer.firstElementChild
       );
@@ -52649,10 +52588,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       render(
         buffer,
         html`
-                <h2>${tl(trans.no_mutual_listeners)}</h2>
+                <h2>${tl2(trans2.no_mutual_listeners)}</h2>
                 <div class="loading-data-container">
                     <div class="loading-data-text info">
-                        ${tl(trans.no_mutual_listeners_explain)}
+                        ${tl2(trans2.no_mutual_listeners_explain)}
                     </div>
                 </div>
             `
@@ -52682,11 +52621,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             `
     )}
             <a class="btn side-action" data-type="add" href="${root}bleh/profile">
-                ${tl(trans.add_friends)}
+                ${tl2(trans2.add_friends)}
             </a>
             <div class="sep" />
             <button class="btn side-action" data-type="add" onclick=${() => other_listener(sanitise(page.name))}>
-                ${tl(trans.custom)}
+                ${tl2(trans2.custom)}
             </button>
         </section>
     `);
@@ -52722,22 +52661,22 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         <section class="setup" ref=${(el) => page.structure.setup = el}>
             ${auth.name ? html.node`
             <div class="avatar">
-                <img src=${auth.avatar.replace("/avatar42s/", "/avatar170s/")} alt=${tl(trans.your_avatar)}>
+                <img src=${auth.avatar.replace("/avatar42s/", "/avatar170s/")} alt=${tl2(trans2.your_avatar)}>
             </div>
             <div class="info">
-                <h1>${tl(trans.bleh_setup)}</h1>
+                <h1>${tl2(trans2.bleh_setup)}</h1>
                 <div class="subtle">
-                    ${{ html: tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}
+                    ${{ html: tl2(trans2.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}
                 </div>
             </div>
             ` : html.node`
             <div class="avatar">
-                <img class="missing-avatar" alt=${tl(trans.your_avatar)}>
+                <img class="missing-avatar" alt=${tl2(trans2.your_avatar)}>
             </div>
             <div class="info">
-                <h1>${tl(trans.bleh_setup)}</h1>
+                <h1>${tl2(trans2.bleh_setup)}</h1>
                 <div class="subtle">
-                    ${tl(trans.not_logged_in)}
+                    ${tl2(trans2.not_logged_in)}
                 </div>
             </div>
             `}
@@ -52757,15 +52696,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
       render(page.structure.setup_content, html`
-            <p>${{ html: tl(trans.welcome_to_bleh) }}</p>
+            <p>${{ html: tl2(trans2.welcome_to_bleh) }}</p>
         `);
       page.structure.setup_footer.innerHTML = `
             <a class="see-more cancel" href="${root}user/${auth.name}">
-                ${tl(trans.skip)}
+                ${tl2(trans2.skip)}
             </a>
             <div class="fill"></div>
             <button class="btn primary continue" onclick="_setup_accessibility()">
-                ${tl(trans.next)}
+                ${tl2(trans2.next)}
             </button>
         `;
     }, page.state.trans);
@@ -52779,32 +52718,32 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     function render_tip() {
       adaptive_tip.setAttribute("aria-hidden", !settings.theme_schedule);
       render(adaptive_tip, html`
-            ${tl(trans.adaptive_tip, { "day": tl(trans.themes[settings.theme_day]), "night": tl(trans.themes[settings.theme_night]) })}<a onclick=${() => {
+            ${tl2(trans2.adaptive_tip, { "day": tl2(trans2.themes[settings.theme_day]), "night": tl2(trans2.themes[settings.theme_night]) })}<a onclick=${() => {
         dialog({
           id: "auto_theme",
-          title: tl(trans.themes.name),
+          title: tl2(trans2.themes.name),
           body: html.node`
                         <div class="setting-group">
                             ${theme_day = setting({ id: "theme_day", list: [
             {
               value: "light",
-              text: tl(trans.themes.light)
+              text: tl2(trans2.themes.light)
             },
             {
               value: "ink",
-              text: tl(trans.themes.ink)
+              text: tl2(trans2.themes.ink)
             },
             {
               value: "dark",
-              text: tl(trans.themes.dark)
+              text: tl2(trans2.themes.dark)
             },
             {
               value: "darker",
-              text: tl(trans.themes.darker)
+              text: tl2(trans2.themes.darker)
             },
             {
               value: "oled",
-              text: tl(trans.themes.oled)
+              text: tl2(trans2.themes.oled)
             }
           ], func: () => {
             render_tip();
@@ -52814,23 +52753,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             ${theme_night = setting({ id: "theme_night", list: [
             {
               value: "light",
-              text: tl(trans.themes.light)
+              text: tl2(trans2.themes.light)
             },
             {
               value: "ink",
-              text: tl(trans.themes.ink)
+              text: tl2(trans2.themes.ink)
             },
             {
               value: "dark",
-              text: tl(trans.themes.dark)
+              text: tl2(trans2.themes.dark)
             },
             {
               value: "darker",
-              text: tl(trans.themes.darker)
+              text: tl2(trans2.themes.darker)
             },
             {
               value: "oled",
-              text: tl(trans.themes.oled)
+              text: tl2(trans2.themes.oled)
             }
           ], func: () => {
             render_tip();
@@ -52838,10 +52777,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             match2();
           } })}
                         </div>
-                        <p class="card-tip">${tl(trans.theme_schedule)}</p>
+                        <p class="card-tip">${tl2(trans2.theme_schedule)}</p>
                     `
         });
-      }}>${tl(trans.change_schedule)}</a>
+      }}>${tl2(trans2.change_schedule)}</a>
         `);
     }
     setTimeout(function() {
@@ -52850,7 +52789,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <div class="setting-group">
                 <div class="setting" data-type="action">
                     <div class="heading">
-                        <h5>${tl(trans.themes.name)}</h5>
+                        <h5>${tl2(trans2.themes.name)}</h5>
                     </div>
                     <div class="info v">
                         ${bubbles = theme_bubbles(() => {
@@ -52864,7 +52803,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 ${setting({ id: "solarium" })}
                 <div class="setting" data-type="action">
                     <div class="heading">
-                        <h5>${tl(trans.hue)}</h5>
+                        <h5>${tl2(trans2.hue)}</h5>
                     </div>
                     <div class="info swatch-info">
                         <div id="colour_custom" class="swatch-group palette"></div>
@@ -52879,11 +52818,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_accessibility()">
-                ${tl(trans.back)}
+                ${tl2(trans2.back)}
             </button>
             <div class="fill"></div>
             <button class="btn primary continue" onclick="_setup_music()">
-                ${tl(trans.next)}
+                ${tl2(trans2.next)}
             </button>
         `;
       render_tip();
@@ -52897,7 +52836,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
       render(page.structure.setup_content, html`
-            <p>${tl(trans.accessibility_explain)}</p>
+            <p>${tl2(trans2.accessibility_explain)}</p>
             <div class="settings">
                 <div class="setting-group">
                     ${setting({ id: "reduced_motion" })}
@@ -52907,11 +52846,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup()">
-                ${tl(trans.back)}
+                ${tl2(trans2.back)}
             </button>
             <div class="fill"></div>
             <button class="btn primary continue" onclick="_setup_themes()">
-                ${tl(trans.next)}
+                ${tl2(trans2.next)}
             </button>
         `;
       refresh_all(page.structure.setup_content);
@@ -52923,7 +52862,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
       render(page.structure.setup_content, html`
-            <p>${tl(trans.music_explain)}</p>
+            <p>${tl2(trans2.music_explain)}</p>
             <div class="settings">
                 <div class="inner-preview pad flex">
                     <section class="redesigned-header mockup redesigned-track-header no-top-margin">
@@ -52931,7 +52870,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg">
                         </div>
                         <div class="info-side">
-                            <div class="sub-text">${tl(trans.track)}</div>
+                            <div class="sub-text">${tl2(trans2.track)}</div>
                             <div class="title-container">
                                 <h1 class="bleh--name-with-features">
                                     <div class="title">California Love</div>
@@ -52959,11 +52898,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_themes()">
-                ${tl(trans.back)}
+                ${tl2(trans2.back)}
             </button>
             <div class="fill"></div>
             <button class="btn primary continue" onclick="_setup_end()">
-                ${tl(trans.next)}
+                ${tl2(trans2.next)}
             </button>
         `;
       display_colour_presets();
@@ -52976,14 +52915,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
       render(page.structure.setup_content, html`
-            <p>${{ html: tl(trans.setup_end).replace("{a}", `<a href="${root}bleh">`).replace("{/a}", "</a>") }}</p>
+            <p>${{ html: tl2(trans2.setup_end).replace("{a}", `<a href="${root}bleh">`).replace("{/a}", "</a>") }}</p>
             <div class="mini-list">
                 <a class="btn mini" href="https://discord.gg/${discord}" target="_blank">
                     <div class="mini-icon colourful" data-type="discord">
                         <div class="bleh-icon" />
                     </div>
                     <div class="mini-info">
-                        <h5>${tl(trans.join_discord)}</h5>
+                        <h5>${tl2(trans2.join_discord)}</h5>
                     </div>
                     <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right"></div>
                 </a>
@@ -52992,7 +52931,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         <div class="bleh-icon" />
                     </div>
                     <div class="mini-info">
-                        <h5>${tl(trans.sponsor)}</h5>
+                        <h5>${tl2(trans2.sponsor)}</h5>
                     </div>
                     <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right"></div>
                 </button>
@@ -53001,21 +52940,21 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (auth.name) {
         page.structure.setup_footer.innerHTML = `
                 <button class="see-more cancel" onclick="_setup_music()">
-                    ${tl(trans.back)}
+                    ${tl2(trans2.back)}
                 </button>
                 <div class="fill"></div>
                 <a class="btn primary continue" href="${root}user/${auth.name}">
-                    ${tl(trans.finish)}
+                    ${tl2(trans2.finish)}
                 </a>
             `;
       } else {
         page.structure.setup_footer.innerHTML = `
                 <button class="see-more cancel" onclick="_setup_music()">
-                    ${tl(trans.back)}
+                    ${tl2(trans2.back)}
                 </button>
                 <div class="fill"></div>
                 <a class="btn primary continue" href="${root}dashboard">
-                    ${tl(trans.finish)}
+                    ${tl2(trans2.finish)}
                 </a>
             `;
       }
@@ -53059,7 +52998,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <div class="col-main">
                 <section class="error-panel sour">
                     <div class="info">
-                        <h1>${tl(trans.erm)}</h1>
+                        <h1>${tl2(trans2.erm)}</h1>
                         <div class="subtle">${error_content.textContent}</div>
                     </div>
                     <div class="error-content">
@@ -53068,10 +53007,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <div class="subtle">${window.location.pathname}</div>
                     <div class="error-footer">
                         <a class="see-more cancel" href="${back_link.getAttribute("href")}">
-                            ${tl(trans.back)}
+                            ${tl2(trans2.back)}
                         </a>
                         <a class="btn primary continue" href="${root}user/${auth.name}">
-                            ${tl(trans.profile)}
+                            ${tl2(trans2.profile)}
                         </a>
                     </div>
                 </section>
@@ -53101,12 +53040,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </div>
             <div class="middle">
                 <div class="sub-text">${DateTime.now().toLocaleString(DateTime.DATE_FULL)}</div>
-                <h2>${tl(trans.charts)}</h2>
+                <h2>${tl2(trans2.charts)}</h2>
             </div>
             <div class="right">
                 <div class="view-buttons">
                     <button class="btn view-item glacier-configure-button panel-settings-button">
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </button>
                 </div>
             </div>
@@ -53120,7 +53059,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <div class="dialog-settings">
                 <div class="setting-group blend">
                     <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
-                        <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
+                        <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl2(trans2.reset)}</button>
                         <div class="heading">
                             <h5>${trans_legacy.en.charts.scroll.name}</h5>
                             <p>${trans_legacy.en.charts.scroll.bio}</p>
@@ -53287,24 +53226,24 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       welcome = html.node`
             <div class="top-banner home-banner">
                 <div class="avatar">
-                    <img src=${auth.avatar.replace("/avatar42s/", "/avatar170s/")} alt=${tl(trans.your_avatar)}>
+                    <img src=${auth.avatar.replace("/avatar42s/", "/avatar170s/")} alt=${tl2(trans2.your_avatar)}>
                     ${auth.sponsor ? html.node`
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                     ` : ""}
                 </div>
-                <h1>${{ html: tl(trans[`good_${time2}_user`]).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}</h1>
+                <h1>${{ html: tl2(trans2[`good_${time2}_user`]).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}</h1>
             </div>
         `;
     } else {
       welcome = html.node`
             <div class="top-banner home-banner">
                 <div class="avatar">
-                    <img class="missing-avatar" alt=${tl(trans.your_avatar)}>
+                    <img class="missing-avatar" alt=${tl2(trans2.your_avatar)}>
                     ${auth.sponsor ? html.node`
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                     ` : ""}
                 </div>
-                <h1>${tl(trans.not_logged_in)}</h1>
+                <h1>${tl2(trans2.not_logged_in)}</h1>
             </div>
         `;
     }
@@ -53316,45 +53255,45 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--home">
                         <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" || page.type == "events" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.home)}
+                            ${tl2(trans2.home)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
                         <a href="${root}music/+recommended" class="secondary-nav-item-link ${page.type == "recommended" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.recommendations)}
+                            ${tl2(trans2.recommendations)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
                         <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${page.type == "releases" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.releases)}
+                            ${tl2(trans2.releases)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
                         <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${page.type == "bookmarks" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.bookmarks)}
+                            ${tl2(trans2.bookmarks)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
                         <a href="${root}charts" class="secondary-nav-item-link ${page.type == "charts" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.charts)}
+                            ${tl2(trans2.charts)}
                         </a>
                     </li>
                     ${ff("minis") ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
                         <a href="${root}bleh/minis" data-type="mini" class="secondary-nav-item-link ${page.type == "minis" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.minis)}
+                            ${tl2(trans2.minis)}
                         </a>
                     </li>
                     ` : ""}
                     <li class="fill"></li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
                         <a href="${root}settings" class="secondary-nav-item-link ${page.type == "settings" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.settings)}
+                            ${tl2(trans2.settings)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
                         <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "bleh_settings" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.settings)}
+                            ${tl2(trans2.settings)}
                         </a>
                     </li>
                 </ul>
@@ -53366,18 +53305,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--home">
                         <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" || page.type == "events" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.home)}
+                            ${tl2(trans2.home)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
                         <a href="${root}charts" class="secondary-nav-item-link ${page.type == "charts" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.charts)}
+                            ${tl2(trans2.charts)}
                         </a>
                     </li>
                     <li class="fill"></li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
                         <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "bleh_settings" ? "secondary-nav-item-link--active" : ""}">
-                            ${tl(trans.settings)}
+                            ${tl2(trans2.settings)}
                         </a>
                     </li>
                 </ul>
@@ -53404,22 +53343,22 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <ul class="navlist-items">
                         <li class="navlist-item secondary-nav-item">
                             <a href="${root}user/${auth.name}" data-type="mention" class="secondary-nav-item-link">
-                                ${tl(trans.profile)}
+                                ${tl2(trans2.profile)}
                             </a>
                         </li>
                         <li class="navlist-item secondary-nav-item">
                             <a href="${root}user/${auth.name}/library" data-type="library" class="secondary-nav-item-link">
-                                ${tl(trans.library)}
+                                ${tl2(trans2.library)}
                             </a>
                         </li>
                         <li class="navlist-item secondary-nav-item">
                             <a href="${root}user/${auth.name}/following" data-type="profile" class="secondary-nav-item-link">
-                                ${tl(trans.friends)}
+                                ${tl2(trans2.friends)}
                             </a>
                         </li>
                         <li class="navlist-item secondary-nav-item">
                             <a href="${root}user/${auth.name}/shoutbox" data-type="shouts" class="secondary-nav-item-link">
-                                ${tl(trans.shouts)}
+                                ${tl2(trans2.shouts)}
                             </a>
                         </li>
                     </ul>
@@ -53432,20 +53371,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <div class="content override">
                 <div class="col-main" ref=${(el) => page.structure.main = el}>
                     <section>
-                        <h2>${tl(trans.recent_tracks)}</h2>
+                        <h2>${tl2(trans2.recent_tracks)}</h2>
                         <div class="recent-listening-container" ref=${(el) => track_list = el}>
                             <div class="loading-data-container">
-                                <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
+                                <p class="loading-data-text">${tl2(trans2.finding_your_tracks)}</p>
                             </div>
                         </div>
                     </section>
                 </div>
                 <div class="col-sidebar" ref=${(el) => page.structure.side = el}>
                     <section>
-                        <h2>${tl(trans.activity)}</h2>
+                        <h2>${tl2(trans2.activity)}</h2>
                         ${render_activity_list()}
                         <div class="more-link">
-                            <a href="${root}bleh/profile?setting=activities">${tl(trans.activity_settings)}</a>
+                            <a href="${root}bleh/profile?setting=activities">${tl2(trans2.activity_settings)}</a>
                         </div>
                     </section>
                 </div>
@@ -53528,7 +53467,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${tl(trans.event)}</div>
+            <div class="sub-text">${tl2(trans2.event)}</div>
             <h1>${page.name}</h1>
             <p class="sub-info">${event_description.innerHTML}</p>
         </div>
@@ -53598,7 +53537,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         page.structure.main.removeChild(cancelled);
         page.structure.main.insertBefore(html.node`
                 <section class="cta first colourful error">
-                    <strong>${tl(trans.event_cancelled)}</strong>
+                    <strong>${tl2(trans2.event_cancelled)}</strong>
                 </section>
             `, page.structure.main.firstElementChild);
       }
@@ -53610,10 +53549,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         view_buttons.innerHTML = `
                 <div class="view-buttons">
                     <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                        ${tl(trans.grid)}
+                        ${tl2(trans2.grid)}
                     </button>
                     <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                        ${tl(trans.list)}
+                        ${tl2(trans2.list)}
                     </button>
                 </div>
             `;
@@ -53661,7 +53600,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <div class="tag-icon event-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${tl(trans.event)}</div>
+            <div class="sub-text">${tl2(trans2.event)}</div>
             <h1>${header_text2}</h1>
         </div>
     `;
@@ -53677,7 +53616,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     nav.insertBefore(html.node`
         <li class="navlist-item secondary-nav-item secondary-nav-item--back">
             <a class="secondary-nav-item-link" href="${back.getAttribute("href")}">
-                ${tl(trans.back)}
+                ${tl2(trans2.back)}
             </a>
         </li>
     `, nav.firstElementChild);
@@ -53700,7 +53639,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page.structure.side.innerHTML = `
         <section class="view-all-panel">
             <a class="btn view-all-button add-button" href="${root}events/add?reset=true">
-                ${tl(trans.create_new_event)}
+                ${tl2(trans2.create_new_event)}
             </a>
         </section>
     `;
@@ -53834,7 +53773,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="tag-icon search-icon"></div>
             </div>
             <div class="info-side">
-                <div class="sub-text">${tl(trans.search)}</div>
+                <div class="sub-text">${tl2(trans2.search)}</div>
                 <h1>${value}</h1>
             </div>
         </section>
@@ -53858,20 +53797,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         <li class="fill"></li>
         <li class="navlist-item secondary-nav-item secondary-nav-item--library">
             <a class="secondary-nav-item-link" ref=${(el) => explore = el}>
-                ${tl(trans.explore_in_library)}
+                ${tl2(trans2.explore_in_library)}
             </a>
         </li>
     `);
     tippy_esm_default(explore, {
       content: html.node`
             <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}user/${auth.name}/library/artists/search?query=${sanitise(value)}">
-                ${tl(trans.artists)}
+                ${tl2(trans2.artists)}
             </a>
             <a class="dropdown-menu-clickable-item" data-type="album" href="${root}user/${auth.name}/library/albums/search?query=${sanitise(value)}">
-                ${tl(trans.albums)}
+                ${tl2(trans2.albums)}
             </a>
             <a class="dropdown-menu-clickable-item" data-type="track" href="${root}user/${auth.name}/library/tracks/search?query=${sanitise(value)}">
-                ${tl(trans.tracks)}
+                ${tl2(trans2.tracks)}
             </a>
         `,
       theme: "menu",
@@ -53941,7 +53880,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     ` : html.node`<img class="missing-track">`}
                 </div>
                 <div class="info-side">
-                    <div class="sub-text">${tl(trans.track)}</div>
+                    <div class="sub-text">${tl2(trans2.track)}</div>
                     <div class="title-container">
                         ${title}
                         ${position ? position : ""}
@@ -53975,17 +53914,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         content: html.node`
                 ${album_avatar || artist_avatar ? html.node`
                 <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute("content"))} data-menu-item="expand">
-                    ${tl(trans.expand)}
+                    ${tl2(trans2.expand)}
                 </button>
                 ` : ""}
                 ${album_avatar ? html.node`
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector(".link-block-cover-link").getAttribute("href")}" data-menu-item="album">
-                    ${tl(trans.album)}
+                    ${tl2(trans2.album)}
                 </a>
                 ` : ""}
                 <div class="sep"></div>
                 <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                    ${tl(trans.settings)}
+                    ${tl2(trans2.settings)}
                 </a>
             `,
         placement: "right-start",
@@ -54151,9 +54090,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         buttons.forEach((button) => {
           const type = button.classList[1];
           if (type == "more-item--delete") {
-            button.textContent = tl(trans.delete);
+            button.textContent = tl2(trans2.delete);
           } else if (type == "more-item--report") {
-            button.textContent = tl(trans.report);
+            button.textContent = tl2(trans2.report);
           }
         });
         menu.insertBefore(
@@ -54161,7 +54100,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => {
             copy(shout_text);
           }}>
-                    ${tl(trans.copy)}
+                    ${tl2(trans2.copy)}
                 </button>
                 <div class="sep" />
             `,
@@ -54172,7 +54111,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       } catch (e) {
         notify({
           id: "shout",
-          title: tl(trans.shouts),
+          title: tl2(trans2.shouts),
           body: "Failed to be modified :(",
           type: "error",
           icon: "icon-16-shoutbox"
@@ -54203,7 +54142,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     class="tip markdown-enabled"
                     onclick=${() => markdown_prompt()}
                 >
-                    ${tl(trans.supports_markdown)}
+                    ${tl2(trans2.supports_markdown)}
                 </div>
                 <div
                     class="tip preview"
@@ -54211,16 +54150,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     ref=${(el) => preview = el}
                     disabled="true"
                 >
-                    ${tl(trans.preview)}
+                    ${tl2(trans2.preview)}
                 </div>
                 <div class="tip characters" ref=${(el) => chars = el}>
-                    ${tl(trans.value_characters_max, { v: "0/1000" })}
+                    ${tl2(trans2.value_characters_max, { v: "0/1000" })}
                 </div>
             `
       );
       textarea.addEventListener("input", () => {
         const value = textarea.value;
-        chars.textContent = tl(trans.value_characters_max, {
+        chars.textContent = tl2(trans2.value_characters_max, {
           v: `${value.length}/1000`
         });
         chars.setAttribute("data-exceeded", value.length >= 1e3);
@@ -54232,8 +54171,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           send_button.querySelector(".btn-post-shout").click();
           notify({
             id: "shout",
-            title: tl(trans.shouts),
-            body: tl(trans.sent),
+            title: tl2(trans2.shouts),
+            body: tl2(trans2.sent),
             icon: "icon-16-shoutbox"
           });
         }
@@ -54245,10 +54184,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let button = send_button.querySelector(".btn-post-shout");
     if (!button) return;
     button.classList.add("btn-send-shout-generic");
-    button.textContent = tl(trans.send);
+    button.textContent = tl2(trans2.send);
     if (page.mobile) return;
     tippy_esm_default(button, {
-      content: tl(trans.send_quickly_with).replace(
+      content: tl2(trans2.send_quickly_with).replace(
         "{kbd}",
         keybind(["\u2318", "\u23CE"]).outerHTML
       ),
@@ -54267,14 +54206,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         html.node`
             <div class="top-container">
                 <h2>
-                    <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
+                    <a class="text-colour-link" href=${link}>${tl2(trans2.shouts)}</a>
                 </h2>
                 <div class="accompany view-buttons blend blend-v2">
-                    <p class="notice">${tl(trans.single_shout)}</p>
+                    <p class="notice">${tl2(trans2.single_shout)}</p>
                 </div>
                 <div class="view-buttons blend blend-v2">
                     <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </button>
                 </div>
             </div>
@@ -54295,7 +54234,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         html.node`
             <div class="top-container">
                 <h2>
-                    <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
+                    <a class="text-colour-link" href=${link}>${tl2(trans2.shouts)}</a>
                 </h2>
                 ${select_btn ? html.node`
                     <div class="accompany view-buttons blend blend-v2">
@@ -54315,7 +54254,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 ` : ""}
                 <div class="view-buttons blend blend-v2">
                     <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </button>
                 </div>
             </div>
@@ -54347,7 +54286,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         html`
                 <div class="loading-data-container">
                     <div class="loading-data-text static" data-type="shouts">
-                        ${tl(trans.cant_shout)}
+                        ${tl2(trans2.cant_shout)}
                     </div>
                 </div>
             `
@@ -54372,8 +54311,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (alert2.classList.contains("alert-danger")) {
         notify({
           id: "shout",
-          title: tl(trans.shouts),
-          body: tl(trans.failed_to_send),
+          title: tl2(trans2.shouts),
+          body: tl2(trans2.failed_to_send),
           type: "error",
           icon: "icon-16-shoutbox"
         });
@@ -54390,13 +54329,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     radios.forEach((radio) => {
       let type = radio.getAttribute("data-analytics-label");
       radio.classList.add("radio-button");
-      let text3 = tl(trans[type]);
+      let text3 = tl2(trans2[type]);
       if (type == "tag")
         text3 = page.name;
       else if (type == "event")
-        text3 = tl(trans.artists);
+        text3 = tl2(trans2.artists);
       render(radio, html`
-            <h3 class="sub-text">${tl(trans.radio)}</h3>
+            <h3 class="sub-text">${tl2(trans2.radio)}</h3>
             <h4>${text3}</h4>
         `);
       radio.removeAttribute("title");
@@ -54405,7 +54344,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let promo_v3 = page.structure.side.querySelector(".promo-v3");
       if (!promo_v3) return;
       let header = promo_v3.querySelector("h2");
-      header.textContent = tl(trans.listening);
+      header.textContent = tl2(trans2.listening);
       let promos = promo_v3.querySelectorAll(".listening-report-promo");
       let container = document.createElement("div");
       container.classList.add("listening-report-promos");
@@ -54422,7 +54361,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       promo_v3.appendChild(list);
     } else {
       let header = page.structure.side.querySelector(".stationlinks-header");
-      header.textContent = tl(trans.listening);
+      header.textContent = tl2(trans2.listening);
     }
   }
 
@@ -54463,29 +54402,29 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       render(page.structure.main, html`
             <section class="api-connector sour">
                 <div class="avatar">
-                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans2.your_avatar)}">
                 </div>
                 <div class="info">
                     <h1>${page.name}</h1>
-                    <div class="sub-text no-margin">${tl(trans.app_would_like_to_connect)}</div>
+                    <div class="sub-text no-margin">${tl2(trans2.app_would_like_to_connect)}</div>
                     <div class="subtle">
                         ${html.node([
-        tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
+        tl2(trans2.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
       ])}
                     </div>
                 </div>
                 <div class="sep"></div>
                 <div class="description">${description}</div>
-                <div class="small-label with-icon lock">${tl(trans.ensure_you_trust)}</div>
+                <div class="small-label with-icon lock">${tl2(trans2.ensure_you_trust)}</div>
                 <div class="connector-footer">
                     <a class="see-more cancel" href="${cancel}">
-                        ${tl(trans.cancel)}
+                        ${tl2(trans2.cancel)}
                     </a>
                     <form method="post" data-no-partial-refresh="">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                         <input type="hidden" name="confirmation" value="confirm">
                         <button class="btn primary icon connect" type="submit" name="confirm">
-                            ${tl(trans.connect)}
+                            ${tl2(trans2.connect)}
                         </button>
                     </form>
                 </div>
@@ -54496,18 +54435,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       render(page.structure.main, html`
             <section class="api-connector sour">
                 <div class="avatar">
-                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans2.your_avatar)}">
                 </div>
                 <div class="info">
                     <h1>${page.name}</h1>
-                    <div class="sub-text no-margin">${tl(trans.has_been_connected)}</div>
+                    <div class="sub-text no-margin">${tl2(trans2.has_been_connected)}</div>
                 </div>
                 <div class="sep"></div>
-                <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
+                <div class="description">${tl2(trans2.you_can_now_close_this_tab)}</div>
                 <div class="connector-footer">
                     <div class="btn-fill"/>
                     <a class="see-more" href="${root}settings/applications">
-                        ${tl(trans.manage_applications)}
+                        ${tl2(trans2.manage_applications)}
                     </a>
                     <div class="btn-fill"/>
                 </div>
@@ -54559,7 +54498,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       html`
             <div class="footer-credit">
                 ${{
-        html: tl(trans.made_with_love).replace(
+        html: tl2(trans2.made_with_love).replace(
           "{u}",
           `<a href="${root}user/${kate}">${kate}</a>`
         ).replace(
@@ -54567,7 +54506,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">'
         ).replace("{/c}", "</a>").replace(
           "{h}",
-          `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`
+          `<span class="bleh-icon heart sponsor-related">${tl2(trans2.love_lower)}</span>`
         )
       }}
             </div>
@@ -54577,14 +54516,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     data-type="source"
                     href="https://github.com/katelyynn/bleh"
                     target="_blank"
-                    >${tl(trans.view_source)}</a
+                    >${tl2(trans2.view_source)}</a
                 >
                 <a
                     class="music-link"
                     data-type="issue"
                     href="https://github.com/katelyynn/bleh/issues/new/choose"
                     target="_blank"
-                    >${tl(trans.report_issue)}</a
+                    >${tl2(trans2.report_issue)}</a
                 >
                 <a
                     class="more"
@@ -54615,11 +54554,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let token = form.querySelector('[name="csrfmiddlewaretoken"]');
       if (token) page.token = token.getAttribute("value");
       if (form.action && form.action.endsWith("+bookmarks/modal/added")) {
-        title.textContent = tl(trans.saved_to_bookmarks);
+        title.textContent = tl2(trans2.saved_to_bookmarks);
         let new_form;
         render(contents, html`
                 <div class="big-modal-alert">
-                    ${{ html: tl(trans.bookmark_save_msg).replace("{link}", `<a class="see-more" href="${root}music/+bookmarks">${tl(trans.go_there_now_lower)}</a>`) }}
+                    ${{ html: tl2(trans2.bookmark_save_msg).replace("{link}", `<a class="see-more" href="${root}music/+bookmarks">${tl2(trans2.go_there_now_lower)}</a>`) }}
                 </div>
                 <form method="post" ref=${(el) => new_form = el} onsubmit=${async (e) => {
           e.preventDefault();
@@ -54645,10 +54584,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           value: true,
           type: "checkbox",
           name: "always_show",
-          title: tl(trans.always_remind_me)
+          title: tl2(trans2.always_remind_me)
         })}
                         <button class="btn primary done" type="submit">
-                            ${tl(trans.done)}
+                            ${tl2(trans2.done)}
                         </button>
                     </div>
                 </form>
@@ -54658,9 +54597,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         let edit_all = body.querySelector('[name="edit_all"]');
         if (edit_all && edit_all.disabled) bulk_edit_active = true;
         if (!bulk_edit_active)
-          title.textContent = tl(trans.edit_scrobble);
+          title.textContent = tl2(trans2.edit_scrobble);
         else
-          title.textContent = tl(trans.edit_scrobbles_in_bulk);
+          title.textContent = tl2(trans2.edit_scrobbles_in_bulk);
         modal_dialog.classList.add("automatic-edit-modal");
         let checkboxes = body.querySelectorAll(".checkbox");
         checkboxes.forEach((checkbox) => {
@@ -54691,7 +54630,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         if (delete_form) delete_btn = delete_form.querySelector(".btn-delete");
         render(submit, html`
                 <button class="see-more cancel" type="button" onclick=${() => dismiss.click()}>
-                    ${tl(trans.cancel)}
+                    ${tl2(trans2.cancel)}
                 </button>
                 <div class="fill" />
                 <div class="button-group">
@@ -54699,12 +54638,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <button class="btn icon danger-subtle" data-type="delete" type="button" onclick=${() => {
           delete_btn.click();
         }}>
-                        ${tl(trans.delete)}
+                        ${tl2(trans2.delete)}
                     </button>
                     ` : ""}
                     ${submit.querySelector("input")}
                     <button class="btn primary icon" data-type="item-edit" type="submit">
-                        ${tl(trans.edit)}
+                        ${tl2(trans2.edit)}
                     </button>
                 </div>
             `);
@@ -54723,7 +54662,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             });
           }} type="button">
                             <div class="bleh-icon" data-type="select-all" style="--icon: var(--mask)" />
-                            ${tl(trans.select_all)}
+                            ${tl2(trans2.select_all)}
                         </button>
                         <button class="flex-button" onclick=${() => {
             checks.forEach((check) => {
@@ -54731,7 +54670,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             });
           }} type="button">
                             <div class="bleh-icon" data-type="deselect-all" style="--icon: var(--mask)" />
-                            ${tl(trans.deselect_all)}
+                            ${tl2(trans2.deselect_all)}
                         </button>
                     </div>
                 `);
@@ -54752,7 +54691,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             value,
             type: "checkbox",
             name,
-            title: item_name + tl(trans.by_artist).replace("{a}", item_artist),
+            title: item_name + tl2(trans2.by_artist).replace("{a}", item_artist),
             body: item_scrobbles,
             disabled,
             data: data2
@@ -54763,9 +54702,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         let footer = body.querySelector(".form-group--submit");
         footer.classList = "modal-footer";
         render(footer, html`
-                <button class="see-more cancel" type="reset">${tl(trans.cancel)}</button>
+                <button class="see-more cancel" type="reset">${tl2(trans2.cancel)}</button>
                 <div class="fill" />
-                <button class="btn primary continue" type="submit">${tl(trans.continue)}</button>
+                <button class="btn primary continue" type="submit">${tl2(trans2.continue)}</button>
             `);
       }
     });
@@ -54803,7 +54742,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <section class="api-connector sour">
                     <div class="loading-data-container">
                         <div class="loading-data-text error">
-                            ${tl(trans.no_token_provided)}
+                            ${tl2(trans2.no_token_provided)}
                         </div>
                     </div>
                 </section>
@@ -54816,7 +54755,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       html`
             <section class="api-connector sour">
                 <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.loading)}</div>
+                    <div class="loading-data-text">${tl2(trans2.loading)}</div>
                 </div>
             </section>
         `
@@ -54860,23 +54799,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         "/avatar42s/",
         "/avatar170s/"
       )}"
-                        alt="${tl(trans.your_avatar)}"
+                        alt="${tl2(trans2.your_avatar)}"
                     />
                 </div>
                 <div class="info">
                     <h1>bleh</h1>
                     <div class="sub-text no-margin">
-                        ${tl(trans.has_been_connected)}
+                        ${tl2(trans2.has_been_connected)}
                     </div>
                 </div>
                 <div class="sep"></div>
                 <div class="description">
-                    ${tl(trans.you_can_now_close_this_tab)}
+                    ${tl2(trans2.you_can_now_close_this_tab)}
                 </div>
                 <div class="connector-footer">
                     <div class="btn-fill" />
                     <a class="btn primary continue" href="${root}bleh">
-                        ${tl(trans.continue)}
+                        ${tl2(trans2.continue)}
                     </a>
                     <div class="btn-fill" />
                 </div>
@@ -55375,7 +55314,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             star,
             html`
                         <div class="bleh-icon" />
-                        ${tl(trans.starred)}
+                        ${tl2(trans2.starred)}
                     `
           );
         });
@@ -55405,12 +55344,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
   function page_title() {
     if (ff("page_title")) {
-      let template = tl(trans.page_templates.type);
+      let template = tl2(trans2.page_templates.type);
       if (!page.state.error) {
         if ((page.type == "user" || page.type == "artist" || page.type == "events" || page.type == "tag") && page.subpage != "home")
-          template = tl(trans.page_templates.name_type);
+          template = tl2(trans2.page_templates.name_type);
         else if (page.type == "album" || page.type == "track")
-          template = tl(trans.page_templates.name_sister_type);
+          template = tl2(trans2.page_templates.name_sister_type);
       }
       let name = page.name;
       let sister = page.sister;
@@ -55422,61 +55361,61 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       let title;
       if (page.subpage != "overview" && page.subpage != "event_overview" && page.subpage != "home" && (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "tag"))
-        title = tl(trans[page.subpage]);
+        title = tl2(trans2[page.subpage]);
       if (page.type == "settings" || page.type == "bleh_settings")
-        title = tl(trans.settings);
-      else if (page.type == "bleh_setup") title = tl(trans.bleh_setup);
-      else if (page.type == "bleh_sponsor") title = tl(trans.sponsor);
-      else if (page.type == "search") title = tl(trans.search);
+        title = tl2(trans2.settings);
+      else if (page.type == "bleh_setup") title = tl2(trans2.bleh_setup);
+      else if (page.type == "bleh_sponsor") title = tl2(trans2.sponsor);
+      else if (page.type == "search") title = tl2(trans2.search);
       else if (page.type == "overview" || page.type == "home")
-        title = tl(trans.home);
-      else if (page.type == "recommended") title = tl(trans.recommendations);
-      else if (page.type == "releases") title = tl(trans.releases);
+        title = tl2(trans2.home);
+      else if (page.type == "recommended") title = tl2(trans2.recommendations);
+      else if (page.type == "releases") title = tl2(trans2.releases);
       else if (page.type == "events" && page.subpage == "home")
-        title = tl(trans.events);
-      else if (page.type == "bookmarks") title = tl(trans.bookmarks);
-      else if (page.type == "charts") title = tl(trans.charts);
-      else if (page.type == "labs") title = tl(trans.labs.name);
-      else if (page.type == "minis") title = tl(trans.minis);
+        title = tl2(trans2.events);
+      else if (page.type == "bookmarks") title = tl2(trans2.bookmarks);
+      else if (page.type == "charts") title = tl2(trans2.charts);
+      else if (page.type == "labs") title = tl2(trans2.labs.name);
+      else if (page.type == "minis") title = tl2(trans2.minis);
       if (page.type == "inbox") {
         if (page.subpage == "notifications")
-          title = tl(trans.notifications);
-        else title = tl(trans.messages);
+          title = tl2(trans2.notifications);
+        else title = tl2(trans2.messages);
       }
       if (page.subpage.replace("event_", "").startsWith("shoutbox"))
-        title = tl(trans.shouts);
-      else if (page.subpage.startsWith("library")) title = tl(trans.library);
+        title = tl2(trans2.shouts);
+      else if (page.subpage.startsWith("library")) title = tl2(trans2.library);
       else if (page.subpage == "obsessions_overview")
-        title = tl(trans.obsessions);
+        title = tl2(trans2.obsessions);
       else if (page.subpage == "obsessions_obsession")
-        title = tl(trans.obsession);
-      else if (page.subpage.startsWith("tags")) title = tl(trans.tags);
+        title = tl2(trans2.obsession);
+      else if (page.subpage.startsWith("tags")) title = tl2(trans2.tags);
       else if (page.subpage.startsWith("listening-report"))
-        title = tl(trans.reports);
+        title = tl2(trans2.reports);
       else if (page.subpage.startsWith("event_attendance"))
-        title = tl(trans.attendance);
-      else if (page.subpage == "event_lineup") title = tl(trans.lineup);
+        title = tl2(trans2.attendance);
+      else if (page.subpage == "event_lineup") title = tl2(trans2.lineup);
       else if (page.subpage == "playlists_playlists")
-        title = tl(trans.playlists);
-      else if (page.subpage == "auth") title = tl(trans.connect_app);
+        title = tl2(trans2.playlists);
+      else if (page.subpage == "auth") title = tl2(trans2.connect_app);
       else if (page.subpage.startsWith("image") && page.type == "artist")
-        title = tl(trans.photos);
+        title = tl2(trans2.photos);
       else if (page.subpage.startsWith("image") && page.type == "album")
-        title = tl(trans.artwork);
+        title = tl2(trans2.artwork);
       else if (page.subpage.startsWith("listeners"))
-        title = tl(trans.listeners);
-      else if (page.subpage == "similar") title = tl(trans.similar_artists);
-      else if (page.subpage.startsWith("wiki")) title = tl(trans.wiki);
-      else if (page.subpage == "lyrics") title = tl(trans.lyrics);
+        title = tl2(trans2.listeners);
+      else if (page.subpage == "similar") title = tl2(trans2.similar_artists);
+      else if (page.subpage.startsWith("wiki")) title = tl2(trans2.wiki);
+      else if (page.subpage == "lyrics") title = tl2(trans2.lyrics);
       if (page.subpage == "overview" || page.subpage == "event_overview") {
-        if (page.type == "user") title = tl(trans.profile);
-        else if (page.type == "artist") title = tl(trans.artist);
-        else if (page.type == "album") title = tl(trans.album);
-        else if (page.type == "track") title = tl(trans.track);
-        else if (page.type == "events") title = tl(trans.event);
-        else if (page.type == "tag") title = tl(trans.tag);
+        if (page.type == "user") title = tl2(trans2.profile);
+        else if (page.type == "artist") title = tl2(trans2.artist);
+        else if (page.type == "album") title = tl2(trans2.album);
+        else if (page.type == "track") title = tl2(trans2.track);
+        else if (page.type == "events") title = tl2(trans2.event);
+        else if (page.type == "tag") title = tl2(trans2.tag);
       }
-      if (page.state.error) title = tl(trans.error);
+      if (page.state.error) title = tl2(trans2.error);
       template = template.replace("{page}", title).replace("{name}", name).replace("{sister}", sister).replace("{build}", version.build).replace("{sku}", version.sku);
       if (settings.branding_type == "bleh")
         template = template.replace("{brand}", version.brand);
@@ -55654,8 +55593,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       last_updated: "2025-09-23"
     }
   };
-  var trans = {
+  var trans2 = {
     page_templates: {
+      // these are used for browser tab titles
+      // {page} is something like 'Home' or 'Profile'
+      // {name} and {sister} is something like a profile name
+      // {brand} is bleh
+      // {build} and {sku} are version numbers
       type: {
         en: "{page} on {brand} {build}.{sku}",
         de: "{page} auf {brand} {build}.{sku}",
@@ -55692,7 +55636,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       },
       "user-status-subscriber": {
         name: {
-          en: "Last.fm Pro"
+          en: "Last.fm Pro",
+          de: "Last.fm Pro",
+          pt: "Last.fm Pro",
+          sv: "Last.fm Pro"
         },
         reason: {
           en: "Active Pro subscription",
@@ -56207,6 +56154,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ja: "\u30A2\u30EB\u30D0\u30E0",
       sv: "Album"
     },
+    albums_and_tracks: {
+      en: "Albums and tracks"
+    },
     album_artist: {
       en: "Album Artist",
       sv: "Albumartist"
@@ -56457,6 +56407,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           pt: "Ano Novo",
           sv: "Ny\xE5r"
         }
+      },
+      notice: {
+        en: "Open the live counter"
+      },
+      live: {
+        en: "Counter is updating live"
       }
     },
     new_season: {
@@ -56673,7 +56629,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "News",
       de: "Neuigkeiten",
       pt: "Not\xEDcias",
-      sv: "Nytt"
+      sv: "Nytt",
+      type: {
+        major: {
+          en: "Major release"
+        },
+        minor: {
+          en: "Minor release"
+        }
+      }
     },
     news_from_user: {
       en: "News from {user}",
@@ -56975,6 +56939,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Cover",
       pt: "Arte de capa",
       sv: "Konst"
+    },
+    gallery_sum: {
+      en: "This is the sum of votes for ordering"
+    },
+    view_saved: {
+      en: "View all saved photos"
     },
     dropzone: {
       en: "Drag-and-drop an image or click here"
@@ -58101,6 +58071,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Procurar atualiza\xE7\xF5es",
       sv: "Kolla efter uppdateringar"
     },
+    redirected_from: {
+      en: "Redirected from"
+    },
     music_corrections: {
       en: "Music corrections",
       pt: "Corre\xE7\xF5es de m\xFAsica",
@@ -59081,8 +59054,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     title: {
       en: "Title"
     },
+    no_title: {
+      en: "No title"
+    },
     description: {
       en: "Description"
+    },
+    no_description: {
+      en: "No description"
     },
     change_avatar: {
       en: "Change avatar",
@@ -59120,6 +59099,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Saved",
       pt: "Salvo",
       sv: "Sparade"
+    },
+    remove_save: {
+      en: "Remove save"
     },
     no_images_saved: {
       en: "No photos saved",
@@ -63310,7 +63292,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     }
   };
-  function tl(key, replacements = {}) {
+  function tl2(key, replacements = {}) {
     if (!key) {
       log("your key is undefined", "trans");
       return "NO_TRANSLATION_FOUND";
@@ -63338,13 +63320,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     return path.split(".").reduce((acc, part) => acc?.[part], object);
   }
   function translation_stats() {
-    const keys2 = collect_keys(trans);
+    const keys2 = collect_keys(trans2);
     for (const lang2 of Object.keys(lang_info)) {
       if (lang2 == "en") continue;
       let translated = 0;
       const missing = [];
       for (const key of keys2) {
-        const value = get_value_by_path(trans, key);
+        const value = get_value_by_path(trans2, key);
         if (value && value[lang2]) {
           translated++;
         } else {
@@ -63892,7 +63874,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     theme: {
       default: "darker",
       type: "radio",
-      title: trans.theme
+      title: trans2.theme
     },
     theme_schedule: {
       default: false
@@ -63900,23 +63882,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     theme_day: {
       default: "light",
       type: "select",
-      title: trans.theme_day.name,
-      body: trans.theme_day.body,
+      title: trans2.theme_day.name,
+      body: trans2.theme_day.body,
       incompatible: { theme_schedule: false },
       hide_if_incompatible: true
     },
     theme_night: {
       default: "darker",
       type: "select",
-      title: trans.theme_night.name,
-      body: trans.theme_night.body,
+      title: trans2.theme_night.name,
+      body: trans2.theme_night.body,
       incompatible: { theme_schedule: false },
       hide_if_incompatible: true
     },
     high_contrast: {
       default: false,
       type: "checkbox",
-      title: trans.high_contrast
+      title: trans2.high_contrast
     },
     accent_type: {
       default: "colour",
@@ -63929,7 +63911,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       min: 0,
       max: 360,
       step: 1,
-      title: trans.hue,
+      title: trans2.hue,
       vertical: true
     },
     sat: {
@@ -63939,7 +63921,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       min: 0,
       max: 2,
       step: 0.01,
-      title: trans.sat,
+      title: trans2.sat,
       vertical: true
     },
     sat_bg: {
@@ -63949,8 +63931,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       min: 0,
       max: 5,
       step: 0.2,
-      title: trans.card_background_saturation.name,
-      body: trans.card_background_saturation.body,
+      title: trans2.card_background_saturation.name,
+      body: trans2.card_background_saturation.body,
       incompatible: { theme: "light" }
     },
     lit: {
@@ -63960,13 +63942,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       min: 0,
       max: 1.5,
       step: 0.01,
-      title: trans.lit,
+      title: trans2.lit,
       vertical: true
     },
     solarium: {
       default: true,
-      title: trans.solarium.name,
-      body: trans.solarium.body,
+      title: trans2.solarium.name,
+      body: trans2.solarium.body,
       new_release: true
     },
     gloss: {
@@ -63976,82 +63958,82 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       min: 0,
       max: 1,
       step: 0.05,
-      title: trans.gloss.name,
-      body: trans.gloss.body
+      title: trans2.gloss.name,
+      body: trans2.gloss.body
     },
     gendered_tags: {
       default: true,
-      title: trans.gendered_tags.name,
-      body: trans.gendered_tags.body
+      title: trans2.gendered_tags.name,
+      body: trans2.gendered_tags.body
     },
     dev: {
       default: false,
-      title: trans.theme_loading.name,
-      body: trans.theme_loading.body
+      title: trans2.theme_loading.name,
+      body: trans2.theme_loading.body
     },
     profile_header_expand: {
       default: true
     },
     accessible_name_colours: {
       default: false,
-      title: trans.accessible_name_colours.name,
-      body: trans.accessible_name_colours.body
+      title: trans2.accessible_name_colours.name,
+      body: trans2.accessible_name_colours.body
     },
     reduced_motion: {
       default: false,
-      title: trans.reduced_motion.name,
-      body: trans.reduced_motion.body
+      title: trans2.reduced_motion.name,
+      body: trans2.reduced_motion.body
     },
     underline_links: {
       default: false,
-      title: trans.underline_links.name,
-      body: trans.underline_links.body
+      title: trans2.underline_links.name,
+      body: trans2.underline_links.body
     },
     format_guest_features: {
       default: true,
-      title: trans.format_guest_features.name,
-      body: trans.format_guest_features.body
+      title: trans2.format_guest_features.name,
+      body: trans2.format_guest_features.body
     },
     show_guest_features: {
       default: false,
-      title: trans.show_guest_features.name,
-      body: trans.show_guest_features.body
+      title: trans2.show_guest_features.name,
+      body: trans2.show_guest_features.body
     },
     stacked_chartlist_info: {
       default: true,
-      title: trans.track_column_view
+      title: trans2.track_column_view
     },
     glacier_library_graphs: {
       default: true,
-      title: trans.glacier_graphs.name,
-      body: trans.glacier_graphs.body
+      title: trans2.glacier_graphs.name,
+      body: trans2.glacier_graphs.body
     },
     show_remaster_tags: {
       default: true,
-      title: trans.show_remaster_tags,
+      title: trans2.show_remaster_tags,
       beta: true
     },
     corrections: {
       default: true,
-      title: trans.correct_titles_with_lotus.name,
-      body: trans.correct_titles_with_lotus.body,
+      title: trans2.correct_titles_with_lotus.name,
+      body: trans2.correct_titles_with_lotus.body,
       require_reload: true
     },
     colourful_counts: {
       default: true,
-      title: trans.colourful_counts.name,
-      body: trans.colourful_counts.body
+      title: trans2.colourful_counts.name,
+      body: trans2.colourful_counts.body
     },
     colourful_tracks: {
       default: true,
       type: "checkbox",
-      title: trans.colourful_active,
+      title: trans2.colourful_active,
       incompatible: { colourful_tracks_all: true }
     },
     colourful_tracks_all: {
       default: false,
       type: "checkbox",
-      title: trans.colourful_all,
+      title: trans2.colourful_all,
       new_release: true
     },
     feature_flags: {
@@ -64060,13 +64042,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     show_your_progress: {
       default: true,
-      title: trans.show_your_progress.name,
-      body: trans.show_your_progress.body
+      title: trans2.show_your_progress.name,
+      body: trans2.show_your_progress.body
     },
     travis: {
       default: true,
-      title: trans.redirect_messages.name,
-      body: trans.redirect_messages.body
+      title: trans2.redirect_messages.name,
+      body: trans2.redirect_messages.body
     },
     list_view: {
       default: 1,
@@ -64087,14 +64069,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     shout_markdown: {
       default: true,
       require_reload: "partial",
-      title: trans.markdown_shouts.name,
-      body: trans.markdown_shouts.body
+      title: trans2.markdown_shouts.name,
+      body: trans2.markdown_shouts.body
     },
     bio_markdown: {
       default: true,
       require_reload: "partial",
-      title: trans.markdown_profiles.name,
-      body: trans.markdown_profiles.body
+      title: trans2.markdown_profiles.name,
+      body: trans2.markdown_profiles.body
     },
     avatar_radius: {
       default: 50,
@@ -64104,18 +64086,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       type: "range",
       css: "avatar-radius",
       suffix: "%",
-      title: trans.avatar_radius.name,
-      body: trans.avatar_radius.body
+      title: trans2.avatar_radius.name,
+      body: trans2.avatar_radius.body
     },
     hue_from_album: {
       default: true,
       type: "checkbox",
-      title: trans.hue_from_album
+      title: trans2.hue_from_album
     },
     seasonal: {
       default: true,
-      title: trans.enable_seasons.name,
-      body: trans.enable_seasons.body,
+      title: trans2.enable_seasons.name,
+      body: trans2.enable_seasons.body,
       require_reload: true
     },
     seasonal_particles: {
@@ -64125,8 +64107,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     seasonal_particles_fps: {
       default: false,
       type: "checkbox",
-      title: trans.seasonal_particles_fps.name,
-      body: trans.seasonal_particles_fps.body
+      title: trans2.seasonal_particles_fps.name,
+      body: trans2.seasonal_particles_fps.body
     },
     seasonal_overlays: {
       default: true
@@ -64134,17 +64116,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     profile_header_own: {
       default: true,
       type: "checkbox",
-      title: trans.own_profile
+      title: trans2.own_profile
     },
     profile_header_others: {
       default: true,
       type: "checkbox",
-      title: trans.other_profiles
+      title: trans2.other_profiles
     },
     profile_avi_background: {
       default: false,
-      title: trans.profile_avi_background.name,
-      body: trans.profile_avi_background.body
+      title: trans2.profile_avi_background.name,
+      body: trans2.profile_avi_background.body
     },
     profile_shortcut: {
       default: "",
@@ -64152,9 +64134,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       avatar: true,
       wait: true,
       max: 40,
-      title: trans.profile_shortcut.name,
-      body: trans.profile_shortcut.body,
-      placeholder: trans.enter_username,
+      title: trans2.profile_shortcut.name,
+      body: trans2.profile_shortcut.body,
+      placeholder: trans2.enter_username,
       warn_if_matches_auth: true
     },
     font: {
@@ -64162,9 +64144,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       default: "",
       type: "text",
       max: 120,
-      title: trans.font.name,
-      body: trans.font.body,
-      placeholder: trans.enter_font_names
+      title: trans2.font.name,
+      body: trans2.font.body,
+      placeholder: trans2.enter_font_names
     },
     font_weight: {
       css: "custom_font_weight",
@@ -64173,8 +64155,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       max: 600,
       step: 10,
       type: "range",
-      title: trans.font_weight.name,
-      body: trans.font_weight.body
+      title: trans2.font_weight.name,
+      body: trans2.font_weight.body
     },
     font_weight_medium: {
       css: "custom_font_weight_medium",
@@ -64183,8 +64165,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       max: 750,
       step: 10,
       type: "range",
-      title: trans.font_weight_medium.name,
-      body: trans.font_weight_medium.body
+      title: trans2.font_weight_medium.name,
+      body: trans2.font_weight_medium.body
     },
     font_weight_bold: {
       css: "custom_font_weight_bold",
@@ -64193,19 +64175,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       max: 900,
       step: 10,
       type: "range",
-      title: trans.font_weight_bold.name,
-      body: trans.font_weight_bold.body
+      title: trans2.font_weight_bold.name,
+      body: trans2.font_weight_bold.body
     },
     font_emoji: {
       default: true,
-      title: trans.font_emoji.name,
-      body: trans.font_emoji.body,
+      title: trans2.font_emoji.name,
+      body: trans2.font_emoji.body,
       platforms: ["win32", "linux", "android", "other"]
     },
     grid_glow: {
       default: true,
-      title: trans.grid_glow.name,
-      body: trans.grid_glow.body
+      title: trans2.grid_glow.name,
+      body: trans2.grid_glow.body
     },
     default_avatar_action: {
       default: "expand",
@@ -64213,97 +64195,97 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     collage_title: {
       default: true,
-      title: trans.collage_title.name,
-      body: trans.collage_title.body
+      title: trans2.collage_title.name,
+      body: trans2.collage_title.body
     },
     collage_grid_text: {
       default: true,
-      title: trans.collage_grid_text
+      title: trans2.collage_grid_text
     },
     collage_grid_plays: {
       default: true,
-      title: trans.collage_grid_plays
+      title: trans2.collage_grid_plays
     },
     collage_grid_gap: {
       default: true,
-      title: trans.collage_grid_gap.name,
-      body: trans.collage_grid_gap.body
+      title: trans2.collage_grid_gap.name,
+      body: trans2.collage_grid_gap.body
     },
     hu_tao: {
       default: "",
       type: "text",
       max: 40,
-      placeholder: trans.enter_password
+      placeholder: trans2.enter_password
     },
     activities: {
       default: true,
-      title: trans.activity_tracking.name,
-      body: trans.activity_tracking.body
+      title: trans2.activity_tracking.name,
+      body: trans2.activity_tracking.body
     },
     activity_shout: {
       default: true,
-      title: trans.shouts,
-      body: trans.activity.types.shout,
+      title: trans2.shouts,
+      body: trans2.activity.types.shout,
       type: "checkbox",
       icon: "icon-16-shoutbox",
       horizontal: true
     },
     activity_image: {
       default: true,
-      title: trans.photos,
-      body: trans.activity.types.image,
+      title: trans2.photos,
+      body: trans2.activity.types.image,
       type: "checkbox",
       icon: "icon-16-gallery-vertical",
       horizontal: true
     },
     activity_obsess: {
       default: true,
-      title: trans.obsessions,
-      body: trans.activity.types.obsess,
+      title: trans2.obsessions,
+      body: trans2.activity.types.obsess,
       type: "checkbox",
       icon: "icon-16-obsession",
       horizontal: true
     },
     activity_love: {
       default: true,
-      title: trans.loved,
-      body: trans.activity.types.love,
+      title: trans2.loved,
+      body: trans2.activity.types.love,
       type: "checkbox",
       icon: "icon-16-heart",
       horizontal: true
     },
     activity_bookmark: {
       default: true,
-      title: trans.bookmarks,
-      body: trans.activity.types.bookmark,
+      title: trans2.bookmarks,
+      body: trans2.activity.types.bookmark,
       type: "checkbox",
       icon: "icon-16-bookmark",
       horizontal: true
     },
     activity_wiki: {
       default: true,
-      title: trans.wiki,
-      body: trans.activity.types.wiki,
+      title: trans2.wiki,
+      body: trans2.activity.types.wiki,
       type: "checkbox",
       icon: "icon-16-bio",
       horizontal: true
     },
     activity_install: {
       default: true,
-      title: trans.installation,
-      body: trans.activity.types.install,
+      title: trans2.installation,
+      body: trans2.activity.types.install,
       type: "checkbox",
       icon: "icon-16-download",
       horizontal: true
     },
     rabbit: {
       default: true,
-      title: trans.use_quick_switcher.name,
-      body: trans.use_quick_switcher.body
+      title: trans2.use_quick_switcher.name,
+      body: trans2.use_quick_switcher.body
     },
     rabbit_search: {
       default: "d",
-      title: trans.search,
+      title: trans2.search,
       type: "text",
       min: 1,
       max: 1,
@@ -64314,7 +64296,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     rabbit_primary: {
       default: "k",
-      title: trans.open,
+      title: trans2.open,
       type: "text",
       min: 1,
       max: 1,
@@ -64325,7 +64307,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     rabbit_profile: {
       default: "p",
-      title: trans.profile,
+      title: trans2.profile,
       type: "text",
       min: 1,
       max: 1,
@@ -64336,7 +64318,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     rabbit_shortcut: {
       default: "s",
-      title: trans.starred_friend.name,
+      title: trans2.starred_friend.name,
       type: "text",
       min: 1,
       max: 1,
@@ -64347,7 +64329,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     rabbit_bleh_settings: {
       default: "b",
-      title: trans.settings,
+      title: trans2.settings,
       type: "text",
       min: 1,
       max: 1,
@@ -64358,38 +64340,38 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     prefer_no_redirect: {
       default: true,
-      title: trans.prefer_no_redirect.name,
-      body: trans.prefer_no_redirect.body
+      title: trans2.prefer_no_redirect.name,
+      body: trans2.prefer_no_redirect.body
     },
     inbox_view: {
       default: "notifications",
       type: "tabs",
       values: {
         notifications: {
-          name: trans.notifications
+          name: trans2.notifications
         },
         messages: {
-          name: trans.messages
+          name: trans2.messages
         }
       }
     },
     navigation_items: {
       default: ["home", "library", "shouts"],
       type: "list",
-      title: trans.navigation_items.name,
-      body: trans.navigation_items.body,
+      title: trans2.navigation_items.name,
+      body: trans2.navigation_items.body,
       predefined: true
     },
     navigation_language: {
       default: true,
       type: "checkbox",
-      title: trans.navigation_language
+      title: trans2.navigation_language
     },
     branding_type: {
       default: "bleh",
       type: "radio",
-      title: trans.branding_type.name,
-      body: trans.branding_type.body,
+      title: trans2.branding_type.name,
+      body: trans2.branding_type.body,
       values: {
         bleh: {
           name: "bleh"
@@ -64402,45 +64384,45 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     expand_tracks: {
       default: "active",
       type: "radio",
-      title: trans.expand_tracks.name,
-      body: trans.expand_tracks.body,
+      title: trans2.expand_tracks.name,
+      body: trans2.expand_tracks.body,
       values: {
         always: {
-          name: trans.expand_tracks_always
+          name: trans2.expand_tracks_always
         },
         active: {
-          name: trans.expand_tracks_when_active
+          name: trans2.expand_tracks_when_active
         },
         never: {
-          name: trans.never
+          name: trans2.never
         }
       },
       incompatible: { stacked_chartlist_info: false }
     },
     rain: {
       default: false,
-      title: trans.rain.name,
-      body: trans.rain.body,
+      title: trans2.rain.name,
+      body: trans2.rain.body,
       require_reload: true
     },
     collage_centered: {
       default: true,
-      title: trans.collage_centered.name,
-      body: trans.collage_centered.body
+      title: trans2.collage_centered.name,
+      body: trans2.collage_centered.body
     },
     static_gifs: {
       default: "always",
       type: "radio",
-      title: trans.static_gifs,
+      title: trans2.static_gifs,
       values: {
         always: {
-          name: trans.always_animate
+          name: trans2.always_animate
         },
         hover: {
-          name: trans.only_on_hover
+          name: trans2.only_on_hover
         },
         never: {
-          name: trans.never
+          name: trans2.never
         }
       },
       new_release: true,
@@ -64449,17 +64431,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     static_avatars: {
       default: false,
       type: "checkbox",
-      title: trans.static_avatars
+      title: trans2.static_avatars
     },
     static_music: {
       default: true,
       type: "checkbox",
-      title: trans.static_music
+      title: trans2.static_music
     },
     static_banners: {
       default: true,
       type: "checkbox",
-      title: trans.static_banners,
+      title: trans2.static_banners,
       new_release: true
     },
     trusted_sites: {
@@ -64472,7 +64454,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       min: 0,
       max: 360,
       step: 1,
-      title: trans.hue,
+      title: trans2.hue,
       vertical: true
     },
     profile_sat: {
@@ -64481,7 +64463,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       min: 0,
       max: 2,
       step: 0.01,
-      title: trans.sat,
+      title: trans2.sat,
       vertical: true
     },
     profile_lit: {
@@ -64490,21 +64472,21 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       min: 0,
       max: 1.5,
       step: 0.01,
-      title: trans.lit,
+      title: trans2.lit,
       vertical: true
     },
     friends: {
       default: [],
       type: "list",
-      title: trans.friends,
-      body: trans.friends_setting,
+      title: trans2.friends,
+      body: trans2.friends_setting,
       warn_if_matches_auth: true
     },
     starred_friend: {
       default: "",
       type: "select",
-      title: trans.starred_friend.name,
-      body: trans.starred_friend.body
+      title: trans2.starred_friend.name,
+      body: trans2.starred_friend.body
     },
     dismissed: {
       default: [],
@@ -64512,8 +64494,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     oracle_beta: {
       default: false,
-      title: trans.oracle_beta.name,
-      body: trans.oracle_beta.body,
+      title: trans2.oracle_beta.name,
+      body: trans2.oracle_beta.body,
       beta: true,
       new_release: true
     },
@@ -64524,13 +64506,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     romanise_jp: {
       default: false,
       type: "checkbox",
-      title: trans.romanise_jp,
+      title: trans2.romanise_jp,
       new_release: true
     },
     romanise_ko: {
       default: false,
       type: "checkbox",
-      title: trans.romanise_ko,
+      title: trans2.romanise_ko,
       new_release: true
     },
     music_links: {
@@ -64547,15 +64529,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         "instagram"
       ],
       type: "list",
-      title: trans.music_links.name,
-      body: trans.music_links.body,
+      title: trans2.music_links.name,
+      body: trans2.music_links.body,
       new_release: true,
       predefined: true
     },
     inverse_compare: {
       default: false,
-      title: trans.inverse_compare.name,
-      body: trans.inverse_compare.body,
+      title: trans2.inverse_compare.name,
+      body: trans2.inverse_compare.body,
       new_release: true
     }
   };
@@ -72219,7 +72201,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const isHorizontal = this.isHorizontal();
       const ticks = this.ticks;
       const ticksLength = ticks.length + (offset3 ? 1 : 0);
-      const tl2 = getTickMarkLength(grid);
+      const tl3 = getTickMarkLength(grid);
       const items = [];
       const borderOpts = border.setContext(this.getContext());
       const axisWidth = borderOpts.display ? borderOpts.width : 0;
@@ -72231,7 +72213,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let tx1, ty1, tx2, ty2, x1, y1, x2, y2;
       if (position === "top") {
         borderValue = alignBorderValue(this.bottom);
-        ty1 = this.bottom - tl2;
+        ty1 = this.bottom - tl3;
         ty2 = borderValue - axisHalfWidth;
         y1 = alignBorderValue(chartArea.top) + axisHalfWidth;
         y2 = chartArea.bottom;
@@ -72240,10 +72222,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         y1 = chartArea.top;
         y2 = alignBorderValue(chartArea.bottom) - axisHalfWidth;
         ty1 = borderValue + axisHalfWidth;
-        ty2 = this.top + tl2;
+        ty2 = this.top + tl3;
       } else if (position === "left") {
         borderValue = alignBorderValue(this.right);
-        tx1 = this.right - tl2;
+        tx1 = this.right - tl3;
         tx2 = borderValue - axisHalfWidth;
         x1 = alignBorderValue(chartArea.left) + axisHalfWidth;
         x2 = chartArea.right;
@@ -72252,7 +72234,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         x1 = chartArea.left;
         x2 = alignBorderValue(chartArea.right) - axisHalfWidth;
         tx1 = borderValue + axisHalfWidth;
-        tx2 = this.left + tl2;
+        tx2 = this.left + tl3;
       } else if (axis === "x") {
         if (position === "center") {
           borderValue = alignBorderValue((chartArea.top + chartArea.bottom) / 2 + 0.5);
@@ -72264,7 +72246,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         y1 = chartArea.top;
         y2 = chartArea.bottom;
         ty1 = borderValue + axisHalfWidth;
-        ty2 = ty1 + tl2;
+        ty2 = ty1 + tl3;
       } else if (axis === "y") {
         if (position === "center") {
           borderValue = alignBorderValue((chartArea.left + chartArea.right) / 2);
@@ -72274,7 +72256,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           borderValue = alignBorderValue(this.chart.scales[positionAxisID].getPixelForValue(value));
         }
         tx1 = borderValue - axisHalfWidth;
-        tx2 = tx1 - tl2;
+        tx2 = tx1 - tl3;
         x1 = chartArea.left;
         x2 = chartArea.right;
       }
@@ -72332,8 +72314,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const isHorizontal = this.isHorizontal();
       const ticks = this.ticks;
       const { align, crossAlign, padding, mirror } = optionTicks;
-      const tl2 = getTickMarkLength(options.grid);
-      const tickAndPadding = tl2 + padding;
+      const tl3 = getTickMarkLength(options.grid);
+      const tickAndPadding = tl3 + padding;
       const hTickAndPadding = mirror ? -padding : tickAndPadding;
       const rotation = -toRadians(this.labelRotation);
       const items = [];
@@ -72346,11 +72328,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         y = this.top + hTickAndPadding;
         textAlign = this._getXAxisLabelAlignment();
       } else if (position === "left") {
-        const ret = this._getYAxisLabelAlignment(tl2);
+        const ret = this._getYAxisLabelAlignment(tl3);
         textAlign = ret.textAlign;
         x = ret.x;
       } else if (position === "right") {
-        const ret = this._getYAxisLabelAlignment(tl2);
+        const ret = this._getYAxisLabelAlignment(tl3);
         textAlign = ret.textAlign;
         x = ret.x;
       } else if (axis === "x") {
@@ -72370,7 +72352,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           const value = position[positionAxisID];
           x = this.chart.scales[positionAxisID].getPixelForValue(value);
         }
-        textAlign = this._getYAxisLabelAlignment(tl2).textAlign;
+        textAlign = this._getYAxisLabelAlignment(tl3).textAlign;
       }
       if (axis === "y") {
         if (align === "start") {
@@ -72506,10 +72488,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       return align;
     }
-    _getYAxisLabelAlignment(tl2) {
+    _getYAxisLabelAlignment(tl3) {
       const { position, ticks: { crossAlign, mirror, padding } } = this.options;
       const labelSizes = this._getLabelSizes();
-      const tickAndPadding = tl2 + padding;
+      const tickAndPadding = tl3 + padding;
       const widest = labelSizes.widest.width;
       let textAlign;
       let x;
