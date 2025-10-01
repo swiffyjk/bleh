@@ -11031,6 +11031,7 @@
     }
 
     .date-range-picker-form {
+        gap: unset !important;
         margin-top: var(--card-gap) !important;
         padding-top: var(--card-gap);
         border-top: 1px solid var(--card-border-base);

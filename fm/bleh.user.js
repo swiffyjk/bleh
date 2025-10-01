@@ -61779,7 +61779,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     format_guest_features: {
       default: true,
       title: trans2.format_guest_features.name,
-      body: trans2.format_guest_features.body
+      body: trans2.format_guest_features.body,
+      require_reload: "partial"
     },
     show_guest_features: {
       default: false,

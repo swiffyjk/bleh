@@ -700,7 +700,8 @@ export let settings_store = {
     format_guest_features: {
         default: true,
         title: trans.format_guest_features.name,
-        body: trans.format_guest_features.body
+        body: trans.format_guest_features.body,
+        require_reload: 'partial'
     },
     show_guest_features: {
         default: false,
