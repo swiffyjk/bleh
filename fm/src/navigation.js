@@ -7,7 +7,7 @@
 import { settings } from './build/config';
 import { auth, discord, page, root } from './build/page';
 import { stored_season } from './build/seasonal';
-import { lang, lang_info, tl, trans, trans_legacy } from './build/trans';
+import { lang, lang_info, tl, trans } from './build/trans';
 import { create_badge, load_badges } from './components/badge';
 import { version } from './main';
 import { ff } from './sku';
@@ -1218,6 +1218,7 @@ export async function live_status() {
                 artist.textContent
             );
 
+            track.classList.add('smart-title');
             render(track, smart_title(formatted[0], formatted[1]));
             artist = html.node`<span class="artist">${smart_artists(formatted[2], formatted[3])}</span>`;
         } else if (settings.corrections) {

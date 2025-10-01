@@ -51620,6 +51620,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           track.textContent,
           artist.textContent
         );
+        track.classList.add("smart-title");
         render(track, smart_title(formatted[0], formatted[1]));
         artist = html.node`<span class="artist">${smart_artists(formatted[2], formatted[3])}</span>`;
       } else if (settings.corrections) {
@@ -52187,7 +52188,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       if (position) {
         tippy_esm_default(position, {
-          content: trans_legacy.en.charts.view
+          content: tl2(trans2.view_the_charts)
         });
       }
       let bg;
@@ -56529,6 +56530,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Paradas",
       ja: "\u30C1\u30E3\u30FC\u30C8",
       sv: "Topplistor"
+    },
+    view_the_charts: {
+      en: "View the charts"
     },
     welcome_back_user: {
       en: "Welcome back {user}!",

@@ -8,7 +8,7 @@ import { settings } from '../build/config';
 import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
 import { romanise, sanitise } from '../build/tools';
-import { tl, trans, trans_legacy } from '../build/trans';
+import { tl, trans } from '../build/trans';
 import {
     artist_title,
     correct_artist,
@@ -168,7 +168,7 @@ export function bleh_artists() {
 
         if (position) {
             tippy(position, {
-                content: trans_legacy.en.charts.view
+                content: tl(trans.view_the_charts)
             });
         }
 

@@ -975,6 +975,9 @@ export const trans = {
         ja: 'チャート',
         sv: 'Topplistor'
     },
+    view_the_charts: {
+        en: 'View the charts'
+    },
     welcome_back_user: {
         en: 'Welcome back {user}!',
         de: 'Willkommen züruck {user}!',
