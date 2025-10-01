@@ -30505,8 +30505,12 @@
     const negative_btn = vote_buttons.querySelector(
       ':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)'
     ).cloneNode(true);
-    const positive = parseInt(positive_btn.lastChild.textContent.trim());
-    const negative = parseInt(negative_btn.lastChild.textContent.trim());
+    const positive = parseInt(
+      positive_btn.querySelector(".gallery-image-votes").lastChild.textContent.trim()
+    );
+    const negative = parseInt(
+      negative_btn.querySelector(".gallery-image-votes").lastChild.textContent.trim()
+    );
     const number = positive - negative;
     const is_negative = number < 0;
     let vote_badge = image_title_container.querySelector(".vote-number");

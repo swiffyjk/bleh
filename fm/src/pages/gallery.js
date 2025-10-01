@@ -147,8 +147,16 @@ export function bleh_gallery() {
         )
         .cloneNode(true);
 
-    const positive = parseInt(positive_btn.lastChild.textContent.trim());
-    const negative = parseInt(negative_btn.lastChild.textContent.trim());
+    const positive = parseInt(
+        positive_btn
+            .querySelector('.gallery-image-votes')
+            .lastChild.textContent.trim()
+    );
+    const negative = parseInt(
+        negative_btn
+            .querySelector('.gallery-image-votes')
+            .lastChild.textContent.trim()
+    );
 
     const number = positive - negative;
     const is_negative = number < 0;
