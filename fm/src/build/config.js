@@ -819,7 +819,10 @@ export let settings_store = {
         body: trans.seasonal_particles_fps.body
     },
     seasonal_overlays: {
-        default: true
+        default: true,
+        type: 'checkbox',
+        title: trans.seasonal_overlays.name,
+        body: trans.seasonal_overlays.body
     },
     profile_header_own: {
         default: true,
@@ -899,7 +902,17 @@ export let settings_store = {
     },
     default_avatar_action: {
         default: 'expand',
-        type: 'radio'
+        type: 'radio',
+        title: trans.default_avatar_action.name,
+        body: trans.default_avatar_action.body,
+        values: {
+            expand: {
+                name: trans.expand
+            },
+            gallery: {
+                name: trans.photos
+            }
+        }
     },
     collage_title: {
         default: true,
@@ -985,6 +998,12 @@ export let settings_store = {
         type: 'checkbox',
         icon: 'icon-16-download',
         horizontal: true
+    },
+    simulate_scroll: {
+        default: true,
+        title: trans.simulate_scroll.name,
+        body: trans.simulate_scroll.body,
+        require_reload: 'partial'
     },
     rabbit: {
         default: true,

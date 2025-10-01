@@ -47693,6 +47693,35 @@
           id: "music_links",
           list: page.state.music_links
         })}
+                        ${setting({ id: "default_avatar_action" })}
+                    </div>
+                    <div class="inner-preview pad flex">
+                        <section class="catalogue-tags">
+                            <ul class="tags-list tags-list--global">
+                                <li class="tag">
+                                    <a href="/tag/pop">pop</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/country">country</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/singer-songwriter"
+                                        >singer-songwriter</a
+                                    >
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/female+vocalists"
+                                        >female vocalists</a
+                                    >
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/synthpop">synthpop</a>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: "gendered_tags" })}
                     </div>
                 </section>
                 ${!page.mobile ? html.node`
@@ -47778,37 +47807,6 @@
                 </div>
             </section>
             ` : ""}
-                <section class="bleh--panel">
-                    <h4>${trans_legacy.en.settings.customise.display.name}</h4>
-                    <div class="inner-preview pad flex">
-                        <section class="catalogue-tags">
-                            <ul class="tags-list tags-list--global">
-                                <li class="tag">
-                                    <a href="/tag/pop">pop</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/country">country</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/singer-songwriter"
-                                        >singer-songwriter</a
-                                    >
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/female+vocalists"
-                                        >female vocalists</a
-                                    >
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/synthpop">synthpop</a>
-                                </li>
-                            </ul>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "gendered_tags" })}
-                    </div>
-                </section>
             `
       );
     } else if (page_id == "playback") {
@@ -47920,7 +47918,7 @@
                     </div>
                 </section>
                 <section class="bleh--panel">
-                    <h4>${trans_legacy.en.settings.corrections.formatting}</h4>
+                    <h4>${tl2(trans2.smart_music_titles)}</h4>
                     <div class="inner-preview pad flex">
                         <section
                             class="redesigned-header mockup redesigned-track-header no-top-margin"
@@ -48028,67 +48026,6 @@
                 </div>
             </section>
             ` : ""}
-            `
-      );
-    } else if (page_id == "customise") {
-      register_skip_to([
-        {
-          id: "profile_avi_background",
-          name: trans_legacy.en.settings.customise.profile_header.see_type
-        },
-        {
-          id: "profile_header_own",
-          name: trans_legacy.en.settings.customise.profile_header.view_on
-        },
-        {
-          id: "show_your_progress",
-          name: trans_legacy.en.settings.customise.show_your_progress.name
-        }
-      ]);
-      render(
-        page.structure.main,
-        html`
-                <div class="bleh--panel">
-                    <h4>
-                        ${trans_legacy.en.settings.customise.profile_header.name}
-                    </h4>
-
-                    <div class="sep"></div>
-                </div>
-                <div class="bleh--panel check-artist-hover">
-                    <h4 class="top-header">${tl2(trans2.layout)}</h4>
-                    <h4>${trans_legacy.en.settings.layout.header}</h4>
-                    <div class="inner-preview pad">
-                        <div class="profile-mockup artist">
-                            <div class="mockup-header">
-                                <div class="mockup-avatar-wrap">
-                                    <img
-                                        class="mockup-avatar"
-                                        src="https://lastfm.freetls.fastly.net/i/u/avatar170s/383d6c03304e720075d0050e8a6a4644"
-                                    />
-                                </div>
-                                <div class="mockup-info">
-                                    <div class="mockup-subtext"></div>
-                                    <div class="mockup-name"></div>
-                                </div>
-                            </div>
-                            <div class="mockup-container">
-                                <div class="mockup-col-main">
-                                    <div class="mockup-panel"></div>
-                                    <div class="mockup-panel main"></div>
-                                </div>
-                                <div class="mockup-col-sidebar">
-                                    <div class="mockup-panel"></div>
-                                    <div class="mockup-panel main"></div>
-                                </div>
-                            </div>
-                            <div
-                                class="profile-mockup-background"
-                                style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/383d6c03304e720075d0050e8a6a4644);"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
             `
       );
     } else if (page_id == "seasonal") {
@@ -48205,36 +48142,7 @@
                             </div>
                         </div>
                         ${setting({ id: "seasonal_particles_fps" })}
-                        <div
-                            class="setting hide-if-seasonal-disabled"
-                            data-type="toggle"
-                            id="container-seasonal_overlays"
-                            onclick="_update_item('seasonal_overlays')"
-                        >
-                            <button
-                                class="btn reset"
-                                onclick="_reset_item('seasonal_overlays')"
-                            >
-                                ${tl2(trans2.reset)}
-                            </button>
-                            <div class="heading">
-                                <h5>
-                                    ${trans_legacy.en.settings.customise.seasonal.overlays.name}
-                                </h5>
-                                <p>
-                                    ${trans_legacy.en.settings.customise.seasonal.overlays.bio}
-                                </p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button
-                                    class="toggle"
-                                    id="toggle-seasonal_overlays"
-                                    aria-checked="true"
-                                >
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
+                        ${setting({ id: "seasonal_overlays" })}
                     </div>
                 </div>
             `
@@ -48475,38 +48383,6 @@
                     <div class="setting-group">
                         ${setting({ id: "bio_markdown" })}
                         ${setting({ id: "show_your_progress" })}
-                    </div>
-                    <div class="setting-group">
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>
-                                    ${trans_legacy.en.settings.layout.avatar_action.name}
-                                </h5>
-                                <p>
-                                    ${trans_legacy.en.settings.layout.avatar_action.bio}
-                                </p>
-                            </div>
-                            <div class="primary-selections artist-hover-image">
-                                <div
-                                    class="btn primary-selection"
-                                    id="toggle-default_avatar_action-expand"
-                                    data-toggle="default_avatar_action"
-                                    data-toggle-value="expand"
-                                    onclick="_update_item('default_avatar_action', 'expand')"
-                                >
-                                    <h5>${tl2(trans2.expand)}</h5>
-                                </div>
-                                <div
-                                    class="btn primary-selection"
-                                    id="toggle-default_avatar_action-gallery"
-                                    data-toggle="default_avatar_action"
-                                    data-toggle-value="gallery"
-                                    onclick="_update_item('default_avatar_action', 'gallery')"
-                                >
-                                    <h5>${tl2(trans2.photos)}</h5>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </section>
                 <section class="bleh--panel">
@@ -49031,7 +48907,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       christmas: [
         {
           type: "season",
-          name: trans_legacy.en.settings.customise.seasonal.nonsense,
+          name: tl2(trans2.seasonal.presets.nonsense),
           sets: {
             hue: 352,
             sat: 1.8,
@@ -49040,7 +48916,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         },
         {
           type: "season",
-          name: trans_legacy.en.settings.customise.seasonal.fruitcake,
+          name: tl2(trans2.seasonal.presets.fruitcake),
           sets: {
             hue: 24,
             sat: 0.93,
@@ -49049,7 +48925,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         },
         {
           type: "season",
-          name: trans_legacy.en.settings.customise.seasonal.mistletoe,
+          name: tl2(trans2.seasonal.presets.mistletoe),
           sets: {
             hue: 130,
             sat: 0.45,
@@ -49058,7 +48934,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         },
         {
           type: "season",
-          name: trans_legacy.en.settings.customise.seasonal.festival,
+          name: tl2(trans2.seasonal.presets.festival),
           sets: {
             hue: 240,
             sat: 1.4,
@@ -49349,12 +49225,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         } catch (e) {
           dialog({
             id: "import_failed",
-            title: trans_legacy.en.settings.actions.import.modals.failed.name,
+            title: tl2(trans2.import_failed),
             body: html.node`
-                                <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
+                                <p class="big-modal-alert alert-error">${tl2(trans2.import_failed.notice)}</p>
                                 <div class="modal-footer">
                                     <div class="fill"></div>
-                                    <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
+                                    <button class="btn primary done" onclick=${() => dialog_rm({ id: "import_failed" })}>
                                         ${tl2(trans2.done)}
                                     </button>
                                 </div>
@@ -52796,7 +52672,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     let content_top = document.body.querySelector(".content-top");
     checkup_page_structure(false, content_top);
-    if (auth.avatar) register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    if (auth.avatar)
+      register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     else register_background(null);
     page.type = "bleh_setup";
     page.subpage = "";
@@ -52810,9 +52687,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page.structure.content.classList.add("cards-view");
     let masthead = document.body.querySelector(".masthead");
     masthead.classList.add("in-setup");
-    render(page.structure.main, html`
-        <section class="setup" ref=${(el) => page.structure.setup = el}>
-            ${auth.name ? html.node`
+    render(
+      page.structure.main,
+      html`
+            <section class="setup" ref=${(el) => page.structure.setup = el}>
+                ${auth.name ? html.node`
             <div class="avatar">
                 <img src=${auth.avatar.replace("/avatar42s/", "/avatar170s/")} alt=${tl2(trans2.your_avatar)}>
             </div>
@@ -52833,11 +52712,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </div>
             </div>
             `}
-            <div class="sep"></div>
-            <div class="setup-content" ref=${(el) => page.structure.setup_content = el}></div>
-            <div class="setup-footer" ref=${(el) => page.structure.setup_footer = el}></div>
-        </section>
-    `);
+                <div class="sep"></div>
+                <div
+                    class="setup-content"
+                    ref=${(el) => page.structure.setup_content = el}
+                ></div>
+                <div
+                    class="setup-footer"
+                    ref=${(el) => page.structure.setup_footer = el}
+                ></div>
+            </section>
+        `
+    );
     bleh_setup_start();
   }
   unsafeWindow._setup = function() {
@@ -52848,9 +52734,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      render(page.structure.setup_content, html`
-            <p>${{ html: tl2(trans2.welcome_to_bleh) }}</p>
-        `);
+      render(
+        page.structure.setup_content,
+        html` <p>${{ html: tl2(trans2.welcome_to_bleh) }}</p> `
+      );
       page.structure.setup_footer.innerHTML = `
             <a class="see-more cancel" href="${root}user/${auth.name}">
                 ${tl2(trans2.skip)}
@@ -52870,105 +52757,134 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let bubbles;
     function render_tip() {
       adaptive_tip.setAttribute("aria-hidden", !settings.theme_schedule);
-      render(adaptive_tip, html`
-            ${tl2(trans2.adaptive_tip, { "day": tl2(trans2.themes[settings.theme_day]), "night": tl2(trans2.themes[settings.theme_night]) })}<a onclick=${() => {
-        dialog({
-          id: "auto_theme",
-          title: tl2(trans2.themes.name),
-          body: html.node`
+      render(
+        adaptive_tip,
+        html`
+                ${tl2(trans2.adaptive_tip, {
+          day: tl2(trans2.themes[settings.theme_day]),
+          night: tl2(trans2.themes[settings.theme_night])
+        })}<a
+                    onclick=${() => {
+          dialog({
+            id: "auto_theme",
+            title: tl2(trans2.themes.name),
+            body: html.node`
                         <div class="setting-group">
-                            ${theme_day = setting({ id: "theme_day", list: [
-            {
-              value: "light",
-              text: tl2(trans2.themes.light)
-            },
-            {
-              value: "ink",
-              text: tl2(trans2.themes.ink)
-            },
-            {
-              value: "dark",
-              text: tl2(trans2.themes.dark)
-            },
-            {
-              value: "darker",
-              text: tl2(trans2.themes.darker)
-            },
-            {
-              value: "oled",
-              text: tl2(trans2.themes.oled)
-            }
-          ], func: () => {
-            render_tip();
-            bubbles.re_render();
-            match2();
-          } })}
-                            ${theme_night = setting({ id: "theme_night", list: [
-            {
-              value: "light",
-              text: tl2(trans2.themes.light)
-            },
-            {
-              value: "ink",
-              text: tl2(trans2.themes.ink)
-            },
-            {
-              value: "dark",
-              text: tl2(trans2.themes.dark)
-            },
-            {
-              value: "darker",
-              text: tl2(trans2.themes.darker)
-            },
-            {
-              value: "oled",
-              text: tl2(trans2.themes.oled)
-            }
-          ], func: () => {
-            render_tip();
-            bubbles.re_render();
-            match2();
-          } })}
+                            ${theme_day = setting({
+              id: "theme_day",
+              list: [
+                {
+                  value: "light",
+                  text: tl2(trans2.themes.light)
+                },
+                {
+                  value: "ink",
+                  text: tl2(trans2.themes.ink)
+                },
+                {
+                  value: "dark",
+                  text: tl2(trans2.themes.dark)
+                },
+                {
+                  value: "darker",
+                  text: tl2(trans2.themes.darker)
+                },
+                {
+                  value: "oled",
+                  text: tl2(trans2.themes.oled)
+                }
+              ],
+              func: () => {
+                render_tip();
+                bubbles.re_render();
+                match2();
+              }
+            })}
+                            ${theme_night = setting({
+              id: "theme_night",
+              list: [
+                {
+                  value: "light",
+                  text: tl2(trans2.themes.light)
+                },
+                {
+                  value: "ink",
+                  text: tl2(trans2.themes.ink)
+                },
+                {
+                  value: "dark",
+                  text: tl2(trans2.themes.dark)
+                },
+                {
+                  value: "darker",
+                  text: tl2(trans2.themes.darker)
+                },
+                {
+                  value: "oled",
+                  text: tl2(trans2.themes.oled)
+                }
+              ],
+              func: () => {
+                render_tip();
+                bubbles.re_render();
+                match2();
+              }
+            })}
                         </div>
                         <p class="card-tip">${tl2(trans2.theme_schedule)}</p>
                     `
-        });
-      }}>${tl2(trans2.change_schedule)}</a>
-        `);
+          });
+        }}
+                    >${tl2(trans2.change_schedule)}</a
+                >
+            `
+      );
     }
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      render(page.structure.setup_content, html`
-            <div class="setting-group">
-                <div class="setting" data-type="action">
-                    <div class="heading">
-                        <h5>${tl2(trans2.themes.name)}</h5>
+      render(
+        page.structure.setup_content,
+        html`
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl2(trans2.themes.name)}</h5>
+                        </div>
+                        <div class="info v">
+                            ${bubbles = theme_bubbles(() => {
+          sat_bg.compat();
+          render_tip();
+          match2();
+        })}
+                            <p
+                                class="card-tip"
+                                ref=${(el) => adaptive_tip = el}
+                            />
+                        </div>
                     </div>
-                    <div class="info v">
-                        ${bubbles = theme_bubbles(() => {
-        sat_bg.compat();
-        render_tip();
-        match2();
-      })}
-                        <p class="card-tip" ref=${(el) => adaptive_tip = el} />
+                    ${setting({ id: "solarium" })}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl2(trans2.hue)}</h5>
+                        </div>
+                        <div class="info swatch-info">
+                            <div
+                                id="colour_custom"
+                                class="swatch-group palette"
+                            ></div>
+                            <div class="sep swatch-sep" />
+                            <div
+                                id="colour_palette"
+                                class="swatch-group palette"
+                            ></div>
+                        </div>
                     </div>
-                </div>
-                ${setting({ id: "solarium" })}
-                <div class="setting" data-type="action">
-                    <div class="heading">
-                        <h5>${tl2(trans2.hue)}</h5>
-                    </div>
-                    <div class="info swatch-info">
-                        <div id="colour_custom" class="swatch-group palette"></div>
-                        <div class="sep swatch-sep" />
-                        <div id="colour_palette" class="swatch-group palette"></div>
-                    </div>
-                </div>
-                ${ff("card_saturation") ? html.node`
+                    ${ff("card_saturation") ? html.node`
                 ${sat_bg = setting({ id: "sat_bg" })}
                 ` : ""}
-            </div>
-        `);
+                </div>
+            `
+      );
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_accessibility()">
                 ${tl2(trans2.back)}
@@ -52988,15 +52904,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      render(page.structure.setup_content, html`
-            <p>${tl2(trans2.accessibility_explain)}</p>
-            <div class="settings">
-                <div class="setting-group">
-                    ${setting({ id: "reduced_motion" })}
-                    ${setting({ id: "underline_links" })}
+      render(
+        page.structure.setup_content,
+        html`
+                <p>${tl2(trans2.accessibility_explain)}</p>
+                <div class="settings">
+                    <div class="setting-group">
+                        ${setting({ id: "reduced_motion" })}
+                        ${setting({ id: "underline_links" })}
+                    </div>
                 </div>
-            </div>
-        `);
+            `
+      );
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup()">
                 ${tl2(trans2.back)}
@@ -53014,41 +52933,72 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      render(page.structure.setup_content, html`
-            <p>${tl2(trans2.music_explain)}</p>
-            <div class="settings">
-                <div class="inner-preview pad flex">
-                    <section class="redesigned-header mockup redesigned-track-header no-top-margin">
-                        <div class="avatar-side">
-                            <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg">
-                        </div>
-                        <div class="info-side">
-                            <div class="sub-text">${tl2(trans2.track)}</div>
-                            <div class="title-container">
-                                <h1 class="bleh--name-with-features">
-                                    <div class="title">California Love</div>
-                                    <div class="feat" data-bleh--tag-type="ft." data-bleh--tag-group="guests">ft. Dr. Dre, Roger Troutman</div>
-                                    <div class="feat" data-bleh--tag-type="- remix" data-bleh--tag-group="mixes">Remix</div>
-                                </h1>
-                                <h1 class="bleh--name-without-features">
-                                    California Love (ft. Dr. Dre, Roger Troutman) - Remix
-                                </h1>
+      render(
+        page.structure.setup_content,
+        html`
+                <p>${tl2(trans2.music_explain)}</p>
+                <div class="settings">
+                    <div class="inner-preview pad flex">
+                        <section
+                            class="redesigned-header mockup redesigned-track-header no-top-margin"
+                        >
+                            <div class="avatar-side">
+                                <img
+                                    src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg"
+                                />
                             </div>
-                            <h2>
-                                <a class="header-new-crumb">2Pac</a><span class="bleh--name-with-features">, </span>
-                                <a class="header-new-crumb bleh--name-with-features">Dr. Dre</a><span class="bleh--name-with-features">, </span>
-                                <a class="header-new-crumb bleh--name-with-features">Roger Troutman</a>
-                            </h2>
-                        </div>
-                    </section>
+                            <div class="info-side">
+                                <div class="sub-text">${tl2(trans2.track)}</div>
+                                <div class="title-container">
+                                    <h1 class="bleh--name-with-features">
+                                        <div class="title">California Love</div>
+                                        <div
+                                            class="feat"
+                                            data-bleh--tag-type="ft."
+                                            data-bleh--tag-group="guests"
+                                        >
+                                            ft. Dr. Dre, Roger Troutman
+                                        </div>
+                                        <div
+                                            class="feat"
+                                            data-bleh--tag-type="- remix"
+                                            data-bleh--tag-group="mixes"
+                                        >
+                                            Remix
+                                        </div>
+                                    </h1>
+                                    <h1 class="bleh--name-without-features">
+                                        California Love (ft. Dr. Dre, Roger
+                                        Troutman) - Remix
+                                    </h1>
+                                </div>
+                                <h2>
+                                    <a class="header-new-crumb">2Pac</a
+                                    ><span class="bleh--name-with-features"
+                                        >,
+                                    </span>
+                                    <a
+                                        class="header-new-crumb bleh--name-with-features"
+                                        >Dr. Dre</a
+                                    ><span class="bleh--name-with-features"
+                                        >,
+                                    </span>
+                                    <a
+                                        class="header-new-crumb bleh--name-with-features"
+                                        >Roger Troutman</a
+                                    >
+                                </h2>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: "corrections" })}
+                        ${setting({ id: "format_guest_features" })}
+                        ${setting({ id: "stacked_chartlist_info" })}
+                    </div>
                 </div>
-                <div class="setting-group">
-                    ${setting({ id: "corrections" })}
-                    ${setting({ id: "format_guest_features" })}
-                    ${setting({ id: "stacked_chartlist_info" })}
-                </div>
-            </div>
-        `);
+            `
+      );
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_themes()">
                 ${tl2(trans2.back)}
@@ -53067,29 +53017,48 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      render(page.structure.setup_content, html`
-            <p>${{ html: tl2(trans2.setup_end).replace("{a}", `<a href="${root}bleh">`).replace("{/a}", "</a>") }}</p>
-            <div class="mini-list">
-                <a class="btn mini" href="https://discord.gg/${discord}" target="_blank">
-                    <div class="mini-icon colourful" data-type="discord">
-                        <div class="bleh-icon" />
-                    </div>
-                    <div class="mini-info">
-                        <h5>${tl2(trans2.join_discord)}</h5>
-                    </div>
-                    <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right"></div>
-                </a>
-                <button class="btn mini" onclick=${() => sponsor()}>
-                    <div class="mini-icon colourful" data-type="sponsor">
-                        <div class="bleh-icon" />
-                    </div>
-                    <div class="mini-info">
-                        <h5>${tl2(trans2.sponsor)}</h5>
-                    </div>
-                    <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right"></div>
-                </button>
-            </div>
-        `);
+      render(
+        page.structure.setup_content,
+        html`
+                <p>
+                    ${{
+          html: tl2(trans2.setup_end).replace("{a}", `<a href="${root}bleh">`).replace("{/a}", "</a>")
+        }}
+                </p>
+                <div class="mini-list">
+                    <a
+                        class="btn mini"
+                        href="https://discord.gg/${discord}"
+                        target="_blank"
+                    >
+                        <div class="mini-icon colourful" data-type="discord">
+                            <div class="bleh-icon" />
+                        </div>
+                        <div class="mini-info">
+                            <h5>${tl2(trans2.join_discord)}</h5>
+                        </div>
+                        <div
+                            class="bleh-icon mini-arrow"
+                            style="--icon: var(--mask)"
+                            data-type="arrow-right"
+                        ></div>
+                    </a>
+                    <button class="btn mini" onclick=${() => sponsor()}>
+                        <div class="mini-icon colourful" data-type="sponsor">
+                            <div class="bleh-icon" />
+                        </div>
+                        <div class="mini-info">
+                            <h5>${tl2(trans2.sponsor)}</h5>
+                        </div>
+                        <div
+                            class="bleh-icon mini-arrow"
+                            style="--icon: var(--mask)"
+                            data-type="arrow-right"
+                        ></div>
+                    </button>
+                </div>
+            `
+      );
       if (auth.name) {
         page.structure.setup_footer.innerHTML = `
                 <button class="see-more cancel" onclick="_setup_music()">
@@ -53123,11 +53092,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     if (last_version_used != version.build) {
       notify({
-        title: trans_legacy.en.messaging.update.replace("{v}", `${version.build}.${version.sku}`),
+        title: tl2(trans2.you_are_up_to_date),
+        body: tl2(trans2.updated.notification, {
+          v: `${version.build}.${version.sku}`
+        }),
         persist: true,
-        icon: "icon-16-download"
+        icon: "icon-16-update"
       });
-      register_activity("update_bleh", [{ name: version.build, type: "bleh" }], `${root}bleh`);
+      register_activity(
+        "update_bleh",
+        [{ name: version.build, type: "bleh" }],
+        `${root}bleh`
+      );
       localStorage.setItem("bleh_last_version_used", version.build);
       request_changelog();
     }
@@ -53211,28 +53187,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       content: html.node`
             <div class="dialog-settings">
                 <div class="setting-group blend">
-                    <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
-                        <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl2(trans2.reset)}</button>
-                        <div class="heading">
-                            <h5>${trans_legacy.en.charts.scroll.name}</h5>
-                            <p>${trans_legacy.en.charts.scroll.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
+                    ${setting({ id: "simulate_scroll" })}
                 </div>
             </div>
         `,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        refresh_all(instance.popper);
-      }
+      trigger: "click"
     });
     chart_rows.forEach((row, index3) => {
       let chart_row = html.node`
@@ -56612,6 +56574,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ja: "\u97F3\u697D",
       sv: "Musik"
     },
+    smart_music_titles: {
+      en: "Smart music titles"
+    },
     playback: {
       en: "Playback",
       de: "Wiedergabe",
@@ -56705,6 +56670,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       },
       live: {
         en: "Counter is updating live"
+      },
+      presets: {
+        // these are seasonal exclusive colour presets
+        nonsense: {
+          // reference to https://open.spotify.com/track/7yogx3TwxGwSxO2QITsT2q
+          en: "A Nonsense Christmas"
+        },
+        fruitcake: {
+          // reference to https://open.spotify.com/album/7EisdwWcodpmHxgpGVE5Pg
+          en: "fruitcake"
+        },
+        mistletoe: {
+          en: "Mistletoe"
+        },
+        festival: {
+          en: "Christmas Eve"
+        }
       }
     },
     new_season: {
@@ -56750,6 +56732,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Snow particles use a drop-shadow glow for aesthetics with the added processing cost",
         de: "Schneepartikel verwenden f\xFCr die \xC4sthetik einen Glanzeffekt \u2013 erfordert zus\xE4tzliche Rechenleistung",
         sv: "Sn\xF6partiklarna anv\xE4nder en gl\xF6deffekt f\xF6r estetiska sj\xE4l, med lite extra datorbelastning"
+      }
+    },
+    seasonal_overlays: {
+      name: {
+        en: "Display additional seasonal effects"
+      },
+      body: {
+        en: "During winter seasons this applies a coat of ice to panels, otherwise mainly gradients"
       }
     },
     seasonal_offset: {
@@ -56882,6 +56872,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Importar",
       pl: "Importuj",
       sv: "Importera"
+    },
+    import_failed: {
+      en: "Import failed",
+      notice: {
+        en: "The settings you attempted to import failed to parse, no changes were made."
+      }
     },
     import_settings: {
       en: "Import settings",
@@ -57709,6 +57705,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Auf volle Aufl\xF6sung erweitern",
       pt: "Expandir para resolu\xE7\xE3o total",
       sv: "Expandera till full uppl\xF6sning"
+    },
+    default_avatar_action: {
+      name: {
+        en: "Default avatar action"
+      },
+      body: {
+        en: "Which action should be performed when you click an avatar"
+      }
     },
     share: {
       en: "Share",
@@ -60116,7 +60120,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Updated",
       de: "Aktualisiert",
       pt: "Atualizado",
-      sv: "Uppdaterats"
+      sv: "Uppdaterats",
+      notification: {
+        en: "Updated to version {v}"
+      }
     },
     you_are_up_to_date: {
       en: "You\u2019re up to date",
@@ -61032,2998 +61039,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     missing_translated: {
       // number of strings missing
       en: "{c} missing"
-    }
-  };
-  var trans_legacy = {
-    en: {
-      pages: {
-        bleh_settings: {
-          "": "bleh settings"
-        },
-        bleh_setup: {
-          "": "bleh setup"
-        },
-        bleh_sponsor: {
-          "": "sponsor"
-        },
-        home: {
-          overview: "home",
-          artists: "artists",
-          albums: "albums",
-          tracks: "tracks",
-          events: "events"
-        },
-        overview: {
-          music: "home"
-        },
-        recommended: {
-          artists: "recommended artists",
-          albums: "recommended albums",
-          tracks: "recommended tracks",
-          rediscover: "blasts from the past",
-          tags: "recommended tags"
-        },
-        bookmarks: {
-          overview: "bookmarks",
-          artists: "bookmarks",
-          albums: "bookmarks",
-          tracks: "bookmarks",
-          tags: "bookmarks"
-        },
-        search: {
-          overview: "{name} \xB7 search",
-          artists: "{name} \xB7 artist search",
-          albums: "{name} \xB7 album search",
-          tracks: "{name} \xB7 track search"
-        },
-        labs: {
-          overview: "labs"
-        },
-        settings: {
-          overview: "settings",
-          privacy: "privacy \xB7 settings",
-          account_overview: "account \xB7 settings",
-          website: "website \xB7 settings",
-          subscription_overview: "last.fm pro \xB7 settings",
-          "subscription_automatic-edits_albums": "album auto edits \xB7 settings",
-          "subscription_automatic-edits_tracks": "track auto edits \xB7 settings",
-          applications_overview: "applications \xB7 settings"
-        },
-        inbox: {
-          overview: "incoming inbox",
-          sent_overview: "outgoing inbox",
-          compose: "compose message",
-          message_overview: "message",
-          sent_message: "message",
-          notifications: "notifications"
-        },
-        releases: {
-          "out-now_recommended": "out now",
-          "out-now_popular": "out now",
-          "coming-soon_recommended": "coming soon",
-          "coming-soon_popular": "coming soon"
-        },
-        charts: {
-          overview: "live charts",
-          weekly: "weekly charts"
-        },
-        user: {
-          overview: "{name} \xB7 profile",
-          "listening-report_week": "{name} \xB7 profile reports",
-          "listening-report_month": "{name} \xB7 profile reports",
-          "listening-report_year": "{name} \xB7 profile reports",
-          library_overview: "{name} \xB7 profile library",
-          library_artists: "{name} \xB7 profile library",
-          library_albums: "{name} \xB7 profile library",
-          library_tracks: "{name} \xB7 profile library",
-          library_artist_overview: "{name} \xB7 profile library",
-          library_album_overview: "{name} \xB7 profile library",
-          library_track_overview: "{name} \xB7 profile library",
-          library_artist_albums: "{name} \xB7 profile library",
-          library_artist_tracks: "{name} \xB7 profile library",
-          following: "{name} \xB7 profile following",
-          followers: "{name} \xB7 profile followers",
-          neighbours: "{name} \xB7 profile neighbours",
-          shoutbox_overview: "{name} \xB7 profile shouts",
-          loved: "{name} \xB7 profile loved",
-          obsessions: "{name} \xB7 profile obsessions",
-          events: "{name} \xB7 profile events",
-          playlists_playlists: "{name} \xB7 profile playlists",
-          tags_overview: "{name} \xB7 profile tags"
-        },
-        artist: {
-          overview: "{name} \xB7 artist",
-          tracks: "{name} \xB7 artist tracks",
-          albums: "{name} \xB7 artist albums",
-          images_overview: "{name} \xB7 artist photos",
-          "images_image-upload": "{name} \xB7 artist photos",
-          image: "{name} \xB7 artist photo",
-          similar: "{name} \xB7 artist similar",
-          wiki_overview: "{name} \xB7 artist wiki",
-          wiki_edit: "{name} \xB7 artist wiki",
-          wiki_history: "{name} \xB7 artist wiki",
-          listeners_overview: "{name} \xB7 artist top listeners",
-          "listeners_you-know": "{name} \xB7 artist listeners you know",
-          shoutbox_overview: "{name} \xB7 artist shouts",
-          events: "{name} \xB7 artist events",
-          tags_overview: "{name} \xB7 artist tags"
-        },
-        album: {
-          overview: "{name} - {sister} \xB7 album",
-          wiki_overview: "{name} - {sister} \xB7 album wiki",
-          wiki_edit: "{name} - {sister} \xB7 album wiki",
-          wiki_history: "{name} - {sister} \xB7 album wiki",
-          images_overview: "{name} - {sister} \xB7 album photos",
-          "images_image-upload": "{name} - {sister} \xB7 album photos",
-          image: "{name} - {sister} \xB7 album photo",
-          shoutbox_overview: "{name} - {sister} \xB7 album shouts",
-          tags_overview: "{name} - {sister} \xB7 album tags"
-        },
-        track: {
-          overview: "{name} - {sister} \xB7 track",
-          albums: "{name} - {sister} \xB7 track albums",
-          wiki_overview: "{name} - {sister} \xB7 track wiki",
-          wiki_edit: "{name} - {sister} \xB7 track wiki",
-          wiki_history: "{name} - {sister} \xB7 track wiki",
-          shoutbox_overview: "{name} - {sister} \xB7 track shouts",
-          tags_overview: "{name} - {sister} \xB7 track tags"
-        }
-      },
-      badges: {
-        missing: {
-          name: "No badges"
-        },
-        "user-status-subscriber": {
-          name: "Last.fm Pro",
-          reason: "Active Pro subscription"
-        },
-        "user-status-staff": {
-          name: "Staff",
-          reason: "Staff member of Last.fm"
-        },
-        "label--fade": {
-          reason: "They follow you"
-        },
-        contributor: {
-          name: "bleh contributor",
-          reason: "Contributed to bleh via code or translations"
-        },
-        translation: {
-          reason: "Translated for a supported language"
-        },
-        cat: {
-          name: "it\u2019s a kitty!!"
-        },
-        sponsor: {
-          name: "Sponsoring",
-          reason: "Sponsored bleh and bwaa :3"
-        },
-        cute: {
-          reason: "Reserved for special users"
-        },
-        reserved: {
-          reason: "Reserved for certain users"
-        }
-      },
-      avatar_for_me: "Your avatar",
-      avatar_for_user: "Avatar for ",
-      actions: {
-        view_profile: "View profile",
-        view_library: "Library",
-        leave_a_shout: "Shouts"
-      },
-      lotus: {
-        artist: "Artist corrections have been downloaded!",
-        album_track: "Album and track corrections have been downloaded!",
-        version: "You are running lotus version {v}.",
-        tooltip: "lotus is the community correction system used in bleh and bwaa",
-        check: "Check for updates",
-        correct: {
-          name: "Correct capitalisation",
-          tooltip: "Submit name correction",
-          tooltip_active: "Active name correction"
-        }
-      },
-      glacier: {
-        name: "Library refresh",
-        by_artist: " by {a}",
-        meta: {
-          artists: "Artists",
-          albums: "Albums",
-          tracks: "Tracks",
-          average: "Average"
-        },
-        view: {
-          grid: "Grid",
-          list: "List",
-          line: "Line",
-          pie: "Pie",
-          bar: "Bar"
-        },
-        axis: {
-          horizontal: "Horizontal",
-          vertical: "Vertical"
-        },
-        dates: {
-          last_year: "Last year",
-          this_year: "This year"
-        },
-        edit: "Edit",
-        delete: "Delete",
-        love: "Love",
-        bulk_edit: "Bulk edit",
-        option: {
-          name: "Use new graphs in library",
-          bio: "This can add a little amount of slow-down in some cases but with the benefit of awesome graphs."
-        }
-      },
-      changelog: {
-        name: "What\u2019s New?",
-        subtitle: "from {u}",
-        type: {
-          major: "Major release",
-          minor: "Minor release",
-          general: "General improvements",
-          fix: "Bug fix"
-        },
-        latest: "Latest",
-        view_major: "View latest major release"
-      },
-      auth_menu: {
-        dev: "Toggle dev mode",
-        configure_bleh: "Configure bleh",
-        library: "Library",
-        shouts: "Shouts",
-        obsessions: "Obsessions",
-        labs: "Labs",
-        bookmarks: "Bookmarks",
-        settings: "Settings",
-        logout: "Logout",
-        seasonal_notice: "To watch the counter update live, click and stay on the tab that opens.",
-        seasonal_live: "Counter is updating live!"
-      },
-      music: {
-        submit_lastfm_correction: "Submit correction to Last.fm",
-        search_variations: {
-          name: "Search",
-          tooltip: "Search for variations of this title"
-        },
-        search_genius: "Search lyrics",
-        fetch_plays: {
-          name: "Tracklist",
-          info: "Sourced from your own plays as an official tracklist is unavailable",
-          loading: "Fetching your plays on this album",
-          fail: "You do not have any plays on this album",
-          open_as_track: "Open album title as a track"
-        },
-        from_the_album: "From the album: {album}",
-        listens: {
-          count_listens: "{c} listens",
-          loading_listens: "listens",
-          other_listeners: "{c} others",
-          custom: {
-            tooltip: "Pick a user",
-            name: "View listens from another user"
-          }
-        },
-        wiki: "About",
-        wiki_edit: "edit wiki",
-        wiki_read: "read more",
-        refresh: "Refresh",
-        refresh_tracks: "Refresh tracks",
-        menu: "Extra options",
-        obsession: "Obsess",
-        obsession_first: "First to claim this obsession!",
-        compare: {
-          name: "Compare",
-          header: "Compare plays"
-        },
-        about: "About",
-        about_guests: "Others featured",
-        view_profile: "View profile"
-      },
-      error: {
-        name: "This page is missing...",
-        go_back: "Go back",
-        visit_profile: "Visit profile",
-        try_again: "Try again"
-      },
-      statistics: {
-        scrobbles: {
-          name: "Your scrobbles"
-        },
-        plays: {
-          name: "plays"
-        }
-      },
-      profile: {
-        name: "Profile",
-        on_ignore_list: "Ignored",
-        friends: {
-          name: "Friends"
-        },
-        display_name: {
-          aka: "aka.",
-          pronouns: "pronouns"
-        },
-        created: {
-          name: "created",
-          replace: "\u2022 scrobbling since "
-        },
-        edit: "Edit profile",
-        obsess: "Obsess",
-        message: "Message",
-        sponsor: "Sponsor",
-        message_sponsor: "Receive sponsor rewards",
-        shortcut: {
-          add: "Shortcut",
-          remove: "Shortcut"
-        },
-        scrobbles: "Scrobbles",
-        artists: "Artists",
-        loved: "Loved",
-        taste: "Taste similarity",
-        taste_meter: {
-          level: {
-            super: "Super",
-            very_high: "Very High",
-            high: "High",
-            medium: "Medium",
-            low: "Low",
-            very_low: "Very Low",
-            unknown: "Unknown"
-          },
-          you_share_1: "{artist}",
-          you_share_2: "{artist1}, {artist2}",
-          you_share_3: "{artist1}, {artist2}, {artist3}"
-        },
-        open_avatar: "Open in a new tab",
-        settings: "Configure",
-        events: "Events",
-        top_badge: "Top Badge",
-        progress: {
-          to_go: "{s} scrobbles to go",
-          tier: "Tier {t}",
-          explain: "For each tier, you unlock a new badge"
-        }
-      },
-      event: {
-        name: "Event",
-        going: "{c} going",
-        maybe: "{c} interested",
-        you_know: "Who you know",
-        all_time: "All time",
-        total: "{c} total"
-      },
-      messaging: {
-        update: "bleh has updated to version {v}!"
-      },
-      wiki: {
-        latest: "View latest version",
-        syntax: {
-          name: "Use fancy syntax when editing",
-          links_to: "Links to {link}"
-        },
-        presets: {
-          name: "Symbol presets"
-        }
-      },
-      settings: {
-        name: "Settings",
-        save: "Save",
-        cancel: "Cancel",
-        close: "Close",
-        clear: "Clear",
-        create: "Create",
-        add: "Add",
-        remove: "Remove",
-        done: "Done",
-        finish: "Finish",
-        continue: "Continue",
-        reset: "Reset to default",
-        go: "Go",
-        skip: "Skip",
-        back: "Back",
-        send: "Send",
-        send_quickly: "Send quickly with {kbd}",
-        right_click: "Right-click for more options",
-        reload: {
-          name: "Refresh pending",
-          body: "A setting you changed requires a page refresh to take effect."
-        },
-        new: "New",
-        beta: "Beta",
-        configure: "Configure",
-        pages: {
-          overview: "Profile",
-          privacy: "Privacy",
-          account_overview: "Account",
-          website: "Website",
-          subscription_overview: "Pro",
-          applications_overview: "Applications"
-        },
-        examples: {
-          button: "Example button"
-        },
-        skip_to: {
-          name: "Skip to"
-        },
-        home: {
-          name: "Home",
-          brand: "bleh",
-          version: "Version {v}",
-          recommended: "Recommended settings",
-          issues: {
-            name: "Issues",
-            bio: "Report bugs"
-          },
-          update: {
-            name: "Updates",
-            css: "Update style",
-            bio: "Check now",
-            notice: "There are updates available!",
-            ignore: "Ignore temporarily",
-            update_now: "Update now",
-            update_to_v: "Update to {v}"
-          },
-          setup: {
-            name: "Setup",
-            bio: "Re-enter setup"
-          },
-          colours: {
-            name: "Colours",
-            bio: "Pick your favourite!"
-          },
-          thanks: "Welcome {m}, you are running bleh version {v}.",
-          sponsor: {
-            name: "Sponsor",
-            header: "Sponsor the development of bleh and bwaa",
-            bio: "If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.",
-            thanks: "Thank you for sponsoring {m}, you are running bleh version {v}.",
-            status: {
-              yes: "You are a sponsor, thank you!",
-              no: "Become a sponsor to get a custom badge",
-              badge: "To configure your custom badge, get in touch with me.",
-              one_time: "A custom badge is available only when selecting monthly."
-            },
-            manage: "Manage sponsorship",
-            check: "Refresh badges",
-            download: "Sponsorship and badge data downloaded!",
-            version: "You have version {v} of the sponsorship/badge data downloaded."
-          }
-        },
-        appearance: {
-          name: "Appearance"
-        },
-        themes: {
-          name: "Themes",
-          bio: "Choose from light to midnight.",
-          dark: {
-            name: "Dark",
-            bio: "The default flavour of bleh"
-          },
-          darker: {
-            name: "Darker",
-            bio: "The in-between"
-          },
-          oled: {
-            name: "Midnight",
-            bio: "Ultra blackout"
-          },
-          light: {
-            name: "Light",
-            bio: "Low saturation and bright"
-          },
-          classic: {
-            name: "Classic",
-            bio: "Re-live early computing"
-          }
-        },
-        music: {
-          name: "Music",
-          header: "Music configuration",
-          bio: "Configure your music-related settings for profiles, artists, albums, and tracks.",
-          profile_shortcut: {
-            name: "Profile shortcut",
-            bio: "Quickly access a user's plays on an artist, album, or track page.",
-            placeholder: "Profile",
-            header: "Enter username",
-            saved: "Profile shortcut is valid",
-            failed: "Profile does not exist or failed to load"
-          },
-          show_bulk_edit_album: {
-            name: "Show album in chartlists",
-            bio: "This is disabled by default as hovering over tracks reveals the album title in all areas",
-            require: "Only applicable with the \u2018Last.fm Bulk Edit\u2019 extension"
-          },
-          grid_glow: {
-            name: "Show a glow around grid items"
-          }
-        },
-        accessibility: {
-          name: "Accessibility",
-          shout_preview: `some completely random text that doesn't mean <a href="https://cutensilly.org">anything at all</a>`,
-          accessible_name_colours: {
-            name: "Prefer accessible name colours",
-            bio: "Use the default header text colour over a accented text colour."
-          },
-          underline_links: {
-            name: "Always underline links",
-            bio: "Make links to interactables stand out."
-          },
-          reduced_motion: {
-            name: "Reduce animations around interfaces",
-            bio: "Will in most cases either slowly fade or hard-cut, no scaling."
-          },
-          toggle_icon: {
-            name: "Add indicator icon to toggles",
-            bio: "Display a checkmark or a cross depending on toggle state."
-          }
-        },
-        layout: {
-          name: "Layout",
-          header: "Manage header layout",
-          avatar_action: {
-            name: "Default avatar action",
-            bio: "What do you want to happen when you click avatars?",
-            gallery: "View photos (or featured album for tracks)",
-            album: "View featured album"
-          }
-        },
-        customise: {
-          name: "Customise",
-          colours: {
-            name: "Colours",
-            modals: {
-              custom_colour: {
-                hue: "Accent colour",
-                sat: "Saturation",
-                lit: "Lightness",
-                seasonal_alert: "The current season is overriding your accent colour, adjust sliders to disable."
-              }
-            },
-            swatches: {
-              default: "Default",
-              avatar: "Avatar",
-              seasonal: "Seasonal",
-              custom: "Customise"
-            }
-          },
-          high_contrast: {
-            name: "Enable high contrast mode"
-          },
-          seasonal: {
-            name: "Seasonal",
-            timeline: "Seasonal timeline",
-            bio: "During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.",
-            info: "Seasonal events try to match your timezone, for reference we calculated {offset}",
-            started: "Started",
-            ends_in: "Ends in",
-            listing: {
-              none: "No active season",
-              easter: "Easter",
-              pride: "Pride",
-              halloween: "Halloween",
-              pre_fall: "Pre-Fall",
-              fall: "Fall",
-              christmas: "Christmas",
-              new_years: "New Years"
-            },
-            option: {
-              name: "Enable seasonal event system"
-            },
-            marker: {
-              current: "The current season is {season} for {time}.",
-              started: "started {time}",
-              none: "There is no active season currently.",
-              disabled: "You have seasons disabled, enable to view current event."
-            },
-            particles: {
-              name: "Display particles during select seasons",
-              bio: "During winter seasons you get snowflakes!"
-            },
-            show_less_particles: {
-              name: "Display a reduced number of particles"
-            },
-            fps_particles: {
-              name: "Display particles without fancy effects",
-              bio: "This might be more demanding on some systems"
-            },
-            overlays: {
-              name: "Display additional seasonal effects",
-              bio: "During winter seasons this is used for ice effects, otherwise mainly just gradients."
-            },
-            announce: "It is now {s}!",
-            nonsense: "A Nonsense Christmas",
-            fruitcake: "fruitcake",
-            mistletoe: "Mistletoe",
-            festival: "Christmas Eve",
-            view: "Open seasonal tab",
-            none: "No colours available"
-          },
-          artwork: {
-            name: "Artwork"
-          },
-          hue_from_album: {
-            name: "Colour album pages based on album art",
-            bio: "Picks the primary colour from an album cover to paint the page."
-          },
-          gloss: {
-            name: "Gloss overlay",
-            bio: "Apply flair to all cover arts."
-          },
-          display: {
-            name: "Display"
-          },
-          colourful_counts: {
-            name: "Use a colour gradient for all-time charts",
-            bio: "Assigns a colour from a gradient based on your position in all-time artist scrobbles."
-          },
-          colourful_tracks: {
-            name: "Colour actively scrobbling tracks based on album art",
-            bio: "Picks the primary colour from the associated cover to paint the track."
-          },
-          gendered_tags: {
-            name: "Hide gendered tags",
-            bio: "Gender-specific tags are deemed redundant by default."
-          },
-          rain: {
-            name: "Let it rain!",
-            bio: "rain :3c (may have performance impacts !! also may look bad !!)"
-          },
-          show_your_progress: {
-            name: "Show your weekly progress",
-            bio: "too many numbers ~w~"
-          },
-          profile_header: {
-            name: "Display profile backgrounds",
-            see_type: "Source from avatar instead of top artist",
-            view_on: "View backgrounds on",
-            for_own: "My own profile",
-            for_others: "Other profiles"
-          },
-          sat_bg: {
-            name: "Card background saturation",
-            bio: "Control the colour of backgrounds in addition to main accent"
-          }
-        },
-        activities: {
-          name: "Activities",
-          bio: "Display your most recent activities locally on your profile, only for you to see.",
-          toggle: {
-            name: "Enable activity tracking",
-            bio: "Events will only be registered and displayed while enabled."
-          },
-          types: {
-            shout: "Shouts",
-            image: "Image uploads and interactions",
-            obsess: "Track obsessions",
-            love: "Track love",
-            install: "Installing and updating",
-            wiki: "Wiki editing"
-          }
-        },
-        performance: {
-          name: "Troubleshooting",
-          bio: "Running into noticeable issues in theme loading? Try out these settings.",
-          dev: {
-            name: "Disable in-built theme loading",
-            bio: "This allows you to load the in-built theme via Stylus instead, which may be more performant.",
-            modals: {
-              prompt: {
-                alert: "Once you refresh the page, the in-built bleh theme will be disabled (unless you disable this option again).",
-                stylus: "If you do not already have the <strong>Stylus</strong> extension, choose your browser below:",
-                browsers: {
-                  chrome: {
-                    name: "Chrome",
-                    bio: "for Chrome, Edge, Brave, Opera"
-                  },
-                  firefox: {
-                    name: "Firefox",
-                    bio: "for Firefox only"
-                  }
-                }
-              },
-              continue: {
-                next_step: 'Once you have the extension installed, hit "Install style" on the new tab that will open.'
-              },
-              finish: {
-                alert: "All done! From now on, styling will be handled via Stylus."
-              }
-            }
-          },
-          bug: {
-            name: "Something wrong?",
-            bio: "Report a bug in the bleh repo to get it fixed."
-          }
-        },
-        profiles: {
-          name: "Profile",
-          bio: "Manage your personal data and data stored on other profiles.",
-          notes: {
-            name: "Notes",
-            header: "Note",
-            placeholder: "Enter a local note for this user",
-            edit: "Edit note",
-            delete: "Remove note",
-            edit_user: "Edit {u}'s note",
-            delete_user: "Remove {u}'s note",
-            view: "View your profile notes"
-          },
-          you: "You",
-          avatar_radius: {
-            name: "User avatar shape"
-          },
-          api: {
-            name: "API access",
-            bio: "Enter a Last.fm API key to use new features, such as:",
-            features: [{}],
-            placeholder: "Enter API key",
-            saved: "Saved your API key, testing..",
-            confirmed: "Verified your API key, enjoy!",
-            inaccessible: "Last.fm API is inaccessible",
-            invalid: "That key seems invalid, are you sure?",
-            rate_limit: "Your key is rate-limited for a short time"
-          }
-        },
-        redirects: {
-          name: "Redirects",
-          bio: "Manage last.fm's (not) handy redirection system as best as possible.",
-          travis: {
-            name: "Hide redirect messages on music pages",
-            bio: "No, I didn't mean Travi$ Scott"
-          },
-          autocorrect: {
-            name: "Scrobble auto-correction",
-            bio: "By default, last.fm will 'auto-correct' some of your scrobbles using this system. This will make your scrobbles appear as <i>Travis Scott</i> rather than <i>Travi$ Scott</i>, however the redirection system is not fully disabled.",
-            action: "Open Settings"
-          }
-        },
-        corrections: {
-          name: "Corrections",
-          bio: "Manage capitalisation of artist, album, and track names with community contributions.",
-          toggle: {
-            name: "Enable the correction system"
-          },
-          view: {
-            name: "View current corrections",
-            bio: "Lists all active in your install"
-          },
-          formatting: "Smart music titles",
-          format_guest_features: {
-            name: "Format guest features and song tags",
-            bio: "Splits track and album titles into their individual tags such as guest features, versions, remixes."
-          },
-          show_guest_features: {
-            name: "Show featured artists in track title",
-            bio: "Featured artists are always shown below the title regardless."
-          },
-          stacked_chartlist_info: {
-            name: "Stack track name and title",
-            bio: "Both matches streaming services and increases max length of each."
-          },
-          show_remaster_tags: {
-            name: "Show remaster tags",
-            bio: "Nobody likes remasters (or the tags), if you'd prefer to still listen but remove the annoyance hide them!"
-          },
-          submit: {
-            name: "Submit new correction",
-            bio: "Have a name that you feel is capitalised wrong?",
-            action: "Submit"
-          },
-          listing: {
-            artists: "Artists",
-            albums_tracks: "Albums and tracks"
-          }
-        },
-        language: {
-          name: "Language",
-          supported: "Supported by bleh",
-          by: "by {users}",
-          submit: {
-            name: "Are you fluent in another language?",
-            bio: "Translations are purely community-contributed.",
-            action: "Submit translation"
-          }
-        },
-        text: {
-          name: "Text",
-          shout_preview_md: `some <strong>completely</strong> random!<br>text that doesn't mean <a href="https://cutensilly.org">anything at all</a>`,
-          shout_preview: "some completely random! text that doesn't mean anything at all",
-          markdown: {
-            name: "Use markdown formatting",
-            bio: "Enables line-breaks, bold, italics, and links.",
-            shouts: "In shouts",
-            profile: "In profile bios"
-          },
-          font: {
-            name: "Font settings",
-            placeholder: "Font name(s), separated by commas"
-          },
-          font_weight: {
-            name: "Font weight",
-            bio: "Used for most regular text"
-          },
-          font_weight_medium: {
-            name: "Medium font weight",
-            bio: "Used for bold text"
-          },
-          font_weight_bold: {
-            name: "Bold font weight",
-            bio: "Used for larger text such as headers"
-          },
-          font_emoji: {
-            name: "Use compatibility emoji font",
-            bio: "On Windows systems prior to 11, the emoji font is majorly outdated unless this option is used. (such as \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F)"
-          }
-        },
-        inbuilt: {
-          profile: {
-            name: "Profile",
-            subtitle: {
-              name: "Subtitle",
-              aka: "aka.",
-              pronouns: "pronouns"
-            },
-            pronoun_tip: 'When pronouns are placed first, "aka." will change to "pronouns".',
-            country: "Country",
-            website: "Website",
-            about: "About",
-            toggle_preview: {
-              name: "Toggle preview",
-              bio: "Preview how your bio looks to others",
-              note: "For non-bleh users, multiple lines display as spaces and links, bold, italics will be plain text. Any images embedded will appear as manic text, so be aware."
-            },
-            banner_tip: "Images can be embedded using ![](link). You can also set a custom profile banner with ![banner](link).",
-            avatar: {
-              name: "Edit avatar",
-              upload: "Upload file",
-              delete: "Delete avatar"
-            }
-          },
-          charts: {
-            name: "Charts",
-            recent: {
-              count: {
-                name: "Tracks to display"
-              },
-              artwork: {
-                name: "Display album artwork"
-              },
-              realtime: {
-                name: "Update tracks in realtime",
-                bio: "Your recent tracks will refresh while you are on your profile."
-              }
-            },
-            artists: {
-              timeframe: {
-                name: "Default timeframe"
-              },
-              style: {
-                name: "Chart style"
-              },
-              length: {
-                name: "Chart size"
-              }
-            },
-            albums: {
-              timeframe: {
-                name: "Default timeframe"
-              },
-              style: {
-                name: "Chart style"
-              },
-              length: {
-                name: "Chart size"
-              }
-            },
-            tracks: {
-              count: {
-                name: "Tracks to display"
-              },
-              timeframe: {
-                name: "Default timeframe"
-              }
-            }
-          },
-          ignore: {
-            name: "Communication",
-            consider: {
-              name: "To consider",
-              good: [
-                "You will not see previous or new shouts globally",
-                "They cannot direct message you",
-                "They cannot leave a shout on your profile or under your shouts anywhere"
-              ],
-              bad: [
-                "You cannot delete pre-existing shouts from your profile",
-                "They can still view your profile"
-              ]
-            },
-            view: "View {c} more",
-            count: "You have {c} users hidden"
-          },
-          privacy: {
-            name: "Privacy",
-            recent_listening: {
-              name: "Hide your recent listening history",
-              bio: "Keep your recent listens a secret o.O"
-            },
-            receiving_msgs: {
-              name: "Control who can interact with you",
-              bio: "This setting controls who can post shouts and message you privately.",
-              settings: {
-                everyone: {
-                  name: "Everyone not hidden",
-                  bio: "Everyone except who you have ignored"
-                },
-                neighbours: {
-                  name: "Who you follow and neighbours",
-                  bio: "Everyone who you have chosen to follow, along with your Last.fm neighbours"
-                },
-                follow: {
-                  name: "Who you follow only",
-                  bio: "Only users who you have chosen to follow"
-                }
-              }
-            },
-            disable_shoutbox: {
-              name: "Hide your shoutbox",
-              bio: "Your shoutbox will be hidden for you and anyone else."
-            }
-          }
-        },
-        actions: {
-          import: {
-            name: "Import",
-            modals: {
-              initial: {
-                name: "Import settings from a previous install",
-                alert: "Anything you import will override your current settings, if you are importing settings from online ensure you trust the source."
-              },
-              failed: {
-                name: "Import failed",
-                alert: "The settings you attempted to import failed to parse, no changes were made."
-              }
-            }
-          },
-          export: {
-            name: "Export",
-            modals: {
-              initial: {
-                name: "Export your current settings",
-                alert: "Your current settings are in the textbox below ready for you to copy."
-              }
-            }
-          },
-          reset: {
-            name: "Reset",
-            modals: {
-              initial: {
-                name: "Reset your settings to default",
-                alert: "Your settings will be <strong>reset to all defaults</strong> with no way to go back. Are you sure?",
-                confirm: "Yes, reset my settings",
-                export: "Export first"
-              }
-            }
-          }
-        }
-      },
-      shout: {
-        name: "Shout",
-        sent: "Sent!"
-      },
-      setup: {
-        start: {
-          name: "hello {m}!!",
-          thanks: "Thank you for installing",
-          info: [
-            "This is the first-time setup to help you get started with common tasks for new users, which include:",
-            "Manage accessibility, such as reduced motion",
-            "Configuring your accent colour",
-            "Changing your interface theme",
-            "Adjusting song corrections and tagging",
-            "If you're already set, you can skip."
-          ],
-          pick_theme: "Which theme would you prefer?",
-          change_later: "You can modify all your settings at any time."
-        },
-        appearance: {
-          name: "Your colour",
-          bio: "Configure the colour of bleh from one of the available presets, or make your own colour combination!",
-          subtext: "During seasonal events, the default colour changes automatically."
-        },
-        music: {
-          change_later: "More detailed options available in settings."
-        }
-      },
-      gallery: {
-        tabs: {
-          overview: "All",
-          bookmarks: "Saved"
-        },
-        bookmarks: {
-          name: "Saved",
-          bio: "Gallery photos can be saved for future reference.",
-          no_data: "no images saved (\u30FB\u30FB )",
-          link: "View all saved photos",
-          button: {
-            image_is_bookmarked: {
-              name: "You have saved this image"
-            },
-            bookmark_this_image: {
-              name: "Save",
-              bio: "Save this image for later"
-            },
-            unbookmark_this_image: {
-              name: "Unsave",
-              bio: "Unsave this image"
-            }
-          }
-        },
-        empty: {
-          title: "No title",
-          description: "No description"
-        },
-        prefer: {
-          name: "Star"
-        },
-        report: {
-          name: "Report"
-        },
-        open: {
-          name: "Expand",
-          tooltip: "Expand image to full resolution"
-        },
-        up: "Up votes:",
-        down: "Down votes:",
-        vote: "This is the sum of votes used for ordering.",
-        view: "View photos"
-      },
-      activities: {
-        name: "Recent Activity",
-        test: "TEST {involved}",
-        shout: "Shout",
-        image_upload: "Uploaded image",
-        image_star: "Starred image",
-        obsess: "Obsessed",
-        unobsess: "Removed obsession",
-        love: "Loved",
-        unlove: "Removed love",
-        install_bwaa: "Installed bwaa",
-        update_bwaa: "Updated bwaa",
-        install_bleh: "Installed bleh",
-        update_bleh: "Updated bleh",
-        bookmark: "Bookmarked",
-        unbookmark: "Removed bookmark",
-        wiki: "Edited wiki"
-      },
-      artist: {
-        name: "Artist",
-        plural: "Artists",
-        tooltip: "Multiple artists are combined into this profile."
-      },
-      album: {
-        name: "Album",
-        plural: "Albums"
-      },
-      track: {
-        name: "Track",
-        plural: "Tracks"
-      },
-      tag: {
-        name: "Tag"
-      },
-      search: {
-        name: "Search",
-        results_for: "Results for {v}"
-      },
-      inbox: {
-        name: "Inbox",
-        overview: "Messages",
-        sent_overview: "Messages",
-        compose: "Messages",
-        message_overview: "Messages",
-        sent_message: "Messages",
-        notifications: "Notifications"
-      },
-      charts: {
-        name: "Charts",
-        overview: "Real time",
-        weekly: "Weekly",
-        charts_for: "Charts for {date}",
-        view: "View the charts",
-        scroll: {
-          name: "Simulate horizontal scrolling",
-          bio: "Disable if you can scroll easily on a laptop for example."
-        }
-      },
-      bookmarks: {
-        name: "Bookmarks"
-      },
-      home: {
-        name: "Home",
-        welcome: "Welcome back {m}"
-      },
-      nag_bar: {
-        corrections: {
-          title: "Redirected from"
-        }
-      }
     },
-    de: {
-      badges: {
-        missing: {
-          name: "Kein Abzeichen"
-        },
-        "user-status-subscriber": {
-          name: "Last.fm Pro",
-          reason: "Aktives Pro Abonnement"
-        },
-        "user-status-staff": {
-          name: "Angestellter",
-          reason: "Angestellter von Last.fm"
-        },
-        "label--fade": {
-          reason: "-"
-        },
-        contributor: {
-          name: "bleh Mitwirkender",
-          reason: "Hat bei bleh mitgewirkt \xFCber code oder \xFCbersetzungen"
-        },
-        translation: {
-          reason: "Hat f\xFCr eine unterst\xFCtzte Sprache \xFCbersetzt"
-        },
-        cat: {
-          name: "ein K\xE4tzchen!!!"
-        },
-        sponsor: {
-          name: "Sponsor",
-          reason: "Hat bleh und bwaa gesponsert :3"
-        },
-        cute: {
-          reason: "F\xFCr besondere Beutzer reserviert"
-        },
-        reserved: {
-          reason: "F\xFCr bestimmte Beutzer reserviert"
-        }
+    simulate_scroll: {
+      name: {
+        en: "Simulate horizontal scrolling"
       },
-      avatar_for_me: "Dein Avatar",
-      avatar_for_user: "Avatar f\xFCr ",
-      actions: {
-        view_profile: "View profile",
-        view_library: "Library",
-        leave_a_shout: "Shouts"
-      },
-      lotus: {
-        artist: "Artist corrections have been downloaded!",
-        album_track: "Album and track corrections have been downloaded!",
-        version: "You are running lotus version {v}.",
-        tooltip: "lotus is the community correction system used in bleh and bwaa",
-        check: "Check for updates",
-        correct: {
-          name: "Correct capitalisation",
-          tooltip: "Submit name correction",
-          tooltip_active: "Active name correction"
-        }
-      },
-      glacier: {
-        name: "Library refresh",
-        by_artist: " von {a}",
-        meta: {
-          artists: "K\xFCnstler",
-          albums: "Alben",
-          tracks: "Titel",
-          average: "Average"
-        },
-        view: {
-          grid: "Gitter",
-          list: "Liste",
-          line: "Liniendiagramm",
-          pie: "Kreis",
-          bar: "Balken"
-        },
-        axis: {
-          horizontal: "Horizontal",
-          vertical: "Vertikal"
-        },
-        dates: {
-          last_year: "Letztes Jahr",
-          this_year: "Dieses Jahr"
-        },
-        edit: "Editieren",
-        delete: "Loeschen",
-        love: "Love",
-        bulk_edit: "Massenbearbeitung",
-        option: {
-          name: "Use new graphs in library",
-          bio: "This can add a little amount of slow-down in some cases but with the benefit of awesome graphs."
-        }
-      },
-      changelog: {
-        name: "What\u2019s New?",
-        subtitle: "from {u}",
-        type: {
-          major: "Major release",
-          minor: "Minor release",
-          general: "General improvements",
-          fix: "Bug fix"
-        },
-        latest: "Latest",
-        view_major: "View latest major release"
-      },
-      auth_menu: {
-        dev: "Entwicklermodus ein-/ausschalten",
-        configure_bleh: "bleh konfigurieren",
-        library: "Bibliothek",
-        shouts: "Shouts",
-        obsessions: "Obsessionen",
-        labs: "Labs",
-        bookmarks: "Lesezeichen",
-        settings: "Einstellungen",
-        logout: "Abmelden"
-      },
-      music: {
-        submit_lastfm_correction: "Submit correction to Last.fm",
-        search_variations: {
-          name: "Search",
-          tooltip: "Search for variations of this title"
-        },
-        search_genius: "Search lyrics",
-        fetch_plays: {
-          name: "Titelliste",
-          info: "Sourced from your own plays as an official tracklist is unavailable",
-          loading: "Deine Wiedergaben auf diesem Album werden abgerufen",
-          fail: "Du hast keine Scrobbel auf diesem Album",
-          open_as_track: "Albumtitel als Titel \xF6ffnen"
-        },
-        from_the_album: "Aus dem Album: {album}",
-        listens: {
-          count_listens: "{c} scrobbels",
-          loading_listens: "scrobbels",
-          other_listeners: "{c} h\xF6rer",
-          custom: {
-            tooltip: "Pick a user",
-            name: "View listens from another user"
-          }
-        },
-        wiki: "\xDCber",
-        wiki_edit: "wiki editieren",
-        wiki_read: "mehr erfahren",
-        refresh: "Neu laden",
-        refresh_tracks: "Titel aktualisieren",
-        menu: "Extra options",
-        obsession: "Obsess",
-        obsession_first: "First to claim this obsession!",
-        compare: {
-          name: "Compare",
-          header: "Compare plays"
-        },
-        about: "About",
-        about_guests: "Others featured",
-        view_profile: "View profile"
-      },
-      error: {
-        name: "This page is missing...",
-        go_back: "Go back",
-        visit_profile: "Visit profile",
-        try_again: "Try again"
-      },
-      statistics: {
-        scrobbles: {
-          name: "Deine Scrobbels"
-        },
-        plays: {
-          name: "scrobbels"
-        }
-      },
-      profile: {
-        name: "Profil",
-        on_ignore_list: "Du stehst auf der Ignorierliste dieses Benutzers.",
-        friends: {
-          name: "Freunde"
-        },
-        display_name: {
-          aka: "aka.",
-          pronouns: "pronomen"
-        },
-        created: {
-          name: "erstellt",
-          replace: "\u2022 scrobbelt seit "
-        },
-        edit: "Profil bearbeiten",
-        obsess: "Obsess",
-        message: "Anschreiben",
-        shortcut: {
-          add: "Verkn\xFCpfung",
-          remove: "Verkn\xFCpfung"
-        },
-        scrobbles: "Scrobbels",
-        artists: "K\xFCnstler",
-        loved: "Lieblingslieder",
-        taste: "Taste similarity",
-        taste_meter: {
-          level: {
-            super: "Super",
-            very_high: "Very High",
-            high: "High",
-            medium: "Medium",
-            low: "Low",
-            very_low: "Very Low",
-            unknown: "Unknown"
-          },
-          you_share_1: "Ihr h\xF6rt beide {artist}",
-          you_share_2: "Ihr h\xF6rt beide {artist1}, {artist2}",
-          you_share_3: "Ihr h\xF6rt beide {artist1}, {artist2}, {artist3}"
-        },
-        open_avatar: "Im neuen Fenster \xF6ffnen",
-        settings: "Konfigurieren",
-        events: "Events",
-        top_badge: "Top-Abzeichen",
-        progress: {
-          to_go: "Noch {s} scrobbels",
-          tier: "Stufe {t}",
-          explain: "F\xFCr jede Stufe schaltest du ein neues Abzeichen frei"
-        }
-      },
-      event: {
-        name: "Event",
-        going: "{c} going",
-        maybe: "{c} interested",
-        you_know: "Who you know",
-        all_time: "All time",
-        total: "{c} total"
-      },
-      messaging: {
-        update: "bleh wurde auf Version {v} aktualisiert!"
-      },
-      wiki: {
-        latest: "View latest version",
-        syntax: {
-          name: "Use fancy syntax when editing",
-          links_to: "Links to {link}"
-        },
-        presets: {
-          name: "Symbol presets"
-        }
-      },
-      settings: {
-        name: "Einstellungen",
-        save: "Speichern",
-        cancel: "Abbrechen",
-        close: "Schlie\xDFen",
-        clear: "Leeren",
-        create: "Create",
-        add: "Add",
-        remove: "Remove",
-        done: "Fertig",
-        finish: "Beenden",
-        continue: "Fortsetzen",
-        reset: "Auf Werkseinstellung Zur\xFCcksetzen",
-        go: "Fortfahren",
-        skip: "\xDCberspringen",
-        back: "Zur\xFCck",
-        right_click: "Right-click for more options",
-        reload: {
-          name: "Refresh pending",
-          body: "Klicke zum Neuladen, um deine Einstellungen zu \xFCbernehmen."
-        },
-        new: "Neu",
-        beta: "Beta",
-        configure: "Konfigurieren",
-        pages: {
-          overview: "Profil",
-          privacy: "Datenschutz",
-          account_overview: "Konto",
-          website: "Website",
-          subscription_overview: "Pro",
-          applications_overview: "Apps"
-        },
-        examples: {
-          button: "Beispiel-Taste"
-        },
-        skip_to: {
-          name: "Skip to"
-        },
-        home: {
-          name: "Startseite",
-          brand: "bleh",
-          version: "Version {v}",
-          recommended: "Empfohlene Einstellungen",
-          issues: {
-            name: "Probleme",
-            bio: "Bugs reporten"
-          },
-          update: {
-            name: "Aktualisierungen",
-            css: "Stylesheet aktualisieren",
-            bio: "Jetzt pr\xFCfen",
-            notice: "There are updates available!",
-            ignore: "Ignore temporarily",
-            update_now: "Update now",
-            update_to_v: "Update to {v}"
-          },
-          setup: {
-            name: "Setup",
-            bio: "Re-enter setup"
-          },
-          colours: {
-            name: "Farbe",
-            bio: "Pick your favourite!"
-          },
-          thanks: "Willkommen {m}, du verwendest bleh Version {v}.",
-          sponsor: {
-            name: "Sponsor",
-            header: "Sponsor the development of bleh and bwaa",
-            bio: "If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.",
-            thanks: "Thank you for sponsoring {m}, you are running bleh version {v}.",
-            status: {
-              yes: "You are a sponsor, thank you!",
-              no: "Become a sponsor to get a custom badge",
-              badge: "To configure your custom badge, get in touch with me.",
-              one_time: "A custom badge is available only when selecting monthly."
-            },
-            manage: "Manage sponsorship",
-            check: "Refresh badges",
-            download: "Sponsorship and badge data downloaded!",
-            version: "You have version {v} of the sponsorship/badge data downloaded."
-          }
-        },
-        appearance: {
-          name: "Aussehen"
-        },
-        themes: {
-          name: "Farbschema",
-          bio: "Choose from light to midnight.",
-          dark: {
-            name: "Dunkel",
-            bio: "The default flavour of bleh"
-          },
-          darker: {
-            name: "Dunkler",
-            bio: "The in-between"
-          },
-          oled: {
-            name: "Mitternacht",
-            bio: "Ultra blackout"
-          },
-          light: {
-            name: "Hell",
-            bio: "Low saturation and bright"
-          },
-          classic: {
-            name: "Classic",
-            bio: "Re-live early computing"
-          }
-        },
-        music: {
-          name: "Musik",
-          header: "Musikkonfiguration",
-          bio: "Konfiguriere deine musikbezogene Einstellungen f\xFCr Profile, K\xFCnstler:innen, Alben und Titel.",
-          profile_shortcut: {
-            name: "Profilverkn\xFCpfung",
-            bio: "Schnell auf die Wiedergaben eines Benutzers auf einer K\xFCnstler-, Album- oder Titelseite zugreifen.",
-            placeholder: "Profil",
-            header: "Benutzernamen eingeben",
-            saved: "Die Profilverkn\xFCpfung ist g\xFCltig",
-            failed: "Das Profil existiert nicht oder konnte nicht geladen werden."
-          },
-          show_bulk_edit_album: {
-            name: "Show album in chartlists",
-            bio: "This is disabled by default as hovering over tracks reveals the album title in all areas",
-            require: "Only applicable with the \u2018Last.fm Bulk Edit\u2019 extension"
-          },
-          grid_glow: {
-            name: "Show a glow around grid items"
-          }
-        },
-        accessibility: {
-          name: "Zug\xE4nglichkeit",
-          shout_preview: `some completely random text that doesn't mean <a href="https://cutensilly.org">anything at all</a>`,
-          accessible_name_colours: {
-            name: "Zug\xE4ngliche Namensfarben bevorzugen",
-            bio: "Use the default header text colour over a accented text colour."
-          },
-          underline_links: {
-            name: "Links immer unterstreichen",
-            bio: "Make links to interactables stand out."
-          },
-          reduced_motion: {
-            name: "Animationen reduzieren",
-            bio: "Will in most cases either slowly fade or hard-cut, no scaling."
-          },
-          toggle_icon: {
-            name: "Add indicator icon to toggles",
-            bio: "Display a checkmark or a cross depending on toggle state."
-          }
-        },
-        layout: {
-          name: "Layout",
-          header: "Manage header layout",
-          avatar_action: {
-            name: "Default avatar action",
-            bio: "What do you want to happen when you click avatars?",
-            gallery: "View photos (or featured album for tracks)",
-            album: "View featured album"
-          }
-        },
-        customise: {
-          name: "Anpassen",
-          colours: {
-            name: "Farbe",
-            presets: "Voreinstellungen",
-            manual: "Anleitung",
-            custom: "Erstelle eine eigene Farbe",
-            default_with_season: "Standardfarbe f\xFCr {season}",
-            default: "Standardfarbe",
-            modals: {
-              custom_colour: {
-                preface: "Farben werden durch drei Werte gesteuert: Farbton, S\xE4ttigung und Helligkeit. Probiere den Schieberegler aus, um ein Gef\xFChl daf\xFCr zu bekommen.",
-                hue: "Akzentfarbe",
-                sat: "S\xE4ttigung",
-                lit: "Helligkeit",
-                seasonal_alert: "Die aktuelle Saison \xFCberschreibt deine Akzentfarbe. Passe den Schieberegler an, um sie zu deaktivieren."
-              }
-            }
-          },
-          high_contrast: {
-            name: "Enable high contrast mode"
-          },
-          seasonal: {
-            name: "Saisonal",
-            timeline: "Seasonal timeline",
-            bio: "W\xE4hrend saisonaler Ereignisse kann bleh automatisch die Standardakzentfarbe \xE4ndern, Partikel hinzuf\xFCgen und verschiedenen Schnittstellenelementen Overlays hinzuf\xFCgen.",
-            info: "Seasonal events try to match your timezone, for reference we calculated {offset}",
-            started: "Gestartet",
-            ends_in: "Endet in",
-            listing: {
-              none: "No active season",
-              easter: "Ostern",
-              pride: "Pride",
-              halloween: "Halloween",
-              pre_fall: "Vorherbst",
-              fall: "Herbst",
-              christmas: "Weihnachten",
-              new_years: "Silvester"
-            },
-            option: {
-              name: "Saisonales Eventsystem aktivieren"
-            },
-            marker: {
-              current: "Die aktuelle Saison ist {season} f\xFCr {time}",
-              started: "{time} angefangen",
-              none: "Derzeit gibt es keine aktive Saison.",
-              disabled: "Saisons sind deaktiviert. Aktiviere diese, um die aktuelle Saison anzuzeigen."
-            },
-            particles: {
-              name: "Partikel w\xE4hrend bestimmter Jahreszeiten anzeigen",
-              bio: "W\xE4hrend der Wintersaison gibt es Schneeflocken!"
-            },
-            show_less_particles: {
-              name: "Display a reduced number of particles"
-            },
-            fps_particles: {
-              name: "Display particles without fancy effects",
-              bio: "This might be more demanding on some systems"
-            },
-            overlays: {
-              name: "Zus\xE4tzliche saisonale Effekte anzeigen",
-              bio: "During winter seasons this is used for ice effects, otherwise mainly just gradients."
-            },
-            announce: "It is now {s}!",
-            nonsense: "A Nonsense Christmas",
-            fruitcake: "fruitcake",
-            mistletoe: "Mistletoe",
-            festival: "Christmas Eve",
-            exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-            exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
-            view: "Open seasonal tab"
-          },
-          artwork: {
-            name: "Cover"
-          },
-          hue_from_album: {
-            name: "Albumseiten automatisch f\xE4rben",
-            bio: "W\xE4hlt die Prim\xE4rfarbe eines Albumcovers aus, um die Seite zu bemalen."
-          },
-          gloss: {
-            name: "Gloss overlay",
-            bio: "Apply flair to all cover arts."
-          },
-          display: {
-            name: "Anzeigeeinstellungen"
-          },
-          colourful_counts: {
-            name: "Verwende einen Farbverlauf f\xFCr die Allzeitdiagramme",
-            bio: "Weist eine Farbe aus dem Farbverlauf zu, basierend auf der insgesamten Anzahl der Scrobbels f\xFCr einen K\xFCnstler."
-          },
-          colourful_tracks: {
-            name: "Colour actively scrobbling tracks based on album art",
-            bio: "Picks the primary colour from the associated cover to paint the track."
-          },
-          gendered_tags: {
-            name: "Geschlechtsspezifische Tags ausblenden",
-            bio: "Geschlechtsspezifische Tags sind normalerweise \xFCberfl\xFCssig."
-          },
-          rain: {
-            name: "Let it rain!",
-            bio: "rain :3c (may have performance impacts !! also may look bad !!)"
-          },
-          show_your_progress: {
-            name: "Show your weekly progress",
-            bio: "too many numbers ~w~"
-          },
-          profile_header: {
-            name: "Profilhintergr\xFCnde anzeigen",
-            see_type: "Source from avatar instead of top artist",
-            view_on: "View backgrounds on",
-            for_own: "Auf meinem Profil",
-            for_others: "Auf anderen Profilen"
-          },
-          sat_bg: {
-            name: "Card background saturation",
-            bio: "Control the colour of backgrounds in addition to main accent"
-          }
-        },
-        activities: {
-          name: "Activities",
-          bio: "Track your most recent activities locally on your profile.",
-          toggle: {
-            name: "Enable activity tracking",
-            bio: "Events will only be registered and displayed while enabled."
-          },
-          types: {
-            shout: "Shouts",
-            image: "Image uploads and interactions",
-            obsess: "Track obsessions",
-            love: "Track love",
-            install: "Installing and updating",
-            wiki: "Wiki editing"
-          }
-        },
-        performance: {
-          name: "Fehlerbehebung",
-          bio: "Running into noticeable issues in theme loading? Try out these settings.",
-          dev: {
-            name: "Disable in-built theme loading",
-            bio: "This allows you to load the in-built theme via Stylus instead, which may be more performant.",
-            modals: {
-              prompt: {
-                alert: "Once you refresh the page, the in-built bleh theme will be disabled (unless you disable this option again).",
-                stylus: "If you do not already have the <strong>Stylus</strong> extension, choose your browser below:",
-                browsers: {
-                  chrome: {
-                    name: "Chrome",
-                    bio: "for Chrome, Edge, Brave, Opera"
-                  },
-                  firefox: {
-                    name: "Firefox",
-                    bio: "for Firefox only"
-                  }
-                }
-              },
-              continue: {
-                next_step: 'Once you have the extension installed, hit "Install style" on the new tab that will open.'
-              },
-              finish: {
-                alert: "All done! From now on, styling will be handled via Stylus."
-              }
-            }
-          },
-          bug: {
-            name: "Something wrong?",
-            bio: "Report a bug in the bleh repo to get it fixed."
-          }
-        },
-        profiles: {
-          name: "Profil",
-          bio: "Manage your personal data and data stored on other profiles.",
-          notes: {
-            name: "Notes",
-            header: "Note",
-            placeholder: "Enter a local note for this user",
-            edit: "Edit note",
-            delete: "Remove note",
-            edit_user: "Edit {u}'s note",
-            delete_user: "Remove {u}'s note",
-            view: "View your profile notes"
-          },
-          you: "You"
-        },
-        redirects: {
-          name: "Weiterleitungen",
-          bio: "Manage last.fm's (not) handy redirection system as best as possible.",
-          travis: {
-            name: "Hide redirect messages on music pages",
-            bio: "No, I didn't mean Travi$ Scott"
-          },
-          autocorrect: {
-            name: "Scrobble auto-correction",
-            bio: "By default, last.fm will 'auto-correct' some of your scrobbles using this system. This will make your scrobbles appear as <i>Travis Scott</i> rather than <i>Travi$ Scott</i>, however the redirection system is not fully disabled.",
-            action: "Open Settings"
-          }
-        },
-        corrections: {
-          name: "Korrekturen",
-          bio: "Verwalte das Korrektursystem von bleh f\xFCr K\xFCnstler-, Album- und Titel.",
-          toggle: {
-            name: "Aktiviere das Korrektursystem"
-          },
-          view: {
-            name: "Aktuelle Korrekturen anzeigen",
-            bio: "Lists all active in your install"
-          },
-          formatting: "Smarte Musiktitel",
-          format_guest_features: {
-            name: "Formatiere Features und Song-Tags",
-            bio: "Teilt Titel und Albentitel in einzelne Tags auf, beispielsweise Features, Versionen, Remixe."
-          },
-          show_guest_features: {
-            name: "Features im Titel und K\xFCnstler anzeigen",
-            bio: "Durch deaktivieren werden sie von Titeln entfernt und das K\xFCnstlerfeld wird bevorzugt."
-          },
-          stacked_chartlist_info: {
-            name: "Name und Titel stapeln",
-            bio: "Beide passen sich an den Streaming-Diensten an und erh\xF6ht die L\xE4nge dieser."
-          },
-          show_remaster_tags: {
-            name: "Remaster-Tags anzeigen",
-            bio: "Nobody likes remasters (or the tags), if you'd prefer to still listen but remove the annoyance hide them!"
-          },
-          submit: {
-            name: "Neue Korrektur einreichen",
-            bio: "Have a name that you feel is capitalised wrong?",
-            action: "Submit"
-          },
-          listing: {
-            artists: "K\xFCnstler",
-            albums_tracks: "Alben und Titel"
-          }
-        },
-        language: {
-          name: "Sprache",
-          supported: "Unterst\xFCtzt von bleh",
-          by: "von {users}",
-          submit: {
-            name: "Sprichst du flie\xDFend eine andere Sprache?",
-            bio: "\xDCbersetzungen werden ausschlie\xDFlich von der Community beigesteuert.",
-            action: "\xDCbersetzung einreichen"
-          }
-        },
-        text: {
-          name: "Text",
-          shout_preview_md: `some <strong>completely</strong> random!<br>text that doesn't mean <a href="https://cutensilly.org">anything at all</a>`,
-          shout_preview: "some completely random! text that doesn't mean anything at all",
-          markdown: {
-            name: "Markdown-Formatierung verwenden",
-            bio: "Aktiviert Zeilenumbr\xFCche, Fettdruck, Kursivschrift und Links.",
-            shouts: "In Shouts",
-            profile: "In Profilbiografien"
-          },
-          font: {
-            name: "Font settings",
-            placeholder: "Font name(s), separated by commas"
-          },
-          font_weight: {
-            name: "Font weight",
-            bio: "Used for most regular text"
-          },
-          font_weight_medium: {
-            name: "Medium font weight",
-            bio: "Used for bold text"
-          },
-          font_weight_bold: {
-            name: "Bold font weight",
-            bio: "Used for larger text such as headers"
-          },
-          font_emoji: {
-            name: "Use compatibility emoji font",
-            bio: "On Windows systems prior to 11, the emoji font is majorly outdated unless this option is used. (such as \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F)"
-          }
-        },
-        inbuilt: {
-          profile: {
-            name: "Profil",
-            subtitle: {
-              name: "Untertitel"
-            },
-            pronoun_tip: "Wenn Pronomen an den Anfang gestellt werden, \xE4ndert sich \u201Eaka.\u201C in \u201EPronomen\u201C.",
-            country: "Land",
-            website: "Website",
-            about: "\xDCber mich",
-            toggle_preview: {
-              name: "Vorschau umschalten",
-              bio: "Vorschau deiner biographie f\xFCr andere",
-              note: "F\xFCr nicht bleh Benutzer, mehrere Zeilen werden als Leerzeichen und Links angezeigt, Fett- und Kursivschrift wird als einfacher Text angezeigt. Jegliche eingelegte Bilder werden als Text angezeigt."
-            },
-            banner_tip: "Bilder k\xF6nnen mithilfe von ![](link) eingelegt werden. Du kannst auch ein benutzerdefiniertes Banner mithilfe von ![banner](link) festlegen.",
-            avatar: {
-              name: "Profilbild bearbeiten",
-              upload: "Datei hochladen",
-              delete: "Profilbild l\xF6schen"
-            }
-          },
-          charts: {
-            name: "Charts",
-            recent: {
-              count: {
-                name: "Tracks to display"
-              },
-              artwork: {
-                name: "Display album artwork"
-              },
-              realtime: {
-                name: "Update tracks in realtime",
-                bio: "Your recent tracks will refresh while you are on your profile."
-              }
-            },
-            artists: {
-              timeframe: {
-                name: "Default timeframe"
-              },
-              style: {
-                name: "Chart style"
-              },
-              length: {
-                name: "Chart size"
-              }
-            },
-            albums: {
-              timeframe: {
-                name: "Default timeframe"
-              },
-              style: {
-                name: "Chart style"
-              },
-              length: {
-                name: "Chart size"
-              }
-            },
-            tracks: {
-              count: {
-                name: "Tracks to display"
-              },
-              timeframe: {
-                name: "Default timeframe"
-              }
-            }
-          },
-          ignore: {
-            name: "Communication",
-            consider: {
-              name: "To consider",
-              good: [
-                "You will not see previous or new shouts globally",
-                "They cannot direct message you",
-                "They cannot leave a shout on your profile or under your shouts anywhere"
-              ],
-              bad: [
-                "You cannot delete pre-existing shouts from your profile",
-                "They can still view your profile"
-              ]
-            },
-            view: "View {c} more",
-            count: "You have {c} users hidden"
-          },
-          privacy: {
-            name: "Datenschutz",
-            recent_listening: {
-              name: "Hide your recent listening history",
-              bio: "Keep your recent listens a secret o.O"
-            },
-            receiving_msgs: {
-              name: "Control who can interact with you",
-              bio: "This setting controls who can post shouts and message you privately.",
-              settings: {
-                everyone: {
-                  name: "Everyone",
-                  bio: "Everyone except who you have ignored"
-                },
-                neighbours: {
-                  name: "Who you follow and neighbours",
-                  bio: "Everyone who you have chosen to follow, along with your Last.fm neighbours"
-                },
-                follow: {
-                  name: "Who you follow only",
-                  bio: "Only users who you have chosen to follow"
-                }
-              }
-            },
-            disable_shoutbox: {
-              name: "Hide your shoutbox",
-              bio: "Your shoutbox will be hidden for you and anyone else."
-            }
-          }
-        },
-        actions: {
-          import: {
-            name: "Import",
-            modals: {
-              initial: {
-                name: "Import settings from a previous install",
-                alert: "Anything you import will override your current settings, if you are importing settings from online ensure you trust the source."
-              },
-              failed: {
-                name: "Import failed",
-                alert: "The settings you attempted to import failed to parse, no changes were made."
-              }
-            }
-          },
-          export: {
-            name: "Export",
-            modals: {
-              initial: {
-                name: "Export your current settings",
-                alert: "Your current settings are in the textbox below ready for you to copy."
-              }
-            }
-          },
-          reset: {
-            name: "Zur\xFCcksetzen",
-            modals: {
-              initial: {
-                name: "Reset your settings to default",
-                alert: "Your settings will be <strong>reset to all defaults</strong> with no way to go back. Are you sure?",
-                confirm: "Yes, reset my settings",
-                export: "Export first"
-              }
-            }
-          }
-        }
-      },
-      setup: {
-        start: {
-          name: "haiii :3 welcome to bleh!!",
-          thanks: "Thank you for installing, {m}",
-          info: [
-            "This is the first-time setup to help you get started with common tasks for new users, which include:",
-            "Manage accessibility, such as reduced motion",
-            "Configuring your accent colour",
-            "Changing your interface theme",
-            "Adjusting song corrections and tagging",
-            "If you're already set, you can skip."
-          ]
-        },
-        appearance: {
-          bio: "Configure the colour of bleh from one of the available presets, or make your own colour combination!",
-          subtext: "During seasonal events, the default colour changes automatically."
-        }
-      },
-      gallery: {
-        tabs: {
-          overview: "Fotos",
-          bookmarks: "Saved"
-        },
-        bookmarks: {
-          name: "Saved",
-          bio: "Gallery photos can be saved for future reference.",
-          no_data: "no images saved (\u30FB\u30FB )",
-          link: "Alle favorisierten Bilder ansehen",
-          button: {
-            image_is_bookmarked: {
-              name: "You have saved this image"
-            },
-            bookmark_this_image: {
-              name: "Speichern",
-              bio: "Dieses Bild speichern"
-            },
-            unbookmark_this_image: {
-              name: "Unsave",
-              bio: "Dieses Bild nicht mehr speichern"
-            }
-          }
-        },
-        empty: {
-          title: "No title",
-          description: "No description"
-        },
-        prefer: {
-          name: "Star"
-        },
-        report: {
-          name: "Melden"
-        },
-        open: {
-          name: "Vergr\xF6\xDFern",
-          tooltip: "Dieses Bild auf gesamter Aufl\xF6sung vergr\xF6\xDFern"
-        },
-        up: "Plusstimmen:",
-        down: "Minusstimmen:",
-        vote: "This is the sum of votes used for ordering.",
-        view: "Fotos anzeigen"
-      },
-      activities: {
-        name: "K\xFCrzliche Aktivit\xE4ten",
-        test: "TEST {involved}",
-        shout: "Shout hinterlassen",
-        image_upload: "Bild hochgeladen",
-        image_star: "Bild favorisiert",
-        obsess: "Obsessed",
-        unobsess: "Nicht mehr obsessed",
-        love: "Liebst",
-        unlove: "Liebst nicht mehr",
-        install_bwaa: "bwaa installiert",
-        update_bwaa: "bwaa aktualisiert",
-        install_bleh: "bleh installiert",
-        update_bleh: "bleh aktualisiert",
-        bookmark: "Lesezeichen hinzugef\xFCgt",
-        unbookmark: "Lesezeichen entfernt",
-        wiki: "Wiki editiert"
-      },
-      artist: {
-        name: "K\xFCnstler",
-        plural: "K\xFCnstler",
-        tooltip: "Multiple artists are combined into this profile."
-      },
-      album: {
-        name: "Album",
-        plural: "Alben"
-      },
-      track: {
-        name: "Titel",
-        plural: "Titel"
-      },
-      tag: {
-        name: "Tag"
-      },
-      search: {
-        name: "Suche",
-        results_for: "Results for {v}"
-      },
-      inbox: {
-        name: "Inbox",
-        overview: "Messages",
-        sent_overview: "Messages",
-        compose: "Messages",
-        message_overview: "Messages",
-        sent_message: "Messages",
-        notifications: "Notifications"
-      },
-      charts: {
-        name: "Charts",
-        overview: "Real time",
-        weekly: "Weekly",
-        charts_for: "Charts for {date}",
-        view: "View the charts",
-        scroll: {
-          name: "Simulate horizontal scrolling",
-          bio: "Disable if you can scroll easily on a laptop for example."
-        }
-      },
-      bookmarks: {
-        name: "Bookmarks"
-      },
-      home: {
-        name: "Home",
-        welcome: "Welcome back {m}"
-      }
-    },
-    pl: {
-      badges: {
-        missing: {
-          name: "No badges"
-        },
-        "user-status-subscriber": {
-          name: "Last.fm Pro",
-          reason: "Active Pro subscription"
-        },
-        "user-status-staff": {
-          name: "Staff",
-          reason: "Staff member of Last.fm"
-        },
-        "label--fade": {
-          reason: "They follow you"
-        },
-        contributor: {
-          name: "bleh contributor",
-          reason: "Contributed to bleh via code or translations"
-        },
-        translation: {
-          reason: "Translated for a supported language"
-        },
-        cat: {
-          name: "it's a kitty!!"
-        },
-        sponsor: {
-          name: "Sponsoring",
-          reason: "Sponsored bleh and bwaa :3"
-        },
-        cute: {
-          reason: "Reserved for special users"
-        },
-        reserved: {
-          reason: "Reserved for certain users"
-        }
-      },
-      avatar_for_me: "Your avatar",
-      avatar_for_user: "Avatar for ",
-      actions: {
-        view_profile: "View profile",
-        view_library: "Library",
-        leave_a_shout: "Shouts"
-      },
-      lotus: {
-        artist: "Artist corrections have been downloaded!",
-        album_track: "Album and track corrections have been downloaded!",
-        version: "You are running lotus version {v}.",
-        tooltip: "lotus is the community correction system used in bleh and bwaa",
-        check: "Check for updates",
-        correct: {
-          name: "Correct capitalisation",
-          tooltip: "Submit name correction",
-          tooltip_active: "Active name correction"
-        }
-      },
-      glacier: {
-        name: "Library refresh",
-        by_artist: " by {a}",
-        meta: {
-          artists: "Artists",
-          albums: "Albums",
-          tracks: "Tracks",
-          average: "Average"
-        },
-        view: {
-          grid: "Grid",
-          list: "List",
-          line: "Line",
-          pie: "Pie",
-          bar: "Bar"
-        },
-        axis: {
-          horizontal: "Horizontal",
-          vertical: "Vertical"
-        },
-        dates: {
-          last_year: "Last year",
-          this_year: "This year"
-        },
-        edit: "Edit",
-        delete: "Delete",
-        love: "Love",
-        bulk_edit: "Bulk edit",
-        option: {
-          name: "Use new graphs in library",
-          bio: "This can add a little amount of slow-down in some cases but with the benefit of awesome graphs."
-        }
-      },
-      changelog: {
-        name: "What\u2019s New?",
-        subtitle: "from {u}",
-        type: {
-          major: "Major release",
-          minor: "Minor release",
-          general: "General improvements",
-          fix: "Bug fix"
-        },
-        latest: "Latest",
-        view_major: "View latest major release"
-      },
-      auth_menu: {
-        dev: "Prze\u0142\u0105cz tryb deweloperski",
-        configure_bleh: "Skonfiguruj bleh",
-        library: "Library",
-        shouts: "Wiadomo\u015Bci",
-        obsessions: "Obsessions",
-        labs: "Labs",
-        bookmarks: "Bookmarks",
-        settings: "Settings",
-        logout: "Logout"
-      },
-      music: {
-        submit_lastfm_correction: "Submit correction to Last.fm",
-        search_variations: {
-          name: "Search",
-          tooltip: "Search for variations of this title"
-        },
-        search_genius: "Search lyrics",
-        fetch_plays: {
-          name: "Tracklist",
-          info: "Sourced from your own plays as an official tracklist is unavailable",
-          loading: "Fetching your plays on this album",
-          fail: "You do not have any plays on this album",
-          open_as_track: "Open album title as a track"
-        },
-        from_the_album: "From the album: {album}",
-        listens: {
-          count_listens: "{c} listens",
-          loading_listens: "listens",
-          other_listeners: "{c} others",
-          custom: {
-            tooltip: "Pick a user",
-            name: "View listens from another user"
-          }
-        },
-        wiki: "About",
-        wiki_edit: "edit wiki",
-        wiki_read: "read more",
-        refresh: "Refresh",
-        refresh_tracks: "Refresh tracks",
-        menu: "Extra options",
-        obsession: "Obsess",
-        obsession_first: "First to claim this obsession!",
-        compare: {
-          name: "Compare",
-          header: "Compare plays"
-        },
-        about: "About",
-        about_guests: "Others featured",
-        view_profile: "View profile"
-      },
-      error: {
-        name: "This page is missing...",
-        go_back: "Go back",
-        visit_profile: "Visit profile",
-        try_again: "Try again"
-      },
-      statistics: {
-        scrobbles: {
-          name: "Twoje scrobble"
-        },
-        plays: {
-          name: "odtworze\u0144"
-        }
-      },
-      profile: {
-        name: "Profile",
-        on_ignore_list: "Jeste\u015B na li\u015Bcie ignorowanych tego u\u017Cytkownika.",
-        friends: {
-          name: "Friends"
-        },
-        display_name: {
-          aka: "aka.",
-          pronouns: "pronouns"
-        },
-        created: {
-          name: "created",
-          replace: "\u2022 scrobbling since "
-        },
-        edit: "Edit profile",
-        obsess: "Obsess",
-        message: "Private message",
-        shortcut: {
-          add: "Add as shortcut",
-          remove: "Your profiles are linked!"
-        },
-        scrobbles: "Scrobbles",
-        artists: "Artists",
-        loved: "Loved tracks",
-        taste: "Taste similarity",
-        taste_meter: {
-          level: {
-            super: "Super",
-            very_high: "Very High",
-            high: "High",
-            medium: "Medium",
-            low: "Low",
-            very_low: "Very Low",
-            unknown: "Unknown"
-          },
-          you_share_1: "You share {artist}",
-          you_share_2: "You share {artist1} and {artist2}",
-          you_share_3: "You share {artist1}, {artist2}, and {artist3}"
-        },
-        open_avatar: "Open in a new tab",
-        settings: "Configure",
-        events: "Events",
-        top_badge: "Top Badge",
-        progress: {
-          to_go: "{s} scrobbles to go",
-          tier: "Tier {t}",
-          explain: "For each tier, you unlock a new badge"
-        }
-      },
-      event: {
-        name: "Event",
-        going: "{c} going",
-        maybe: "{c} interested",
-        you_know: "Who you know",
-        all_time: "All time",
-        total: "{c} total"
-      },
-      messaging: {
-        update: "bleh has updated to version {v}!"
-      },
-      wiki: {
-        latest: "View latest version",
-        syntax: {
-          name: "Use fancy syntax when editing",
-          links_to: "Links to {link}"
-        },
-        presets: {
-          name: "Symbol presets"
-        }
-      },
-      settings: {
-        name: "Settings",
-        save: "Zapisz",
-        cancel: "Anuluj",
-        close: "Zamknij",
-        clear: "Wyczy\u015B\u0107",
-        create: "Create",
-        add: "Add",
-        remove: "Remove",
-        done: "Gotowe",
-        finish: "Finish",
-        continue: "Kontynuuj",
-        reset: "Przywr\xF3\u0107 domy\u015Blne",
-        go: "Go",
-        skip: "Skip",
-        back: "Back",
-        right_click: "Right-click for more options",
-        reload: {
-          name: "Refresh pending",
-          body: "A setting you changed requires a page refresh to take effect."
-        },
-        new: "New",
-        beta: "Beta",
-        configure: "Configure",
-        pages: {
-          overview: "Profile",
-          privacy: "Privacy",
-          account_overview: "Account",
-          website: "Website",
-          subscription_overview: "Pro",
-          applications_overview: "Applications"
-        },
-        examples: {
-          button: "Przycisk przyk\u0142adowy"
-        },
-        skip_to: {
-          name: "Skip to"
-        },
-        home: {
-          name: "Strona g\u0142\xF3wna",
-          brand: "bleh",
-          version: "Wersja {v}",
-          recommended: "Zalecane ustawienia",
-          issues: {
-            name: "Problemy",
-            bio: "Zg\u0142o\u015B b\u0142\u0119dy"
-          },
-          update: {
-            name: "Updates",
-            css: "Update style",
-            bio: "Check now",
-            notice: "There are updates available!",
-            ignore: "Ignore temporarily",
-            update_now: "Update now",
-            update_to_v: "Update to {v}"
-          },
-          setup: {
-            name: "Setup",
-            bio: "Re-enter setup"
-          },
-          colours: {
-            name: "Kolory",
-            bio: "Wybierz sw\xF3j ulubiony!"
-          },
-          thanks: "Welcome {m}, you are running bleh version {v}.",
-          sponsor: {
-            name: "Sponsor",
-            header: "Sponsor the development of bleh and bwaa",
-            bio: "If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.",
-            thanks: "Thank you for sponsoring {m}, you are running bleh version {v}.",
-            status: {
-              yes: "You are a sponsor, thank you!",
-              no: "Become a sponsor to get a custom badge",
-              badge: "To configure your custom badge, get in touch with me.",
-              one_time: "A custom badge is available only when selecting monthly."
-            },
-            manage: "Manage sponsorship",
-            check: "Refresh badges",
-            download: "Sponsorship and badge data downloaded!",
-            version: "You have version {v} of the sponsorship/badge data downloaded."
-          }
-        },
-        appearance: {
-          name: "Appearance"
-        },
-        themes: {
-          name: "Motywy",
-          bio: "Wybierz od jasnego do ciemnego.",
-          dark: {
-            name: "Ciemny",
-            bio: "Domy\u015Blna wersja bleh"
-          },
-          darker: {
-            name: "Ciemniejszy",
-            bio: "Co\u015B pomi\u0119dzy"
-          },
-          oled: {
-            name: "P\xF3\u0142nocny",
-            bio: "Ca\u0142kowita ciemno\u015B\u0107"
-          },
-          light: {
-            name: "Jasny",
-            bio: "Ma\u0142o koloru i du\u017Co \u015Bwiat\u0142a"
-          },
-          classic: {
-            name: "Classic",
-            bio: "Re-live early computing"
-          }
-        },
-        music: {
-          name: "Music",
-          header: "Music configuration",
-          bio: "Configure your music-related settings for profiles, artists, albums, and tracks.",
-          profile_shortcut: {
-            name: "Profile shortcut",
-            bio: "Quickly access a user's plays on an artist, album, or track page.",
-            placeholder: "Profile",
-            header: "Enter username",
-            saved: "Profile shortcut is valid",
-            failed: "Profile does not exist or failed to load"
-          },
-          show_bulk_edit_album: {
-            name: "Show album in chartlists",
-            bio: "This is disabled by default as hovering over tracks reveals the album title in all areas",
-            require: "Only applicable with the \u2018Last.fm Bulk Edit\u2019 extension"
-          },
-          grid_glow: {
-            name: "Show a glow around grid items"
-          }
-        },
-        accessibility: {
-          name: "Accessibility",
-          shout_preview: 'jakikolwiek losowy tekst, kt\xF3ry <a href="https://cutensilly.org">nic nie znaczy</a>',
-          accessible_name_colours: {
-            name: "Preferowane kolory dost\u0119pnej nazwy",
-            bio: "U\u017Cyj domy\u015Blnego koloru tekstu nag\u0142\xF3wka zamiast koloru akcentowego."
-          },
-          underline_links: {
-            name: "Zawsze podkre\u015Blaj linki",
-            bio: "Podkre\u015Blaj linki do element\xF3w interaktywnych."
-          },
-          reduced_motion: {
-            name: "Reduce animations around interfaces",
-            bio: "Will in most cases either slowly fade or hard-cut, no scaling."
-          },
-          toggle_icon: {
-            name: "Add indicator icon to toggles",
-            bio: "Display a checkmark or a cross depending on toggle state."
-          }
-        },
-        layout: {
-          name: "Layout",
-          header: "Manage header layout",
-          avatar_action: {
-            name: "Default avatar action",
-            bio: "What do you want to happen when you click avatars?",
-            gallery: "View photos (or featured album for tracks)",
-            album: "View featured album"
-          }
-        },
-        customise: {
-          name: "Dostosuj",
-          colours: {
-            name: "Kolory",
-            presets: "Ustawienia wst\u0119pne",
-            manual: "R\u0119cznie",
-            custom: "Stw\xF3rz niestandardowy kolor",
-            default_with_season: "Default colour for {season}",
-            default: "Default colour",
-            modals: {
-              custom_colour: {
-                preface: "Kolory s\u0105 kontrolowane przez trzy warto\u015Bci: odcie\u0144 (hue), nasycenie (saturation) i jasno\u015B\u0107 (lightness). Przesu\u0144 suwaki, aby dostosowa\u0107 kolor.",
-                hue: "Kolor akcentu (hue)",
-                sat: "Nasycenie (saturation)",
-                lit: "Jasno\u015B\u0107 (lightness)",
-                seasonal_alert: "The current season is overriding your accent colour, adjust sliders to disable."
-              }
-            }
-          },
-          high_contrast: {
-            name: "Enable high contrast mode"
-          },
-          seasonal: {
-            name: "Seasonal",
-            timeline: "Seasonal timeline",
-            bio: "During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.",
-            info: "Seasonal events try to match your timezone, for reference we calculated {offset}",
-            started: "Started",
-            ends_in: "Ends in",
-            listing: {
-              none: "No active season",
-              easter: "Easter",
-              pride: "Pride",
-              halloween: "Halloween",
-              pre_fall: "Pre-Fall",
-              fall: "Fall",
-              christmas: "Christmas",
-              new_years: "New Years"
-            },
-            option: {
-              name: "Enable seasonal event system"
-            },
-            marker: {
-              current: "The current season is {season} for {time}.",
-              started: "started {time}",
-              none: "There is no active season currently.",
-              disabled: "You have seasons disabled, enable to view current event."
-            },
-            particles: {
-              name: "Display particles during select seasons",
-              bio: "During winter seasons you get snowflakes!"
-            },
-            show_less_particles: {
-              name: "Display a reduced number of particles"
-            },
-            fps_particles: {
-              name: "Display particles without fancy effects",
-              bio: "This might be more demanding on some systems"
-            },
-            overlays: {
-              name: "Display additional seasonal effects",
-              bio: "During winter seasons this is used for ice effects, otherwise mainly just gradients."
-            },
-            announce: "It is now {s}!",
-            nonsense: "A Nonsense Christmas",
-            fruitcake: "fruitcake",
-            mistletoe: "Mistletoe",
-            festival: "Christmas Eve",
-            exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-            exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
-            view: "Open seasonal tab"
-          },
-          artwork: {
-            name: "Ok\u0142adka"
-          },
-          hue_from_album: {
-            name: "Automatically colour album pages",
-            bio: "Picks the primary colour from an album cover to paint the page."
-          },
-          gloss: {
-            name: "Nak\u0142adka b\u0142yszcz\u0105ca",
-            bio: "Dodaj odblasku do wszystkich ok\u0142adek."
-          },
-          display: {
-            name: "Wy\u015Bwietlacz"
-          },
-          colourful_counts: {
-            name: "U\u017Cyj gradientu kolor\xF3w dla wszystkich czas\xF3w ranking\xF3w",
-            bio: "Kolor jest przypisywany na podstawie twojej pozycji w wszechczasowych statystykach artyst\xF3w."
-          },
-          colourful_tracks: {
-            name: "Colour actively scrobbling tracks based on album art",
-            bio: "Picks the primary colour from the associated cover to paint the track."
-          },
-          gendered_tags: {
-            name: "Ukryj tagi zwi\u0105zane z p\u0142ci\u0105",
-            bio: "Domy\u015Blnie tagi zwi\u0105zane z p\u0142ci\u0105 s\u0105 ukryte w bleh ze wzgl\u0119du na ich nieuporz\u0105dkowan\u0105 i problematyczn\u0105 nature."
-          },
-          rain: {
-            name: "Niech pada!",
-            bio: "deszcz :3c (mo\u017Ce wp\u0142ywa\u0107 na wydajno\u015B\u0107!! mo\u017Ce te\u017C wygl\u0105da\u0107 \u017Ale!!)"
-          },
-          show_your_progress: {
-            name: "Show your weekly progress",
-            bio: "too many numbers ~w~"
-          },
-          profile_header: {
-            name: "Display profile backgrounds",
-            see_type: "Source from avatar instead of top artist",
-            view_on: "View backgrounds on",
-            for_own: "My own profile",
-            for_others: "Other profiles"
-          },
-          sat_bg: {
-            name: "Card background saturation",
-            bio: "Control the colour of backgrounds in addition to main accent"
-          }
-        },
-        activities: {
-          name: "Activities",
-          bio: "Track your most recent activities locally on your profile.",
-          toggle: {
-            name: "Enable activity tracking",
-            bio: "Events will only be registered and displayed while enabled."
-          },
-          types: {
-            shout: "Shouts",
-            image: "Image uploads and interactions",
-            obsess: "Track obsessions",
-            love: "Track love",
-            install: "Installing and updating",
-            wiki: "Wiki editing"
-          }
-        },
-        performance: {
-          name: "Wydajno\u015B\u0107",
-          bio: "Napotykasz problemy z \u0142adowaniem motywu? Wypr\xF3buj te ustawienia.",
-          dev: {
-            name: "Wy\u0142\u0105cz wbudowane \u0142adowanie motywu",
-            bio: "Pozwala to na \u0142adowanie wbudowanego motywu za pomoc\u0105 rozszerzenia Stylus, co mo\u017Ce by\u0107 bardziej wydajne.",
-            modals: {
-              prompt: {
-                alert: "Po od\u015Bwie\u017Ceniu strony wbudowany motyw bleh zostanie wy\u0142\u0105czony (chyba \u017Ce ponownie wy\u0142\u0105czysz t\u0119 opcj\u0119).",
-                stylus: "Je\u015Bli nie masz jeszcze rozszerzenia <strong>Stylus</strong>, wybierz swoj\u0105 przegl\u0105dark\u0119 poni\u017Cej:",
-                browsers: {
-                  chrome: {
-                    name: "Chrome",
-                    bio: "dla Chrome, Edge, Brave, Opera"
-                  },
-                  firefox: {
-                    name: "Firefox",
-                    bio: "tylko dla Firefox"
-                  }
-                }
-              },
-              continue: {
-                next_step: 'Gdy ju\u017C zainstalujesz rozszerzenie, kliknij "Zainstaluj styl" na nowej karcie, kt\xF3ra si\u0119 otworzy.'
-              },
-              finish: {
-                alert: "Gotowe! Od teraz motyw b\u0119dzie obs\u0142ugiwany za pomoc\u0105 Stylus."
-              }
-            }
-          },
-          bug: {
-            name: "Something wrong?",
-            bio: "Report a bug in the bleh repo to get it fixed."
-          }
-        },
-        profiles: {
-          name: "Profil",
-          bio: "Zarz\u0105dzaj swoimi danymi i danymi zapisanych na innych profilach.",
-          notes: {
-            name: "Notatki",
-            header: "Notatka",
-            placeholder: "Wprowad\u017A lokaln\u0105 notatk\u0119 dla tego u\u017Cytkownika",
-            edit: "Edytuj notatk\u0119",
-            delete: "Usu\u0144 notatk\u0119",
-            edit_user: "Edytuj notatk\u0119 dla {u}",
-            delete_user: "Usu\u0144 notatk\u0119 dla {u}"
-          },
-          you: "You"
-        },
-        redirects: {
-          name: "Redirects",
-          bio: "Manage last.fm's (not) handy redirection system as best as possible.",
-          travis: {
-            name: "Hide redirect messages on music pages",
-            bio: "No, I didn't mean Travi$ Scott"
-          },
-          autocorrect: {
-            name: "Scrobble auto-correction",
-            bio: "By default, last.fm will 'auto-correct' some of your scrobbles using this system. This will make your scrobbles appear as <i>Travis Scott</i> rather than <i>Travi$ Scott</i>, however the redirection system is not fully disabled.",
-            action: "Open Settings"
-          }
-        },
-        corrections: {
-          name: "Corrections",
-          bio: "Manage bleh's in-built correction system for artist, album, and track titles.",
-          toggle: {
-            name: "Enable the correction system"
-          },
-          view: {
-            name: "View current corrections",
-            bio: "Lists all active in your install"
-          },
-          formatting: "Smart music titles",
-          format_guest_features: {
-            name: "Formatuj wyst\u0119py i tagi utwor\xF3w",
-            bio: "Mniej eksponuje wyst\u0119py i tagi utwor\xF3w (np. Remix, Deluxe Edition, itp.)"
-          },
-          show_guest_features: {
-            name: "Display guest features in title and artist",
-            bio: "Turning off will remove from title and prefer artist field."
-          },
-          stacked_chartlist_info: {
-            name: "Stack track name and title",
-            bio: "Both matches streaming services and increases max length of each."
-          },
-          show_remaster_tags: {
-            name: "Show remaster tags",
-            bio: "Nobody likes remasters (or the tags), if you'd prefer to still listen but remove the annoyance hide them!"
-          },
-          submit: {
-            name: "Submit new correction",
-            bio: "Have an artist, album, or track name that you feel is capitalised wrong?",
-            action: "Submit"
-          },
-          listing: {
-            artists: "Artists",
-            albums_tracks: "Albums and tracks"
-          }
-        },
-        language: {
-          name: "Language",
-          supported: "Supported by bleh",
-          by: "by {users}",
-          submit: {
-            name: "Are you fluent in another language?",
-            bio: "Translations are purely community-contributed.",
-            action: "Submit translation"
-          }
-        },
-        text: {
-          name: "Text",
-          shout_preview_md: 'jakikolwiek <strong>losowy</strong> tekst,<br>kt\xF3ry <a href="https://cutensilly.org">nic nie znaczy</a>',
-          shout_preview: "jakikolwiek losowy tekst, kt\xF3ry nic nie znaczy",
-          markdown: {
-            name: "Use markdown formatting",
-            bio: "Enables line-breaks, bold, italics, and links.",
-            shouts: "In shouts",
-            profile: "In profile bios"
-          },
-          font: {
-            name: "Font settings",
-            placeholder: "Font name(s), separated by commas"
-          },
-          font_weight: {
-            name: "Font weight",
-            bio: "Used for most regular text"
-          },
-          font_weight_medium: {
-            name: "Medium font weight",
-            bio: "Used for bold text"
-          },
-          font_weight_bold: {
-            name: "Bold font weight",
-            bio: "Used for larger text such as headers"
-          },
-          font_emoji: {
-            name: "Use compatibility emoji font",
-            bio: "On Windows systems prior to 11, the emoji font is majorly outdated unless this option is used. (such as \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F)"
-          }
-        },
-        inbuilt: {
-          profile: {
-            name: "Profil",
-            subtitle: {
-              name: "Podtytu\u0142",
-              aka: "aka.",
-              pronouns: "zaimki"
-            },
-            pronoun_tip: 'Je\u015Bli zaimki s\u0105 umieszczone jako pierwsze, "aka." zmieni si\u0119 na "zaimki".',
-            country: "Kraj",
-            website: "Strona internetowa",
-            about: "O mnie",
-            toggle_preview: {
-              name: "Prze\u0142\u0105cz podgl\u0105d",
-              bio: "Podgl\u0105d, jak tw\xF3j profil wygl\u0105da dla innych",
-              note: "Uwaga: Nowe linie, linki itp. s\u0105 widoczne tylko dla innych u\u017Cytkownik\xF3w bleh, zwykli u\u017Cytkownicy Last.fm widz\u0105 nowe linie jako spacje."
-            },
-            banner_tip: "Images can be embedded using ![](link). You can also set a custom profile banner with ![banner](link).",
-            avatar: {
-              name: "Edytuj awatar",
-              upload: "Prze\u015Blij plik",
-              delete: "Usu\u0144 awatar"
-            }
-          },
-          charts: {
-            name: "Rankingi",
-            recent: {
-              count: {
-                name: "Liczba utwor\xF3w do wy\u015Bwietlenia"
-              },
-              artwork: {
-                name: "Wy\u015Bwietl ok\u0142adki album\xF3w"
-              },
-              realtime: {
-                name: "Aktualizuj utwory w czasie rzeczywistym"
-              }
-            },
-            artists: {
-              timeframe: {
-                name: "Domy\u015Blny przedzia\u0142 czasowy"
-              },
-              style: {
-                name: "Styl rankingu"
-              },
-              length: {
-                name: "Chart size"
-              }
-            },
-            albums: {
-              timeframe: {
-                name: "Domy\u015Blny przedzia\u0142 czasowy"
-              },
-              style: {
-                name: "Styl rankingu"
-              },
-              length: {
-                name: "Chart size"
-              }
-            },
-            tracks: {
-              count: {
-                name: "Liczba utwor\xF3w do wy\u015Bwietlenia"
-              },
-              timeframe: {
-                name: "Domy\u015Blny przedzia\u0142 czasowy"
-              }
-            }
-          },
-          ignore: {
-            name: "Communication",
-            consider: {
-              name: "To consider",
-              good: [
-                "You will not see previous or new shouts globally",
-                "They cannot direct message you",
-                "They cannot leave a shout on your profile or under your shouts anywhere"
-              ],
-              bad: [
-                "You cannot delete pre-existing shouts from your profile",
-                "They can still view your profile"
-              ]
-            },
-            view: "View {c} more",
-            count: "You have {c} users hidden"
-          },
-          privacy: {
-            name: "Prywatno\u015B\u0107",
-            recent_listening: {
-              name: "Ukryj histori\u0119 ostatnich ods\u0142uch\xF3w",
-              bio: "Zachowaj tajemnic\u0119 swoich ostatnich ods\u0142uch\xF3w o.O"
-            },
-            receiving_msgs: {
-              name: "Kontroluj kto mo\u017Ce si\u0119 z Tob\u0105 zkontaktowa\u0107",
-              bio: "To ustawienie kontroluje kto mo\u017Ce wysy\u0142a\u0107 wiadomosci i prywatne wiadomo\u015Bci do ciebie.",
-              settings: {
-                everyone: {
-                  name: "Ka\u017Cdy",
-                  bio: "Ka\u017Cdy opr\xF3cz os\xF3b kt\xF3re zosta\u0142y przez ciebie zignorowane"
-                },
-                neighbours: {
-                  name: "Osoby kt\xF3rych obserwujesz i s\u0105siaduj\u0105cy",
-                  bio: "Wszyscy kt\xF3rych obserwujesz oraz Twoi s\u0105siedzi na Last.fm"
-                },
-                follow: {
-                  name: "Tylko osoby kt\xF3re obserwujesz",
-                  bio: "Tylko u\u017Cytkownicy kt\xF3rych obserwujesz"
-                }
-              }
-            },
-            disable_shoutbox: {
-              name: "Ukryj sw\xF3j shoutbox",
-              bio: "Tw\xF3j shoutbox zostanie ukryty dla ciebie i dla innych u\u017Cytkownik\xF3w."
-            }
-          }
-        },
-        actions: {
-          import: {
-            name: "Importuj",
-            modals: {
-              initial: {
-                name: "Importuj ustawienia z poprzedniej instalacji",
-                alert: "Wszystko co zaimportujesz zast\u0105pi twoje bie\u017C\u0105ce ustawienia. Importuj\u0105c ustawienia z internetu upewnij si\u0119 \u017Ce \u017Ar\xF3d\u0142o jest zaufane."
-              },
-              failed: {
-                name: "Import nie powi\xF3d\u0142 si\u0119",
-                alert: "Nie uda\u0142o si\u0119 przetworzy\u0107 importowanych ustawie\u0144. \u017Badne zmiany nie zosta\u0142y wprowadzone."
-              }
-            }
-          },
-          export: {
-            name: "Eksportuj",
-            modals: {
-              initial: {
-                name: "Eksportuj swoje bie\u017C\u0105ce ustawienia",
-                alert: "Twoje bie\u017C\u0105ce ustawienia s\u0105 w polu tekstowym poni\u017Cej, gotowe do skopiowania."
-              }
-            }
-          },
-          reset: {
-            name: "Resetuj",
-            modals: {
-              initial: {
-                name: "Resetuj ustawienia do domy\u015Blnych",
-                alert: "Twoje ustawienia zostan\u0105 <strong>zresetowane do domy\u015Blnych</strong> bez mo\u017Cliwo\u015Bci cofni\u0119cia. Czy na pewno chcesz kontynuowa\u0107?",
-                confirm: "Tak, resetuj moje ustawienia",
-                export: "Eksportuj najpierw"
-              }
-            }
-          }
-        }
-      },
-      gallery: {
-        tabs: {
-          overview: "Zdj\u0119cia",
-          bookmarks: "Zapisane"
-        },
-        bookmarks: {
-          name: "Zapisane",
-          bio: "Zdj\u0119cia galerii mo\u017Cna zapisa\u0107 na przysz\u0142o\u015B\u0107.",
-          no_data: "brak zapisanych zdj\u0119\u0107 (\u30FB\u30FB )",
-          link: "View all saved photos",
-          button: {
-            image_is_bookmarked: {
-              name: "Masz to zdj\u0119cie zapisane"
-            },
-            bookmark_this_image: {
-              name: "Zapisz to zdj\u0119cie",
-              bio: "Zapisz to zdj\u0119cie na p\xF3\u017Aniej"
-            },
-            unbookmark_this_image: {
-              name: "Usu\u0144 zapis tego zdj\u0119cia",
-              bio: "Usu\u0144 zapis tego zdj\u0119cia"
-            }
-          }
-        },
-        empty: {
-          title: "No title",
-          description: "No description"
-        },
-        prefer: {
-          name: "Star"
-        },
-        report: {
-          name: "Report"
-        },
-        open: {
-          name: "Expand",
-          tooltip: "Expand image to full resolution"
-        },
-        up: "Up votes:",
-        down: "Down votes:",
-        vote: "This is the sum of votes used for ordering."
-      },
-      activities: {
-        name: "Recent Activity",
-        test: "TEST {involved}",
-        shout: "You left a shout for {i}",
-        image_upload: "You uploaded an image for {i}",
-        image_star: "You starred an image for {i}",
-        obsess: "You\u2019re obsessed with {i}",
-        unobsess: "You\u2019re no longer obsessed with {i}",
-        love: "You love {i}",
-        unlove: "You no longer love {i}",
-        install_bwaa: "You installed bwaa",
-        update_bwaa: "You updated bwaa to {i}",
-        install_bleh: "You installed bleh",
-        update_bleh: "You updated bleh to {i}",
-        bookmark: "You bookmarked {i}",
-        unbookmark: "You removed {i}\u2019s bookmark",
-        wiki: "You edited on {i}"
-      },
-      artist: {
-        name: "Artist",
-        plural: "Artists",
-        tooltip: "Multiple artists are combined into this profile."
-      },
-      album: {
-        name: "Album",
-        plural: "Albums"
-      },
-      track: {
-        name: "Track",
-        plural: "Tracks"
-      },
-      tag: {
-        name: "Tag"
-      },
-      search: {
-        name: "Search",
-        results_for: "Results for {v}"
-      },
-      inbox: {
-        name: "Inbox",
-        overview: "Messages",
-        sent_overview: "Messages",
-        compose: "Messages",
-        message_overview: "Messages",
-        sent_message: "Messages",
-        notifications: "Notifications"
-      },
-      charts: {
-        name: "Charts",
-        overview: "Real time",
-        weekly: "Weekly",
-        charts_for: "Charts for {date}",
-        view: "View the charts",
-        scroll: {
-          name: "Simulate horizontal scrolling",
-          bio: "Disable if you can scroll easily on a laptop for example."
-        }
-      },
-      bookmarks: {
-        name: "Bookmarks"
-      },
-      home: {
-        name: "Home",
-        welcome: "Welcome back {m}"
+      body: {
+        en: "Only recommended for desktop devices"
       }
     }
   };
@@ -64846,7 +61868,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       body: trans2.seasonal_particles_fps.body
     },
     seasonal_overlays: {
-      default: true
+      default: true,
+      type: "checkbox",
+      title: trans2.seasonal_overlays.name,
+      body: trans2.seasonal_overlays.body
     },
     profile_header_own: {
       default: true,
@@ -64926,7 +61951,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     default_avatar_action: {
       default: "expand",
-      type: "radio"
+      type: "radio",
+      title: trans2.default_avatar_action.name,
+      body: trans2.default_avatar_action.body,
+      values: {
+        expand: {
+          name: trans2.expand
+        },
+        gallery: {
+          name: trans2.photos
+        }
+      }
     },
     collage_title: {
       default: true,
@@ -65012,6 +62047,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       type: "checkbox",
       icon: "icon-16-download",
       horizontal: true
+    },
+    simulate_scroll: {
+      default: true,
+      title: trans2.simulate_scroll.name,
+      body: trans2.simulate_scroll.body,
+      require_reload: "partial"
     },
     rabbit: {
       default: true,

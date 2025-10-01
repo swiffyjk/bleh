@@ -19,7 +19,7 @@ import {
 import { stored_season } from '../build/seasonal';
 import { sponsor_list } from '../build/sponsor';
 import { clamp_sat, hex_to_hsl, time } from '../build/tools';
-import { lang, lang_info, tl, trans, trans_legacy } from '../build/trans';
+import { lang, lang_info, tl, trans } from '../build/trans';
 import { load_badges } from '../components/badge';
 import { dialog, dialog_rm } from '../components/dialog';
 import { markdown } from '../components/markdown';
@@ -998,6 +998,35 @@ export async function render_setting_page(page_id) {
                             id: 'music_links',
                             list: page.state.music_links
                         })}
+                        ${setting({ id: 'default_avatar_action' })}
+                    </div>
+                    <div class="inner-preview pad flex">
+                        <section class="catalogue-tags">
+                            <ul class="tags-list tags-list--global">
+                                <li class="tag">
+                                    <a href="/tag/pop">pop</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/country">country</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/singer-songwriter"
+                                        >singer-songwriter</a
+                                    >
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/female+vocalists"
+                                        >female vocalists</a
+                                    >
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/synthpop">synthpop</a>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="setting-group">
+                        ${setting({ id: 'gendered_tags' })}
                     </div>
                 </section>
                 ${!page.mobile ?
@@ -1089,37 +1118,6 @@ export async function render_setting_page(page_id) {
             </section>
             `
                 :   ''}
-                <section class="bleh--panel">
-                    <h4>${trans_legacy.en.settings.customise.display.name}</h4>
-                    <div class="inner-preview pad flex">
-                        <section class="catalogue-tags">
-                            <ul class="tags-list tags-list--global">
-                                <li class="tag">
-                                    <a href="/tag/pop">pop</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/country">country</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/singer-songwriter"
-                                        >singer-songwriter</a
-                                    >
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/female+vocalists"
-                                        >female vocalists</a
-                                    >
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/synthpop">synthpop</a>
-                                </li>
-                            </ul>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'gendered_tags' })}
-                    </div>
-                </section>
             `
         );
     } else if (page_id == 'playback') {
@@ -1243,7 +1241,7 @@ export async function render_setting_page(page_id) {
                     </div>
                 </section>
                 <section class="bleh--panel">
-                    <h4>${trans_legacy.en.settings.corrections.formatting}</h4>
+                    <h4>${tl(trans.smart_music_titles)}</h4>
                     <div class="inner-preview pad flex">
                         <section
                             class="redesigned-header mockup redesigned-track-header no-top-margin"
@@ -1357,69 +1355,6 @@ export async function render_setting_page(page_id) {
             </section>
             `
                 :   ''}
-            `
-        );
-    } else if (page_id == 'customise') {
-        register_skip_to([
-            {
-                id: 'profile_avi_background',
-                name: trans_legacy.en.settings.customise.profile_header.see_type
-            },
-            {
-                id: 'profile_header_own',
-                name: trans_legacy.en.settings.customise.profile_header.view_on
-            },
-            {
-                id: 'show_your_progress',
-                name: trans_legacy.en.settings.customise.show_your_progress.name
-            }
-        ]);
-
-        render(
-            page.structure.main,
-            html`
-                <div class="bleh--panel">
-                    <h4>
-                        ${trans_legacy.en.settings.customise.profile_header
-                            .name}
-                    </h4>
-
-                    <div class="sep"></div>
-                </div>
-                <div class="bleh--panel check-artist-hover">
-                    <h4 class="top-header">${tl(trans.layout)}</h4>
-                    <h4>${trans_legacy.en.settings.layout.header}</h4>
-                    <div class="inner-preview pad">
-                        <div class="profile-mockup artist">
-                            <div class="mockup-header">
-                                <div class="mockup-avatar-wrap">
-                                    <img
-                                        class="mockup-avatar"
-                                        src="https://lastfm.freetls.fastly.net/i/u/avatar170s/383d6c03304e720075d0050e8a6a4644"
-                                    />
-                                </div>
-                                <div class="mockup-info">
-                                    <div class="mockup-subtext"></div>
-                                    <div class="mockup-name"></div>
-                                </div>
-                            </div>
-                            <div class="mockup-container">
-                                <div class="mockup-col-main">
-                                    <div class="mockup-panel"></div>
-                                    <div class="mockup-panel main"></div>
-                                </div>
-                                <div class="mockup-col-sidebar">
-                                    <div class="mockup-panel"></div>
-                                    <div class="mockup-panel main"></div>
-                                </div>
-                            </div>
-                            <div
-                                class="profile-mockup-background"
-                                style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/383d6c03304e720075d0050e8a6a4644);"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
             `
         );
     } else if (page_id == 'seasonal') {
@@ -1549,38 +1484,7 @@ export async function render_setting_page(page_id) {
                             </div>
                         </div>
                         ${setting({ id: 'seasonal_particles_fps' })}
-                        <div
-                            class="setting hide-if-seasonal-disabled"
-                            data-type="toggle"
-                            id="container-seasonal_overlays"
-                            onclick="_update_item('seasonal_overlays')"
-                        >
-                            <button
-                                class="btn reset"
-                                onclick="_reset_item('seasonal_overlays')"
-                            >
-                                ${tl(trans.reset)}
-                            </button>
-                            <div class="heading">
-                                <h5>
-                                    ${trans_legacy.en.settings.customise
-                                        .seasonal.overlays.name}
-                                </h5>
-                                <p>
-                                    ${trans_legacy.en.settings.customise
-                                        .seasonal.overlays.bio}
-                                </p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button
-                                    class="toggle"
-                                    id="toggle-seasonal_overlays"
-                                    aria-checked="true"
-                                >
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
+                        ${setting({ id: 'seasonal_overlays' })}
                     </div>
                 </div>
             `
@@ -1834,40 +1738,6 @@ export async function render_setting_page(page_id) {
                     <div class="setting-group">
                         ${setting({ id: 'bio_markdown' })}
                         ${setting({ id: 'show_your_progress' })}
-                    </div>
-                    <div class="setting-group">
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>
-                                    ${trans_legacy.en.settings.layout
-                                        .avatar_action.name}
-                                </h5>
-                                <p>
-                                    ${trans_legacy.en.settings.layout
-                                        .avatar_action.bio}
-                                </p>
-                            </div>
-                            <div class="primary-selections artist-hover-image">
-                                <div
-                                    class="btn primary-selection"
-                                    id="toggle-default_avatar_action-expand"
-                                    data-toggle="default_avatar_action"
-                                    data-toggle-value="expand"
-                                    onclick="_update_item('default_avatar_action', 'expand')"
-                                >
-                                    <h5>${tl(trans.expand)}</h5>
-                                </div>
-                                <div
-                                    class="btn primary-selection"
-                                    id="toggle-default_avatar_action-gallery"
-                                    data-toggle="default_avatar_action"
-                                    data-toggle-value="gallery"
-                                    onclick="_update_item('default_avatar_action', 'gallery')"
-                                >
-                                    <h5>${tl(trans.photos)}</h5>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </section>
                 <section class="bleh--panel">
@@ -2457,7 +2327,7 @@ export function display_colour_presets() {
         christmas: [
             {
                 type: 'season',
-                name: trans_legacy.en.settings.customise.seasonal.nonsense,
+                name: tl(trans.seasonal.presets.nonsense),
                 sets: {
                     hue: 352,
                     sat: 1.8,
@@ -2466,7 +2336,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: trans_legacy.en.settings.customise.seasonal.fruitcake,
+                name: tl(trans.seasonal.presets.fruitcake),
                 sets: {
                     hue: 24,
                     sat: 0.93,
@@ -2475,7 +2345,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: trans_legacy.en.settings.customise.seasonal.mistletoe,
+                name: tl(trans.seasonal.presets.mistletoe),
                 sets: {
                     hue: 130,
                     sat: 0.45,
@@ -2484,7 +2354,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: trans_legacy.en.settings.customise.seasonal.festival,
+                name: tl(trans.seasonal.presets.festival),
                 sets: {
                     hue: 240,
                     sat: 1.4,
@@ -2854,13 +2724,12 @@ function import_settings() {
                         // halt
                         dialog({
                             id: 'import_failed',
-                            title: trans_legacy.en.settings.actions.import
-                                .modals.failed.name,
+                            title: tl(trans.import_failed),
                             body: html.node`
-                                <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
+                                <p class="big-modal-alert alert-error">${tl(trans.import_failed.notice)}</p>
                                 <div class="modal-footer">
                                     <div class="fill"></div>
-                                    <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
+                                    <button class="btn primary done" onclick=${() => dialog_rm({ id: 'import_failed' })}>
                                         ${tl(trans.done)}
                                     </button>
                                 </div>
