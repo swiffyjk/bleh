@@ -3578,13 +3578,6 @@ export const trans = {
         pt: 'Desativar partículas',
         sv: 'Stäng av partiklar'
     },
-    going: {
-        // going as in going to an event
-        en: 'Going',
-        de: 'Zugesagt',
-        pt: 'Indo',
-        sv: 'Ska gå på'
-    },
     beware_notice: {
         en: 'Beware! Only change these settings if you know what you’re doing',
         de: 'Vorsicht! Ändere diese Einstellungen nur, wenn du weißt, was du tust',
@@ -3898,13 +3891,22 @@ export const trans = {
         pt: 'Nenhuma foto salva',
         sv: 'Inga foton sparade'
     },
+    going: {
+        // going as in attending an event
+        en: 'Going',
+        de: 'Zugesagt',
+        pt: 'Indo',
+        sv: 'Ska gå på'
+    },
     interested: {
+        // interested in attending an event
         en: 'Interested',
         de: 'Interessiert',
         pt: 'Interessado',
         sv: 'Intresserad'
     },
     total: {
+        // total of events attended or anything else
         en: 'Total',
         de: 'Gesamt',
         sv: 'Totalt'

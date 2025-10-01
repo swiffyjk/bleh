@@ -59258,13 +59258,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Desativar part\xEDculas",
       sv: "St\xE4ng av partiklar"
     },
-    going: {
-      // going as in going to an event
-      en: "Going",
-      de: "Zugesagt",
-      pt: "Indo",
-      sv: "Ska g\xE5 p\xE5"
-    },
     beware_notice: {
       en: "Beware! Only change these settings if you know what you\u2019re doing",
       de: "Vorsicht! \xC4ndere diese Einstellungen nur, wenn du wei\xDFt, was du tust",
@@ -59578,13 +59571,22 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Nenhuma foto salva",
       sv: "Inga foton sparade"
     },
+    going: {
+      // going as in attending an event
+      en: "Going",
+      de: "Zugesagt",
+      pt: "Indo",
+      sv: "Ska g\xE5 p\xE5"
+    },
     interested: {
+      // interested in attending an event
       en: "Interested",
       de: "Interessiert",
       pt: "Interessado",
       sv: "Intresserad"
     },
     total: {
+      // total of events attended or anything else
       en: "Total",
       de: "Gesamt",
       sv: "Totalt"
