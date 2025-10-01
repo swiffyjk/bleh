@@ -203,7 +203,7 @@ export const trans = {
             },
             reason: {
                 en: 'the sillyness caught up to me',
-                de: 'der unsinn hat eingeholt'
+                de: 'der unfug hat mich eingeholt'
             }
         },
         'bubble-tea': {
