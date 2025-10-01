@@ -5536,6 +5536,8 @@
 
             .grid-items-item-details {
                 background: rgb(0, 0, 0, 50%);
+                text-shadow: none;
+                filter: none;
                 border-radius: var(--item-med-radius);
                 border-top-left-radius: 0;
                 border-top-right-radius: 0;
@@ -5741,7 +5743,7 @@
                     --mask: linear-gradient(
                         0deg,
                         transparent calc(0% + var(--extra-trans)),
-                        white calc(60% + var(--extra-white))
+                        white calc(38% + var(--extra-white))
                     );
                     mask-image: var(--mask);
                     -webkit-mask-image: var(--mask);
@@ -5973,10 +5975,14 @@
         }
     }
     .grid-items-item-details {
+        --shadow: color-mix(in hsl, hsl(var(--h4)) 60%, black 70%);
+
         pointer-events: none;
         font-size: var(--font-size);
         line-height: var(--line-height);
-        text-shadow: 0 0 10px hsl(var(--b7), 50%);
+        text-shadow: none;
+        filter: drop-shadow(0 0 6px var(--shadow))
+            drop-shadow(0 0 2px var(--shadow));
         overflow: hidden;
         padding: 10px;
         left: 0;
