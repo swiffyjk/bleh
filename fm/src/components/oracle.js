@@ -564,7 +564,6 @@ export function oracle_process() {
 
                             for (let i = 1; i < artists.length; i++) {
                                 const artist = artists[i];
-                                const name = correct_artist(artist.name);
                                 const joinphrase = (
                                     artists[i - 1].joinphrase || ''
                                 )
@@ -572,11 +571,13 @@ export function oracle_process() {
                                     .toLowerCase();
 
                                 if (!found_feature) {
-                                    inherit_guests.push(artist);
-
                                     if (joinphrase.includes('feat')) {
                                         found_feature = true;
                                         first_joinphrase = joinphrase;
+
+                                        guests.push(artist);
+                                    } else {
+                                        inherit_guests.push(artist);
                                     }
                                 } else {
                                     guests.push(artist);

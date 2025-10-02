@@ -31878,13 +31878,14 @@
           let first_joinphrase;
           for (let i = 1; i < artists.length; i++) {
             const artist3 = artists[i];
-            const name = correct_artist(artist3.name);
             const joinphrase = (artists[i - 1].joinphrase || "").trim().toLowerCase();
             if (!found_feature) {
-              inherit_guests.push(artist3);
               if (joinphrase.includes("feat")) {
                 found_feature = true;
                 first_joinphrase = joinphrase;
+                guests.push(artist3);
+              } else {
+                inherit_guests.push(artist3);
               }
             } else {
               guests.push(artist3);
