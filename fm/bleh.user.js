@@ -31808,9 +31808,9 @@
         recording.releases.forEach((release) => {
           const artist2 = release["artist-credit"] ? release["artist-credit"][0].name : recording["artist-credit"].name;
           if (artist2 == "Various Artists") return;
-          const status2 = release.status.toLowerCase();
+          const status2 = release.status?.toLowerCase();
           const disambiguation = release.disambiguation?.toLowerCase();
-          if (status2.startsWith("pseudo")) return;
+          if (status2 && status2.startsWith("pseudo")) return;
           if (disambiguation) {
             if (disambiguation.includes("english")) {
               releases_to_move.push(release);
