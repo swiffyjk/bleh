@@ -13,7 +13,12 @@ import {
     includes
 } from '../build/music';
 import { page, root } from '../build/page';
-import { return_artist_from_generic, romanise, sanitise } from '../build/tools';
+import {
+    desanitise,
+    return_artist_from_generic,
+    romanise,
+    sanitise
+} from '../build/tools';
 import { tl, trans } from '../build/trans';
 import { prepare_corrections_page } from '../pages/bleh_config';
 import { dialog, dialog_rm } from './dialog';
@@ -358,7 +363,11 @@ export function correct_artist(artist, broadcast = false) {
 }
 
 // feat.
-export function name_includes(original_title, original_artist) {
+export function name_includes(
+    original_title,
+    original_artist,
+    inherit_guests = ''
+) {
     // track if we applied an album/track correction
     let original_title_corrected = false;
     // start with the raw title, then apply any album_track_corrections
@@ -449,6 +458,13 @@ export function name_includes(original_title, original_artist) {
 
     // collect all guest artists
     let song_guests = [];
+
+    if (inherit_guests != '') {
+        song_guests = inherit_guests
+            .split(';')
+            .map((artist) => desanitise(artist, ' '));
+    }
+
     extras.forEach((extra) => {
         if (extra.group != 'guests') return;
         let normalised = extra.text

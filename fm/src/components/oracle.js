@@ -557,10 +557,29 @@ export function oracle_process() {
 
                             let title = track.title;
 
+                            const artists = track['artist-credit'];
+                            let inherit_guests = [];
+
+                            artists.forEach((artist, index) => {
+                                if (index == 0) return;
+
+                                const previous = (
+                                    artists[index - 1].joinphrase || ''
+                                ).trim();
+
+                                if (previous == '&' || previous == ',') {
+                                    inherit_guests.push(artist);
+                                }
+                            });
+
+                            log('inheriting guests', 'oracle', 'info', {
+                                artists,
+                                inherit_guests
+                            });
+
                             if (track_entry) {
                                 title = track_entry;
                             } else if (oracle_entry.guests_in_title) {
-                                const artists = track['artist-credit'];
                                 const guests = artists.filter(
                                     (artist) =>
                                         artist.name.toLowerCase() !=
@@ -603,7 +622,7 @@ export function oracle_process() {
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${oracle_aliases(track['artist-credit'][0], page.sister)}/_/${sanitise(title)}" data-name="${title}">
+                                        <a href="${root}music/${oracle_aliases(track['artist-credit'][0], page.sister)}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist) => sanitise(artist.name, ' ')).join(';')}>
                                             ${title}
                                         </a>
                                     </td>

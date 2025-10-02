@@ -280,7 +280,8 @@ export function patch_titles(search = page.structure.main) {
             if (settings.format_guest_features) {
                 let formatted_title = name_includes(
                     track_title.getAttribute('data-name'),
-                    track_artist
+                    track_artist,
+                    track_title.getAttribute('data-inherit-artists')
                 );
                 console.log('formatted', formatted_title);
                 let song_title = track_title.getAttribute('data-name');

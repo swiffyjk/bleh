@@ -31721,10 +31721,22 @@
           const video = track.recording.video;
           if (video) return html.node``;
           let title = track.title;
+          const artists = track["artist-credit"];
+          let inherit_guests = [];
+          artists.forEach((artist3, index3) => {
+            if (index3 == 0) return;
+            const previous = (artists[index3 - 1].joinphrase || "").trim();
+            if (previous == "&" || previous == ",") {
+              inherit_guests.push(artist3);
+            }
+          });
+          log("inheriting guests", "oracle", "info", {
+            artists,
+            inherit_guests
+          });
           if (track_entry) {
             title = track_entry;
           } else if (oracle_entry.guests_in_title) {
-            const artists = track["artist-credit"];
             const guests = artists.filter(
               (artist3) => artist3.name.toLowerCase() != retrieved_artist
             );
@@ -31750,7 +31762,7 @@
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${oracle_aliases(track["artist-credit"][0], page.sister)}/_/${sanitise(title)}" data-name="${title}">
+                                        <a href="${root}music/${oracle_aliases(track["artist-credit"][0], page.sister)}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist3) => sanitise(artist3.name, " ")).join(";")}>
                                             ${title}
                                         </a>
                                     </td>
@@ -33757,7 +33769,8 @@
         if (settings.format_guest_features) {
           let formatted_title = name_includes(
             track_title.getAttribute("data-name"),
-            track_artist
+            track_artist,
+            track_title.getAttribute("data-inherit-artists")
           );
           console.log("formatted", formatted_title);
           let song_title = track_title.getAttribute("data-name");
@@ -49945,7 +49958,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       return artist;
     }
   }
-  function name_includes(original_title, original_artist) {
+  function name_includes(original_title, original_artist, inherit_guests = "") {
     let original_title_corrected = false;
     let formatted_title = original_title;
     const artist_key = original_artist.toLowerCase();
@@ -49994,6 +50007,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       };
     });
     let song_guests = [];
+    if (inherit_guests != "") {
+      song_guests = inherit_guests.split(";").map((artist) => desanitise(artist, " "));
+    }
     extras.forEach((extra) => {
       if (extra.group != "guests") return;
       let normalised = extra.text.replace(/\b(?:feat|ft|featuring)\.?\b/gi, "").replace(/\bwith\b/gi, "").replace(/w\//gi, "").replace(/&/g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/^[\.\-\s;]+/, "").trim();
