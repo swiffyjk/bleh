@@ -31584,6 +31584,8 @@
         (release) => release.disambiguation?.toLowerCase() == "explicit"
       );
       if (best) return best;
+      best = filtered.find((release) => !release.disambiguation);
+      if (best) return best;
       best = filtered.find(
         (release) => release.disambiguation?.toLowerCase() == "clean"
       );
