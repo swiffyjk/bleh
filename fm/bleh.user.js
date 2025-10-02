@@ -31556,9 +31556,11 @@
         (recording) => recording.disambiguation?.toLowerCase().includes("clean")
       );
       if (best) return best;
-      best = filtered.find(
-        (recording) => !recording.disambiguation?.toLowerCase().includes("english")
-      );
+      best = filtered.find((recording) => {
+        const disambiguation = recording.disambiguation?.toLowerCase() || "";
+        const video = recording.video;
+        return !disambiguation.includes("english") && !disambiguation.endsWith("mv") && !video;
+      });
       if (best) return best;
       best = filtered.find(
         (recording) => !recording.disambiguation?.toLowerCase().endsWith("mv")

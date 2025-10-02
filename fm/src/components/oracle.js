@@ -310,10 +310,17 @@ export function oracle_process() {
         // avoid anything referencing english
         // usually an english translation of
         // e.g. a japanese album
-        best = filtered.find(
-            (recording) =>
-                !recording.disambiguation?.toLowerCase().includes('english')
-        );
+        // also avoid music videos
+        best = filtered.find((recording) => {
+            const disambiguation =
+                recording.disambiguation?.toLowerCase() || '';
+            const video = recording.video;
+            return (
+                !disambiguation.includes('english') &&
+                !disambiguation.endsWith('mv') &&
+                !video
+            );
+        });
         if (best) return best;
 
         // avoid a music video
