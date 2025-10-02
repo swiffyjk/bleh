@@ -15689,12 +15689,12 @@
               break;
             case "attr":
               var sparse = info.sparse;
-              var fn3 = options.attribute(node, info.name, info.node);
+              var fn2 = options.attribute(node, info.name, info.node);
               if (sparse === null)
-                updates.push({ fn: fn3, sparse: false });
+                updates.push({ fn: fn2, sparse: false });
               else {
                 off += sparse.length - 2;
-                updates.push({ fn: fn3, sparse: true, values: sparse });
+                updates.push({ fn: fn2, sparse: true, values: sparse });
               }
               break;
             case "text":
@@ -17504,14 +17504,14 @@
   }
 
   // node_modules/@popperjs/core/lib/utils/debounce.js
-  function debounce(fn3) {
+  function debounce(fn2) {
     var pending;
     return function() {
       if (!pending) {
         pending = new Promise(function(resolve2) {
           Promise.resolve().then(function() {
             pending = void 0;
-            resolve2(fn3());
+            resolve2(fn2());
           });
         });
       }
@@ -17616,9 +17616,9 @@
               index3 = -1;
               continue;
             }
-            var _state$orderedModifie = state.orderedModifiers[index3], fn3 = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name = _state$orderedModifie.name;
-            if (typeof fn3 === "function") {
-              state = fn3({
+            var _state$orderedModifie = state.orderedModifiers[index3], fn2 = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name = _state$orderedModifie.name;
+            if (typeof fn2 === "function") {
+              state = fn2({
                 state,
                 options: _options,
                 name,
@@ -17665,8 +17665,8 @@
         });
       }
       function cleanupModifierEffects() {
-        effectCleanupFns.forEach(function(fn3) {
-          return fn3();
+        effectCleanupFns.forEach(function(fn2) {
+          return fn2();
         });
         effectCleanupFns = [];
       }
@@ -17710,15 +17710,15 @@
   function invokeWithArgsOrReturn(value, args) {
     return typeof value === "function" ? value.apply(void 0, args) : value;
   }
-  function debounce2(fn3, ms) {
+  function debounce2(fn2, ms) {
     if (ms === 0) {
-      return fn3;
+      return fn2;
     }
     var timeout;
     return function(arg) {
       clearTimeout(timeout);
       timeout = setTimeout(function() {
-        fn3(arg);
+        fn2(arg);
       }, ms);
     };
   }
@@ -18570,7 +18570,7 @@
         enabled: true,
         phase: "beforeWrite",
         requires: ["computeStyles"],
-        fn: function fn3(_ref2) {
+        fn: function fn2(_ref2) {
           var state2 = _ref2.state;
           if (getIsDefaultRenderFn()) {
             var _getDefaultTemplateCh = getDefaultTemplateChildren(), box = _getDefaultTemplateCh.box;
@@ -18956,157 +18956,6 @@
       }
     }
   });
-  var mouseCoords = {
-    clientX: 0,
-    clientY: 0
-  };
-  var activeInstances = [];
-  function storeMouseCoords(_ref) {
-    var clientX = _ref.clientX, clientY = _ref.clientY;
-    mouseCoords = {
-      clientX,
-      clientY
-    };
-  }
-  function addMouseCoordsListener(doc) {
-    doc.addEventListener("mousemove", storeMouseCoords);
-  }
-  function removeMouseCoordsListener(doc) {
-    doc.removeEventListener("mousemove", storeMouseCoords);
-  }
-  var followCursor = {
-    name: "followCursor",
-    defaultValue: false,
-    fn: function fn2(instance) {
-      var reference2 = instance.reference;
-      var doc = getOwnerDocument(instance.props.triggerTarget || reference2);
-      var isInternalUpdate = false;
-      var wasFocusEvent = false;
-      var isUnmounted = true;
-      var prevProps = instance.props;
-      function getIsInitialBehavior() {
-        return instance.props.followCursor === "initial" && instance.state.isVisible;
-      }
-      function addListener2() {
-        doc.addEventListener("mousemove", onMouseMove);
-      }
-      function removeListener2() {
-        doc.removeEventListener("mousemove", onMouseMove);
-      }
-      function unsetGetReferenceClientRect() {
-        isInternalUpdate = true;
-        instance.setProps({
-          getReferenceClientRect: null
-        });
-        isInternalUpdate = false;
-      }
-      function onMouseMove(event3) {
-        var isCursorOverReference = event3.target ? reference2.contains(event3.target) : true;
-        var followCursor2 = instance.props.followCursor;
-        var clientX = event3.clientX, clientY = event3.clientY;
-        var rect = reference2.getBoundingClientRect();
-        var relativeX = clientX - rect.left;
-        var relativeY = clientY - rect.top;
-        if (isCursorOverReference || !instance.props.interactive) {
-          instance.setProps({
-            // @ts-ignore - unneeded DOMRect properties
-            getReferenceClientRect: function getReferenceClientRect() {
-              var rect2 = reference2.getBoundingClientRect();
-              var x = clientX;
-              var y = clientY;
-              if (followCursor2 === "initial") {
-                x = rect2.left + relativeX;
-                y = rect2.top + relativeY;
-              }
-              var top2 = followCursor2 === "horizontal" ? rect2.top : y;
-              var right2 = followCursor2 === "vertical" ? rect2.right : x;
-              var bottom2 = followCursor2 === "horizontal" ? rect2.bottom : y;
-              var left2 = followCursor2 === "vertical" ? rect2.left : x;
-              return {
-                width: right2 - left2,
-                height: bottom2 - top2,
-                top: top2,
-                right: right2,
-                bottom: bottom2,
-                left: left2
-              };
-            }
-          });
-        }
-      }
-      function create3() {
-        if (instance.props.followCursor) {
-          activeInstances.push({
-            instance,
-            doc
-          });
-          addMouseCoordsListener(doc);
-        }
-      }
-      function destroy() {
-        activeInstances = activeInstances.filter(function(data2) {
-          return data2.instance !== instance;
-        });
-        if (activeInstances.filter(function(data2) {
-          return data2.doc === doc;
-        }).length === 0) {
-          removeMouseCoordsListener(doc);
-        }
-      }
-      return {
-        onCreate: create3,
-        onDestroy: destroy,
-        onBeforeUpdate: function onBeforeUpdate2() {
-          prevProps = instance.props;
-        },
-        onAfterUpdate: function onAfterUpdate2(_, _ref2) {
-          var followCursor2 = _ref2.followCursor;
-          if (isInternalUpdate) {
-            return;
-          }
-          if (followCursor2 !== void 0 && prevProps.followCursor !== followCursor2) {
-            destroy();
-            if (followCursor2) {
-              create3();
-              if (instance.state.isMounted && !wasFocusEvent && !getIsInitialBehavior()) {
-                addListener2();
-              }
-            } else {
-              removeListener2();
-              unsetGetReferenceClientRect();
-            }
-          }
-        },
-        onMount: function onMount2() {
-          if (instance.props.followCursor && !wasFocusEvent) {
-            if (isUnmounted) {
-              onMouseMove(mouseCoords);
-              isUnmounted = false;
-            }
-            if (!getIsInitialBehavior()) {
-              addListener2();
-            }
-          }
-        },
-        onTrigger: function onTrigger2(_, event3) {
-          if (isMouseEvent(event3)) {
-            mouseCoords = {
-              clientX: event3.clientX,
-              clientY: event3.clientY
-            };
-          }
-          wasFocusEvent = event3.type === "focus";
-        },
-        onHidden: function onHidden2() {
-          if (instance.props.followCursor) {
-            unsetGetReferenceClientRect();
-            removeListener2();
-            isUnmounted = true;
-          }
-        }
-      };
-    }
-  };
   tippy.setDefaultProps({
     render: render2
   });
@@ -24378,11 +24227,11 @@
      * @example Duration.fromObject({ hours: 1, minutes: 30 }).mapUnits((x, u) => u === "hours" ? x * 2 : x) //=> { hours: 2, minutes: 30 }
      * @return {Duration}
      */
-    mapUnits(fn3) {
+    mapUnits(fn2) {
       if (!this.isValid) return this;
       const result = {};
       for (const k of Object.keys(this.values)) {
-        result[k] = asNumber(fn3(this.values[k], k));
+        result[k] = asNumber(fn2(this.values[k], k));
       }
       return clone(this, { values: result }, true);
     }
@@ -31941,26 +31790,6 @@
                                     </td>
                                 </tr>
                             `;
-          tippy_esm_default(elem, {
-            content: html.node`
-                                    <div style="text-align: left">
-                                        <h4>implicit</h4>
-                                        ${inherit_guests.map(
-              (artist3) => html.node`
-                                                <p>${artist3.name}</p>
-                                            `
-            )}
-                                        <h4>guests</h4>
-                                        ${guests.map(
-              (artist3) => html.node`
-                                                <p>${artist3.name} <code>${artist3.joinphrase}</code></p>
-                                            `
-            )}
-                                    </div>
-                                `,
-            followCursor: true,
-            plugins: [followCursor]
-          });
           return elem;
         })}
                     </tbody>
@@ -63586,29 +63415,29 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
   var toPercentage = (value, dimension) => typeof value === "string" && value.endsWith("%") ? parseFloat(value) / 100 : +value / dimension;
   var toDimension = (value, dimension) => typeof value === "string" && value.endsWith("%") ? parseFloat(value) / 100 * dimension : +value;
-  function callback(fn3, args, thisArg) {
-    if (fn3 && typeof fn3.call === "function") {
-      return fn3.apply(thisArg, args);
+  function callback(fn2, args, thisArg) {
+    if (fn2 && typeof fn2.call === "function") {
+      return fn2.apply(thisArg, args);
     }
   }
-  function each(loopable, fn3, thisArg, reverse) {
+  function each(loopable, fn2, thisArg, reverse) {
     let i, len, keys2;
     if (isArray2(loopable)) {
       len = loopable.length;
       if (reverse) {
         for (i = len - 1; i >= 0; i--) {
-          fn3.call(thisArg, loopable[i], i);
+          fn2.call(thisArg, loopable[i], i);
         }
       } else {
         for (i = 0; i < len; i++) {
-          fn3.call(thisArg, loopable[i], i);
+          fn2.call(thisArg, loopable[i], i);
         }
       }
     } else if (isObject(loopable)) {
       keys2 = Object.keys(loopable);
       len = keys2.length;
       for (i = 0; i < len; i++) {
-        fn3.call(thisArg, loopable[keys2[i]], keys2[i]);
+        fn2.call(thisArg, loopable[keys2[i]], keys2[i]);
       }
     }
   }
@@ -63980,7 +63809,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     return window.requestAnimationFrame;
   }();
-  function throttled(fn3, thisArg) {
+  function throttled(fn2, thisArg) {
     let argsToUse = [];
     let ticking = false;
     return function(...args) {
@@ -63989,19 +63818,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         ticking = true;
         requestAnimFrame.call(window, () => {
           ticking = false;
-          fn3.apply(thisArg, argsToUse);
+          fn2.apply(thisArg, argsToUse);
         });
       }
     };
   }
-  function debounce3(fn3, delay) {
+  function debounce3(fn2, delay) {
     let timeout;
     return function(...args) {
       if (delay) {
         clearTimeout(timeout);
-        timeout = setTimeout(fn3, delay, args);
+        timeout = setTimeout(fn2, delay, args);
       } else {
-        fn3.apply(this, args);
+        fn2.apply(this, args);
       }
       return delay;
     };
@@ -65976,7 +65805,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     _notify(chart, anims, date, type) {
       const callbacks = anims.listeners[type];
       const numSteps = anims.duration;
-      callbacks.forEach((fn3) => fn3({
+      callbacks.forEach((fn2) => fn2({
         chart,
         initial: anims.initial,
         numSteps,
@@ -73609,9 +73438,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     return end2;
   }
-  function _getEdge(a, b, prop, fn3) {
+  function _getEdge(a, b, prop, fn2) {
     if (a && b) {
-      return fn3(a[prop], b[prop]);
+      return fn2(a[prop], b[prop]);
     }
     return a ? a[prop] : b ? b[prop] : 0;
   }

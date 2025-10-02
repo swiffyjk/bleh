@@ -656,27 +656,6 @@ export function oracle_process() {
                                 </tr>
                             `;
 
-                            tippy(elem, {
-                                content: html.node`
-                                    <div style="text-align: left">
-                                        <h4>implicit</h4>
-                                        ${inherit_guests.map(
-                                            (artist) => html.node`
-                                                <p>${artist.name}</p>
-                                            `
-                                        )}
-                                        <h4>guests</h4>
-                                        ${guests.map(
-                                            (artist) => html.node`
-                                                <p>${artist.name} <code>${artist.joinphrase}</code></p>
-                                            `
-                                        )}
-                                    </div>
-                                `,
-                                followCursor: true,
-                                plugins: [followCursor]
-                            });
-
                             return elem;
                         })}
                     </tbody>
