@@ -746,6 +746,23 @@ export function oracle_process() {
                         );
                     })
             );
+
+            releases.sort((a, b) => {
+                const rank = (type) => {
+                    type = type.toLowerCase();
+
+                    if (type == 'album') return 0;
+                    if (type == 'ep') return 1;
+                    if (type != 'single') return 2;
+                    return 3;
+                };
+
+                return (
+                    rank(a['release-group']['primary-type']) -
+                    rank(b['release-group']['primary-type'])
+                );
+            });
+
             log('releases in recording after filter', 'oracle', 'info', {
                 releases
             });
@@ -833,15 +850,15 @@ export function oracle_process() {
                             let stats;
 
                             const elem = html.node`
-                            <div class="source-album js-link-block link-block-cover-link" data-match=${match != null}>
+                            <div class="source-album js-link-block link-block-cover-link">
                                 <div class="source-album-art" ref=${(el) => (artwork_container = el)}>
                                     ${
                                         artwork ?
                                             html.node`
-                                    <span class="cover-art">
-                                        <img src=${artwork} alt=${title}>
-                                    </span>
-                                    `
+                                                <span class="cover-art">
+                                                    <img src=${artwork} alt=${title}>
+                                                </span>
+                                            `
                                         :   ''
                                     }
                                 </div>
@@ -853,11 +870,11 @@ export function oracle_process() {
                                         ${
                                             match ?
                                                 html.node`
-                                        <span class="plays">
-                                            <span class="bleh-icon" />
-                                            ${plays}
-                                        </span>
-                                        `
+                                                    <span class="plays">
+                                                        <span class="bleh-icon" />
+                                                        ${plays}
+                                                    </span>
+                                                `
                                             :   ''
                                         }
                                     </p>
