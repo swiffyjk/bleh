@@ -83,7 +83,7 @@ export function oracle_process() {
         albums_and_lyrics_row.classList.add('oracle-hidden');
 
     function oracle_aliases(artist, desired) {
-        log('aliase request', 'oracle', 'log', {
+        log('alias request', 'oracle', 'log', {
             artist,
             desired,
             artist_data
@@ -91,7 +91,7 @@ export function oracle_process() {
 
         if (
             artist.name == desired ||
-            (artist_data.id && artist.id == artist_data.id)
+            (artist_data.type == 'id' && artist.artist.id == artist_data.name)
         )
             return desired;
 

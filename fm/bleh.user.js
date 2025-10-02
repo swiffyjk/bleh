@@ -31381,12 +31381,12 @@
     if (page.type == "track")
       albums_and_lyrics_row.classList.add("oracle-hidden");
     function oracle_aliases(artist2, desired) {
-      log("aliase request", "oracle", "log", {
+      log("alias request", "oracle", "log", {
         artist: artist2,
         desired,
         artist_data
       });
-      if (artist2.name == desired || artist_data.id && artist2.id == artist_data.id)
+      if (artist2.name == desired || artist_data.type == "id" && artist2.artist.id == artist_data.name)
         return desired;
       return artist2.name;
     }
