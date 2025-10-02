@@ -31655,7 +31655,6 @@
       });
     }
     function oracle_album(data2) {
-      page.state.oracle_debug.album_id = data2.id;
       const labels = data2["label-info"];
       if (labels && labels.length > 0) {
         info_panel.appendChild(html.node`
@@ -32139,7 +32138,7 @@
                                 <td ref=${(el) => va = el}>${val}</td>
                             </tr>
                         `;
-        if (item = "artist") {
+        if (item == "artist") {
           render(
             va,
             html`
@@ -32153,6 +32152,19 @@
                                         >view</a
                                     >
                                     ` : ""}
+                                `
+          );
+        } else if (item == "release_id") {
+          render(
+            va,
+            html`
+                                    <p>${val}</p>
+                                    <a
+                                        class="see-more"
+                                        href="https://musicbrainz.org/release/${val}"
+                                        target="_blank"
+                                        >view</a
+                                    >
                                 `
           );
         }
