@@ -31486,6 +31486,7 @@
     }
     if (!ff("oracle_connect") || page.type == "artist") return;
     let tries = 2;
+    const item = page.name.toLowerCase();
     const artist = page.sister.toLowerCase();
     let artist_data;
     let artist_template = `artist:"${page.sister}"`;
@@ -31616,6 +31617,19 @@
         url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND ${artist_template} AND status:Official`;
       else if (page.type == "album")
         url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), " ")}" AND ${artist_template}`;
+      if (page.type == "album" && oracle_albums.hasOwnProperty(artist) && oracle_albums[artist][item] && oracle_albums[artist][item].id) {
+        log(
+          "skipping album search as an id was supplied",
+          "oracle",
+          "info",
+          { oracle_albums, item: oracle_albums[item] }
+        );
+        tries = 2;
+        oracle_album_fetch({
+          id: oracle_albums[item]
+        });
+        return;
+      }
       log(
         `using url ${encodeURI(url)} with ${tries} tries available`,
         "oracle"
@@ -31838,7 +31852,7 @@
       };
       log("entry", "oracle", "info", { oracle_entry });
       const media = data2.media;
-      const discs = media.filter((item) => item.tracks != null);
+      const discs = media.filter((item2) => item2.tracks != null);
       const track_panel = html.node`
             <section class="oracle-tracks">
                 <h3 class="text-18">${tl2(trans2.tracklist)}<span class="new-badge beta">${tl2(trans2.beta)}</span></h3>
