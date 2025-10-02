@@ -272,9 +272,9 @@ export function oracle_process() {
             return recording.releases.some((release) => {
                 const artists = release['artist-credit'] || [];
                 const various = artists.some(
-                    (artist) => artist.name === 'Various Artists'
+                    (artist) => artist.name == 'Various Artists'
                 );
-                const official = release.status === 'Official';
+                const official = release.status == 'Official';
 
                 return !various && official;
             });
@@ -700,16 +700,27 @@ export function oracle_process() {
                 releases
             });
 
+            // makes 'Bootleg' less likely if there's duplicates
+            releases.sort((a, b) => {
+                const rank = (status) => {
+                    if (status == 'Official') return 0;
+                    if (!status) return 1;
+                    return 2;
+                };
+
+                return rank(a.status) - rank(b.status);
+            });
+
             releases = releases.filter(
                 (release, index, self) =>
-                    index ===
+                    index ==
                     self.findIndex((r) => {
                         const r_artist = r['artist-credit']?.[0]?.name;
                         const release_artist =
                             release['artist-credit']?.[0]?.name;
                         return (
-                            r.title === release.title &&
-                            r_artist === release_artist
+                            r.title == release.title &&
+                            r_artist == release_artist
                         );
                     })
             );

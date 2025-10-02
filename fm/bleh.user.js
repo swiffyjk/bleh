@@ -31533,9 +31533,9 @@
         return recording.releases.some((release) => {
           const artists = release["artist-credit"] || [];
           const various = artists.some(
-            (artist2) => artist2.name === "Various Artists"
+            (artist2) => artist2.name == "Various Artists"
           );
-          const official = release.status === "Official";
+          const official = release.status == "Official";
           return !various && official;
         });
       });
@@ -31821,11 +31821,19 @@
         log("releases in recording after parsing", "oracle", "info", {
           releases
         });
+        releases.sort((a, b) => {
+          const rank = (status2) => {
+            if (status2 == "Official") return 0;
+            if (!status2) return 1;
+            return 2;
+          };
+          return rank(a.status) - rank(b.status);
+        });
         releases = releases.filter(
-          (release, index3, self3) => index3 === self3.findIndex((r) => {
+          (release, index3, self3) => index3 == self3.findIndex((r) => {
             const r_artist = r["artist-credit"]?.[0]?.name;
             const release_artist = release["artist-credit"]?.[0]?.name;
-            return r.title === release.title && r_artist === release_artist;
+            return r.title == release.title && r_artist == release_artist;
           })
         );
         log("releases in recording after filter", "oracle", "info", {
