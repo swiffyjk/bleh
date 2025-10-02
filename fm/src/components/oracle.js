@@ -208,7 +208,7 @@ export function oracle_process() {
             tries = 2;
 
             oracle_album_fetch({
-                id: oracle_albums[item]
+                id: oracle_albums[artist][item].id
             });
             return;
         }
