@@ -50007,7 +50007,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       };
     });
     let song_guests = [];
-    if (inherit_guests != "") {
+    if (inherit_guests) {
       song_guests = inherit_guests.split(";").map((artist) => desanitise(artist, " "));
     }
     extras.forEach((extra) => {

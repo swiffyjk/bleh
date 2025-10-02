@@ -459,7 +459,7 @@ export function name_includes(
     // collect all guest artists
     let song_guests = [];
 
-    if (inherit_guests != '') {
+    if (inherit_guests) {
         song_guests = inherit_guests
             .split(';')
             .map((artist) => desanitise(artist, ' '));
