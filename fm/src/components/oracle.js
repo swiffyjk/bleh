@@ -21,6 +21,7 @@ import { clean_title } from '../build/music';
 import { version } from '../main';
 import { settings } from '../build/config';
 import { dialog } from './dialog';
+import tippy, { followCursor } from 'tippy.js';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -557,64 +558,67 @@ export function oracle_process() {
 
                             const artists = track['artist-credit'];
                             let inherit_guests = [];
+                            let guests = [];
+                            let found_feature = false;
+                            let first_joinphrase;
 
-                            artists.forEach((artist, index) => {
-                                if (index == 0) return;
+                            for (let i = 1; i < artists.length; i++) {
+                                const artist = artists[i];
+                                const name = correct_artist(artist.name);
+                                const joinphrase = (
+                                    artists[i - 1].joinphrase || ''
+                                )
+                                    .trim()
+                                    .toLowerCase();
 
-                                const previous = (
-                                    artists[index - 1].joinphrase || ''
-                                ).trim();
-
-                                if (previous == '&' || previous == ',') {
+                                if (!found_feature) {
                                     inherit_guests.push(artist);
-                                }
-                            });
 
-                            log('inheriting guests', 'oracle', 'info', {
+                                    if (joinphrase.includes('feat')) {
+                                        found_feature = true;
+                                        first_joinphrase = joinphrase;
+                                    }
+                                } else {
+                                    guests.push(artist);
+                                }
+                            }
+
+                            log(`${track.position}: artists`, 'oracle', 'log', {
                                 artists,
+                                guests,
                                 inherit_guests
                             });
 
                             if (track_entry) {
                                 title = track_entry;
-                            } else if (oracle_entry.guests_in_title) {
-                                const guests = artists.filter(
-                                    (artist) =>
-                                        artist.name.toLowerCase() !=
-                                        retrieved_artist
-                                );
+                            } else if (
+                                oracle_entry.guests_in_title &&
+                                guests.length > 0
+                            ) {
+                                title += ` (${first_joinphrase} `;
 
-                                let first_joinphrase =
-                                    artists[0].joinphrase.trim();
-
-                                if (
-                                    artists.length > 1 &&
-                                    !['&', ','].includes(first_joinphrase)
-                                ) {
-                                    title += ` (${first_joinphrase} `;
-
-                                    guests.forEach((artist, index) => {
-                                        log(
-                                            `guest ${index}`,
-                                            'oracle',
-                                            'info',
-                                            { artist }
-                                        );
-                                        let joinphrase = artist.joinphrase;
-
-                                        if (
-                                            index == guests.length - 2 &&
-                                            oracle_entry.final_guest_separator
-                                        )
-                                            joinphrase =
-                                                oracle_entry.final_guest_separator;
-
-                                        title += `${artist.name}${joinphrase}`;
+                                guests.forEach((artist, index) => {
+                                    log(`guest ${index}`, 'oracle', 'info', {
+                                        artist
                                     });
+                                    let joinphrase = artist.joinphrase || '';
 
-                                    title += ')';
-                                }
+                                    if (
+                                        index == guests.length - 2 &&
+                                        oracle_entry.final_guest_separator
+                                    )
+                                        joinphrase =
+                                            oracle_entry.final_guest_separator;
+
+                                    title += `${artist.name}${joinphrase}`;
+                                });
+
+                                title += ')';
                             }
+
+                            log(`${track.position}: title`, 'oracle', 'log', {
+                                title
+                            });
 
                             const elem = html.node`
                                 <tr class="chartlist-row" data-disambig=${disambig}>
@@ -629,6 +633,27 @@ export function oracle_process() {
                                     </td>
                                 </tr>
                             `;
+
+                            tippy(elem, {
+                                content: html.node`
+                                    <div style="text-align: left">
+                                        <h4>implicit</h4>
+                                        ${inherit_guests.map(
+                                            (artist) => html.node`
+                                                <p>${artist.name}</p>
+                                            `
+                                        )}
+                                        <h4>guests</h4>
+                                        ${guests.map(
+                                            (artist) => html.node`
+                                                <p>${artist.name} <code>${artist.joinphrase}</code></p>
+                                            `
+                                        )}
+                                    </div>
+                                `,
+                                followCursor: true,
+                                plugins: [followCursor]
+                            });
 
                             return elem;
                         })}
@@ -850,40 +875,40 @@ export function oracle_process() {
                             let stats;
 
                             const elem = html.node`
-                            <div class="source-album js-link-block link-block-cover-link">
-                                <div class="source-album-art" ref=${(el) => (artwork_container = el)}>
-                                    ${
-                                        artwork ?
-                                            html.node`
-                                                <span class="cover-art">
-                                                    <img src=${artwork} alt=${title}>
-                                                </span>
-                                            `
-                                        :   ''
-                                    }
-                                </div>
-                                <div class="source-album-details" data-kate-processed="true">
-                                    <h4 class="source-album-name">${romanise(correct_item_by_artist(title, artist))}</h4>
-                                    <p class="source-album-artist">${romanise(correct_artist(artist))}</p>
-                                    <p class="source-album-stats oracle-stats" ref=${(el) => (stats = el)}>
-                                        ${type}
+                                <div class="source-album js-link-block link-block-cover-link">
+                                    <div class="source-album-art" ref=${(el) => (artwork_container = el)}>
                                         ${
-                                            match ?
+                                            artwork ?
                                                 html.node`
-                                                    <span class="plays">
-                                                        <span class="bleh-icon" />
-                                                        ${plays}
+                                                    <span class="cover-art">
+                                                        <img src=${artwork} alt=${title}>
                                                     </span>
                                                 `
                                             :   ''
                                         }
-                                    </p>
-                                    <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(artist)}/${sanitise(title)}" tabindex="-1" aria-hidden="true" />
+                                    </div>
+                                    <div class="source-album-details" data-kate-processed="true">
+                                        <h4 class="source-album-name">${romanise(correct_item_by_artist(title, artist))}</h4>
+                                        <p class="source-album-artist">${romanise(correct_artist(artist))}</p>
+                                        <p class="source-album-stats oracle-stats" ref=${(el) => (stats = el)}>
+                                            ${type}
+                                            ${
+                                                match ?
+                                                    html.node`
+                                                        <span class="plays">
+                                                            <span class="bleh-icon" />
+                                                            ${plays}
+                                                        </span>
+                                                    `
+                                                :   ''
+                                            }
+                                        </p>
+                                        <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(artist)}/${sanitise(title)}" tabindex="-1" aria-hidden="true" />
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
 
-                            if (!artwork)
+                            if (!artwork && index < 2)
                                 load_cover_art(
                                     artwork_container,
                                     title,
