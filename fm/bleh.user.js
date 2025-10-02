@@ -31856,7 +31856,15 @@
               release["artist-credit"]?.[0] || recording["artist-credit"][0],
               page.sister
             );
-            const type = release["release-group"]["primary-type"];
+            const types = {
+              album: tl2(trans2.album),
+              single: tl2(trans2.single),
+              ep: "EP",
+              other: tl2(trans2.other)
+            };
+            let type = release["release-group"]["primary-type"];
+            if (type.toLowerCase() in types)
+              type = types[type.toLowerCase()];
             const artist_lower = page.sister.toLowerCase();
             const title_lower = title.toLowerCase();
             const defaults2 = {
@@ -56410,6 +56418,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Album Artist",
       de: "Albumk\xFCnstler",
       sv: "Albumartist"
+    },
+    single: {
+      // release type
+      en: "Single"
     },
     track: {
       en: "Track",

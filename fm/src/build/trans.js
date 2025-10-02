@@ -701,6 +701,10 @@ export const trans = {
         de: 'Albumkünstler',
         sv: 'Albumartist'
     },
+    single: {
+        // release type
+        en: 'Single'
+    },
     track: {
         en: 'Track',
         de: 'Titel',

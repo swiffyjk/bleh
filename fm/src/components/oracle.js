@@ -747,8 +747,17 @@ export function oracle_process() {
                                     recording['artist-credit'][0],
                                 page.sister
                             );
-                            const type =
-                                release['release-group']['primary-type'];
+
+                            const types = {
+                                album: tl(trans.album),
+                                single: tl(trans.single),
+                                ep: 'EP',
+                                other: tl(trans.other)
+                            };
+
+                            let type = release['release-group']['primary-type'];
+                            if (type.toLowerCase() in types)
+                                type = types[type.toLowerCase()];
 
                             const artist_lower = page.sister.toLowerCase();
                             const title_lower = title.toLowerCase();
