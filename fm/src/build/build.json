@@ -319,6 +319,11 @@
             "default": false,
             "name": "Introduce new inverse comparison option",
             "date": "2025-09-28"
+        },
+        "menus": {
+            "default": false,
+            "name": "Replace browser menus with in-house",
+            "date": "2025-10-03"
         }
     }
 }

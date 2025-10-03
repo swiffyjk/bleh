@@ -2511,6 +2511,9 @@ export const trans = {
         pt: 'Abrir em nova aba',
         sv: 'Öppna i ny flik'
     },
+    view_image: {
+        en: 'View image'
+    },
     event_cancelled: {
         // obviously remove the emoji or replace it as
         // you see fit if desired

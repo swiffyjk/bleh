@@ -29233,6 +29233,7 @@
 
   // src/components/menu.js
   function register_menu(element, menu) {
+    element.setAttribute("data-has-bleh-menu", true);
     element.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       menu.setProps({
@@ -29249,6 +29250,66 @@
       });
       menu.show();
     });
+  }
+  function page_menu() {
+    if (!ff("menus")) return;
+    const menu = tippy_esm_default(document.body, {
+      theme: "context-menu",
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      appendTo: document.body,
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
+    document.addEventListener("contextmenu", (e) => {
+      if (!show_menu(e)) return;
+      e.preventDefault();
+      const elem = e.target;
+      const is_image = elem.tagName == "IMG";
+      const has_link = elem.href;
+      const contents = html.node`
+            ${is_image ? html.node`
+                        <button class="dropdown-menu-clickable-item" data-type="image" onclick=${() => {
+        open(elem.src, "_blank");
+      }}>
+                            ${tl2(trans2.view_image)}
+                        </button>
+                    ` : ""}
+            ${has_link ? html.node`
+                        <a class="dropdown-menu-clickable-item" data-type="link" href=${elem.href} target=${elem.target}>
+                            ${tl2(trans2.open)}
+                        </a>
+                    ` : ""}
+        `;
+      if (![...contents.childNodes].some(
+        (node) => node.nodeType == Node.ELEMENT_NODE
+      ))
+        return;
+      menu.setProps({
+        getReferenceClientRect: () => ({
+          width: 0,
+          height: 0,
+          top: e.clientY,
+          bottom: e.clientY,
+          left: e.clientX,
+          right: e.clientX
+        })
+      });
+      menu.setContent(contents);
+      menu.show();
+    });
+  }
+  function show_menu(e) {
+    const target = e.target;
+    console.info("menu target", target);
+    if (target.closest("[data-has-bleh-menu]")) return false;
+    return true;
   }
 
   // src/components/calendar.js
@@ -55207,6 +55268,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     dynamic_theming();
     solarium();
     translation_stats();
+    page_menu();
     load_dialogs();
     register_rabbit();
     try {
@@ -58287,6 +58349,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "In neuem Tab \xF6ffnen",
       pt: "Abrir em nova aba",
       sv: "\xD6ppna i ny flik"
+    },
+    view_image: {
+      en: "View image"
     },
     event_cancelled: {
       // obviously remove the emoji or replace it as
@@ -62820,6 +62885,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         default: false,
         name: "Introduce new inverse comparison option",
         date: "2025-09-28"
+      },
+      menus: {
+        default: false,
+        name: "Replace browser menus with in-house",
+        date: "2025-10-03"
       }
     }
   };

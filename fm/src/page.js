@@ -86,6 +86,7 @@ import { load_dismissed } from './components/dismissed.js';
 import { oracle_data } from './components/oracle.js';
 import { dynamic_theming } from './components/dynamic_theming.js';
 import { prepare_music } from './components/music.js';
+import { page_menu } from './components/menu.js';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -149,6 +150,8 @@ function bleh_main() {
     solarium();
 
     translation_stats();
+
+    page_menu();
 
     // messaging
     load_dialogs();
