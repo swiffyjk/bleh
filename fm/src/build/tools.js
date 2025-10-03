@@ -428,7 +428,7 @@ export function time(string = '') {
 }
 
 export function int_from_string(string) {
-    const match = string.match(/\d+/);
+    const match = string.match(/[\d.,\s\u00A0\u202F]+/);
     if (match) return clean_number(match[0]);
 
     return string;

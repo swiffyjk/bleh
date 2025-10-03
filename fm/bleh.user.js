@@ -28040,7 +28040,7 @@
     return date.toFormat("HH:mm:ss Z");
   }
   function int_from_string(string) {
-    const match3 = string.match(/\d+/);
+    const match3 = string.match(/[\d.,\s\u00A0\u202F]+/);
     if (match3) return clean_number(match3[0]);
     return string;
   }
