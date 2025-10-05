@@ -483,8 +483,18 @@ export function oracle_process() {
     }
 
     function oracle_album(data) {
-        const labels = data['label-info'];
+        let labels = data['label-info'];
         if (labels && labels.length > 0) {
+            // filter out visually duplicates
+            const seen = new Set();
+            labels = labels.filter((label) => {
+                const name = label.label.name;
+                if (seen.has(name)) return false;
+
+                seen.add(name);
+                return true;
+            });
+
             info_panel.appendChild(html.node`
                 <div class="card-tip copyright">
                     ©

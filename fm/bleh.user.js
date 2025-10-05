@@ -31731,8 +31731,15 @@
       });
     }
     function oracle_album(data2) {
-      const labels = data2["label-info"];
+      let labels = data2["label-info"];
       if (labels && labels.length > 0) {
+        const seen = /* @__PURE__ */ new Set();
+        labels = labels.filter((label) => {
+          const name = label.label.name;
+          if (seen.has(name)) return false;
+          seen.add(name);
+          return true;
+        });
         info_panel.appendChild(html.node`
                 <div class="card-tip copyright">
                     ©
