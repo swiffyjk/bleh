@@ -60718,9 +60718,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "Skapa en personlig bild baserad p\xE5 din lyssningshistoria och inst\xE4llningar"
     },
     labs_cta: {
-      en: "If you\u2019re looking for more, try out Last.fm\u2019s own {a}Labs feature{/a}.",
-      de: "Wenn du nach mehr suchst, probiere die {a}Labs-Funktion{/a} von Last.fm aus.",
-      sv: "Om du letar efter lite mer, testa Last.fm\u2019s {a}egna Labs{/a}."
+      // a period on the end looks weird cus of the link
+      en: "If you\u2019re looking for more, try out Last.fm\u2019s own {a}Labs feature{/a}",
+      de: "Wenn du nach mehr suchst, probiere die {a}Labs-Funktion{/a} von Last.fm aus",
+      sv: "Om du letar efter lite mer, testa Last.fm\u2019s {a}egna Labs{/a}"
     },
     compare_description: {
       en: "Find your shared artists, albums, and tracks with another",

@@ -4878,9 +4878,10 @@ export const trans = {
         sv: 'Skapa en personlig bild baserad på din lyssningshistoria och inställningar'
     },
     labs_cta: {
-        en: 'If you’re looking for more, try out Last.fm’s own {a}Labs feature{/a}.',
-        de: 'Wenn du nach mehr suchst, probiere die {a}Labs-Funktion{/a} von Last.fm aus.',
-        sv: 'Om du letar efter lite mer, testa Last.fm’s {a}egna Labs{/a}.'
+        // a period on the end looks weird cus of the link
+        en: 'If you’re looking for more, try out Last.fm’s own {a}Labs feature{/a}',
+        de: 'Wenn du nach mehr suchst, probiere die {a}Labs-Funktion{/a} von Last.fm aus',
+        sv: 'Om du letar efter lite mer, testa Last.fm’s {a}egna Labs{/a}'
     },
     compare_description: {
         en: 'Find your shared artists, albums, and tracks with another',
