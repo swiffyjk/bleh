@@ -47646,8 +47646,9 @@
                             </div>
                         </div>
                         ${ff("card_saturation") ? html.node`
-                    ${sat_bg2 = setting({ id: "sat_bg" })}
-                    ` : ""}
+                                ${sat_bg2 = setting({ id: "sat_bg" })}
+                            ` : ""}
+                        ${setting({ id: "noise" })}
                     </div>
                 </section>
                 <section class="bleh--panel">
@@ -57222,6 +57223,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         sv: "Skaffa lite f\xE4rg i din v\xE4rld (eller minska den)"
       }
     },
+    noise: {
+      name: {
+        en: "Noise overlay opacity"
+      },
+      body: {
+        en: "Apply a coat of subtle noise to add variation to solid backgrounds"
+      }
+    },
     save: {
       en: "Save",
       de: "Speichern",
@@ -61883,6 +61892,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       default: true,
       title: trans2.solarium.name,
       body: trans2.solarium.body,
+      new_release: true
+    },
+    noise: {
+      css: "noise-opacity",
+      default: 0.5,
+      type: "range",
+      min: 0,
+      max: 1,
+      step: 0.05,
+      title: trans2.noise.name,
+      body: trans2.noise.body,
       new_release: true
     },
     gloss: {

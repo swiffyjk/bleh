@@ -790,9 +790,10 @@ export async function render_setting_page(page_id) {
                         </div>
                         ${ff('card_saturation') ?
                             html.node`
-                    ${(sat_bg = setting({ id: 'sat_bg' }))}
-                    `
+                                ${(sat_bg = setting({ id: 'sat_bg' }))}
+                            `
                         :   ''}
+                        ${setting({ id: 'noise' })}
                     </div>
                 </section>
                 <section class="bleh--panel">

@@ -659,6 +659,17 @@ export let settings_store = {
         body: trans.solarium.body,
         new_release: true
     },
+    noise: {
+        css: 'noise-opacity',
+        default: 0.5,
+        type: 'range',
+        min: 0,
+        max: 1,
+        step: 0.05,
+        title: trans.noise.name,
+        body: trans.noise.body,
+        new_release: true
+    },
     gloss: {
         css: 'gloss',
         default: 0,

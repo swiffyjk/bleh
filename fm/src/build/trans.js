@@ -1382,6 +1382,14 @@ export const trans = {
             sv: 'Skaffa lite färg i din värld (eller minska den)'
         }
     },
+    noise: {
+        name: {
+            en: 'Noise overlay opacity'
+        },
+        body: {
+            en: 'Apply a coat of subtle noise to add variation to solid backgrounds'
+        }
+    },
     save: {
         en: 'Save',
         de: 'Speichern',
