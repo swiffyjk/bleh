@@ -2959,6 +2959,10 @@
         .masonry-left {
             float: unset;
         }
+
+        & > .buffer-standard.section-with-separator {
+            display: none;
+        }
     }
 
     .page-content:has(> .section) + .full-bleed-ad-container + .page-content {
