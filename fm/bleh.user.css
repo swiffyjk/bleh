@@ -25771,8 +25771,8 @@
             --bg: hsl(var(--k4), 20%);
             --bg-hov: hsl(var(--k4), 30%);
             --bg-atv: hsl(var(--k4), 40%);
-            --padding: 5px 10px 5px
-                calc(10px + var(--icon-size) + var(--icon-gap));
+            --padding: 5px 9px 5px
+                calc(9px + var(--icon-size) + var(--icon-gap));
             --col: hsl(var(--l3-c));
             --mask-colour: color-mix(
                 in hsl,
@@ -25782,7 +25782,7 @@
             --shadow: none;
             --radius: var(--item-med-radius);
             flex: unset;
-            --left: 10px;
+            --left: 8px;
 
             position: relative;
 
@@ -25865,7 +25865,7 @@
         --bg-atv: hsl(var(--b4), 60%);
         --col: hsl(var(--c3));
         --shadow: inset 0 0 0 1px var(--card-border-base);
-        --padding: 5px 10px;
+        --padding: 5px 9px;
         --radius: var(--item-med-radius);
         min-width: 28px !important;
         width: fit-content;

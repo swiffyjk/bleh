@@ -742,6 +742,12 @@ export function oracle_process() {
             return;
         }
 
+        page.state.oracle_debug.recording_id = recording.id;
+        log('picked recording, proceeding', 'oracle', 'info', {
+            data,
+            recording
+        });
+
         if (recording) {
             log('releases in recording', 'oracle', 'info', {
                 recording,
@@ -1216,6 +1222,19 @@ export function oracle_debug() {
                                     <a
                                         class="see-more"
                                         href="https://musicbrainz.org/release/${val}"
+                                        target="_blank"
+                                        >view</a
+                                    >
+                                `
+                            );
+                        } else if (item == 'recording_id') {
+                            render(
+                                va,
+                                html`
+                                    <p>${val}</p>
+                                    <a
+                                        class="see-more"
+                                        href="https://musicbrainz.org/recording/${val}"
                                         target="_blank"
                                         >view</a
                                     >
