@@ -31999,7 +31999,7 @@
               other: tl2(trans2.other)
             };
             let type = release["release-group"]["primary-type"];
-            if (type.toLowerCase() in types)
+            if (type && type.toLowerCase() in types)
               type = types[type.toLowerCase()];
             const artist_lower = page.sister.toLowerCase();
             const title_lower = title.toLowerCase();
