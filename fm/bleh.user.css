@@ -7899,9 +7899,9 @@
 
     .attendee-summary-user-avatar .avatar-status-dot,
     .playlisting-playlist-author-image .avatar-status-dot {
-        width: 18px;
-        height: 18px;
-        --mask-size: 18px;
+        width: 14px;
+        height: 14px;
+        --mask-size: 14px;
         /* remove the heavy bottom shadow */
         filter: drop-shadow(2px 0px 0 hsl(var(--b5)))
             drop-shadow(0px 2px 0 hsl(var(--b5)))
