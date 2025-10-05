@@ -44513,7 +44513,10 @@
     avatar3.setAttribute("data-bleh-avatar", "true");
     const avatar_img = avatar3.querySelector("img");
     if (!avatar_img) return {};
-    avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
+    avatar_img.setAttribute(
+      "src",
+      avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/")
+    );
     avatar3.setAttribute("title", "");
     let badges = load_badges(name);
     let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
@@ -44521,12 +44524,17 @@
     if (!parent) avatar3.classList.add("avatar-can-hoverbox");
     else parent.classList.add("parent-can-hoverbox");
     let pre_existing_badge_type;
-    if (pre_existing_badge) pre_existing_badge_type = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
+    if (pre_existing_badge)
+      pre_existing_badge_type = pre_existing_badge.classList[1].replace(
+        "avatar-status-dot--",
+        "user-status-"
+      );
     if (pre_existing_badge_type == "user-follow") {
       pre_existing_badge = null;
       pre_existing_badge_type = null;
     }
-    if (badges) avatar3.appendChild(create_badge(badges[badges.length - 1], true));
+    if (badges)
+      avatar3.appendChild(create_badge(badges[badges.length - 1], true));
     let image_header;
     const popup = tippy_esm_default(parent ? parent : avatar3, {
       theme: "context-menu",
@@ -44544,8 +44552,12 @@
                         ${badges.map((badge, index3) => create_badge(badge, false, index3 == badges.length - 1))}
                         ${pre_existing_badge ? create_badge({
         type: pre_existing_badge_type,
-        name: tl2(trans2.badges[pre_existing_badge_type].name),
-        reason: tl2(trans2.badges[pre_existing_badge_type].reason),
+        name: tl2(
+          trans2.badges[pre_existing_badge_type].name
+        ),
+        reason: tl2(
+          trans2.badges[pre_existing_badge_type].reason
+        ),
         inbuilt: true
       }) : ""}
                     </div>
@@ -44553,8 +44565,12 @@
                     <div class="badges">
                         ${create_badge({
         type: pre_existing_badge_type,
-        name: tl2(trans2.badges[pre_existing_badge_type].name),
-        reason: tl2(trans2.badges[pre_existing_badge_type].reason),
+        name: tl2(
+          trans2.badges[pre_existing_badge_type].name
+        ),
+        reason: tl2(
+          trans2.badges[pre_existing_badge_type].reason
+        ),
         inbuilt: true
       })}
                     </div>
@@ -44582,16 +44598,14 @@
     register_menu(parent ? parent : avatar3, popup);
     control_gif_pause(avatar_img);
     if (badges) return badges[badges.length - 1];
-    else if (pre_existing_badge) return { type: pre_existing_badge.classList[1] };
+    else if (pre_existing_badge)
+      return { type: pre_existing_badge.classList[1] };
     else return { type: "none" };
   }
   function return_name_from_avatar(avatar3) {
-    if (!avatar3)
-      return;
-    if (!avatar3.hasAttribute("alt"))
-      return;
-    if (avatar3.getAttribute("alt") == tl2(trans2.your_avatar))
-      return auth;
+    if (!avatar3) return;
+    if (!avatar3.hasAttribute("alt")) return;
+    if (avatar3.getAttribute("alt") == tl2(trans2.your_avatar)) return auth;
     return avatar3.getAttribute("alt").replace(tl2(trans2.avatar_for_user), "");
   }
   unsafeWindow._expand_avatar = function(src) {
@@ -44630,6 +44644,21 @@
       type: "avatar",
       has_overlays: false
     });
+  }
+  function style_name_from_badge(name, badge) {
+    if (!badge) return;
+    if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+      name.style.setProperty("--hue-over", badge.hue);
+      name.style.setProperty("--sat-over", badge.sat);
+      name.style.setProperty("--lit-over", badge.lit);
+    } else if (badge.type) {
+      name.classList.add(
+        `user-status--bleh-${badge.type}`,
+        `user-status--bleh-user-${badge.user}`
+      );
+    } else {
+      name.classList.add(badge.type);
+    }
   }
 
   // src/pages/wiki.js
@@ -54319,18 +54348,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         if (badge) {
           if (badge.type && badge.type == "avatar-status-dot--staff")
             shout.classList.add("staff-shout");
-          if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
-            shout_name.style.setProperty("--hue-over", badge.hue);
-            shout_name.style.setProperty("--sat-over", badge.sat);
-            shout_name.style.setProperty("--lit-over", badge.lit);
-          } else if (badge.type) {
-            shout_name.classList.add(
-              `user-status--bleh-${badge.type}`,
-              `user-status--bleh-user-${badge.user}`
-            );
-          } else {
-            shout_name.classList.add(badge.type);
-          }
+          style_name_from_badge(shout_name, badge);
         }
         const shout_body = shout.querySelector(".shout-body p");
         const shout_text = shout_body.textContent.trim();
@@ -54744,8 +54762,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     );
     users.forEach((user) => {
       let avatar3 = user.querySelector(".user-list-avatar");
-      let name = user.querySelector(".user-list-link").textContent;
-      patch_avatar(avatar3, name, "follow");
+      let name = user.querySelector(".user-list-link");
+      const badge = patch_avatar(avatar3, name.textContent, "follow");
+      style_name_from_badge(name, badge);
       let artists = user.querySelectorAll(".user-list-shared-artists a");
       artists.forEach((artist) => {
         artist.textContent = correct_artist(artist.textContent);
