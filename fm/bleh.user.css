@@ -11712,7 +11712,10 @@
         display: none !important;
     }
 
-    .date-range-picker-content,
+    .date-range-picker-content-inner {
+        display: block !important;
+    }
+
     .date-picker-content,
     .dropdown-menu-clickable,
     .auth-dropdown-menu,

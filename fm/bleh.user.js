@@ -38914,7 +38914,7 @@
         </li>
     `);
     picker_content.classList = "date-range-picker-content-inner";
-    tippy_esm_default(date_btn, {
+    const modal = tippy_esm_default(date_btn, {
       theme: "window",
       content: picker_content,
       placement: "bottom",
@@ -38922,12 +38922,26 @@
       interactiveBorder: 10,
       trigger: "click",
       appendTo: document.body,
+      hideOnClick: "toggle",
       onClickOutside(instance, event3) {
-        if (instance.querySelector('[aria-expanded="true"]')) {
+        console.info(
+          "modal click",
+          instance,
+          instance.popper,
+          instance.popper.querySelector('[aria-expanded="true"]'),
+          instance.popper.querySelectorAll(".date-input")
+        );
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
           return;
         }
         instance.hide();
       }
+    });
+    picker_content.querySelectorAll("a, button").forEach((elem) => {
+      elem.addEventListener("click", () => {
+        console.info("modal hide due to inner click", elem);
+        modal.hide();
+      });
     });
     let form = picker_content.querySelector(":scope > .date-range-picker-form");
     let from_group = form.querySelector(".form-group--from");
