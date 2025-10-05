@@ -5,7 +5,7 @@
 //
 
 import { html, render } from 'lighterhtml';
-import { patch_avatar } from '../avatar';
+import { patch_avatar, style_name_from_badge } from '../avatar';
 import { settings } from '../build/config';
 import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
@@ -1678,6 +1678,7 @@ export function convert_top_listener(listener, index, key = 'top-listeners') {
 
     let follow = listener.querySelector('.class');
 
+    let name_link;
     let user_list_avatar;
     let about_me;
     const new_listener = html.node`
@@ -1687,7 +1688,7 @@ export function convert_top_listener(listener, index, key = 'top-listeners') {
                     ${position}
                 </span>
                 <h4 class="user-list-name">
-                    <a class="user-list-link link-block-target" href=${name_wrap.getAttribute('href')}>
+                    <a class="user-list-link link-block-target" href=${name_wrap.getAttribute('href')} ref=${(el) => (name_link = el)}>
                         ${name}
                     </a>
                 </h4>
@@ -1710,7 +1711,8 @@ export function convert_top_listener(listener, index, key = 'top-listeners') {
         </li>
     `;
 
-    let badge = patch_avatar(user_list_avatar, name, 'listener');
+    const badge = patch_avatar(user_list_avatar, name, 'listener');
+    style_name_from_badge(name_link, badge);
 
     if (track_wrap) {
         let track_link = about_me.querySelector('a');

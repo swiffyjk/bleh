@@ -33554,6 +33554,7 @@
     let name = name_wrap.textContent;
     let track_wrap = listener.querySelector(`.${key}-track`);
     let follow = listener.querySelector(".class");
+    let name_link;
     let user_list_avatar;
     let about_me;
     const new_listener = html.node`
@@ -33563,7 +33564,7 @@
                     ${position}
                 </span>
                 <h4 class="user-list-name">
-                    <a class="user-list-link link-block-target" href=${name_wrap.getAttribute("href")}>
+                    <a class="user-list-link link-block-target" href=${name_wrap.getAttribute("href")} ref=${(el) => name_link = el}>
                         ${name}
                     </a>
                 </h4>
@@ -33581,7 +33582,8 @@
             </div>
         </li>
     `;
-    let badge = patch_avatar(user_list_avatar, name, "listener");
+    const badge = patch_avatar(user_list_avatar, name, "listener");
+    style_name_from_badge(name_link, badge);
     if (track_wrap) {
       let track_link = about_me.querySelector("a");
       track_link.classList.add("top-track");
