@@ -31733,30 +31733,21 @@
     function oracle_album(data2) {
       const labels = data2["label-info"];
       if (labels && labels.length > 0) {
-        page.state.links_and_label.appendChild(html.node`
-                <div class="metadata-group">
-                    <div class="sub-text music-small-header">
-                        <span>
-                            ${tl2(trans2.label)}<span class="new-badge beta">${tl2(trans2.beta)}</span>
-                        </span>
-                    </div>
-                    <div class="music-labels catalogue-tags">
-                        <ul class="tags-list">
-                            ${labels.map((label) => {
+        info_panel.appendChild(html.node`
+                <div class="card-tip copyright">
+                    ©
+                    ${labels.map((label, index3) => {
+          let label_elem;
           const elem = html.node`
-                                        <li class="tag">
-                                            <span class="music-label">${label.label.name}</span>
-                                        </li>
-                                    `;
+                            <span class="music-label" ref=${(el) => label_elem = el}>${label.label.name}</span>${index3 < labels.length - 1 ? ", " : ""}
+                        `;
           if (label.label.disambiguation != "") {
-            tippy_esm_default(elem, {
+            tippy_esm_default(label_elem, {
               content: label.label.disambiguation
             });
           }
           return elem;
         })}
-                        </ul>
-                    </div>
                 </div>
             `);
       }
@@ -32775,7 +32766,7 @@
     let play_links;
     let link_container;
     const link_group = html.node`
-        <div class="metadata-row" ref=${(el) => page.state.links_and_label = el}>
+        <div class="metadata-row">
             <div class="metadata-group">
                 <div class="sub-text music-small-header">
                     ${tl2(trans2.find_on)}
@@ -33124,11 +33115,14 @@
     if (link_container.childNodes.length > 0) col_main.appendChild(link_group);
     const tags = col_main.querySelector(".catalogue-tags");
     if (tags) {
-      let header_tags = document.createElement("div");
-      header_tags.classList.add("sub-text", "music-small-header");
-      header_tags.textContent = tl2(trans2.tags);
-      col_main.appendChild(header_tags);
-      col_main.appendChild(tags);
+      link_group.appendChild(html.node`
+            <div class="metadata-group">
+                <div class="sub-text music-small-header">
+                    ${tl2(trans2.tags)}
+                </div>
+                ${tags}
+            </div>
+        `);
     }
     const no_info = col_main.querySelector(
       ":scope > .section-with-separator.buffer-4"

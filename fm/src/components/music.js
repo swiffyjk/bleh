@@ -675,7 +675,7 @@ export async function show_your_scrobbles() {
 
     let link_container;
     const link_group = html.node`
-        <div class="metadata-row" ref=${(el) => (page.state.links_and_label = el)}>
+        <div class="metadata-row">
             <div class="metadata-group">
                 <div class="sub-text music-small-header">
                     ${tl(trans.find_on)}
@@ -1106,12 +1106,14 @@ export async function show_your_scrobbles() {
 
     const tags = col_main.querySelector('.catalogue-tags');
     if (tags) {
-        let header_tags = document.createElement('div');
-        header_tags.classList.add('sub-text', 'music-small-header');
-        header_tags.textContent = tl(trans.tags);
-        col_main.appendChild(header_tags);
-
-        col_main.appendChild(tags);
+        link_group.appendChild(html.node`
+            <div class="metadata-group">
+                <div class="sub-text music-small-header">
+                    ${tl(trans.tags)}
+                </div>
+                ${tags}
+            </div>
+        `);
     }
 
     // no album info

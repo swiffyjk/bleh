@@ -485,32 +485,23 @@ export function oracle_process() {
     function oracle_album(data) {
         const labels = data['label-info'];
         if (labels && labels.length > 0) {
-            page.state.links_and_label.appendChild(html.node`
-                <div class="metadata-group">
-                    <div class="sub-text music-small-header">
-                        <span>
-                            ${tl(trans.label)}<span class="new-badge beta">${tl(trans.beta)}</span>
-                        </span>
-                    </div>
-                    <div class="music-labels catalogue-tags">
-                        <ul class="tags-list">
-                            ${labels.map((label) => {
-                                const elem = html.node`
-                                        <li class="tag">
-                                            <span class="music-label">${label.label.name}</span>
-                                        </li>
-                                    `;
+            info_panel.appendChild(html.node`
+                <div class="card-tip copyright">
+                    ©
+                    ${labels.map((label, index) => {
+                        let label_elem;
+                        const elem = html.node`
+                            <span class="music-label" ref=${(el) => (label_elem = el)}>${label.label.name}</span>${index < labels.length - 1 ? ', ' : ''}
+                        `;
 
-                                if (label.label.disambiguation != '') {
-                                    tippy(elem, {
-                                        content: label.label.disambiguation
-                                    });
-                                }
+                        if (label.label.disambiguation != '') {
+                            tippy(label_elem, {
+                                content: label.label.disambiguation
+                            });
+                        }
 
-                                return elem;
-                            })}
-                        </ul>
-                    </div>
+                        return elem;
+                    })}
                 </div>
             `);
         }
