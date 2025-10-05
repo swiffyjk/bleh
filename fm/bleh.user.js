@@ -31449,7 +31449,7 @@
         desired,
         artist_data
       });
-      if (artist2.name == desired || artist_data.type == "id" && artist2.artist.id == artist_data.name)
+      if (artist2.name.toLowerCase() == desired.toLowerCase() || artist_data.type == "id" && artist2.artist.id == artist_data.name)
         return desired;
       return artist2.name;
     }
@@ -31960,6 +31960,16 @@
             if (type != "single") return 2;
             return 3;
           };
+          const artist_matches = (release) => {
+            return release["artist-credit"]?.some((artist2) => {
+              const name = oracle_aliases(artist2, page.sister);
+              return name.toLowerCase() == page.sister.toLowerCase();
+            });
+          };
+          const a_artist_match = artist_matches(a);
+          const b_artist_match = artist_matches(b);
+          if (a_artist_match && !b_artist_match) return -1;
+          if (!a_artist_match && b_artist_match) return 1;
           return rank(a["release-group"]["primary-type"]) - rank(b["release-group"]["primary-type"]);
         });
         log("releases in recording after filter", "oracle", "info", {
@@ -32103,6 +32113,14 @@
       fetch(`${root}music/${sanitise(artist2)}/${sanitise(title)}/`).then((res) => {
         if (!res.ok) {
           log("error fetching cover art", "oracle", "error", { res });
+          render(
+            parent,
+            html`
+                            <span class="cover-art">
+                                <img class="missing-album error" />
+                            </span>
+                        `
+          );
           throw new Error();
         }
         return res.text();
