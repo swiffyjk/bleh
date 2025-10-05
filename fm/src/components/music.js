@@ -392,9 +392,11 @@ export async function show_your_scrobbles() {
     if (ff('oracle') && settings.oracle_beta && page.type != 'artist') {
         col_main.insertBefore(
             html.node`
-            <div class="oracle">
-                <span class="bleh-icon" />
-                <p>${{ html: tl(trans.oracle_notice).replace('oracle', '<i>oracle</i>') }}</p>
+            <div class="oracle" data-mobile=${page.mobile}>
+                <p>
+                    <span class="bleh-icon" />
+                    <span>${{ html: tl(trans.oracle_notice).replace('oracle', '<i>oracle</i>') }}</span>
+                </p>
                 <button class="see-more left-icon" data-type="debug" onclick=${() => oracle_debug()}>
                     ${tl(trans.debug)}
                 </button>

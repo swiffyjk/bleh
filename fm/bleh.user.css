@@ -794,11 +794,23 @@
                 1px
         );
 
-        --overview-bio-size: 480px;
+        --overview-bio-size: 440px;
+        --header-avatar-size: 150px;
 
         @media (min-width: 2000px) {
             --cards-main-width: 1100px;
             --overview-bio-size: 530px;
+            --header-avatar-size: 200px;
+        }
+
+        @media (max-width: 600px) {
+            --card-padding: 15px;
+            --cards-width: 100vw;
+            --cards-main-width: 100vw;
+            --cards-sidebar-width: 100vw;
+            --card-shadow: unset;
+
+            --header-avatar-size: 200px;
         }
 
         --item-small-radius: 5px;
@@ -858,14 +870,6 @@
         --cover-size-100: 40px;
         --cover-size-200: 72px;
         --cover-size-300: 96px;
-
-        @media (max-width: 600px) {
-            --card-padding: 15px;
-            --cards-width: 100vw;
-            --cards-main-width: 100vw;
-            --cards-sidebar-width: 100vw;
-            --card-shadow: unset;
-        }
 
         --blur-saturate: 180%;
         --blur-brightness: 0.6;
@@ -22786,7 +22790,7 @@
                     gap: calc(var(--card-gap) + var(--card-padding));
 
                     .avatar-side {
-                        --avatar-size: 150px !important;
+                        --avatar-size: var(--header-avatar-size) !important;
                         margin: unset;
 
                         img {
@@ -22863,8 +22867,10 @@
 
                 .avatar-side {
                     --mask-size: var(--cover-size-200) !important;
-                    --avatar-size: 129px !important;
-                    margin-top: -81px !important;
+                    --avatar-size: calc(
+                        var(--header-avatar-size) - 20px
+                    ) !important;
+                    margin-top: -48px !important;
                     cursor: pointer;
 
                     transition-property: width, height, margin, transform;
@@ -28426,17 +28432,23 @@
         --icon: var(--icon-16-oracle);
         --icon-colour: hsl(var(--l3-c));
 
-        & > .bleh-icon {
-            margin-right: calc(-1 * (var(--card-gap) - var(--icon-gap)));
-        }
-
         & > p {
+            display: flex;
+            gap: var(--icon-gap);
             flex: 1;
 
-            & > i {
-                font-style: normal;
-                color: hsl(var(--l3-c));
-                font-weight: var(--font-weight-medium);
+            & > .bleh-icon {
+                margin-right: var(--icon-gap);
+                display: inline-flex;
+                flex-shrink: 0;
+            }
+
+            & > span {
+                & > i {
+                    font-style: normal;
+                    color: hsl(var(--l3-c));
+                    font-weight: var(--font-weight-medium);
+                }
             }
 
             cursor: default;
@@ -28452,6 +28464,19 @@
         padding: var(--card-padding);
         margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) 0
             calc(-1 * var(--card-padding));
+
+        &[data-mobile="true"] {
+            background: hsl(var(--k4), 20%);
+            padding: var(--card-gap);
+            margin: 0 0 var(--card-gap) 0;
+            border-radius: var(--item-big-radius);
+
+            flex-wrap: wrap;
+
+            & > p {
+                flex-basis: 100%;
+            }
+        }
     }
     .oracle-debug {
         width: 600px;
