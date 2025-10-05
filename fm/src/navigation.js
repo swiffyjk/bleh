@@ -373,7 +373,7 @@ export function append_nav() {
         page.header.season_tooltip = tippy(bleh_container, {
             theme: 'seasonal-swatch',
             content: html.node`
-                <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
+                <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${tl(trans.seasonal.notice)}</span>
             `
         });
