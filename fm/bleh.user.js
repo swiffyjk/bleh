@@ -31935,6 +31935,7 @@
         );
         releases.sort((a, b) => {
           const rank = (type) => {
+            if (!type) return 4;
             type = type.toLowerCase();
             if (type == "album") return 0;
             if (type == "ep") return 1;
