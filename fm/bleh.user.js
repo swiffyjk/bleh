@@ -36731,8 +36731,10 @@
       if (id == "artist" || id == "user" || id == "tag")
         selected_search = "primary";
       else selected_search = "secondary";
+      let label = id;
+      if (id == "user") id = "profile";
       input_box.querySelector("input").placeholder = tl2(trans2.rabbit_search, {
-        v: tl2(trans2[id])
+        v: tl2(trans2[label])
       });
       depth = 3;
       searching[selected_search].type = id;
