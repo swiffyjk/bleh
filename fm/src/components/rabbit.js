@@ -518,7 +518,7 @@ export function register_rabbit() {
         else selected_search = 'secondary';
 
         let label = id;
-        if (id == 'user') id = 'profile';
+        if (label == 'user') label = 'profile';
 
         input_box.querySelector('input').placeholder = tl(trans.rabbit_search, {
             v: tl(trans[label])
