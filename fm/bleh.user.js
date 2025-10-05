@@ -31656,6 +31656,13 @@
         const official = release.status == "Official";
         return !various && official;
       });
+      filtered.sort((a, b) => {
+        const a_media = a.media?.[0]?.format == "Digital Media";
+        const b_media = b.media?.[0]?.format == "Digital Media";
+        if (a_media == b_media) return 0;
+        if (a_media != b_media) return a_media ? -1 : 1;
+        return (b["track-count"] || 0) - (a["track-count"] || 0);
+      });
       if (filtered.length == 0) return null;
       log("filtered releases before picking", "oracle", "info", { filtered });
       let best = filtered.find(
