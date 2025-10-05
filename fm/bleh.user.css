@@ -5608,6 +5608,12 @@
             --grid-colour-shadow: 0 27px 15px hsl(var(--b4), 40%);
         }
 
+        --shadow: rgba(0, 0, 0, 0.2);
+
+        &.grid-items-item-has-colour {
+            --shadow: color-mix(in hsl, hsl(var(--h4)) 60%, black 70%);
+        }
+
         transition-property: transform;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
@@ -5998,8 +6004,6 @@
         }
     }
     .grid-items-item-details {
-        --shadow: color-mix(in hsl, hsl(var(--h4)) 60%, black 70%);
-
         pointer-events: none;
         font-size: var(--font-size);
         line-height: var(--line-height);
