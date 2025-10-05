@@ -25876,6 +25876,17 @@
         }
     }
 
+    .music-label {
+        transition-property: color;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+
+        &[aria-describedby] {
+            color: hsl(var(--l3-c));
+            transition: none;
+        }
+    }
+
     .tags-add-cta:before {
         display: none;
     }
