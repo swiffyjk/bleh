@@ -10,6 +10,7 @@
 // @downloadURL  https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
+// @connect      musicbrainz.org
 // ==/UserScript==
 (() => {
   var __create = Object.create;
