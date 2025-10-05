@@ -881,7 +881,7 @@
 
         --rain: 0, 0%, 100%;
 
-        --solarium: var(--card-blur) url(#solarium);
+        --solarium: url(#solarium) var(--card-blur);
 
         &[data-bleh--theme_type="light"],
         [data-bleh--theme_type="light"] > & {

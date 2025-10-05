@@ -220,15 +220,8 @@ function bleh_main() {
 
 function solarium() {
     document.body.appendChild(html.node`
-        <svg style="position: absolute; width: 0; height: 0">
-            <filter
-                id="solarium"
-                x="0%"
-                y="0%"
-                width="100%"
-                height="100%"
-                filterUnits="objectBoundingBox"
-            >
+        <svg style="position:absolute; width:0; height:0">
+            <filter id="solarium" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
                 <feTurbulence
                     type="fractalNoise"
                     baseFrequency="0.001 0.005"
@@ -236,34 +229,20 @@ function solarium() {
                     seed="17"
                     result="turbulence"
                 />
-                <feComponentTransfer in="turbulence" result="mapped">
-                    <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5" />
-                    <feFuncG type="gamma" amplitude="0" exponent="1" offset="0" />
-                    <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
+                <feGaussianBlur in="turbulence" stdDeviation="10" result="softMap" />
+                <feFlood flood-color="white" result="flood" />
+                <feComposite in="flood" in2="SourceAlpha" operator="in" result="circleBase" />
+                <feMorphology in="circleBase" operator="erode" radius="0" result="innerCircle" />
+                <feGaussianBlur in="innerCircle" stdDeviation="150" result="radialFade" />
+                <feComponentTransfer in="radialFade" result="edgeMask">
+                    <feFuncR type="table" tableValues="0 1" />
+                    <feFuncG type="table" tableValues="0 1" />
+                    <feFuncB type="table" tableValues="0 1" />
                 </feComponentTransfer>
-                <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
-                <feSpecularLighting
-                    in="softMap"
-                    surfaceScale="5"
-                    specularConstant="1"
-                    specularExponent="100"
-                    lighting-color="white"
-                    result="specLight"
-                >
-                    <fePointLight x="-200" y="-200" z="300" />
-                </feSpecularLighting>
-                <feComposite
-                    in="specLight"
-                    operator="arithmetic"
-                    k1="0"
-                    k2="1"
-                    k3="1"
-                    k4="0"
-                    result="litImage"
-                />
+                <feBlend in="softMap" in2="edgeMask" mode="multiply" result="edgeDistortion" />
                 <feDisplacementMap
                     in="SourceGraphic"
-                    in2="softMap"
+                    in2="edgeDistortion"
                     scale="200"
                     xChannelSelector="R"
                     yChannelSelector="G"
