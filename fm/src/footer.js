@@ -37,19 +37,23 @@ export function bleh_footer() {
                         })
                     }}
                 </p>
-                <p>
-                    ${{
-                        html: tl(trans.translations, {
-                            l: lang_info[lang].name,
-                            u: lang_info[lang].by
-                                .map(
-                                    (user) =>
-                                        `<a href="${root}user/${user}">${user}</a>`
-                                )
-                                .join(', ')
-                        })
-                    }}
-                </p>
+                ${lang != 'en' ?
+                    html.node`
+                        <p>
+                            ${{
+                                html: tl(trans.translations, {
+                                    l: lang_info[lang].name,
+                                    u: lang_info[lang].by
+                                        .map(
+                                            (user) =>
+                                                `<a href="${root}user/${user}">${user}</a>`
+                                        )
+                                        .join(', ')
+                                })
+                            }}
+                        </p>
+                    `
+                :   ''}
             </div>
             <div class="footer-web music-links">
                 <a

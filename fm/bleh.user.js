@@ -54789,8 +54789,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         })
       }}
                 </p>
-                <p>
-                    ${{
+                ${lang != "en" ? html.node`
+                        <p>
+                            ${{
         html: tl2(trans2.translations, {
           l: lang_info[lang].name,
           u: lang_info[lang].by.map(
@@ -54798,7 +54799,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           ).join(", ")
         })
       }}
-                </p>
+                        </p>
+                    ` : ""}
             </div>
             <div class="footer-web music-links">
                 <a
