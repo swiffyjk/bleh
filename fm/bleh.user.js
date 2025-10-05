@@ -46763,7 +46763,7 @@
     log("started interval", "season", "info");
     if (!page.header.season_tooltip) return;
     page.header.season_tooltip.setContent(html.node`
-        <span class="season-colour-name">${tl2(trans2.seasonal.listing[stored_season.id])}</span>
+        <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl2(trans2.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${tl2(trans2.seasonal.live)}</span>
     `);
     page.header.season.classList.add("live");
@@ -46776,7 +46776,7 @@
     log("ended interval", "season", "info");
     if (!page.header.season_tooltip) return;
     page.header.season_tooltip.setContent(html.node`
-        <span class="season-colour-name">${tl2(trans2.seasonal.listing[stored_season.id])}</span>
+        <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl2(trans2.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${tl2(trans2.seasonal.notice)}</span>
     `);
     page.header.season.classList.remove("live");
@@ -51144,7 +51144,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       page.header.season_tooltip = tippy_esm_default(bleh_container, {
         theme: "seasonal-swatch",
         content: html.node`
-                <span class="season-colour-name">${tl2(trans2.seasonal.listing[stored_season.id])}</span>
+                <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl2(trans2.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${tl2(trans2.seasonal.notice)}</span>
             `
       });
