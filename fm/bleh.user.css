@@ -18110,6 +18110,12 @@
 
             pointer-events: none;
 
+            html[data-bleh--season="halloween"][data-seasonal-accent="true"] & {
+                --hue-over: 100;
+                --sat-over: 1.2;
+                --lit-over: 1.1;
+            }
+
             .fill {
                 display: flex;
                 width: var(--percent);
@@ -19254,6 +19260,12 @@
         transition-duration: 0.2s !important;
 
         --radius: 50px;
+
+        html[data-bleh--season="halloween"][data-seasonal-accent="true"] & {
+            --hue-over: 260;
+            --sat-over: 1.2;
+            --lit-over: 0.9;
+        }
 
         .dot {
             position: absolute;

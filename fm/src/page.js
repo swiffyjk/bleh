@@ -87,6 +87,7 @@ import { oracle_data } from './components/oracle.js';
 import { dynamic_theming } from './components/dynamic_theming.js';
 import { prepare_music } from './components/music.js';
 import { page_menu } from './components/menu.js';
+import { seasonal_colour_switch } from './components/settings.js';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -650,6 +651,8 @@ function load_page() {
                 shout_header(page.structure.main.querySelector('.shoutbox'));
         }
     }
+
+    seasonal_colour_switch();
 
     append_nav();
 

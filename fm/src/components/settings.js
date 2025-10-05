@@ -246,7 +246,7 @@ export function setting({
                     }
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="range">
-                        <div class="track" style="--percent: ${((value - settings_store[id].min) / working_max) * 100}%" data-id=${id} ref=${(el) => (track = el)}>
+                        <div class="track colourful" style="--percent: ${((value - settings_store[id].min) / working_max) * 100}%" data-id=${id} ref=${(el) => (track = el)}>
                             <div class="fill" />
                             <div class="nub" />
                         </div>
@@ -1190,6 +1190,8 @@ export function save_setting(id, value) {
         );
     }
 
+    seasonal_colour_switch();
+
     if (
         settings_store[id].require_reload == true ||
         (settings_store[id].require_reload == 'partial' &&
@@ -1202,6 +1204,18 @@ export function save_setting(id, value) {
         settings: settings,
         settings_id: settings[id]
     });
+}
+
+export function seasonal_colour_switch() {
+    const has_user_accent = document.body.style.getPropertyValue('--hue-album');
+
+    document.documentElement.setAttribute(
+        'data-seasonal-accent',
+        settings.hue == 255 &&
+            settings.sat == 1 &&
+            settings.lit == 1 &&
+            !has_user_accent
+    );
 }
 
 export function compile_settings() {

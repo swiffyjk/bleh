@@ -37684,7 +37684,7 @@
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="range">
-                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" data-id=${id} ref=${(el) => track = el}>
+                        <div class="track colourful" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" data-id=${id} ref=${(el) => track = el}>
                             <div class="fill" />
                             <div class="nub" />
                         </div>
@@ -38377,6 +38377,7 @@
         `${value}${settings_store[id].suffix || ""}`
       );
     }
+    seasonal_colour_switch();
     if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
       request_reload();
     compile_settings();
@@ -38384,6 +38385,13 @@
       settings,
       settings_id: settings[id]
     });
+  }
+  function seasonal_colour_switch() {
+    const has_user_accent = document.body.style.getPropertyValue("--hue-album");
+    document.documentElement.setAttribute(
+      "data-seasonal-accent",
+      settings.hue == 255 && settings.sat == 1 && settings.lit == 1 && !has_user_accent
+    );
   }
   function compile_settings() {
     let clone6 = structuredClone(settings);
@@ -55696,6 +55704,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           shout_header(page.structure.main.querySelector(".shoutbox"));
       }
     }
+    seasonal_colour_switch();
     append_nav();
     page_title();
     setTimeout(() => {
