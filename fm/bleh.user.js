@@ -31742,13 +31742,19 @@
                     </div>
                     <div class="music-labels catalogue-tags">
                         <ul class="tags-list">
-                            ${labels.map(
-          (label) => html.node`
-                                <li class="tag">
-                                    <a class="music-label" href="${root}tag/${sanitise(label.label.name, "+")}">${label.label.name}</a>
-                                </li>
-                            `
-        )}
+                            ${labels.map((label) => {
+          const elem = html.node`
+                                        <li class="tag">
+                                            <span class="music-label">${label.label.name}</span>
+                                        </li>
+                                    `;
+          if (label.label.disambiguation != "") {
+            tippy_esm_default(elem, {
+              content: label.label.disambiguation
+            });
+          }
+          return elem;
+        })}
                         </ul>
                     </div>
                 </div>

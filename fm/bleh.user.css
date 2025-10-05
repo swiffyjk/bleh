@@ -8123,7 +8123,7 @@
     .show-more a,
     /* log in */ .site-auth-control,
     .music-more-link a,
-    .tag a, .tags-add-cta, .tags-add, .tags-view-all,
+    .tag > :is(a, span), .tags-add-cta, .tags-add, .tags-view-all,
     .masthead-popup-close,
     .share-link,
     .check .box,
@@ -25828,11 +25828,12 @@
 
     .music-featured-artist-tags .tag,
     .catalogue-tags .tag {
+        display: flex;
         margin: unset;
         max-width: unset;
     }
     /* apply tag styling to everything tag-related */
-    .tag a,
+    .tag > :is(a, span),
     .tags-add-cta,
     .tags-add,
     .tags-view-all {
@@ -25857,6 +25858,10 @@
         with the padding in bleh this conflicts with eg.
         the underground hip-hop tag */
         max-width: 180px;
+
+        &:not([href]) {
+            cursor: default;
+        }
 
         &.user-created-tag {
             --bg: hsl(var(--h3), 5%);
