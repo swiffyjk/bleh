@@ -31620,6 +31620,8 @@
         (recording) => recording.disambiguation?.toLowerCase() === "explicit"
       );
       if (best) return best;
+      best = filtered.find((recording) => !recording.disambiguation);
+      if (best) return best;
       best = filtered.find(
         (recording) => recording.disambiguation?.toLowerCase() === "clean"
       );

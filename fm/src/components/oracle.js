@@ -311,6 +311,11 @@ export function oracle_process() {
         );
         if (best) return best;
 
+        // check if there's one without any disambiguation
+        // before going for a clean release
+        best = filtered.find((recording) => !recording.disambiguation);
+        if (best) return best;
+
         // then clean
         best = filtered.find(
             (recording) => recording.disambiguation?.toLowerCase() === 'clean'
