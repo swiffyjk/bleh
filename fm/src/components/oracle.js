@@ -485,22 +485,24 @@ export function oracle_process() {
     function oracle_album(data) {
         const labels = data['label-info'];
         if (labels && labels.length > 0) {
-            info_panel.appendChild(html.node`
-                <div class="sub-text music-small-header">
-                    <span>
-                        ${tl(trans.label)}<span class="new-badge beta">${tl(trans.beta)}</span>
-                    </span>
-                </div>
-                <div class="music-labels catalogue-tags">
-                    <ul class="tags-list">
-                        ${labels.map(
-                            (label) => html.node`
-                            <li class="tag">
-                                <a class="music-label" href="${root}tag/${sanitise(label.label.name, '+')}">${label.label.name}</a>
-                            </li>
-                        `
-                        )}
-                    </ul>
+            page.state.links_and_label.appendChild(html.node`
+                <div class="metadata-group">
+                    <div class="sub-text music-small-header">
+                        <span>
+                            ${tl(trans.label)}<span class="new-badge beta">${tl(trans.beta)}</span>
+                        </span>
+                    </div>
+                    <div class="music-labels catalogue-tags">
+                        <ul class="tags-list">
+                            ${labels.map(
+                                (label) => html.node`
+                                <li class="tag">
+                                    <a class="music-label" href="${root}tag/${sanitise(label.label.name, '+')}">${label.label.name}</a>
+                                </li>
+                            `
+                            )}
+                        </ul>
+                    </div>
                 </div>
             `);
         }

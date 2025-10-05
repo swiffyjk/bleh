@@ -31733,22 +31733,24 @@
     function oracle_album(data2) {
       const labels = data2["label-info"];
       if (labels && labels.length > 0) {
-        info_panel.appendChild(html.node`
-                <div class="sub-text music-small-header">
-                    <span>
-                        ${tl2(trans2.label)}<span class="new-badge beta">${tl2(trans2.beta)}</span>
-                    </span>
-                </div>
-                <div class="music-labels catalogue-tags">
-                    <ul class="tags-list">
-                        ${labels.map(
+        page.state.links_and_label.appendChild(html.node`
+                <div class="metadata-group">
+                    <div class="sub-text music-small-header">
+                        <span>
+                            ${tl2(trans2.label)}<span class="new-badge beta">${tl2(trans2.beta)}</span>
+                        </span>
+                    </div>
+                    <div class="music-labels catalogue-tags">
+                        <ul class="tags-list">
+                            ${labels.map(
           (label) => html.node`
-                            <li class="tag">
-                                <a class="music-label" href="${root}tag/${sanitise(label.label.name, "+")}">${label.label.name}</a>
-                            </li>
-                        `
+                                <li class="tag">
+                                    <a class="music-label" href="${root}tag/${sanitise(label.label.name, "+")}">${label.label.name}</a>
+                                </li>
+                            `
         )}
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
             `);
       }
@@ -32766,11 +32768,13 @@
     let play_links;
     let link_container;
     const link_group = html.node`
-        <div class="metadata-group">
-            <div class="sub-text music-small-header">
-                ${tl2(trans2.find_on)}
+        <div class="metadata-row" ref=${(el) => page.state.links_and_label = el}>
+            <div class="metadata-group">
+                <div class="sub-text music-small-header">
+                    ${tl2(trans2.find_on)}
+                </div>
+                <div class="music-links" ref=${(el) => link_container = el} />
             </div>
-            <div class="music-links" ref=${(el) => link_container = el} />
         </div>
     `;
     if (page.type == "track") {

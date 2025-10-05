@@ -675,11 +675,13 @@ export async function show_your_scrobbles() {
 
     let link_container;
     const link_group = html.node`
-        <div class="metadata-group">
-            <div class="sub-text music-small-header">
-                ${tl(trans.find_on)}
+        <div class="metadata-row" ref=${(el) => (page.state.links_and_label = el)}>
+            <div class="metadata-group">
+                <div class="sub-text music-small-header">
+                    ${tl(trans.find_on)}
+                </div>
+                <div class="music-links" ref=${(el) => (link_container = el)} />
             </div>
-            <div class="music-links" ref=${(el) => (link_container = el)} />
         </div>
     `;
 

@@ -794,8 +794,11 @@
                 1px
         );
 
+        --overview-bio-size: 480px;
+
         @media (min-width: 2000px) {
             --cards-main-width: 1100px;
+            --overview-bio-size: 530px;
         }
 
         --item-small-radius: 5px;
@@ -5169,7 +5172,7 @@
             height: 100%;
             width: var(--card-padding);
             background: linear-gradient(90deg, hsl(var(--b5)), transparent);
-            left: calc(480px);
+            left: var(--overview-bio-size);
             top: 0;
             bottom: 0;
             z-index: 10;
@@ -5250,7 +5253,7 @@
         }
         .wiki-column {
             width: 100%;
-            max-width: 480px;
+            max-width: var(--overview-bio-size);
 
             .wiki-block {
                 font-size: 16px;
@@ -25757,8 +25760,8 @@
             --bg: hsl(var(--k4), 20%);
             --bg-hov: hsl(var(--k4), 30%);
             --bg-atv: hsl(var(--k4), 40%);
-            --padding: 3px 8px 3px
-                calc(8px + var(--icon-size) + var(--icon-gap));
+            --padding: 5px 10px 5px
+                calc(10px + var(--icon-size) + var(--icon-gap));
             --col: hsl(var(--l3-c));
             --mask-colour: color-mix(
                 in hsl,
@@ -25768,7 +25771,7 @@
             --shadow: none;
             --radius: var(--item-med-radius);
             flex: unset;
-            --left: 8px;
+            --left: 10px;
 
             position: relative;
 
@@ -25786,10 +25789,20 @@
     }
     .music-small-header {
         margin-top: var(--card-gap);
-        margin-bottom: 10px;
+        margin-bottom: 6px;
 
         & > span > .new-badge {
             margin-left: 6px;
+        }
+    }
+
+    .metadata-row {
+        display: flex;
+        gap: var(--card-padding);
+        flex-wrap: wrap;
+
+        & > :first-child {
+            width: var(--overview-bio-size);
         }
     }
 
