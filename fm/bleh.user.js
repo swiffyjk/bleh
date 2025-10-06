@@ -28706,9 +28706,8 @@
     ],
     form: ["(clean", "[clean", "(explicit", "[explicit", "(spotify)"]
   };
-  var clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify|(feat\.|ft\.|featuring|with)[^)\]]*)\s*[\])]?/gi;
   function clean_title(title) {
-    return fix_title(title.replace(clean_title_regex, ""));
+    return name_includes(title)[0];
   }
   function fix_title(title) {
     return title.replace(/[\u2010\u2011\u2012\u2013]/g, "-").replace(/\u2026/g, "...");
@@ -50175,7 +50174,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function name_includes(original_title, original_artist, inherit_guests = "") {
     let original_title_corrected = false;
     let formatted_title = original_title;
-    const artist_key = original_artist.toLowerCase();
+    const artist_key = original_artist?.toLowerCase();
     if (album_track_corrections.hasOwnProperty(artist_key) && settings.corrections) {
       const corr_map = album_track_corrections[artist_key];
       if (corr_map.hasOwnProperty(formatted_title)) {

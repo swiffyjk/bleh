@@ -372,7 +372,7 @@ export function name_includes(
     let original_title_corrected = false;
     // start with the raw title, then apply any album_track_corrections
     let formatted_title = original_title;
-    const artist_key = original_artist.toLowerCase();
+    const artist_key = original_artist?.toLowerCase();
     if (
         album_track_corrections.hasOwnProperty(artist_key) &&
         settings.corrections

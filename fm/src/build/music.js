@@ -4,6 +4,7 @@
 // Licensed under GPLv3
 //
 
+import { name_includes } from '../components/lotus';
 import { trans } from './trans';
 
 export let artist_corrections = {};
@@ -652,10 +653,8 @@ export let includes = {
 
 // converts titles like 'something [explicit]' to 'something'
 // additionally removes featured artists from title
-export const clean_title_regex =
-    /\s*[-(\[]\s*(explicit|clean|spotify|(feat\.|ft\.|featuring|with)[^)\]]*)\s*[\])]?/gi;
 export function clean_title(title) {
-    return fix_title(title.replace(clean_title_regex, ''));
+    return name_includes(title)[0];
 }
 
 export function fix_title(title) {
