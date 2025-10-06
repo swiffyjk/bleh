@@ -8143,6 +8143,7 @@
     .masthead-popup-close,
     .share-link,
     .check .box,
+    .radio-cont > .radio,
     .blend-v2-btn,
     .notification,
     .inbox-item {
@@ -18336,7 +18337,7 @@
         }
 
         @media (max-width: 600px) {
-            &:not([data-type="checkbox"]) {
+            &:not([data-type="checkbox"], [data-type="radio"]) {
                 flex-direction: column;
                 gap: var(--item-list-gap);
             }
@@ -18437,6 +18438,7 @@
             }
         }
 
+        &[data-type="radio"],
         &[data-type="checkbox"],
         &[data-type="select"],
         &[data-type="range"],
@@ -18609,6 +18611,66 @@
                             transform: scale(1);
                             opacity: 1;
                         }
+                    }
+                }
+            }
+        }
+
+        &[data-type="radio"] {
+            cursor: pointer;
+
+            .heading {
+                h5,
+                p {
+                    cursor: pointer;
+                }
+            }
+
+            input {
+                display: none;
+            }
+
+            &:active {
+                .radio {
+                    background: var(--bg-atv) !important;
+                    transform: scale(0.98);
+
+                    background-repeat: repeat-x !important;
+                    background-position: unset !important;
+                }
+            }
+
+            .radio-cont {
+                display: flex;
+                align-items: center;
+                flex-shrink: 0;
+                order: -1;
+                height: 22px;
+
+                margin-right: calc(-1 * (var(--card-gap) - 10px));
+
+                .radio {
+                    position: relative;
+                    width: 16px;
+                    height: 16px;
+                    --radius: 50px;
+                    --padding: 0;
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    --icon: var(--icon-16-check-thick);
+                    --icon-size: 12px;
+
+                    --col: hsl(var(--b7)) !important;
+                    --mask-colour: var(--col);
+
+                    &[aria-checked="true"] {
+                        --shadow:
+                            inset 0 0 0 4px hsl(var(--l3-c)),
+                            0 3px 12px hsl(var(--h4), 25%),
+                            var(--interactable-outer);
                     }
                 }
             }

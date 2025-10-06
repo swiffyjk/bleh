@@ -676,15 +676,29 @@ export function setting({
                     <div class="primary-selections">
                         ${Object.entries(settings_store[id].values).map(
                             ([key, val]) => {
-                                const icon = val.icon || key;
+                                const icon = val.icon;
 
                                 const button = html.node`
-                                <button class="btn primary-selection no-icon" data-type=${icon} data-value=${key} onclick=${() => {
-                                    update_radio(key);
-                                }} aria-checked=${value == key}>
-                                    <h5>${typeof val.name === 'object' ? tl(val.name) : val.name}</h5>
-                                </button>
-                            `;
+                                    <div class="setting v2 standalone" data-type="radio" data-value=${key} onclick=${() => {
+                                        update_radio(key);
+                                    }}>
+                                        <div class="radio-cont">
+                                            <div class="radio" aria-checked=${value == key} />
+                                        </div>
+                                        ${
+                                            icon ?
+                                                html.node`
+                                                    <div class="icon">
+                                                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                                                    </div>
+                                                `
+                                            :   ''
+                                        }
+                                        <div class="heading">
+                                            <h5>${typeof val.name === 'object' ? tl(val.name) : val.name}</h5>
+                                        </div>
+                                    </div>
+                                `;
 
                                 buttons.push(button);
                                 return button;
@@ -727,7 +741,7 @@ export function setting({
                 );
 
                 buttons.forEach((btn) => {
-                    btn.setAttribute(
+                    btn.querySelector('.radio').setAttribute(
                         'aria-checked',
                         btn.getAttribute('data-value') == val
                     );

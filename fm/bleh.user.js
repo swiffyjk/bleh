@@ -37956,7 +37956,7 @@
             val != settings_store[id].default
           );
           buttons.forEach((btn) => {
-            btn.setAttribute(
+            btn.querySelector(".radio").setAttribute(
               "aria-checked",
               btn.getAttribute("data-value") == val
             );
@@ -38007,14 +38007,24 @@
                     <div class="primary-selections">
                         ${Object.entries(settings_store[id].values).map(
           ([key, val]) => {
-            const icon2 = val.icon || key;
+            const icon2 = val.icon;
             const button = html.node`
-                                <button class="btn primary-selection no-icon" data-type=${icon2} data-value=${key} onclick=${() => {
+                                    <div class="setting v2 standalone" data-type="radio" data-value=${key} onclick=${() => {
               update_radio(key);
-            }} aria-checked=${value == key}>
-                                    <h5>${typeof val.name === "object" ? tl2(val.name) : val.name}</h5>
-                                </button>
-                            `;
+            }}>
+                                        <div class="radio-cont">
+                                            <div class="radio" aria-checked=${value == key} />
+                                        </div>
+                                        ${icon2 ? html.node`
+                                                    <div class="icon">
+                                                        <div class="bleh-icon" style="--icon: var(--${icon2})" />
+                                                    </div>
+                                                ` : ""}
+                                        <div class="heading">
+                                            <h5>${typeof val.name === "object" ? tl2(val.name) : val.name}</h5>
+                                        </div>
+                                    </div>
+                                `;
             buttons.push(button);
             return button;
           }
