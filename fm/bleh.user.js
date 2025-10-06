@@ -62674,8 +62674,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0930",
-    sku: "vivian",
+    build: "2025.1006",
+    sku: "hoshino",
     bio: "bleh!!! ^-^",
     author: "katelyn",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",

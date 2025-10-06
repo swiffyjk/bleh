@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2025.0930
+@version        2025.1006
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -13,7 +13,6 @@
     @import url("https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap");
     @import url("https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap");
     @import url("https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap");
-    @import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap");
 
     /* we need to make the vertical alignment better in this font */
     @font-face {
@@ -78,7 +77,7 @@
     }
 
     body {
-        --version-build: "2025.0930";
+        --version-build: "2025.1006";
 
         --font:
             var(--custom_font, ""), Overpass, Inter, Ubuntu Sans, Spline Sans,
