@@ -25835,7 +25835,7 @@
         gap: var(--card-gap) var(--card-padding);
         margin-top: var(--card-gap);
 
-        & > :first-child {
+        /*& > :first-child {
             width: 100%;
             max-width: var(--overview-bio-size);
             flex-shrink: 0;
@@ -25843,7 +25843,9 @@
 
         @media (max-width: 1250px) {
             flex-wrap: wrap;
-        }
+        }*/
+
+        flex-direction: column;
 
         & > .metadata-group {
             & > .music-small-header {
