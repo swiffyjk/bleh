@@ -822,7 +822,20 @@ export let settings_store = {
     },
     seasonal_particles: {
         default: 'all',
-        type: 'options'
+        type: 'radio',
+        title: trans.seasonal_particles.name,
+        body: trans.seasonal_particles.body,
+        values: {
+            all: {
+                name: trans.all_particles
+            },
+            less: {
+                name: trans.less_particles
+            },
+            none: {
+                name: trans.no_particles
+            }
+        }
     },
     seasonal_particles_fps: {
         default: false,

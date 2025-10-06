@@ -37,7 +37,7 @@ export function bleh_footer() {
                         })
                     }}
                 </p>
-                ${lang != 'en' ?
+                ${lang != 'en' && lang in lang_info ?
                     html.node`
                         <p>
                             ${{

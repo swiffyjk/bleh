@@ -37519,6 +37519,19 @@
       const title = settings_store[id].title ? tl2(settings_store[id].title) : id;
       let body = settings_store[id].body ? tl2(settings_store[id].body) : null;
       const icon = settings_store[id].icon;
+      if (![
+        "toggle",
+        "range",
+        "text",
+        "checkbox",
+        "tabs",
+        "radio",
+        "list",
+        "select"
+      ].includes(type))
+        return setting_fail(id, {
+          message: `Invalid type "${type}"`
+        });
       const incompatible_with = settings_store[id].incompatible;
       const hide_if_incompatible = settings_store[id].hide_if_incompatible || false;
       if (!body && settings_store[id].keybind)
@@ -37554,7 +37567,7 @@
         html_title.appendChild(
           html.node`<span class="new-badge new">${tl2(trans2.new)}</span>`
         );
-      if (type === "toggle") {
+      if (type == "toggle") {
         let update_toggle = function() {
           if (elem.getAttribute("disabled") == "true") {
             status({
@@ -37623,7 +37636,7 @@
         };
         elem.compat();
         return elem;
-      } else if (type === "range") {
+      } else if (type == "range") {
         let update_range = function(val) {
           input2.value = val;
           track.style.setProperty(
@@ -37716,7 +37729,7 @@
         };
         const max_range = max2 - min2;
         return elem;
-      } else if (type === "text") {
+      } else if (type == "text") {
         let option;
         let min2 = settings_store[id].min || 0;
         let max2 = settings_store[id].max || 0;
@@ -48391,41 +48404,7 @@
                     </div>
                     <h4>${tl2(trans2.settings)}</h4>
                     <div class="setting-group">
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>${tl2(trans2.seasonal_particles.name)}</h5>
-                                <p>${tl2(trans2.seasonal_particles.body)}</p>
-                            </div>
-                            <div class="primary-selections">
-                                <div
-                                    class="btn primary-selection no-icon"
-                                    id="toggle-seasonal_particles-all"
-                                    data-toggle="seasonal_particles"
-                                    data-toggle-value="all"
-                                    onclick="_update_item('seasonal_particles', 'all')"
-                                >
-                                    <h5>${tl2(trans2.all_particles)}</h5>
-                                </div>
-                                <div
-                                    class="btn primary-selection no-icon"
-                                    id="toggle-seasonal_particles-less"
-                                    data-toggle="seasonal_particles"
-                                    data-toggle-value="less"
-                                    onclick="_update_item('seasonal_particles', 'less')"
-                                >
-                                    <h5>${tl2(trans2.less_particles)}</h5>
-                                </div>
-                                <div
-                                    class="btn primary-selection no-icon"
-                                    id="toggle-seasonal_particles-none"
-                                    data-toggle="seasonal_particles"
-                                    data-toggle-value="none"
-                                    onclick="_update_item('seasonal_particles', 'none')"
-                                >
-                                    <h5>${tl2(trans2.no_particles)}</h5>
-                                </div>
-                            </div>
-                        </div>
+                        ${setting({ id: "seasonal_particles" })}
                         ${setting({ id: "seasonal_particles_fps" })}
                         ${setting({ id: "seasonal_overlays" })}
                     </div>
@@ -54900,7 +54879,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         })
       }}
                 </p>
-                ${lang != "en" ? html.node`
+                ${lang != "en" && lang in lang_info ? html.node`
                         <p>
                             ${{
         html: tl2(trans2.translations, {
@@ -62161,7 +62140,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     seasonal_particles: {
       default: "all",
-      type: "options"
+      type: "radio",
+      title: trans2.seasonal_particles.name,
+      body: trans2.seasonal_particles.body,
+      values: {
+        all: {
+          name: trans2.all_particles
+        },
+        less: {
+          name: trans2.less_particles
+        },
+        none: {
+          name: trans2.no_particles
+        }
+      }
     },
     seasonal_particles_fps: {
       default: false,

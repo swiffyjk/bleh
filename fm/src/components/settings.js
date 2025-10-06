@@ -47,6 +47,22 @@ export function setting({
         let body = settings_store[id].body ? tl(settings_store[id].body) : null;
         const icon = settings_store[id].icon;
 
+        if (
+            ![
+                'toggle',
+                'range',
+                'text',
+                'checkbox',
+                'tabs',
+                'radio',
+                'list',
+                'select'
+            ].includes(type)
+        )
+            return setting_fail(id, {
+                message: `Invalid type "${type}"`
+            });
+
         const incompatible_with = settings_store[id].incompatible;
         const hide_if_incompatible =
             settings_store[id].hide_if_incompatible || false;
@@ -93,7 +109,7 @@ export function setting({
                 html.node`<span class="new-badge new">${tl(trans.new)}</span>`
             );
 
-        if (type === 'toggle') {
+        if (type == 'toggle') {
             let toggle;
 
             const elem = html.node`
@@ -188,7 +204,7 @@ export function setting({
             elem.compat();
 
             return elem;
-        } else if (type === 'range') {
+        } else if (type == 'range') {
             let option;
 
             let min = settings_store[id].min || 0;
@@ -310,7 +326,7 @@ export function setting({
             }
 
             return elem;
-        } else if (type === 'text') {
+        } else if (type == 'text') {
             let option;
 
             let min = settings_store[id].min || 0;

@@ -1467,41 +1467,7 @@ export async function render_setting_page(page_id) {
                     </div>
                     <h4>${tl(trans.settings)}</h4>
                     <div class="setting-group">
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>${tl(trans.seasonal_particles.name)}</h5>
-                                <p>${tl(trans.seasonal_particles.body)}</p>
-                            </div>
-                            <div class="primary-selections">
-                                <div
-                                    class="btn primary-selection no-icon"
-                                    id="toggle-seasonal_particles-all"
-                                    data-toggle="seasonal_particles"
-                                    data-toggle-value="all"
-                                    onclick="_update_item('seasonal_particles', 'all')"
-                                >
-                                    <h5>${tl(trans.all_particles)}</h5>
-                                </div>
-                                <div
-                                    class="btn primary-selection no-icon"
-                                    id="toggle-seasonal_particles-less"
-                                    data-toggle="seasonal_particles"
-                                    data-toggle-value="less"
-                                    onclick="_update_item('seasonal_particles', 'less')"
-                                >
-                                    <h5>${tl(trans.less_particles)}</h5>
-                                </div>
-                                <div
-                                    class="btn primary-selection no-icon"
-                                    id="toggle-seasonal_particles-none"
-                                    data-toggle="seasonal_particles"
-                                    data-toggle-value="none"
-                                    onclick="_update_item('seasonal_particles', 'none')"
-                                >
-                                    <h5>${tl(trans.no_particles)}</h5>
-                                </div>
-                            </div>
-                        </div>
+                        ${setting({ id: 'seasonal_particles' })}
                         ${setting({ id: 'seasonal_particles_fps' })}
                         ${setting({ id: 'seasonal_overlays' })}
                     </div>
