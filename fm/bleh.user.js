@@ -28708,7 +28708,10 @@
   };
   var clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify|(feat\.|ft\.|featuring|with)[^)\]]*)\s*[\])]?/gi;
   function clean_title(title) {
-    return title.replace(clean_title_regex, "").replace(/\u2010/g, "-");
+    return fix_title(title.replace(clean_title_regex, ""));
+  }
+  function fix_title(title) {
+    return title.replace(/[\u2010\u2011\u2012\u2013]/g, "-").replace(/\u2026/g, "...");
   }
 
   // src/build/seasonal.js
@@ -31798,8 +31801,9 @@
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
                     <tbody>
                         ${disc.tracks.map((track) => {
+          let title = fix_title(track.title);
           const artist_lower = track["artist-credit"][0].name.toLowerCase();
-          const title_lower = track.title.toLowerCase();
+          const title_lower = title.toLowerCase();
           const track_entry = oracle_tracks.hasOwnProperty(
             artist_lower
           ) && oracle_tracks[artist_lower].hasOwnProperty(
@@ -31811,7 +31815,6 @@
           const disambig = track.recording.disambiguation;
           const video = track.recording.video;
           if (video) return html.node``;
-          let title = track.title;
           const artists = track["artist-credit"];
           let inherit_guests = [];
           let guests = [];
@@ -31848,7 +31851,7 @@
               let joinphrase = artist3.joinphrase || "";
               if (index3 == guests.length - 2 && oracle_entry.final_guest_separator)
                 joinphrase = oracle_entry.final_guest_separator;
-              title += `${artist3.name}${joinphrase}`;
+              title += `${fix_title(artist3.name)}${joinphrase}`;
             });
             title += ")";
           }
@@ -31859,7 +31862,7 @@
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${oracle_aliases(track["artist-credit"][0], page.sister)}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist3) => sanitise(artist3.name, " ")).join(";")}>
+                                        <a href="${root}music/${oracle_aliases(track["artist-credit"][0], page.sister)}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist3) => sanitise(fix_title(artist3.name), " ")).join(";")}>
                                             ${title}
                                         </a>
                                     </td>

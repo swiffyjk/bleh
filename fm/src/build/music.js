@@ -655,5 +655,11 @@ export let includes = {
 export const clean_title_regex =
     /\s*[-(\[]\s*(explicit|clean|spotify|(feat\.|ft\.|featuring|with)[^)\]]*)\s*[\])]?/gi;
 export function clean_title(title) {
-    return title.replace(clean_title_regex, '').replace(/\u2010/g, '-');
+    return fix_title(title.replace(clean_title_regex, ''));
+}
+
+export function fix_title(title) {
+    return title
+        .replace(/[\u2010\u2011\u2012\u2013]/g, '-')
+        .replace(/\u2026/g, '...');
 }

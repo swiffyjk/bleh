@@ -17,7 +17,7 @@ import { romanise, sanitise } from '../build/tools';
 import { ff } from '../sku';
 import { correct_artist, correct_item_by_artist } from './lotus';
 import { tl, trans } from '../build/trans';
-import { clean_title } from '../build/music';
+import { clean_title, fix_title } from '../build/music';
 import { version } from '../main';
 import { settings } from '../build/config';
 import { dialog } from './dialog';
@@ -579,9 +579,11 @@ export function oracle_process() {
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
                     <tbody>
                         ${disc.tracks.map((track) => {
+                            let title = fix_title(track.title);
+
                             const artist_lower =
                                 track['artist-credit'][0].name.toLowerCase();
-                            const title_lower = track.title.toLowerCase();
+                            const title_lower = title.toLowerCase();
 
                             const track_entry =
                                 (
@@ -603,8 +605,6 @@ export function oracle_process() {
                             const video = track.recording.video;
 
                             if (video) return html.node``;
-
-                            let title = track.title;
 
                             const artists = track['artist-credit'];
                             let inherit_guests = [];
@@ -661,7 +661,7 @@ export function oracle_process() {
                                         joinphrase =
                                             oracle_entry.final_guest_separator;
 
-                                    title += `${artist.name}${joinphrase}`;
+                                    title += `${fix_title(artist.name)}${joinphrase}`;
                                 });
 
                                 title += ')';
@@ -675,7 +675,7 @@ export function oracle_process() {
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${oracle_aliases(track['artist-credit'][0], page.sister)}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist) => sanitise(artist.name, ' ')).join(';')}>
+                                        <a href="${root}music/${oracle_aliases(track['artist-credit'][0], page.sister)}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist) => sanitise(fix_title(artist.name), ' ')).join(';')}>
                                             ${title}
                                         </a>
                                     </td>
