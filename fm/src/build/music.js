@@ -189,6 +189,7 @@ export let includes = {
         '[multishow ao vivo',
         '- demo',
         '(demo',
+        '[demo',
         '- rehearsal',
         '(rehearsal',
         '- sample clearance',

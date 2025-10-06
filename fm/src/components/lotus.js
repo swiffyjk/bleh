@@ -445,10 +445,7 @@ export function name_includes(
             :   formatted_title.length;
         const tag_text = formatted_title
             .slice(start, end)
-            // strip only leading brackets () [] {}, hyphens, colons, and whitespace
-            .replace(/^[\(\[\{\-\:\s]+/, '')
-            // strip any trailing brackets () [] {}, hyphens, colons, or whitespace
-            .replace(/[\)\]\}\-\:\s]+$/, '')
+            .replace(/^[\(\[\{\)\]\}\-\:\s]+|[\(\[\{\)\]\}\-\:\s]+$/g, '')
             .trim();
         return {
             group: match.group,

@@ -22890,7 +22890,7 @@
                             .feat {
                                 padding: 0 6px;
                                 background-color: hsl(var(--b5), 40%);
-                                border-radius: var(--item-big-radius);
+                                border-radius: var(--item-med-radius);
                                 font-size: 22px;
                                 line-height: 31px;
                                 display: inline-flex;

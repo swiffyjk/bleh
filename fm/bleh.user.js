@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    https://last.fm/
-// @version      2025.0930
+// @version      2025.1006
 // @description  bleh!!! ^-^
 // @author       katelyn
 // @match        https://www.last.fm/*
@@ -28231,6 +28231,7 @@
       "[multishow ao vivo",
       "- demo",
       "(demo",
+      "[demo",
       "- rehearsal",
       "(rehearsal",
       "- sample clearance",
@@ -50225,7 +50226,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const extras = matches.map((match3, i) => {
       const start2 = match3.idx;
       const end2 = i + 1 < matches.length ? matches[i + 1].idx : formatted_title.length;
-      const tag_text = formatted_title.slice(start2, end2).replace(/^[\(\[\{\-\:\s]+/, "").replace(/[\)\]\}\-\:\s]+$/, "").trim();
+      const tag_text = formatted_title.slice(start2, end2).replace(/^[\(\[\{\)\]\}\-\:\s]+|[\(\[\{\)\]\}\-\:\s]+$/g, "").trim();
       return {
         group: match3.group,
         text: tag_text
