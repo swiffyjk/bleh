@@ -42534,18 +42534,14 @@
       html`
             <section class="applications">
                 <div class="section-intro">
-                    <h3>Applications</h3>
-                    <p>
-                        Connect your account to third-party services for a
-                        better scrobbling experience. Make sure you trust the
-                        services below.
-                    </p>
+                    <h3>${tl2(trans2.applications)}</h3>
+                    <p>${tl2(trans2.applications_intro)}</p>
                 </div>
                 ${suggested ? html`
-                        <h2>Suggested</h2>
+                        <h2>${tl2(trans2.suggested)}</h2>
                         ${suggested}
                     ` : ""}
-                <h2>Connected</h2>
+                <h2>${tl2(trans2.connected)}</h2>
                 ${connected}
             </section>
         `
@@ -59296,6 +59292,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Outro",
       sv: "Annat"
     },
+    applications: {
+      en: "Applications"
+    },
+    applications_intro: {
+      en: "Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below."
+    },
     connect_app: {
       en: "Connect {name}",
       de: "Verbinde {name}",
@@ -59307,6 +59309,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Verbinden",
       pt: "Conectar",
       sv: "Anslut"
+    },
+    suggested: {
+      en: "Suggested"
     },
     connected: {
       en: "Connected",

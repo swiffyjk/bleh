@@ -3359,6 +3359,12 @@ export const trans = {
         pt: 'Outro',
         sv: 'Annat'
     },
+    applications: {
+        en: 'Applications'
+    },
+    applications_intro: {
+        en: 'Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below.'
+    },
     connect_app: {
         en: 'Connect {name}',
         de: 'Verbinde {name}',
@@ -3370,6 +3376,9 @@ export const trans = {
         de: 'Verbinden',
         pt: 'Conectar',
         sv: 'Anslut'
+    },
+    suggested: {
+        en: 'Suggested'
     },
     connected: {
         en: 'Connected',

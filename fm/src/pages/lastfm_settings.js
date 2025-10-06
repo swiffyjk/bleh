@@ -1909,20 +1909,16 @@ function bleh_applications() {
         html`
             <section class="applications">
                 <div class="section-intro">
-                    <h3>Applications</h3>
-                    <p>
-                        Connect your account to third-party services for a
-                        better scrobbling experience. Make sure you trust the
-                        services below.
-                    </p>
+                    <h3>${tl(trans.applications)}</h3>
+                    <p>${tl(trans.applications_intro)}</p>
                 </div>
                 ${suggested ?
                     html`
-                        <h2>Suggested</h2>
+                        <h2>${tl(trans.suggested)}</h2>
                         ${suggested}
                     `
                 :   ''}
-                <h2>Connected</h2>
+                <h2>${tl(trans.connected)}</h2>
                 ${connected}
             </section>
         `
