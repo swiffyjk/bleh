@@ -9,6 +9,7 @@ import { settings } from '../build/config';
 import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
 import {
+    clamp_lit,
     clamp_sat,
     copy,
     return_artist_from_track,
@@ -995,56 +996,69 @@ export function patch_titles(search = page.structure.main) {
                 settings.stacked_chartlist_info;
             track.setAttribute('data-show-album-text', show_album_text);
 
-            if (!is_album) {
-                let image_wrap = track.querySelector('.chartlist-image');
-                if (image_wrap) {
-                    let link = image_wrap.querySelector('.cover-art');
-                    let image = link.querySelector('img');
+            const image_wrap = track.querySelector('.chartlist-image');
+            if (image_wrap) {
+                let link = image_wrap.querySelector('.cover-art');
+                let image = link.querySelector('img');
 
-                    if (show_album_text && !has_bar && !settings.album_text) {
-                        let alt = romanise(
-                            correct_item_by_artist(
-                                image.getAttribute('alt'),
-                                track_artist
-                            )
+                if (
+                    !is_album &&
+                    show_album_text &&
+                    !has_bar &&
+                    !settings.album_text
+                ) {
+                    let alt = romanise(
+                        correct_item_by_artist(
+                            image.getAttribute('alt'),
+                            track_artist
+                        )
+                    );
+
+                    track.appendChild(html.node`
+                        <td class="chartlist-album custom-album-text">
+                            <a href="${link.getAttribute('href')}">${alt}</a>
+                        </td>
+                    `);
+                }
+
+                if (
+                    !settings.colourful_tracks &&
+                    !settings.colourful_tracks_all
+                )
+                    return;
+
+                if (!settings.colourful_tracks_all && !is_active) return;
+
+                image.setAttribute('crossorigin', 'anonymous');
+                try {
+                    image.addEventListener('load', function () {
+                        let thief = new ColorThief();
+                        let colour = thief.getColor(image);
+
+                        let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+
+                        let hue = hsl.h;
+                        let sat = clamp_sat((hsl.s / 100) * 3);
+                        let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
+
+                        const to_colour = track.querySelectorAll(
+                            '.chartlist-count-bar, .chartlist-loved'
                         );
 
-                        track.appendChild(html.node`
-                            <td class="chartlist-album custom-album-text">
-                                <a href="${link.getAttribute('href')}">${alt}</a>
-                            </td>
-                        `);
-                    }
-
-                    if (
-                        !settings.colourful_tracks &&
-                        !settings.colourful_tracks_all
-                    )
-                        return;
-
-                    if (!settings.colourful_tracks_all && !is_active) return;
-
-                    image.setAttribute('crossorigin', 'anonymous');
-                    try {
-                        image.addEventListener('load', function () {
-                            let thief = new ColorThief();
-                            let colour = thief.getColor(image);
-
-                            let hsl = rgb_to_hsl(
-                                colour[0],
-                                colour[1],
-                                colour[2]
-                            );
-
-                            track.style.setProperty('--hue-over', hsl.h);
-                            track.style.setProperty(
-                                '--sat-over',
-                                clamp_sat((hsl.s / 100) * 3)
-                            );
-                            track.style.setProperty('--lit-over', 1);
-                        });
-                    } catch (e) {}
-                }
+                        if (is_active) {
+                            track.style.setProperty('--hue-over', hue);
+                            track.style.setProperty('--sat-over', sat);
+                            track.style.setProperty('--lit-over', lit);
+                        } else {
+                            to_colour.forEach((elem) => {
+                                elem.classList.add('colourful');
+                                elem.style.setProperty('--hue-over', hue);
+                                elem.style.setProperty('--sat-over', sat);
+                                elem.style.setProperty('--lit-over', lit);
+                            });
+                        }
+                    });
+                } catch (e) {}
             }
         });
     });

@@ -34516,46 +34516,52 @@
         }
         const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never" && settings.stacked_chartlist_info;
         track.setAttribute("data-show-album-text", show_album_text);
-        if (!is_album) {
-          let image_wrap = track.querySelector(".chartlist-image");
-          if (image_wrap) {
-            let link = image_wrap.querySelector(".cover-art");
-            let image2 = link.querySelector("img");
-            if (show_album_text && !has_bar && !settings.album_text) {
-              let alt = romanise(
-                correct_item_by_artist(
-                  image2.getAttribute("alt"),
-                  track_artist
-                )
+        const image_wrap = track.querySelector(".chartlist-image");
+        if (image_wrap) {
+          let link = image_wrap.querySelector(".cover-art");
+          let image2 = link.querySelector("img");
+          if (!is_album && show_album_text && !has_bar && !settings.album_text) {
+            let alt = romanise(
+              correct_item_by_artist(
+                image2.getAttribute("alt"),
+                track_artist
+              )
+            );
+            track.appendChild(html.node`
+                        <td class="chartlist-album custom-album-text">
+                            <a href="${link.getAttribute("href")}">${alt}</a>
+                        </td>
+                    `);
+          }
+          if (!settings.colourful_tracks && !settings.colourful_tracks_all)
+            return;
+          if (!settings.colourful_tracks_all && !is_active) return;
+          image2.setAttribute("crossorigin", "anonymous");
+          try {
+            image2.addEventListener("load", function() {
+              let thief = new import_color_thief_browser2.default();
+              let colour2 = thief.getColor(image2);
+              let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
+              let hue2 = hsl.h;
+              let sat = clamp_sat2(hsl.s / 100 * 3);
+              let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
+              const to_colour = track.querySelectorAll(
+                ".chartlist-count-bar, .chartlist-loved"
               );
-              track.appendChild(html.node`
-                            <td class="chartlist-album custom-album-text">
-                                <a href="${link.getAttribute("href")}">${alt}</a>
-                            </td>
-                        `);
-            }
-            if (!settings.colourful_tracks && !settings.colourful_tracks_all)
-              return;
-            if (!settings.colourful_tracks_all && !is_active) return;
-            image2.setAttribute("crossorigin", "anonymous");
-            try {
-              image2.addEventListener("load", function() {
-                let thief = new import_color_thief_browser2.default();
-                let colour2 = thief.getColor(image2);
-                let hsl = rgb_to_hsl(
-                  colour2[0],
-                  colour2[1],
-                  colour2[2]
-                );
-                track.style.setProperty("--hue-over", hsl.h);
-                track.style.setProperty(
-                  "--sat-over",
-                  clamp_sat2(hsl.s / 100 * 3)
-                );
-                track.style.setProperty("--lit-over", 1);
-              });
-            } catch (e) {
-            }
+              if (is_active) {
+                track.style.setProperty("--hue-over", hue2);
+                track.style.setProperty("--sat-over", sat);
+                track.style.setProperty("--lit-over", lit);
+              } else {
+                to_colour.forEach((elem) => {
+                  elem.classList.add("colourful");
+                  elem.style.setProperty("--hue-over", hue2);
+                  elem.style.setProperty("--sat-over", sat);
+                  elem.style.setProperty("--lit-over", lit);
+                });
+              }
+            });
+          } catch (e) {
           }
         }
       });
