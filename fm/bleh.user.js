@@ -51409,9 +51409,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         <span class="flag" style="background-image: url(https://katelyynn.github.io/bleh/fm/flags/${lang}.svg)" />
                         ${selected_language}
                     </span>
-                    <span class="auth-dropdown-item-right">
-                        <div class="bleh-icon checkmark" />
-                    </span>
+                    ${lang in lang_info ? html.node`
+                            <span class="auth-dropdown-item-right">
+                                <div class="bleh-icon checkmark" />
+                            </span>
+                        ` : ""}
                 </div>
             </button>
             <div class="sep"></div>
@@ -51437,7 +51439,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                         />
                         ${button.textContent}
                     </span>
-                    ${lang_info.hasOwnProperty(key) ? html.node`
+                    ${key in lang_info ? html.node`
                             <span class="auth-dropdown-item-right">
                                 <div class="bleh-icon checkmark" />
                             </span>

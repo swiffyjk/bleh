@@ -602,9 +602,15 @@ export function append_nav() {
                         <span class="flag" style="background-image: url(https://katelyynn.github.io/bleh/fm/flags/${lang}.svg)" />
                         ${selected_language}
                     </span>
-                    <span class="auth-dropdown-item-right">
-                        <div class="bleh-icon checkmark" />
-                    </span>
+                    ${
+                        lang in lang_info ?
+                            html.node`
+                            <span class="auth-dropdown-item-right">
+                                <div class="bleh-icon checkmark" />
+                            </span>
+                        `
+                        :   ''
+                    }
                 </div>
             </button>
             <div class="sep"></div>
@@ -633,7 +639,7 @@ export function append_nav() {
                         />
                         ${button.textContent}
                     </span>
-                    ${lang_info.hasOwnProperty(key) ?
+                    ${key in lang_info ?
                         html.node`
                             <span class="auth-dropdown-item-right">
                                 <div class="bleh-icon checkmark" />

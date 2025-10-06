@@ -25650,6 +25650,10 @@
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: var(--card-padding) var(--card-gap);
 
+        &.artist-top-albums {
+            grid-template-columns: repeat(4, minmax(180px, 1fr));
+        }
+
         &.resource-list--release-list,
         &.artist-top-albums {
             gap: var(--card-padding) var(--item-list-gap);
