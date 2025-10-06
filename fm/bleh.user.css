@@ -16672,15 +16672,25 @@
                 hsl(var(--l3-c)),
                 hsl(var(--l4-c)) 30%
             );
-            --left: var(--icon-half);
             --mask: var(--icon-16-bookmark-saved);
 
-            --bg: hsla(var(--b4), 40%);
-            --bg-hov: hsla(var(--b4), 60%);
-            --bg-atv: hsla(var(--b4), 80%);
+            --bg: hsla(var(--b6), 60%);
+            --bg-hov: hsla(var(--b6), 80%);
+            --bg-atv: hsla(var(--b6), 100%);
             --shadow: none;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: var(--solarium);
+            -webkit-backdrop-filter: var(--solarium);
+
+            --font-size: 0;
+            width: var(--button-height);
+            height: var(--button-height);
+
+            &:before {
+                --left: calc(
+                    (var(--button-height) - var(--icon-size)) / 2
+                ) !important;
+                --right: none !important;
+            }
         }
 
         .avatar,
