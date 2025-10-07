@@ -46359,6 +46359,10 @@
       ALLOWED_ATTR
     });
     const body = html.node([parsed2]);
+    log("rendered", "markdown", "info", { body });
+    let profile_cache;
+    const will_cache = cache3 === true;
+    log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache3 });
     const link_strings = {
       "open.spotify.com": "Spotify",
       "spotify.com": "Spotify",
@@ -46409,16 +46413,13 @@
             </div>
         `);
     }
-    patch_wiki_contents(body);
-    if (line_breaks) {
+    if (body.nodeName != "#text") patch_wiki_contents(body);
+    if (line_breaks && body.nodeName != "#text") {
       local_restriction(body);
       body.querySelectorAll("p").forEach((text4) => {
         local_restriction(text4);
       });
     }
-    let profile_cache;
-    const will_cache = cache3 === true;
-    log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache3 });
     if (allow_hue) {
       if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name))
         allow_hue = false;
@@ -46436,20 +46437,22 @@
         delete cache3.banner;
       }
     }
-    body.querySelectorAll("img").forEach((image) => {
-      if (!line_breaks) {
-        image.remove();
-        return;
-      }
-      image.setAttribute("loading", "lazy");
-      let func = () => expand_avatar(image.src, image.alt);
-      if (in_dialog) func = () => open(image.src);
-      const container = html.node`
-            <div class="markdown-image" onclick=${func} />
-        `;
-      image.after(container);
-      container.appendChild(image);
-    });
+    if (body.nodeName != "#text") {
+      body.querySelectorAll("img").forEach((image) => {
+        if (!line_breaks) {
+          image.remove();
+          return;
+        }
+        image.setAttribute("loading", "lazy");
+        let func = () => expand_avatar(image.src, image.alt);
+        if (in_dialog) func = () => open(image.src);
+        const container = html.node`
+                <div class="markdown-image" onclick=${func} />
+            `;
+        image.after(container);
+        container.appendChild(image);
+      });
+    }
     if (allow_hue) {
       console.info(hue2, sat, lit);
       if (hue2 !== void 0 && sat !== void 0 && lit !== void 0) {
@@ -54854,7 +54857,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       artists.forEach((artist) => {
         artist.textContent = correct_artist(artist.textContent);
       });
-      let md = user.querySelector(".user-list-about-me");
+      const md = user.querySelector(".user-list-about-me");
+      log("patching", "user", "info", { user, name: name?.textContent, md });
       if (md) {
         render(
           md,
