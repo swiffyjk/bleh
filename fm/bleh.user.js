@@ -31953,6 +31953,13 @@
           (release, index3, self3) => index3 == self3.findIndex((r) => {
             const r_artist = r["artist-credit"]?.[0]?.name;
             const release_artist = release["artist-credit"]?.[0]?.name;
+            log("comparing releases", "oracle", "info", {
+              index: index3,
+              release_title: r.title,
+              compare_to: release.title,
+              release_artist: r_artist,
+              compare_to_artist: release_artist
+            });
             return r.title == release.title && r_artist == release_artist;
           })
         );
@@ -31992,7 +31999,7 @@
                         ${releases.map((release, index3) => {
             if (index3 > 1) return html.node``;
             log("release", "oracle", "log", { release });
-            let title = clean_title(release.title);
+            let title = fix_title(release.title);
             const artist2 = fix_title(
               oracle_aliases(
                 release["artist-credit"]?.[0] || recording["artist-credit"][0],
@@ -32039,6 +32046,18 @@
             }
             let artwork_container;
             let stats;
+            let title_elem;
+            let artist_elem2;
+            if (settings.format_guest_features) {
+              const formatted = name_includes(title, artist2);
+              title_elem = html.node`<a class="smart-title">${smart_title(formatted[0], formatted[1])}</a>`;
+              artist_elem2 = html.node`${smart_artists(formatted[2], formatted[3])}`;
+            } else {
+              title_elem = romanise(
+                correct_item_by_artist(title, artist2)
+              );
+              artist_elem2 = romanise(correct_artist(artist2));
+            }
             const elem = html.node`
                                 <div class="source-album js-link-block link-block-cover-link">
                                     <div class="source-album-art" ref=${(el) => artwork_container = el}>
@@ -32049,8 +32068,8 @@
                                                 ` : ""}
                                     </div>
                                     <div class="source-album-details" data-kate-processed="true">
-                                        <h4 class="source-album-name">${romanise(correct_item_by_artist(title, artist2))}</h4>
-                                        <p class="source-album-artist">${romanise(correct_artist(artist2))}</p>
+                                        <h4 class="source-album-name">${title_elem}</h4>
+                                        <p class="source-album-artist">${artist_elem2}</p>
                                         <p class="source-album-stats oracle-stats" ref=${(el) => stats = el}>
                                             ${type}
                                             ${match3 ? html.node`

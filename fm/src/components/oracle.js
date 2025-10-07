@@ -15,7 +15,13 @@ import {
 } from '../build/page';
 import { romanise, sanitise } from '../build/tools';
 import { ff } from '../sku';
-import { correct_artist, correct_item_by_artist } from './lotus';
+import {
+    correct_artist,
+    correct_item_by_artist,
+    name_includes,
+    smart_artists,
+    smart_title
+} from './lotus';
 import { tl, trans } from '../build/trans';
 import { clean_title, fix_title } from '../build/music';
 import { version } from '../main';
@@ -802,6 +808,15 @@ export function oracle_process() {
                         const r_artist = r['artist-credit']?.[0]?.name;
                         const release_artist =
                             release['artist-credit']?.[0]?.name;
+
+                        log('comparing releases', 'oracle', 'info', {
+                            index,
+                            release_title: r.title,
+                            compare_to: release.title,
+                            release_artist: r_artist,
+                            compare_to_artist: release_artist
+                        });
+
                         return (
                             r.title == release.title &&
                             r_artist == release_artist
@@ -857,7 +872,7 @@ export function oracle_process() {
                             if (index > 1) return html.node``;
 
                             log('release', 'oracle', 'log', { release });
-                            let title = clean_title(release.title);
+                            let title = fix_title(release.title);
                             const artist = fix_title(
                                 oracle_aliases(
                                     release['artist-credit']?.[0] ||
@@ -928,6 +943,20 @@ export function oracle_process() {
                             let artwork_container;
                             let stats;
 
+                            let title_elem;
+                            let artist_elem;
+                            if (settings.format_guest_features) {
+                                const formatted = name_includes(title, artist);
+
+                                title_elem = html.node`<a class="smart-title">${smart_title(formatted[0], formatted[1])}</a>`;
+                                artist_elem = html.node`${smart_artists(formatted[2], formatted[3])}`;
+                            } else {
+                                title_elem = romanise(
+                                    correct_item_by_artist(title, artist)
+                                );
+                                artist_elem = romanise(correct_artist(artist));
+                            }
+
                             const elem = html.node`
                                 <div class="source-album js-link-block link-block-cover-link">
                                     <div class="source-album-art" ref=${(el) => (artwork_container = el)}>
@@ -942,8 +971,8 @@ export function oracle_process() {
                                         }
                                     </div>
                                     <div class="source-album-details" data-kate-processed="true">
-                                        <h4 class="source-album-name">${romanise(correct_item_by_artist(title, artist))}</h4>
-                                        <p class="source-album-artist">${romanise(correct_artist(artist))}</p>
+                                        <h4 class="source-album-name">${title_elem}</h4>
+                                        <p class="source-album-artist">${artist_elem}</p>
                                         <p class="source-album-stats oracle-stats" ref=${(el) => (stats = el)}>
                                             ${type}
                                             ${
