@@ -136,9 +136,9 @@ export function clean_number(string) {
  * @see desanitise
  */
 export function sanitise(text, method = '+') {
-    return encodeURIComponent(
-        encodeURIComponent(text).replaceAll('%20', method)
-    );
+    return encodeURIComponent(text)
+        .replaceAll('%2B', '%252B')
+        .replaceAll('%20', method);
 }
 
 /**
@@ -163,8 +163,9 @@ export function sanitise_text(text) {
  * @see sanitise
  */
 export function desanitise(text, method = '+') {
-    return decodeURIComponent(
-        decodeURIComponent(text).replaceAll(method, '%20')
+    return decodeURIComponent(text.replaceAll(method, '%20')).replaceAll(
+        '%252B',
+        '+'
     );
 }
 

@@ -27860,16 +27860,15 @@
     return int2(string.replaceAll(",", "").replaceAll(".", ""));
   }
   function sanitise(text3, method = "+") {
-    return encodeURIComponent(
-      encodeURIComponent(text3).replaceAll("%20", method)
-    );
+    return encodeURIComponent(text3).replaceAll("%2B", "%252B").replaceAll("%20", method);
   }
   function sanitise_text(text3) {
     return text3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
   function desanitise(text3, method = "+") {
-    return decodeURIComponent(
-      decodeURIComponent(text3).replaceAll(method, "%20")
+    return decodeURIComponent(text3.replaceAll(method, "%20")).replaceAll(
+      "%252B",
+      "+"
     );
   }
   function return_artist_from_track(url, is_album) {
