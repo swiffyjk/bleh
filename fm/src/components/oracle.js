@@ -47,9 +47,30 @@ export function oracle_process() {
     let artist_template = `artist:"${page.sister}"`;
 
     const info_panel = page.structure.main.firstElementChild;
+
+    page.structure.main.insertBefore(
+        html.node`
+            <section class="oracle-notice">
+                <div class="oracle" data-mobile=${page.mobile}>
+                    <p>
+                        <span class="bleh-icon" />
+                        <span>${{ html: tl(trans.oracle_notice).replace('oracle', '<i>oracle</i>') }}</span>
+                    </p>
+                    <button class="see-more left-icon" data-type="debug" onclick=${() => oracle_debug()}>
+                        ${tl(trans.debug)}
+                    </button>
+                    <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
+                        ${tl(trans.send_feedback)}
+                    </a>
+                </div>
+            </section>
+        `,
+        page.structure.main.firstChild
+    );
+
     const header = page.structure.container.querySelector('.redesigned-header');
     let releases_panel;
-    if (page.type == 'track') {
+    if (page.type == 'track' && page.subpage == 'overview') {
         releases_panel = html.node`
             <section class="oracle-releases">
                 <h3 class="text-18">${tl(trans.releases)}</h3>
@@ -87,7 +108,7 @@ export function oracle_process() {
     const albums_and_lyrics_row = page.structure.main.querySelector(
         '.album-and-lyrics-row'
     );
-    if (page.type == 'track')
+    if (albums_and_lyrics_row)
         albums_and_lyrics_row.classList.add('oracle-hidden');
 
     function oracle_aliases(artist, desired) {
@@ -508,7 +529,7 @@ export function oracle_process() {
 
     function oracle_album(data) {
         let labels = data['label-info'];
-        if (labels && labels.length > 0) {
+        if (labels && labels.length > 0 && page.subpage == 'overview') {
             // filter out visually duplicates
             const seen = new Set();
             labels = labels.filter((label) => {
@@ -539,6 +560,8 @@ export function oracle_process() {
                 </div>
             `);
         }
+
+        if (page.subpage != 'overview') return;
 
         const artist = data['artist-credit'][0].name.toLowerCase();
         const album = page.name.toLowerCase();
@@ -715,11 +738,11 @@ export function oracle_process() {
         // to possibly get listener and cover data
         let lastfm_releases = [];
         const lastfm_source_albums =
-            albums_and_lyrics_row.querySelectorAll('.source-album');
+            albums_and_lyrics_row?.querySelectorAll('.source-album');
         // you may ask why im not cleaning the title here
         // its to avoid misleading the listener count incase it tries to show
         // the listener count for GNX (Spotify) under GNX
-        lastfm_source_albums.forEach((release) => {
+        lastfm_source_albums?.forEach((release) => {
             lastfm_releases.push({
                 title: release.querySelector('.source-album-name').textContent,
                 artist: release.querySelector('.source-album-artist')
@@ -736,21 +759,23 @@ export function oracle_process() {
         const recording = oracle_pick_recording(data);
 
         if (!recording) {
-            render(
-                releases_panel,
-                html`
-                    <h3 class="text-18">
-                        ${tl(trans.releases)}<span class="new-badge beta"
-                            >${tl(trans.beta)}</span
-                        >
-                    </h3>
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">
-                            No releases found
+            if (releases_panel) {
+                render(
+                    releases_panel,
+                    html`
+                        <h3 class="text-18">
+                            ${tl(trans.releases)}<span class="new-badge beta"
+                                >${tl(trans.beta)}</span
+                            >
+                        </h3>
+                        <div class="loading-data-container">
+                            <div class="loading-data-text failed">
+                                No releases found
+                            </div>
                         </div>
-                    </div>
-                `
-            );
+                    `
+                );
+            }
             return;
         }
 
@@ -867,201 +892,216 @@ export function oracle_process() {
             const allow_overflow = false;
 
             let source_albums;
-            render(
-                releases_panel,
-                html`
-                    <h3 class="text-18">
-                        ${tl(trans.releases)}<span class="new-badge beta"
-                            >${tl(trans.beta)}</span
-                        >
-                    </h3>
-                    <div class="source-albums-container">
-                        <div
-                            class="source-albums"
-                            ref=${(el) => (source_albums = el)}
-                        >
-                            ${releases.map((release, index) => {
-                                if (index > 1) return html.node``;
+            if (releases_panel) {
+                render(
+                    releases_panel,
+                    html`
+                        <h3 class="text-18">
+                            ${tl(trans.releases)}<span class="new-badge beta"
+                                >${tl(trans.beta)}</span
+                            >
+                        </h3>
+                        <div class="source-albums-container">
+                            <div
+                                class="source-albums"
+                                ref=${(el) => (source_albums = el)}
+                            >
+                                ${releases.map((release, index) => {
+                                    if (index > 1) return html.node``;
 
-                                log('release', 'oracle', 'log', { release });
-                                let title = fix_title(release.title);
-                                const artist = fix_title(
-                                    oracle_aliases(
-                                        release['artist-credit']?.[0] ||
-                                            recording['artist-credit'][0],
-                                        page.sister
-                                    )
-                                );
+                                    log('release', 'oracle', 'log', {
+                                        release
+                                    });
+                                    let title = fix_title(release.title);
+                                    const artist = fix_title(
+                                        oracle_aliases(
+                                            release['artist-credit']?.[0] ||
+                                                recording['artist-credit'][0],
+                                            page.sister
+                                        )
+                                    );
 
-                                const types = {
-                                    album: tl(trans.album),
-                                    single: tl(trans.single),
-                                    ep: 'EP',
-                                    other: tl(trans.other)
-                                };
+                                    const types = {
+                                        album: tl(trans.album),
+                                        single: tl(trans.single),
+                                        ep: 'EP',
+                                        other: tl(trans.other)
+                                    };
 
-                                let type =
-                                    release['release-group']['primary-type'];
-                                if (type && type.toLowerCase() in types)
-                                    type = types[type.toLowerCase()];
+                                    let type =
+                                        release['release-group'][
+                                            'primary-type'
+                                        ];
+                                    if (type && type.toLowerCase() in types)
+                                        type = types[type.toLowerCase()];
 
-                                const artist_lower = artist.toLowerCase();
-                                const title_lower = title.toLowerCase();
+                                    const artist_lower = artist.toLowerCase();
+                                    const title_lower = title.toLowerCase();
 
-                                const defaults = {
-                                    guests_in_title: false
-                                };
+                                    const defaults = {
+                                        guests_in_title: false
+                                    };
 
-                                const oracle_entry = {
-                                    ...defaults,
-                                    ...((
-                                        oracle_albums.hasOwnProperty(
-                                            artist_lower
-                                        ) &&
-                                        oracle_albums[
-                                            artist_lower
-                                        ].hasOwnProperty(title_lower)
-                                    ) ?
-                                        oracle_albums[artist_lower][title_lower]
-                                    :   {})
-                                };
-                                log('entry', 'oracle', 'info', {
-                                    oracle_entry
-                                });
+                                    const oracle_entry = {
+                                        ...defaults,
+                                        ...((
+                                            oracle_albums.hasOwnProperty(
+                                                artist_lower
+                                            ) &&
+                                            oracle_albums[
+                                                artist_lower
+                                            ].hasOwnProperty(title_lower)
+                                        ) ?
+                                            oracle_albums[artist_lower][
+                                                title_lower
+                                            ]
+                                        :   {})
+                                    };
+                                    log('entry', 'oracle', 'info', {
+                                        oracle_entry
+                                    });
 
-                                if (oracle_entry.disambiguation) {
-                                    if (
-                                        oracle_entry.disambiguation[
-                                            release.disambiguation
-                                        ]
-                                    )
-                                        title =
+                                    if (oracle_entry.disambiguation) {
+                                        if (
                                             oracle_entry.disambiguation[
                                                 release.disambiguation
-                                            ];
-                                    else if (oracle_entry.disambiguation.other)
-                                        title =
-                                            oracle_entry.disambiguation.other;
-                                }
+                                            ]
+                                        )
+                                            title =
+                                                oracle_entry.disambiguation[
+                                                    release.disambiguation
+                                                ];
+                                        else if (
+                                            oracle_entry.disambiguation.other
+                                        )
+                                            title =
+                                                oracle_entry.disambiguation
+                                                    .other;
+                                    }
 
-                                // is there a matching last.fm entry available atm?
-                                const match = lastfm_releases.find(
-                                    (r) =>
-                                        r.title == title && r.artist == artist
-                                );
-
-                                let plays = 0;
-                                let artwork;
-                                if (match) {
-                                    plays = match.plays;
-                                    artwork = match.artwork;
-                                }
-
-                                let artwork_container;
-                                let stats;
-
-                                let title_elem;
-                                let artist_elem;
-                                if (settings.format_guest_features) {
-                                    const formatted = name_includes(
-                                        title,
-                                        artist
+                                    // is there a matching last.fm entry available atm?
+                                    const match = lastfm_releases.find(
+                                        (r) =>
+                                            r.title == title &&
+                                            r.artist == artist
                                     );
 
-                                    title_elem = html.node`<a class="smart-title">${smart_title(formatted[0], formatted[1])}</a>`;
-                                    artist_elem = html.node`${smart_artists(formatted[2], formatted[3])}`;
-                                } else {
-                                    title_elem = romanise(
-                                        correct_item_by_artist(title, artist)
-                                    );
-                                    artist_elem = romanise(
-                                        correct_artist(artist)
-                                    );
-                                }
+                                    let plays = 0;
+                                    let artwork;
+                                    if (match) {
+                                        plays = match.plays;
+                                        artwork = match.artwork;
+                                    }
 
-                                const elem = html.node`
-                                    <div class="source-album js-link-block link-block-cover-link">
-                                        <div class="source-album-art" ref=${(el) => (artwork_container = el)}>
-                                            ${
-                                                artwork ?
-                                                    html.node`
-                                                        <span class="cover-art">
-                                                            <img src=${artwork} alt=${title}>
-                                                        </span>
-                                                    `
-                                                :   html.node`
-                                                    <span class="cover-art">
-                                                        <img class="missing-album" />
-                                                    </span>
-                                                `
-                                            }
-                                        </div>
-                                        <div class="source-album-details" data-kate-processed="true">
-                                            <h4 class="source-album-name">${title_elem}</h4>
-                                            <p class="source-album-artist">${artist_elem}</p>
-                                            <p class="source-album-stats oracle-stats" ref=${(el) => (stats = el)}>
-                                                ${type}
+                                    let artwork_container;
+                                    let stats;
+
+                                    let title_elem;
+                                    let artist_elem;
+                                    if (settings.format_guest_features) {
+                                        const formatted = name_includes(
+                                            title,
+                                            artist
+                                        );
+
+                                        title_elem = html.node`<a class="smart-title">${smart_title(formatted[0], formatted[1])}</a>`;
+                                        artist_elem = html.node`${smart_artists(formatted[2], formatted[3])}`;
+                                    } else {
+                                        title_elem = romanise(
+                                            correct_item_by_artist(
+                                                title,
+                                                artist
+                                            )
+                                        );
+                                        artist_elem = romanise(
+                                            correct_artist(artist)
+                                        );
+                                    }
+
+                                    const elem = html.node`
+                                        <div class="source-album js-link-block link-block-cover-link">
+                                            <div class="source-album-art" ref=${(el) => (artwork_container = el)}>
                                                 ${
-                                                    match ?
+                                                    artwork ?
                                                         html.node`
-                                                            <span class="plays">
-                                                                <span class="bleh-icon" />
-                                                                ${plays}
+                                                            <span class="cover-art">
+                                                                <img src=${artwork} alt=${title}>
                                                             </span>
                                                         `
-                                                    :   ''
+                                                    :   html.node`
+                                                        <span class="cover-art">
+                                                            <img class="missing-album" />
+                                                        </span>
+                                                    `
                                                 }
-                                            </p>
-                                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(artist)}/${sanitise(title)}" tabindex="-1" aria-hidden="true" />
+                                            </div>
+                                            <div class="source-album-details" data-kate-processed="true">
+                                                <h4 class="source-album-name">${title_elem}</h4>
+                                                <p class="source-album-artist">${artist_elem}</p>
+                                                <p class="source-album-stats oracle-stats" ref=${(el) => (stats = el)}>
+                                                    ${type}
+                                                    ${
+                                                        match ?
+                                                            html.node`
+                                                                <span class="plays">
+                                                                    <span class="bleh-icon" />
+                                                                    ${plays}
+                                                                </span>
+                                                            `
+                                                        :   ''
+                                                    }
+                                                </p>
+                                                <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(artist)}/${sanitise(title)}" tabindex="-1" aria-hidden="true" />
+                                            </div>
                                         </div>
-                                    </div>
-                                `;
+                                    `;
 
-                                if (!artwork && index < 2)
-                                    load_cover_art(
-                                        artwork_container,
-                                        title,
-                                        artist,
-                                        stats,
-                                        type
-                                    );
+                                    if (!artwork && index < 2)
+                                        load_cover_art(
+                                            artwork_container,
+                                            title,
+                                            artist,
+                                            stats,
+                                            type
+                                        );
 
-                                return elem;
-                            })}
+                                    return elem;
+                                })}
+                            </div>
                         </div>
-                    </div>
-                `
-            );
+                    `
+                );
 
-            if (releases.length > 2 && allow_overflow) {
-                if (settings.simulate_scroll) {
+                if (releases.length > 2 && allow_overflow) {
+                    if (settings.simulate_scroll) {
+                        source_albums.addEventListener('wheel', (e) => {
+                            console.info('scroll', e, e.deltaY);
+                            e.preventDefault();
+
+                            if (e.deltaY > 0) {
+                                source_albums.scrollBy({
+                                    top: 0,
+                                    left: +400,
+                                    behavior: 'smooth'
+                                });
+                            } else {
+                                source_albums.scrollBy({
+                                    top: 0,
+                                    left: -400,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        });
+                    } else {
+                        source_albums.classList.add('no-scroll-simulation');
+                    }
+                } else {
                     source_albums.addEventListener('wheel', (e) => {
-                        console.info('scroll', e, e.deltaY);
                         e.preventDefault();
 
-                        if (e.deltaY > 0) {
-                            source_albums.scrollBy({
-                                top: 0,
-                                left: +400,
-                                behavior: 'smooth'
-                            });
-                        } else {
-                            source_albums.scrollBy({
-                                top: 0,
-                                left: -400,
-                                behavior: 'smooth'
-                            });
-                        }
+                        e.scrollTop = 0;
                     });
-                } else {
-                    source_albums.classList.add('no-scroll-simulation');
                 }
-            } else {
-                source_albums.addEventListener('wheel', (e) => {
-                    e.preventDefault();
-
-                    e.scrollTop = 0;
-                });
             }
 
             const artist_elem = header.querySelector('h2');
@@ -1074,21 +1114,23 @@ export function oracle_process() {
                 );
             }
         } else {
-            render(
-                releases_panel,
-                html`
-                    <h3 class="text-18">
-                        ${tl(trans.releases)}<span class="new-badge beta"
-                            >${tl(trans.beta)}</span
-                        >
-                    </h3>
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">
-                            No releases found
+            if (releases_panel) {
+                render(
+                    releases_panel,
+                    html`
+                        <h3 class="text-18">
+                            ${tl(trans.releases)}<span class="new-badge beta"
+                                >${tl(trans.beta)}</span
+                            >
+                        </h3>
+                        <div class="loading-data-container">
+                            <div class="loading-data-text failed">
+                                No releases found
+                            </div>
                         </div>
-                    </div>
-                `
-            );
+                    `
+                );
+            }
         }
     }
 

@@ -9,12 +9,7 @@ import { patch_avatar, style_name_from_badge } from '../avatar';
 import { settings } from '../build/config';
 import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
-import {
-    clean_number,
-    return_artist_from_track,
-    romanise,
-    sanitise
-} from '../build/tools';
+import { clean_number, romanise, sanitise } from '../build/tools';
 import { lang, tl, trans } from '../build/trans';
 import { prep_chart_colours } from '../chart';
 import { refresh_all } from '../config';
@@ -37,7 +32,6 @@ import {
     load_profile_cache_externally,
     open_starred_friend_window
 } from '../pages/profile.js';
-import { oracle_debug, oracle_process } from './oracle.js';
 
 unsafeWindow._other_listener = function (id) {
     other_listener(id);
@@ -388,26 +382,6 @@ export async function show_your_scrobbles() {
 
     // append
     col_main.insertBefore(listen_container, col_main.firstElementChild);
-
-    if (ff('oracle') && settings.oracle_beta && page.type != 'artist') {
-        col_main.insertBefore(
-            html.node`
-            <div class="oracle" data-mobile=${page.mobile}>
-                <p>
-                    <span class="bleh-icon" />
-                    <span>${{ html: tl(trans.oracle_notice).replace('oracle', '<i>oracle</i>') }}</span>
-                </p>
-                <button class="see-more left-icon" data-type="debug" onclick=${() => oracle_debug()}>
-                    ${tl(trans.debug)}
-                </button>
-                <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
-                    ${tl(trans.send_feedback)}
-                </a>
-            </div>
-        `,
-            listen_container
-        );
-    }
 
     if (!katsune)
         col_main.insertBefore(top_container, col_main.firstElementChild);
@@ -1153,8 +1127,6 @@ export async function show_your_scrobbles() {
             }
         </section>
     `);
-
-    if (ff('oracle') && settings.oracle_beta) oracle_process();
 }
 
 function create_listen_item(

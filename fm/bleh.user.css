@@ -28533,6 +28533,9 @@
             margin-top: 10px;
         }
     }
+    .oracle-notice {
+        margin-bottom: calc(-1 * var(--card-padding));
+    }
     .oracle {
         display: flex;
         gap: var(--card-gap);
