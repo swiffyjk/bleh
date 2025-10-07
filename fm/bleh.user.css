@@ -25651,7 +25651,18 @@
         }
     }
 
-    .source-albums {
+    .music-recommended-artists,
+    .music-recommended-albums,
+    .catalogue-overview-similar-artists,
+    .similar-albums,
+    .playlisting-playlists,
+    .resource-list--release-list,
+    .artist-top-albums,
+    .music-bookmarks-albums,
+    .music-bookmarks-artists,
+    .music-bookmarks-tags,
+    .music-releases,
+    .music-more-artists {
         margin-left: unset;
         margin-right: unset;
         padding: unset;
@@ -25661,10 +25672,6 @@
 
         &.artist-top-albums {
             grid-template-columns: repeat(4, minmax(180px, 1fr));
-        }
-
-        &:not(.source-albums) {
-            overflow: unset;
         }
 
         &.resource-list--release-list,
