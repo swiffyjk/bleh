@@ -689,6 +689,11 @@ export function oracle_process() {
                                     <td class="chartlist-duration">
                                         ${m}:${s.toString().padStart(2, '0')}
                                     </td>
+                                    <td class="chartlist-more">
+                                        <div>
+                                            <ul class="chartlist-more-menu" />
+                                        </div>
+                                    </td>
                                 </tr>
                             `;
 

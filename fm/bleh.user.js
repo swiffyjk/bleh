@@ -31874,6 +31874,11 @@
                                     <td class="chartlist-duration">
                                         ${m}:${s2.toString().padStart(2, "0")}
                                     </td>
+                                    <td class="chartlist-more">
+                                        <div>
+                                            <ul class="chartlist-more-menu" />
+                                        </div>
+                                    </td>
                                 </tr>
                             `;
           return elem;
@@ -32937,6 +32942,7 @@
             interactive: true,
             interactiveBorder: 10,
             offset: [0, 0],
+            appendTo: document.body,
             onShow(instance) {
               instance.popper.addEventListener("click", (event3) => {
                 instance.hide();

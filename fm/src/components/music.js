@@ -735,6 +735,7 @@ export async function show_your_scrobbles() {
                     interactive: true,
                     interactiveBorder: 10,
                     offset: [0, 0],
+                    appendTo: document.body,
 
                     onShow(instance) {
                         instance.popper.addEventListener('click', (event) => {
