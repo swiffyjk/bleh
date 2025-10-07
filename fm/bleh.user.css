@@ -12845,6 +12845,31 @@
     }
 
     /*     TRACK ON ALBUM     */
+    .source-albums-container {
+        overflow-x: hidden;
+
+        padding: 0 var(--card-padding) !important;
+        margin: 0 calc(-1 * var(--card-padding)) !important;
+    }
+    .source-albums {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)) !important;
+        gap: var(--card-gap) !important;
+        grid-auto-flow: column;
+
+        padding: 0 var(--card-padding) !important;
+        margin: 0 calc(-1 * var(--card-padding)) !important;
+
+        width: var(--cards-main-width);
+        overflow-x: hidden;
+
+        height: 64px;
+
+        &.no-scroll-simulation:hover {
+            overflow-x: scroll;
+        }
+    }
+
     .source-album-column,
     .secondary-album-column {
         padding: unset !important;
@@ -12861,6 +12886,8 @@
         --bg-hov: transparent;
         --bg-atv: transparent;
         --shadow: none;
+
+        min-width: 430px !important;
 
         .link-block-cover-link {
             height: unset;
@@ -16469,12 +16496,6 @@
         & > .loading-data-container {
             height: 64px;
         }
-    }
-
-    .source-albums {
-        display: grid !important;
-        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-        gap: var(--card-gap);
     }
 
     img.empty {
@@ -25630,28 +25651,20 @@
         }
     }
 
-    .music-recommended-artists,
-    .music-recommended-albums,
-    .catalogue-overview-similar-artists,
-    .similar-albums,
-    .playlisting-playlists,
-    .resource-list--release-list,
-    .artist-top-albums,
-    .music-bookmarks-albums,
-    .music-bookmarks-artists,
-    .music-bookmarks-tags,
-    .music-releases,
-    .music-more-artists {
+    .source-albums {
         margin-left: unset;
         margin-right: unset;
         padding: unset;
-        overflow: unset;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: var(--card-padding) var(--card-gap);
 
         &.artist-top-albums {
             grid-template-columns: repeat(4, minmax(180px, 1fr));
+        }
+
+        &:not(.source-albums) {
+            overflow: unset;
         }
 
         &.resource-list--release-list,

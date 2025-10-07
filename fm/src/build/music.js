@@ -112,6 +112,7 @@ export let ranks = {
 
 export let includes = {
     guests: [
+        'feat ',
         'feat.',
         'featuring',
         '- feat',

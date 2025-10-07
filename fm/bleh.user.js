@@ -28150,6 +28150,7 @@
   };
   var includes = {
     guests: [
+      "feat ",
       "feat.",
       "featuring",
       "- feat",
@@ -31987,6 +31988,8 @@
         log("releases in recording after filter", "oracle", "info", {
           releases
         });
+        const allow_overflow = false;
+        let source_albums;
         render(
           releases_panel,
           html`
@@ -31995,8 +31998,12 @@
                             >${tl2(trans2.beta)}</span
                         >
                     </h3>
-                    <div class="source-albums">
-                        ${releases.map((release, index3) => {
+                    <div class="source-albums-container">
+                        <div
+                            class="source-albums"
+                            ref=${(el) => source_albums = el}
+                        >
+                            ${releases.map((release, index3) => {
             if (index3 > 1) return html.node``;
             log("release", "oracle", "log", { release });
             let title = fix_title(release.title);
@@ -32024,11 +32031,11 @@
               ...defaults2,
               ...oracle_albums.hasOwnProperty(
                 artist_lower
-              ) && oracle_albums[artist_lower].hasOwnProperty(
-                title_lower
-              ) ? oracle_albums[artist_lower][title_lower] : {}
+              ) && oracle_albums[artist_lower].hasOwnProperty(title_lower) ? oracle_albums[artist_lower][title_lower] : {}
             };
-            log("entry", "oracle", "info", { oracle_entry });
+            log("entry", "oracle", "info", {
+              oracle_entry
+            });
             if (oracle_entry.disambiguation) {
               if (oracle_entry.disambiguation[release.disambiguation])
                 title = oracle_entry.disambiguation[release.disambiguation];
@@ -32049,40 +32056,49 @@
             let title_elem;
             let artist_elem2;
             if (settings.format_guest_features) {
-              const formatted = name_includes(title, artist2);
+              const formatted = name_includes(
+                title,
+                artist2
+              );
               title_elem = html.node`<a class="smart-title">${smart_title(formatted[0], formatted[1])}</a>`;
               artist_elem2 = html.node`${smart_artists(formatted[2], formatted[3])}`;
             } else {
               title_elem = romanise(
                 correct_item_by_artist(title, artist2)
               );
-              artist_elem2 = romanise(correct_artist(artist2));
+              artist_elem2 = romanise(
+                correct_artist(artist2)
+              );
             }
             const elem = html.node`
-                                <div class="source-album js-link-block link-block-cover-link">
-                                    <div class="source-album-art" ref=${(el) => artwork_container = el}>
-                                        ${artwork ? html.node`
-                                                    <span class="cover-art">
-                                                        <img src=${artwork} alt=${title}>
-                                                    </span>
-                                                ` : ""}
-                                    </div>
-                                    <div class="source-album-details" data-kate-processed="true">
-                                        <h4 class="source-album-name">${title_elem}</h4>
-                                        <p class="source-album-artist">${artist_elem2}</p>
-                                        <p class="source-album-stats oracle-stats" ref=${(el) => stats = el}>
-                                            ${type}
-                                            ${match3 ? html.node`
-                                                        <span class="plays">
-                                                            <span class="bleh-icon" />
-                                                            ${plays}
+                                    <div class="source-album js-link-block link-block-cover-link">
+                                        <div class="source-album-art" ref=${(el) => artwork_container = el}>
+                                            ${artwork ? html.node`
+                                                        <span class="cover-art">
+                                                            <img src=${artwork} alt=${title}>
                                                         </span>
-                                                    ` : ""}
-                                        </p>
-                                        <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(artist2)}/${sanitise(title)}" tabindex="-1" aria-hidden="true" />
+                                                    ` : html.node`
+                                                    <span class="cover-art">
+                                                        <img class="missing-album" />
+                                                    </span>
+                                                `}
+                                        </div>
+                                        <div class="source-album-details" data-kate-processed="true">
+                                            <h4 class="source-album-name">${title_elem}</h4>
+                                            <p class="source-album-artist">${artist_elem2}</p>
+                                            <p class="source-album-stats oracle-stats" ref=${(el) => stats = el}>
+                                                ${type}
+                                                ${match3 ? html.node`
+                                                            <span class="plays">
+                                                                <span class="bleh-icon" />
+                                                                ${plays}
+                                                            </span>
+                                                        ` : ""}
+                                            </p>
+                                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(artist2)}/${sanitise(title)}" tabindex="-1" aria-hidden="true" />
+                                        </div>
                                     </div>
-                                </div>
-                            `;
+                                `;
             if (!artwork && index3 < 2)
               load_cover_art(
                 artwork_container,
@@ -32093,9 +32109,38 @@
               );
             return elem;
           })}
+                        </div>
                     </div>
                 `
         );
+        if (releases.length > 2 && allow_overflow) {
+          if (settings.simulate_scroll) {
+            source_albums.addEventListener("wheel", (e) => {
+              console.info("scroll", e, e.deltaY);
+              e.preventDefault();
+              if (e.deltaY > 0) {
+                source_albums.scrollBy({
+                  top: 0,
+                  left: 400,
+                  behavior: "smooth"
+                });
+              } else {
+                source_albums.scrollBy({
+                  top: 0,
+                  left: -400,
+                  behavior: "smooth"
+                });
+              }
+            });
+          } else {
+            source_albums.classList.add("no-scroll-simulation");
+          }
+        } else {
+          source_albums.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            e.scrollTop = 0;
+          });
+        }
         const artist_elem = header.querySelector("h2");
         if (recording.disambiguation == "explicit") {
           artist_elem.insertBefore(

@@ -859,6 +859,9 @@ export function oracle_process() {
                 releases
             });
 
+            const allow_overflow = false;
+
+            let source_albums;
             render(
                 releases_panel,
                 html`
@@ -867,144 +870,194 @@ export function oracle_process() {
                             >${tl(trans.beta)}</span
                         >
                     </h3>
-                    <div class="source-albums">
-                        ${releases.map((release, index) => {
-                            if (index > 1) return html.node``;
+                    <div class="source-albums-container">
+                        <div
+                            class="source-albums"
+                            ref=${(el) => (source_albums = el)}
+                        >
+                            ${releases.map((release, index) => {
+                                if (index > 1) return html.node``;
 
-                            log('release', 'oracle', 'log', { release });
-                            let title = fix_title(release.title);
-                            const artist = fix_title(
-                                oracle_aliases(
-                                    release['artist-credit']?.[0] ||
-                                        recording['artist-credit'][0],
-                                    page.sister
-                                )
-                            );
-
-                            const types = {
-                                album: tl(trans.album),
-                                single: tl(trans.single),
-                                ep: 'EP',
-                                other: tl(trans.other)
-                            };
-
-                            let type = release['release-group']['primary-type'];
-                            if (type && type.toLowerCase() in types)
-                                type = types[type.toLowerCase()];
-
-                            const artist_lower = artist.toLowerCase();
-                            const title_lower = title.toLowerCase();
-
-                            const defaults = {
-                                guests_in_title: false
-                            };
-
-                            const oracle_entry = {
-                                ...defaults,
-                                ...((
-                                    oracle_albums.hasOwnProperty(
-                                        artist_lower
-                                    ) &&
-                                    oracle_albums[artist_lower].hasOwnProperty(
-                                        title_lower
+                                log('release', 'oracle', 'log', { release });
+                                let title = fix_title(release.title);
+                                const artist = fix_title(
+                                    oracle_aliases(
+                                        release['artist-credit']?.[0] ||
+                                            recording['artist-credit'][0],
+                                        page.sister
                                     )
-                                ) ?
-                                    oracle_albums[artist_lower][title_lower]
-                                :   {})
-                            };
-                            log('entry', 'oracle', 'info', { oracle_entry });
+                                );
 
-                            if (oracle_entry.disambiguation) {
-                                if (
-                                    oracle_entry.disambiguation[
-                                        release.disambiguation
-                                    ]
-                                )
-                                    title =
+                                const types = {
+                                    album: tl(trans.album),
+                                    single: tl(trans.single),
+                                    ep: 'EP',
+                                    other: tl(trans.other)
+                                };
+
+                                let type =
+                                    release['release-group']['primary-type'];
+                                if (type && type.toLowerCase() in types)
+                                    type = types[type.toLowerCase()];
+
+                                const artist_lower = artist.toLowerCase();
+                                const title_lower = title.toLowerCase();
+
+                                const defaults = {
+                                    guests_in_title: false
+                                };
+
+                                const oracle_entry = {
+                                    ...defaults,
+                                    ...((
+                                        oracle_albums.hasOwnProperty(
+                                            artist_lower
+                                        ) &&
+                                        oracle_albums[
+                                            artist_lower
+                                        ].hasOwnProperty(title_lower)
+                                    ) ?
+                                        oracle_albums[artist_lower][title_lower]
+                                    :   {})
+                                };
+                                log('entry', 'oracle', 'info', {
+                                    oracle_entry
+                                });
+
+                                if (oracle_entry.disambiguation) {
+                                    if (
                                         oracle_entry.disambiguation[
                                             release.disambiguation
-                                        ];
-                                else if (oracle_entry.disambiguation.other)
-                                    title = oracle_entry.disambiguation.other;
-                            }
+                                        ]
+                                    )
+                                        title =
+                                            oracle_entry.disambiguation[
+                                                release.disambiguation
+                                            ];
+                                    else if (oracle_entry.disambiguation.other)
+                                        title =
+                                            oracle_entry.disambiguation.other;
+                                }
 
-                            // is there a matching last.fm entry available atm?
-                            const match = lastfm_releases.find(
-                                (r) => r.title == title && r.artist == artist
-                            );
-
-                            let plays = 0;
-                            let artwork;
-                            if (match) {
-                                plays = match.plays;
-                                artwork = match.artwork;
-                            }
-
-                            let artwork_container;
-                            let stats;
-
-                            let title_elem;
-                            let artist_elem;
-                            if (settings.format_guest_features) {
-                                const formatted = name_includes(title, artist);
-
-                                title_elem = html.node`<a class="smart-title">${smart_title(formatted[0], formatted[1])}</a>`;
-                                artist_elem = html.node`${smart_artists(formatted[2], formatted[3])}`;
-                            } else {
-                                title_elem = romanise(
-                                    correct_item_by_artist(title, artist)
+                                // is there a matching last.fm entry available atm?
+                                const match = lastfm_releases.find(
+                                    (r) =>
+                                        r.title == title && r.artist == artist
                                 );
-                                artist_elem = romanise(correct_artist(artist));
-                            }
 
-                            const elem = html.node`
-                                <div class="source-album js-link-block link-block-cover-link">
-                                    <div class="source-album-art" ref=${(el) => (artwork_container = el)}>
-                                        ${
-                                            artwork ?
-                                                html.node`
-                                                    <span class="cover-art">
-                                                        <img src=${artwork} alt=${title}>
-                                                    </span>
-                                                `
-                                            :   ''
-                                        }
-                                    </div>
-                                    <div class="source-album-details" data-kate-processed="true">
-                                        <h4 class="source-album-name">${title_elem}</h4>
-                                        <p class="source-album-artist">${artist_elem}</p>
-                                        <p class="source-album-stats oracle-stats" ref=${(el) => (stats = el)}>
-                                            ${type}
+                                let plays = 0;
+                                let artwork;
+                                if (match) {
+                                    plays = match.plays;
+                                    artwork = match.artwork;
+                                }
+
+                                let artwork_container;
+                                let stats;
+
+                                let title_elem;
+                                let artist_elem;
+                                if (settings.format_guest_features) {
+                                    const formatted = name_includes(
+                                        title,
+                                        artist
+                                    );
+
+                                    title_elem = html.node`<a class="smart-title">${smart_title(formatted[0], formatted[1])}</a>`;
+                                    artist_elem = html.node`${smart_artists(formatted[2], formatted[3])}`;
+                                } else {
+                                    title_elem = romanise(
+                                        correct_item_by_artist(title, artist)
+                                    );
+                                    artist_elem = romanise(
+                                        correct_artist(artist)
+                                    );
+                                }
+
+                                const elem = html.node`
+                                    <div class="source-album js-link-block link-block-cover-link">
+                                        <div class="source-album-art" ref=${(el) => (artwork_container = el)}>
                                             ${
-                                                match ?
+                                                artwork ?
                                                     html.node`
-                                                        <span class="plays">
-                                                            <span class="bleh-icon" />
-                                                            ${plays}
+                                                        <span class="cover-art">
+                                                            <img src=${artwork} alt=${title}>
                                                         </span>
                                                     `
-                                                :   ''
+                                                :   html.node`
+                                                    <span class="cover-art">
+                                                        <img class="missing-album" />
+                                                    </span>
+                                                `
                                             }
-                                        </p>
-                                        <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(artist)}/${sanitise(title)}" tabindex="-1" aria-hidden="true" />
+                                        </div>
+                                        <div class="source-album-details" data-kate-processed="true">
+                                            <h4 class="source-album-name">${title_elem}</h4>
+                                            <p class="source-album-artist">${artist_elem}</p>
+                                            <p class="source-album-stats oracle-stats" ref=${(el) => (stats = el)}>
+                                                ${type}
+                                                ${
+                                                    match ?
+                                                        html.node`
+                                                            <span class="plays">
+                                                                <span class="bleh-icon" />
+                                                                ${plays}
+                                                            </span>
+                                                        `
+                                                    :   ''
+                                                }
+                                            </p>
+                                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(artist)}/${sanitise(title)}" tabindex="-1" aria-hidden="true" />
+                                        </div>
                                     </div>
-                                </div>
-                            `;
+                                `;
 
-                            if (!artwork && index < 2)
-                                load_cover_art(
-                                    artwork_container,
-                                    title,
-                                    artist,
-                                    stats,
-                                    type
-                                );
+                                if (!artwork && index < 2)
+                                    load_cover_art(
+                                        artwork_container,
+                                        title,
+                                        artist,
+                                        stats,
+                                        type
+                                    );
 
-                            return elem;
-                        })}
+                                return elem;
+                            })}
+                        </div>
                     </div>
                 `
             );
+
+            if (releases.length > 2 && allow_overflow) {
+                if (settings.simulate_scroll) {
+                    source_albums.addEventListener('wheel', (e) => {
+                        console.info('scroll', e, e.deltaY);
+                        e.preventDefault();
+
+                        if (e.deltaY > 0) {
+                            source_albums.scrollBy({
+                                top: 0,
+                                left: +400,
+                                behavior: 'smooth'
+                            });
+                        } else {
+                            source_albums.scrollBy({
+                                top: 0,
+                                left: -400,
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                } else {
+                    source_albums.classList.add('no-scroll-simulation');
+                }
+            } else {
+                source_albums.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+
+                    e.scrollTop = 0;
+                });
+            }
 
             const artist_elem = header.querySelector('h2');
             if (recording.disambiguation == 'explicit') {
