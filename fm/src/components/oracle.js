@@ -581,8 +581,9 @@ export function oracle_process() {
                         ${disc.tracks.map((track) => {
                             let title = fix_title(track.title);
 
-                            const artist_lower =
-                                track['artist-credit'][0].name.toLowerCase();
+                            const artist_lower = fix_title(
+                                track['artist-credit'][0].name
+                            ).toLowerCase();
                             const title_lower = title.toLowerCase();
 
                             const track_entry =
@@ -675,7 +676,7 @@ export function oracle_process() {
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${oracle_aliases(track['artist-credit'][0], page.sister)}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist) => sanitise(fix_title(artist.name), ' ')).join(';')}>
+                                        <a href="${root}music/${fix_title(oracle_aliases(track['artist-credit'][0], page.sister))}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist) => sanitise(fix_title(artist.name), ' ')).join(';')}>
                                             ${title}
                                         </a>
                                     </td>
@@ -857,10 +858,12 @@ export function oracle_process() {
 
                             log('release', 'oracle', 'log', { release });
                             let title = clean_title(release.title);
-                            const artist = oracle_aliases(
-                                release['artist-credit']?.[0] ||
-                                    recording['artist-credit'][0],
-                                page.sister
+                            const artist = fix_title(
+                                oracle_aliases(
+                                    release['artist-credit']?.[0] ||
+                                        recording['artist-credit'][0],
+                                    page.sister
+                                )
                             );
 
                             const types = {
@@ -874,7 +877,7 @@ export function oracle_process() {
                             if (type && type.toLowerCase() in types)
                                 type = types[type.toLowerCase()];
 
-                            const artist_lower = page.sister.toLowerCase();
+                            const artist_lower = artist.toLowerCase();
                             const title_lower = title.toLowerCase();
 
                             const defaults = {

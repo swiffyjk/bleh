@@ -31801,7 +31801,9 @@
                     <tbody>
                         ${disc.tracks.map((track) => {
           let title = fix_title(track.title);
-          const artist_lower = track["artist-credit"][0].name.toLowerCase();
+          const artist_lower = fix_title(
+            track["artist-credit"][0].name
+          ).toLowerCase();
           const title_lower = title.toLowerCase();
           const track_entry = oracle_tracks.hasOwnProperty(
             artist_lower
@@ -31861,7 +31863,7 @@
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${oracle_aliases(track["artist-credit"][0], page.sister)}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist3) => sanitise(fix_title(artist3.name), " ")).join(";")}>
+                                        <a href="${root}music/${fix_title(oracle_aliases(track["artist-credit"][0], page.sister))}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist3) => sanitise(fix_title(artist3.name), " ")).join(";")}>
                                             ${title}
                                         </a>
                                     </td>
@@ -31991,9 +31993,11 @@
             if (index3 > 1) return html.node``;
             log("release", "oracle", "log", { release });
             let title = clean_title(release.title);
-            const artist2 = oracle_aliases(
-              release["artist-credit"]?.[0] || recording["artist-credit"][0],
-              page.sister
+            const artist2 = fix_title(
+              oracle_aliases(
+                release["artist-credit"]?.[0] || recording["artist-credit"][0],
+                page.sister
+              )
             );
             const types = {
               album: tl2(trans2.album),
@@ -32004,7 +32008,7 @@
             let type = release["release-group"]["primary-type"];
             if (type && type.toLowerCase() in types)
               type = types[type.toLowerCase()];
-            const artist_lower = page.sister.toLowerCase();
+            const artist_lower = artist2.toLowerCase();
             const title_lower = title.toLowerCase();
             const defaults2 = {
               guests_in_title: false
