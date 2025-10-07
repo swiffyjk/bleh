@@ -136,7 +136,9 @@ export function clean_number(string) {
  * @see desanitise
  */
 export function sanitise(text, method = '+') {
-    return encodeURIComponent(text.replaceAll(' ', method));
+    return encodeURIComponent(
+        encodeURIComponent(text).replaceAll('%20', method)
+    );
 }
 
 /**
@@ -161,7 +163,9 @@ export function sanitise_text(text) {
  * @see sanitise
  */
 export function desanitise(text, method = '+') {
-    return decodeURIComponent(text).replaceAll(method, ' ');
+    return decodeURIComponent(
+        decodeURIComponent(text).replaceAll(method, '%20')
+    );
 }
 
 /**
@@ -184,7 +188,7 @@ export function return_artist_from_track(url, is_album) {
     // leading to the % being encoded as %25 (very stupid)
     let passes = 0;
     while (/%[0-9A-Fa-f]{2}/.test(desanitised) && passes < 5) {
-        desanitised = desanitise(desanitised, '+');
+        desanitised = desanitise(desanitised);
         passes++;
     }
 

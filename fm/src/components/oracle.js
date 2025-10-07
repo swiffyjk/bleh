@@ -682,7 +682,7 @@ export function oracle_process() {
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${fix_title(oracle_aliases(track['artist-credit'][0], page.sister))}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist) => sanitise(fix_title(artist.name), ' ')).join(';')}>
+                                        <a href="${root}music/${sanitise(fix_title(oracle_aliases(track['artist-credit'][0], page.sister)))}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist) => sanitise(fix_title(artist.name), ' ')).join(';')}>
                                             ${title}
                                         </a>
                                     </td>

@@ -22037,7 +22037,7 @@
 
         .breadcrumb {
             display: flex;
-            gap: 16px;
+            gap: 0 16px;
 
             .breadcrumb-origin,
             a {

@@ -219,6 +219,10 @@ export function patch_titles(search = page.structure.main) {
                 track_title.getAttribute('href'),
                 is_album
             );
+            log(
+                `returned ${track_artist} from url ${track_title.getAttribute('href')}`,
+                'track'
+            );
             // when focused on a track in a library, an artist field is redundant
             if (!wide) track.classList.add('chartlist-row--with-artist');
 

@@ -27860,13 +27860,17 @@
     return int2(string.replaceAll(",", "").replaceAll(".", ""));
   }
   function sanitise(text3, method = "+") {
-    return encodeURIComponent(text3.replaceAll(" ", method));
+    return encodeURIComponent(
+      encodeURIComponent(text3).replaceAll("%20", method)
+    );
   }
   function sanitise_text(text3) {
     return text3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
   function desanitise(text3, method = "+") {
-    return decodeURIComponent(text3).replaceAll(method, " ");
+    return decodeURIComponent(
+      decodeURIComponent(text3).replaceAll(method, "%20")
+    );
   }
   function return_artist_from_track(url, is_album) {
     let split = url.split("/");
@@ -27876,7 +27880,7 @@
     else desanitised = desanitise(split[length - 2]);
     let passes = 0;
     while (/%[0-9A-Fa-f]{2}/.test(desanitised) && passes < 5) {
-      desanitised = desanitise(desanitised, "+");
+      desanitised = desanitise(desanitised);
       passes++;
     }
     return desanitised;
@@ -31864,7 +31868,7 @@
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${fix_title(oracle_aliases(track["artist-credit"][0], page.sister))}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist3) => sanitise(fix_title(artist3.name), " ")).join(";")}>
+                                        <a href="${root}music/${sanitise(fix_title(oracle_aliases(track["artist-credit"][0], page.sister)))}/_/${sanitise(title)}" data-name=${title} data-inherit-artists=${inherit_guests.map((artist3) => sanitise(fix_title(artist3.name), " ")).join(";")}>
                                             ${title}
                                         </a>
                                     </td>
@@ -33958,6 +33962,10 @@
         let track_artist = return_artist_from_track(
           track_title.getAttribute("href"),
           is_album
+        );
+        log(
+          `returned ${track_artist} from url ${track_title.getAttribute("href")}`,
+          "track"
         );
         if (!wide) track.classList.add("chartlist-row--with-artist");
         const bar = track.querySelector(".chartlist-count-bar-slug");
@@ -52067,35 +52075,43 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector(".about-artist");
     if (!legacy_container) return;
-    let avatar3 = legacy_container.querySelector(".gallery-preview-image--0 img");
+    let avatar3 = legacy_container.querySelector(
+      ".gallery-preview-image--0 img"
+    );
     let listeners = legacy_container.querySelector(".about-artist-listeners");
     let tags = legacy_container.querySelector(".about-artist-tags");
     let wiki = legacy_container.querySelector(".wiki-block.visible-lg");
     if (wiki) wiki.classList.remove("visible-lg");
     let about_artist_container = legacy_container.parentElement;
     about_artist_container.classList.add("about-artist-container");
-    render(about_artist_container, html`
-        <div class="about-artist-panel">
-            <div class="avatar-side">
-                ${avatar3 ? html.node`
+    render(
+      about_artist_container,
+      html`
+            <div class="about-artist-panel">
+                <div class="avatar-side">
+                    ${avatar3 ? html.node`
                     <img src=${avatar3.getAttribute("src")}>
                     <a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>
                 ` : html.node`
                     <img class="missing-artist">
                 `}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${tl2(trans2.about)}</div>
+                    <h1>
+                        <a
+                            href="${root}music/${redirect()}${sanitise(
+        page.sister
+      )}"
+                            >${correct_artist(page.sister)}</a
+                        >
+                    </h1>
+                    ${listeners} ${tags} ${wiki}
+                </div>
             </div>
-            <div class="info-side">
-                <div class="sub-text">${tl2(trans2.about)}</div>
-                <h1>
-                    <a href="${root}music/${redirect()}${sanitise(page.sister)}">${correct_artist(page.sister)}</a>
-                </h1>
-                ${listeners}
-                ${tags}
-                ${wiki}
-            </div>
-        </div>
-        ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl2(trans2.others_featured)}</div>` : ""}
-    `);
+            ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl2(trans2.others_featured)}</div>` : ""}
+        `
+    );
     if (page.sister_others.length > 0) {
       about_artist_container.appendChild(html.node`
             <div class="about-guest-features-panel">
