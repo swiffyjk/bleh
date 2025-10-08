@@ -31,6 +31,8 @@ export function hoshino(artwork, name, sister, link = null) {
         sister
     });
 
+    artwork.setAttribute('data-hoshino', true);
+
     if (alt) {
         artwork.alt = alt;
     }

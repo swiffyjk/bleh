@@ -408,6 +408,15 @@ export function patch_titles(search = page.structure.main) {
                                     )
                                 }
                                 ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ''}
+                                ${
+                                    image?.getAttribute('data-hoshino') ?
+                                        html.node`
+                                            <div class="hoshino-marker">
+                                                <div class="bleh-icon" />
+                                            </div>
+                                        `
+                                    :   ''
+                                }
                             </div>
                         </div>
                     `;

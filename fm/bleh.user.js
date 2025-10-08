@@ -32827,6 +32827,7 @@
       name,
       sister
     });
+    artwork.setAttribute("data-hoshino", true);
     if (alt) {
       artwork.alt = alt;
     }
@@ -33118,6 +33119,11 @@
               track_artist
             ) : album ? album.textContent : ""}</p>`}
                                 ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                                ${image?.getAttribute("data-hoshino") ? html.node`
+                                            <div class="hoshino-marker">
+                                                <div class="bleh-icon" />
+                                            </div>
+                                        ` : ""}
                             </div>
                         </div>
                     `;
