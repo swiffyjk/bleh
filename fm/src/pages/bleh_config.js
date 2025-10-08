@@ -18,7 +18,7 @@ import {
 } from '../build/page';
 import { stored_season } from '../build/seasonal';
 import { sponsor_list } from '../build/sponsor';
-import { clamp_sat, hex_to_hsl, time } from '../build/tools';
+import { clamp_sat, hex_to_hsl, set_storage, time } from '../build/tools';
 import { lang, lang_info, tl, trans } from '../build/trans';
 import { load_badges } from '../components/badge';
 import { dialog, dialog_rm } from '../components/dialog';
@@ -2584,7 +2584,7 @@ function delete_profile_note(user) {
         .getElementById(`profile-note-row--${username}`)
         .style.setProperty('display', 'none');
 
-    localStorage.setItem('bleh_profile_notes', JSON.stringify(profile_notes));
+    set_storage('bleh_profile_notes', JSON.stringify(profile_notes));
 }
 
 function edit_profile_note(user) {
@@ -2624,7 +2624,7 @@ function save_profile_note_in_window(modal, user) {
     document.getElementById(`profile-note-row-preview--${user}`).textContent =
         value_to_save;
 
-    localStorage.setItem('bleh_profile_notes', JSON.stringify(profile_notes));
+    set_storage('bleh_profile_notes', JSON.stringify(profile_notes));
     dialog_rm({ id: 'edit_profile_note' });
 }
 
@@ -2698,7 +2698,7 @@ function import_settings() {
                         const parsed = JSON.parse(text.value);
 
                         // safe to continue
-                        localStorage.setItem('bleh', text.value);
+                        set_storage('bleh', text.value);
                         Object.assign(settings, parsed);
                         load_settings();
 

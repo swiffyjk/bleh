@@ -14,7 +14,8 @@ import {
     control_gif_pause,
     lazy,
     romanise,
-    sanitise
+    sanitise,
+    set_storage
 } from '../build/tools';
 import { lang, tl, trans } from '../build/trans';
 import { prep_chart_colours } from '../chart';
@@ -925,10 +926,7 @@ function create_profile_note_panel(username, has_note) {
                     delete notes[page.name];
 
                     note.value = '';
-                    localStorage.setItem(
-                        'bleh_profile_notes',
-                        JSON.stringify(notes)
-                    );
+                    set_storage('bleh_profile_notes', JSON.stringify(notes));
                 }}>${tl(trans.clear)}</button>
                 <button class="btn primary icon" data-type="save" onclick=${() => {
                     let notes =
@@ -943,10 +941,7 @@ function create_profile_note_panel(username, has_note) {
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#039;');
 
-                    localStorage.setItem(
-                        'bleh_profile_notes',
-                        JSON.stringify(notes)
-                    );
+                    set_storage('bleh_profile_notes', JSON.stringify(notes));
                 }}>${tl(trans.save)}</button>
             </div>
         </section>
@@ -2045,7 +2040,7 @@ export function save_profile_cache(
         name,
         cache: profile_cache[name]
     });
-    localStorage.setItem('bleh_profile_cache', JSON.stringify(profile_cache));
+    set_storage('bleh_profile_cache', JSON.stringify(profile_cache));
 }
 
 export async function checkup_friend_cache(list = settings.friends) {

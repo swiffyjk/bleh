@@ -236,10 +236,7 @@ export function oracle_process() {
 
                 if (Object.keys(cache).length > 100) delete cache[0];
 
-                localStorage.setItem(
-                    'oracle_artist_ids',
-                    JSON.stringify(cache)
-                );
+                set_storage('oracle_artist_ids', JSON.stringify(cache));
 
                 tries = 2;
                 oracle_connect();
@@ -1482,12 +1479,12 @@ function oracle_request(type = 'albums') {
             }
 
             // save to cache for next page load
-            localStorage.setItem(`oracle_${type}`, this.response);
+            set_storage(`oracle_${type}`, this.response);
             api_expire.setHours(api_expire.getHours() + 4);
             log(`${type} list cached until ${api_expire}`, 'oracle');
         }
 
-        localStorage.setItem(`oracle_${type}_expire`, api_expire);
+        set_storage(`oracle_${type}_expire`, api_expire);
     };
 
     xhr.send();

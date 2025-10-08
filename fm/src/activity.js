@@ -7,7 +7,7 @@
 import { settings } from './build/config';
 import { log } from './build/log';
 import { auth, page, recent_activity_list, root } from './build/page';
-import { romanise, sanitise } from './build/tools';
+import { romanise, sanitise, set_storage } from './build/tools';
 import { tl, trans } from './build/trans';
 import {
     correct_artist,
@@ -349,10 +349,7 @@ export function load_activities() {
     check_activities_length();
 
     log('saved', 'activity', 'info', recent_activity_list);
-    localStorage.setItem(
-        'bwaa_recent_activity',
-        JSON.stringify(recent_activity_list)
-    );
+    set_storage('bwaa_recent_activity', JSON.stringify(recent_activity_list));
 }
 
 function check_activities_length() {
@@ -415,8 +412,5 @@ export function register_activity(type, involved, context, date = new Date()) {
     check_activities_length();
 
     log('saved', 'activity', 'info', recent_activity_list);
-    localStorage.setItem(
-        'bwaa_recent_activity',
-        JSON.stringify(recent_activity_list)
-    );
+    set_storage('bwaa_recent_activity', JSON.stringify(recent_activity_list));
 }

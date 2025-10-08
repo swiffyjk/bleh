@@ -29014,8 +29014,7 @@
 
   // src/sponsor.js
   function sponsors(force = false) {
-    if (!ff("sponsor"))
-      return;
+    if (!ff("sponsor")) return;
     let sponsor_data = localStorage.getItem("kat_sponsors");
     let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
     let current_time = /* @__PURE__ */ new Date();
@@ -29027,7 +29026,9 @@
       Object.assign(sponsor_list, JSON.parse(sponsor_data));
       if (sponsor_list) {
         auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-        auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
+        auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(
+          auth.name
+        );
       }
       if (sponsor_expire < current_time && !force) {
         sponsor_request();
@@ -29038,8 +29039,7 @@
   }
   function sponsor_request(notify2 = false) {
     let button = document.body.querySelector('[onclick="_sponsor_check()"]');
-    if (button)
-      button.setAttribute("disabled", "");
+    if (button) button.setAttribute("disabled", "");
     let xhr = new XMLHttpRequest();
     let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
     xhr.open("GET", url, true);
@@ -29047,7 +29047,10 @@
       log(`list responded with ${xhr.status}`, "sponsor");
       let api_expire = /* @__PURE__ */ new Date();
       if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "sponsor");
+        log(
+          "request has been cancelled, will request again in 1h",
+          "sponsor"
+        );
         api_expire.setHours(api_expire.getHours() + 1);
       }
       if (xhr.status == 200) {
@@ -29060,16 +29063,18 @@
           }
           if (notify2)
             status({
-              title: tl2(trans2.downloaded_value).replace("{v}", tl2(trans2.sponsor_details))
+              title: tl2(trans2.downloaded_value).replace(
+                "{v}",
+                tl2(trans2.sponsor_details)
+              )
             });
-          localStorage.setItem("kat_sponsors", this.response);
+          set_storage("kat_sponsors", this.response);
         }
         api_expire.setHours(api_expire.getHours() + 4);
         log(`list cached until ${api_expire}`, "sponsor");
       }
-      localStorage.setItem("kat_sponsors_expire", api_expire);
-      if (button != null)
-        button.removeAttribute("disabled");
+      set_storage("kat_sponsors_expire", api_expire);
+      if (button != null) button.removeAttribute("disabled");
     };
     xhr.send();
   }
@@ -29091,7 +29096,10 @@
                 </div>
                 <h1>${tl2(trans2.support_future_development)}</h1>
                 <p>${html.node([
-        tl2(trans2.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
+        tl2(trans2.why_sponsor).replace(
+          "katelyn",
+          sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn"
+        )
       ])}</p>
             </div>
             <div class="modal-footer">
@@ -29155,9 +29163,10 @@
     document.body.style.removeProperty("--hue-album");
     document.body.style.removeProperty("--sat-album");
     document.body.style.removeProperty("--lit-album");
-    let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
-    if (adaptive_skin_container == null)
-      return;
+    let adaptive_skin_container = document.querySelector(
+      ".adaptive-skin-container:not([data-bleh])"
+    );
+    if (adaptive_skin_container == null) return;
     adaptive_skin_container.setAttribute("data-bleh", "true");
     adaptive_skin_container.innerHTML = "";
     log("internal bleh sponsor", "page");
@@ -30042,10 +30051,7 @@
       hoshino_cache[sister_lower][name_lower] = {};
     if (!artwork || artwork.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg")) {
       if (artwork) delete hoshino_cache[sister_lower][name_lower].artwork;
-      localStorage.setItem(
-        "bleh_hoshino_cache",
-        JSON.stringify(hoshino_cache)
-      );
+      set_storage("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
     } else {
       hoshino_cache[sister_lower][name_lower].artwork = artwork;
     }
@@ -30057,7 +30063,7 @@
       sister,
       listeners
     });
-    localStorage.setItem("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
+    set_storage("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
   }
 
   // src/components/music_grid.js
@@ -31160,10 +31166,7 @@
       bookmarked_images[page.name].push(id);
       log(`image ${id} from ${page.name} added to bookmarks`, "gallery");
     }
-    localStorage.setItem(
-      "bleh_bookmarked_images",
-      JSON.stringify(bookmarked_images)
-    );
+    set_storage("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
   }
 
   // src/components/profile_shortcut.js
@@ -31240,12 +31243,15 @@
       profile_img.classList.remove("requesting");
       try {
         let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+        set_storage("bleh_profile_shortcut_avi", avatar_src);
         document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
         notify({
           id: "profile_shortcut_saved",
           title: tl2(trans2.profile_shortcut.name),
-          body: tl2(trans2.profile_shortcut.linked).replace("{u}", profile_name),
+          body: tl2(trans2.profile_shortcut.linked).replace(
+            "{u}",
+            profile_name
+          ),
           icon: "icon-16-profile-shortcut"
         });
         save_setting("profile_shortcut", profile_name);
@@ -35489,10 +35495,10 @@
         if (open_after) {
           try {
             open_changelog(JSON.parse(this.response));
-            localStorage.setItem("bleh_changelog", this.response);
+            set_storage("bleh_changelog", this.response);
             api_expire.setHours(api_expire.getHours() + 2);
             log(`cached until ${api_expire}`, "changelog");
-            localStorage.setItem("bleh_changelog_expire", api_expire);
+            set_storage("bleh_changelog_expire", api_expire);
           } catch (e) {
             deliver_notif(
               "The changelog is currently unavailable due to errors, try again later.",
@@ -35560,7 +35566,7 @@
     }
   }
   unsafeWindow._update_local_changelog_cache = function(json) {
-    localStorage.setItem("bleh_changelog", JSON.stringify(json));
+    set_storage("bleh_changelog", JSON.stringify(json));
   };
 
   // src/components/dynamic_theming.js
@@ -37624,7 +37630,7 @@
       }
     }
     clone6.version = version.build;
-    localStorage.setItem("bleh", JSON.stringify(clone6));
+    set_storage("bleh", JSON.stringify(clone6));
     return clone6;
   }
 
@@ -42710,20 +42716,14 @@
       ) || {};
       delete notes[page.name];
       note.value = "";
-      localStorage.setItem(
-        "bleh_profile_notes",
-        JSON.stringify(notes)
-      );
+      set_storage("bleh_profile_notes", JSON.stringify(notes));
     }}>${tl2(trans2.clear)}</button>
                 <button class="btn primary icon" data-type="save" onclick=${() => {
       let notes = JSON.parse(
         localStorage.getItem("bleh_profile_notes")
       ) || {};
       notes[page.name] = note.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-      localStorage.setItem(
-        "bleh_profile_notes",
-        JSON.stringify(notes)
-      );
+      set_storage("bleh_profile_notes", JSON.stringify(notes));
     }}>${tl2(trans2.save)}</button>
             </div>
         </section>
@@ -43625,7 +43625,7 @@
       name,
       cache: profile_cache[name]
     });
-    localStorage.setItem("bleh_profile_cache", JSON.stringify(profile_cache));
+    set_storage("bleh_profile_cache", JSON.stringify(profile_cache));
   }
   async function checkup_friend_cache(list = settings.friends) {
     for (const friend of list) {
@@ -46021,7 +46021,7 @@
             persist: true
           });
         }
-        localStorage.setItem("bleh_last_season_seen", season.id);
+        set_storage("bleh_last_season_seen", season.id);
         load_chart_colours();
         return;
       }
@@ -46169,7 +46169,9 @@
       return;
     }
     document.documentElement.setAttribute("data-bleh--theme", settings.theme);
-    document.documentElement.appendChild(html.node`<style>${cropper_min_default}</style>`);
+    document.documentElement.appendChild(
+      html.node`<style>${cropper_min_default}</style>`
+    );
     if (settings.dev) return;
     if (cached_style == "") {
       log("never cached, fetching", "style");
@@ -46196,7 +46198,9 @@
     };
   }
   function check_if_style_cache_is_valid() {
-    let cached_style_timeout = new Date(localStorage.getItem("bleh_cached_style_timeout"));
+    let cached_style_timeout = new Date(
+      localStorage.getItem("bleh_cached_style_timeout")
+    );
     let current_time = /* @__PURE__ */ new Date();
     if (cached_style_timeout < current_time) {
       log("fetching new, expired timeout", "style");
@@ -46219,12 +46223,17 @@
       style.onload = () => {
         let theme_version2 = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
         if (!allow_incompatible && theme_version2 != version.build) {
-          log("denied loading, incompatible version", "style", "info", { theme: theme_version2, script: version.build });
+          log("denied loading, incompatible version", "style", "info", {
+            theme: theme_version2,
+            script: version.build
+          });
           document.documentElement.removeChild(style);
           return;
         }
         if (delete_old_style)
-          document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
+          document.documentElement.removeChild(
+            document.getElementById("bleh--cached-style")
+          );
         log("loaded", "style");
         document.body.classList.add("bleh");
         chart_reflow();
@@ -46233,10 +46242,10 @@
       style.onerror = () => {
         log("error loading", "style", "error");
       };
-      localStorage.setItem("bleh_cached_style", this.response);
+      set_storage("bleh_cached_style", this.response);
       let api_expire = /* @__PURE__ */ new Date();
       api_expire.setHours(api_expire.getHours() + 1);
-      localStorage.setItem("bleh_cached_style_timeout", api_expire);
+      set_storage("bleh_cached_style_timeout", api_expire);
       log(`cached until ${api_expire}`, "style");
     };
     xhr.send();
@@ -46263,7 +46272,10 @@
       const next_check = localStorage.getItem("bleh_update_next_check") || null;
       const current_time = /* @__PURE__ */ new Date();
       if (last_checked && next_check && new Date(next_check) > current_time) {
-        log("update check skipped", "update", "info", { next_in: next_check, current_time });
+        log("update check skipped", "update", "info", {
+          next_in: next_check,
+          current_time
+        });
         if (func) func();
         return;
       }
@@ -46278,13 +46290,16 @@
         let data2 = JSON.parse(text3);
         console.log(data2);
         let update_required = update_comparison(version.build, data2.build);
-        localStorage.setItem("bleh_update_required", update_required.toString());
-        localStorage.setItem("bleh_update_to", data2.build);
-        localStorage.setItem("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
+        set_storage("bleh_update_required", update_required.toString());
+        set_storage("bleh_update_to", data2.build);
+        set_storage("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
         let next = /* @__PURE__ */ new Date();
         next.setHours(next.getHours() + 2);
-        localStorage.setItem("bleh_update_next_check", next.toString());
-        log("update check finished", "update", "info", { next_in: next, current_time: /* @__PURE__ */ new Date() });
+        set_storage("bleh_update_next_check", next.toString());
+        log("update check finished", "update", "info", {
+          next_in: next,
+          current_time: /* @__PURE__ */ new Date()
+        });
         if (func) func();
       } catch (e) {
         log("error parsing", "update", "error", { error: e });
@@ -46294,7 +46309,10 @@
   function prompt_for_update() {
     dialog({
       id: "bleh_update",
-      title: tl2(trans2.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
+      title: tl2(trans2.update_to_version).replace(
+        "{v}",
+        localStorage.getItem("bleh_update_to") || "unknown"
+      ),
       body: html.node`
             <div class="forms">
                 <div class="form">
@@ -46323,7 +46341,10 @@
     open(`https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js`);
     dialog({
       id: "bleh_update",
-      title: tl2(trans2.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
+      title: tl2(trans2.update_to_version).replace(
+        "{v}",
+        localStorage.getItem("bleh_update_to") || "unknown"
+      ),
       body: html.node`
             <div class="forms">
                 <div class="form">
@@ -46341,7 +46362,10 @@
   function finish_update() {
     dialog({
       id: "bleh_wait",
-      title: tl2(trans2.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
+      title: tl2(trans2.update_to_version).replace(
+        "{v}",
+        localStorage.getItem("bleh_update_to") || "unknown"
+      ),
       body: html.node`
             <div class="loading-data-container">
                 <div class="loading-data-text">${tl2(trans2.downloading_styles)}</div>
@@ -46351,8 +46375,8 @@
       dismiss: false,
       replace_if_possible: true
     });
-    localStorage.setItem("bleh_update_required", "false");
-    localStorage.setItem("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
+    set_storage("bleh_update_required", "false");
+    set_storage("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
     fetch_new_style(false, true, true);
   }
   function force_refresh_style() {
@@ -46531,10 +46555,7 @@
           artist_data = data2.artists[0];
           cache2[artist] = artist_data;
           if (Object.keys(cache2).length > 100) delete cache2[0];
-          localStorage.setItem(
-            "oracle_artist_ids",
-            JSON.stringify(cache2)
-          );
+          set_storage("oracle_artist_ids", JSON.stringify(cache2));
           tries = 2;
           oracle_connect();
         },
@@ -47445,11 +47466,11 @@
         } else {
           Object.assign(oracle_tracks, JSON.parse(this.response));
         }
-        localStorage.setItem(`oracle_${type}`, this.response);
+        set_storage(`oracle_${type}`, this.response);
         api_expire.setHours(api_expire.getHours() + 4);
         log(`${type} list cached until ${api_expire}`, "oracle");
       }
-      localStorage.setItem(`oracle_${type}_expire`, api_expire);
+      set_storage(`oracle_${type}_expire`, api_expire);
     };
     xhr.send();
   }
@@ -49756,7 +49777,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     delete profile_notes[username];
     document.getElementById(`profile-note-row--${username}`).style.setProperty("display", "none");
-    localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
+    set_storage("bleh_profile_notes", JSON.stringify(profile_notes));
   }
   function edit_profile_note(user) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
@@ -49782,7 +49803,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let value_to_save = modal.querySelector("#bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     profile_notes[user] = value_to_save;
     document.getElementById(`profile-note-row-preview--${user}`).textContent = value_to_save;
-    localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
+    set_storage("bleh_profile_notes", JSON.stringify(profile_notes));
     dialog_rm({ id: "edit_profile_note" });
   }
   function prepare_corrections_page() {
@@ -49842,7 +49863,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <button class="btn primary download" onclick=${() => {
         try {
           const parsed2 = JSON.parse(text3.value);
-          localStorage.setItem("bleh", text3.value);
+          set_storage("bleh", text3.value);
           Object.assign(settings, parsed2);
           load_settings();
           dialog_rm({
@@ -50372,11 +50393,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
               tl2(trans2.lotus[type])
             )
           });
-        localStorage.setItem(`lotus_${type}`, this.response);
+        set_storage(`lotus_${type}`, this.response);
         api_expire.setHours(api_expire.getHours() + 4);
         log(`${type} list cached until ${api_expire}`, "lotus");
       }
-      localStorage.setItem(`lotus_${type}_expire`, api_expire);
+      set_storage(`lotus_${type}_expire`, api_expire);
       if (button != null) button.removeAttribute("disabled");
     };
     xhr.send();
@@ -51053,10 +51074,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     log("loaded", "activity", "info", recent_activity_list);
     check_activities_length();
     log("saved", "activity", "info", recent_activity_list);
-    localStorage.setItem(
-      "bwaa_recent_activity",
-      JSON.stringify(recent_activity_list)
-    );
+    set_storage("bwaa_recent_activity", JSON.stringify(recent_activity_list));
   }
   function check_activities_length() {
     if (recent_activity_list.length > 10) {
@@ -51102,10 +51120,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
     check_activities_length();
     log("saved", "activity", "info", recent_activity_list);
-    localStorage.setItem(
-      "bwaa_recent_activity",
-      JSON.stringify(recent_activity_list)
-    );
+    set_storage("bwaa_recent_activity", JSON.stringify(recent_activity_list));
   }
 
   // src/components/nag_bar.js
@@ -53798,7 +53813,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let last_version_used = localStorage.getItem("bleh_last_version_used") || "";
     if (last_version_used == "") {
       window.location.href = `${root}bleh/setup`;
-      localStorage.setItem("bleh_last_version_used", version.build);
+      set_storage("bleh_last_version_used", version.build);
       register_activity("install_bleh", [], `${root}bleh`);
       return;
     }
@@ -53816,7 +53831,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         [{ name: version.build, type: "bleh" }],
         `${root}bleh`
       );
-      localStorage.setItem("bleh_last_version_used", version.build);
+      set_storage("bleh_last_version_used", version.build);
       request_changelog();
     }
   }
@@ -55632,8 +55647,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     const { name, key } = json.session;
     log(`authorised as ${name}`, "auth", "info", json.session);
-    localStorage.setItem("bleh_auth", key);
-    localStorage.setItem("bleh_auth_valid", "true");
+    set_storage("bleh_auth", key);
+    set_storage("bleh_auth_valid", "true");
     render(
       page.structure.main,
       html`

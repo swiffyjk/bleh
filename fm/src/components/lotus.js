@@ -17,7 +17,8 @@ import {
     desanitise,
     return_artist_from_generic,
     romanise,
-    sanitise
+    sanitise,
+    set_storage
 } from '../build/tools';
 import { tl, trans } from '../build/trans';
 import { prepare_corrections_page } from '../pages/bleh_config';
@@ -150,12 +151,12 @@ function lotus_request(type = 'artist', send_notify = false) {
                 });
 
             // save to cache for next page load
-            localStorage.setItem(`lotus_${type}`, this.response);
+            set_storage(`lotus_${type}`, this.response);
             api_expire.setHours(api_expire.getHours() + 4);
             log(`${type} list cached until ${api_expire}`, 'lotus');
         }
 
-        localStorage.setItem(`lotus_${type}_expire`, api_expire);
+        set_storage(`lotus_${type}_expire`, api_expire);
 
         if (button != null) button.removeAttribute('disabled');
     };

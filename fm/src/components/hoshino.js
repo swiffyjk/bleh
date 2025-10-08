@@ -1,6 +1,7 @@
 import { html } from 'lighterhtml';
 import { log } from '../build/log';
 import { ff } from '../sku';
+import { set_storage } from '../build/tools';
 
 export function hoshino(artwork, name, sister, link = null) {
     if (!ff('hoshino')) return;
@@ -90,10 +91,7 @@ export function save_hoshino_artwork(artwork, name, sister, listeners = null) {
     if (!artwork || artwork.endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg')) {
         if (artwork) delete hoshino_cache[sister_lower][name_lower].artwork;
 
-        localStorage.setItem(
-            'bleh_hoshino_cache',
-            JSON.stringify(hoshino_cache)
-        );
+        set_storage('bleh_hoshino_cache', JSON.stringify(hoshino_cache));
     } else {
         hoshino_cache[sister_lower][name_lower].artwork = artwork;
     }
@@ -107,5 +105,5 @@ export function save_hoshino_artwork(artwork, name, sister, listeners = null) {
         sister,
         listeners
     });
-    localStorage.setItem('bleh_hoshino_cache', JSON.stringify(hoshino_cache));
+    set_storage('bleh_hoshino_cache', JSON.stringify(hoshino_cache));
 }

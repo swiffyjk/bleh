@@ -12,6 +12,7 @@ import {
     seasonal_timer,
     stored_season
 } from './build/seasonal';
+import { set_storage } from './build/tools';
 import { tl, trans } from './build/trans';
 import { load_chart_colours } from './chart';
 import { notify } from './components/notify';
@@ -161,7 +162,7 @@ export function set_season() {
                     persist: true
                 });
             }
-            localStorage.setItem('bleh_last_season_seen', season.id);
+            set_storage('bleh_last_season_seen', season.id);
 
             load_chart_colours();
 

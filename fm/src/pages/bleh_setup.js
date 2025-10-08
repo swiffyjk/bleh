@@ -22,6 +22,7 @@ import { sponsor } from '../sponsor.js';
 import { settings } from '../build/config.js';
 import { dialog } from '../components/dialog.js';
 import { match } from '../components/dynamic_theming.js';
+import { set_storage } from '../build/tools.js';
 
 export function bleh_setup() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -491,7 +492,7 @@ export function notify_if_new_update() {
     // enter first-time setup
     if (last_version_used == '') {
         window.location.href = `${root}bleh/setup`;
-        localStorage.setItem('bleh_last_version_used', version.build);
+        set_storage('bleh_last_version_used', version.build);
         register_activity('install_bleh', [], `${root}bleh`);
         return;
     }
@@ -511,7 +512,7 @@ export function notify_if_new_update() {
             [{ name: version.build, type: 'bleh' }],
             `${root}bleh`
         );
-        localStorage.setItem('bleh_last_version_used', version.build);
+        set_storage('bleh_last_version_used', version.build);
 
         request_changelog();
     }

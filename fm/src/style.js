@@ -4,15 +4,15 @@
 // Licensed under GPLv3
 //
 
-import {html} from "lighterhtml";
-import {settings} from "./build/config";
-import {log} from "./build/log";
-import {tl, trans} from "./build/trans";
-import {chart_reflow} from "./chart";
-import {dialog, dialog_rm} from "./components/dialog";
-import {invoke_reload} from "./config";
-import {version} from "./main";
-import {download_with_progress} from "./build/tools.js";
+import { html } from 'lighterhtml';
+import { settings } from './build/config';
+import { log } from './build/log';
+import { tl, trans } from './build/trans';
+import { chart_reflow } from './chart';
+import { dialog, dialog_rm } from './components/dialog';
+import { invoke_reload } from './config';
+import { version } from './main';
+import { download_with_progress, set_storage } from './build/tools.js';
 import cropper_css from 'cropperjs/dist/cropper.min.css';
 
 export function append_style() {
@@ -28,13 +28,19 @@ export function append_style() {
     let url_length = url_split.length - 1;
 
     // style is neither fetched nor applied in these interfaces
-    if ((url_split[url_length] == 'playback' && url_split[2] == 'listening-report') || url_split[0] == 'labs') {
+    if (
+        (url_split[url_length] == 'playback' &&
+            url_split[2] == 'listening-report') ||
+        url_split[0] == 'labs'
+    ) {
         log('disabled loading for special interface', 'style');
         return;
     }
 
     document.documentElement.setAttribute('data-bleh--theme', settings.theme);
-    document.documentElement.appendChild(html.node`<style>${cropper_css}</style>`);
+    document.documentElement.appendChild(
+        html.node`<style>${cropper_css}</style>`
+    );
 
     if (settings.dev) return;
 
@@ -64,16 +70,18 @@ function load_cached_style(cached_style) {
         // now, analyse if we should fetch a new one
         log('checking timeout', 'style');
         check_if_style_cache_is_valid();
-    }
+    };
 
     style_cache.onerror = () => {
         log('error loading cache', 'style', 'error');
         fetch_new_style();
-    }
+    };
 }
 
 function check_if_style_cache_is_valid() {
-    let cached_style_timeout = new Date(localStorage.getItem('bleh_cached_style_timeout'));
+    let cached_style_timeout = new Date(
+        localStorage.getItem('bleh_cached_style_timeout')
+    );
     let current_time = new Date();
 
     // check if timeout has expired
@@ -85,8 +93,11 @@ function check_if_style_cache_is_valid() {
     }
 }
 
-
-function fetch_new_style(delete_old_style = false, reload_on_finish = false, allow_incompatible = false) {
+function fetch_new_style(
+    delete_old_style = false,
+    reload_on_finish = false,
+    allow_incompatible = false
+) {
     let xhr = new XMLHttpRequest();
     let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
     log(`making request ${url}`, 'style');
@@ -102,17 +113,25 @@ function fetch_new_style(delete_old_style = false, reload_on_finish = false, all
         document.documentElement.appendChild(style);
 
         style.onload = () => {
-            let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', '');
+            let theme_version = getComputedStyle(document.body)
+                .getPropertyValue('--version-build')
+                .replaceAll("'", '')
+                .replaceAll('"', '');
 
             if (!allow_incompatible && theme_version != version.build) {
-                log('denied loading, incompatible version', 'style', 'info', {theme: theme_version, script: version.build});
+                log('denied loading, incompatible version', 'style', 'info', {
+                    theme: theme_version,
+                    script: version.build
+                });
                 document.documentElement.removeChild(style);
                 return;
             }
 
             // remove the old style, if needed
             if (delete_old_style)
-                document.documentElement.removeChild(document.getElementById('bleh--cached-style'));
+                document.documentElement.removeChild(
+                    document.getElementById('bleh--cached-style')
+                );
 
             log('loaded', 'style');
             document.body.classList.add('bleh');
@@ -120,21 +139,21 @@ function fetch_new_style(delete_old_style = false, reload_on_finish = false, all
             chart_reflow();
 
             if (reload_on_finish) invoke_reload();
-        }
+        };
 
         style.onerror = () => {
             log('error loading', 'style', 'error');
-        }
+        };
 
         // save to cache for next page load
-        localStorage.setItem('bleh_cached_style', this.response);
+        set_storage('bleh_cached_style', this.response);
 
         // set expire date
         let api_expire = new Date();
         api_expire.setHours(api_expire.getHours() + 1);
-        localStorage.setItem('bleh_cached_style_timeout', api_expire);
+        set_storage('bleh_cached_style_timeout', api_expire);
         log(`cached until ${api_expire}`, 'style');
-    }
+    };
 
     xhr.send();
 }
@@ -164,12 +183,17 @@ export function update_comparison(current, latest) {
 
 export function update_check(force = false, btn = null, func = null) {
     if (!force) {
-        const last_checked = localStorage.getItem('bleh_update_checked') || null;
-        const next_check = localStorage.getItem('bleh_update_next_check') || null;
+        const last_checked =
+            localStorage.getItem('bleh_update_checked') || null;
+        const next_check =
+            localStorage.getItem('bleh_update_next_check') || null;
         const current_time = new Date();
 
         if (last_checked && next_check && new Date(next_check) > current_time) {
-            log('update check skipped', 'update', 'info', {next_in: next_check, current_time: current_time});
+            log('update check skipped', 'update', 'info', {
+                next_in: next_check,
+                current_time: current_time
+            });
             if (func) func();
 
             return;
@@ -201,19 +225,22 @@ export function update_check(force = false, btn = null, func = null) {
             console.log(data);
 
             let update_required = update_comparison(version.build, data.build);
-            localStorage.setItem('bleh_update_required', update_required.toString());
-            localStorage.setItem('bleh_update_to', data.build);
-            localStorage.setItem('bleh_update_checked', new Date().toString());
+            set_storage('bleh_update_required', update_required.toString());
+            set_storage('bleh_update_to', data.build);
+            set_storage('bleh_update_checked', new Date().toString());
 
             let next = new Date();
             next.setHours(next.getHours() + 2);
 
-            localStorage.setItem('bleh_update_next_check', next.toString());
-            log('update check finished', 'update', 'info', {next_in: next, current_time: new Date()});
+            set_storage('bleh_update_next_check', next.toString());
+            log('update check finished', 'update', 'info', {
+                next_in: next,
+                current_time: new Date()
+            });
 
             if (func) func();
         } catch (e) {
-            log('error parsing', 'update', 'error', {error: e});
+            log('error parsing', 'update', 'error', { error: e });
         }
     });
 }
@@ -222,7 +249,10 @@ export function prompt_for_update() {
     // prompt the user
     dialog({
         id: 'bleh_update',
-        title: tl(trans.update_to_version).replace('{v}', localStorage.getItem('bleh_update_to') || 'unknown'),
+        title: tl(trans.update_to_version).replace(
+            '{v}',
+            localStorage.getItem('bleh_update_to') || 'unknown'
+        ),
         body: html.node`
             <div class="forms">
                 <div class="form">
@@ -254,7 +284,10 @@ export function start_update() {
 
     dialog({
         id: 'bleh_update',
-        title: tl(trans.update_to_version).replace('{v}', localStorage.getItem('bleh_update_to') || 'unknown'),
+        title: tl(trans.update_to_version).replace(
+            '{v}',
+            localStorage.getItem('bleh_update_to') || 'unknown'
+        ),
         body: html.node`
             <div class="forms">
                 <div class="form">
@@ -273,7 +306,10 @@ export function start_update() {
 function finish_update() {
     dialog({
         id: 'bleh_wait',
-        title: tl(trans.update_to_version).replace('{v}', localStorage.getItem('bleh_update_to') || 'unknown'),
+        title: tl(trans.update_to_version).replace(
+            '{v}',
+            localStorage.getItem('bleh_update_to') || 'unknown'
+        ),
         body: html.node`
             <div class="loading-data-container">
                 <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
@@ -285,12 +321,11 @@ function finish_update() {
     });
 
     // reset update status
-    localStorage.setItem('bleh_update_required', 'false');
-    localStorage.setItem('bleh_update_checked', new Date().toString());
+    set_storage('bleh_update_required', 'false');
+    set_storage('bleh_update_checked', new Date().toString());
 
     fetch_new_style(false, true, true);
 }
-
 
 export function force_refresh_style() {
     localStorage.removeItem('bleh_cached_style');

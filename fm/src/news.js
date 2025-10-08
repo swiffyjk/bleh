@@ -11,6 +11,7 @@ import { tl, trans } from './build/trans';
 import { dialog, dialog_rm } from './components/dialog';
 import { sponsor_list } from './build/sponsor.js';
 import { markdown } from './components/markdown.js';
+import { set_storage } from './build/tools.js';
 
 export function news() {
     let changelog = localStorage.getItem('bleh_changelog');
@@ -59,11 +60,11 @@ export function request_changelog(open_after = true) {
                     open_changelog(JSON.parse(this.response));
 
                     // save to cache for next page load
-                    localStorage.setItem('bleh_changelog', this.response);
+                    set_storage('bleh_changelog', this.response);
                     api_expire.setHours(api_expire.getHours() + 2);
                     log(`cached until ${api_expire}`, 'changelog');
 
-                    localStorage.setItem('bleh_changelog_expire', api_expire);
+                    set_storage('bleh_changelog_expire', api_expire);
                 } catch (e) {
                     deliver_notif(
                         'The changelog is currently unavailable due to errors, try again later.',
@@ -144,5 +145,5 @@ function open_changelog(changelog) {
 }
 
 unsafeWindow._update_local_changelog_cache = function (json) {
-    localStorage.setItem('bleh_changelog', JSON.stringify(json));
+    set_storage('bleh_changelog', JSON.stringify(json));
 };

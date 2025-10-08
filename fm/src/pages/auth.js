@@ -11,6 +11,7 @@ import { checkup_page_structure } from '../components/structure.js';
 import { html, render } from 'lighterhtml';
 import { tl, trans } from '../build/trans.js';
 import { load_profile_cache_externally } from './profile.js';
+import { set_storage } from '../build/tools.js';
 
 export async function bleh_auth() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -104,8 +105,8 @@ export async function bleh_auth() {
     const { name, key } = json.session;
     log(`authorised as ${name}`, 'auth', 'info', json.session);
 
-    localStorage.setItem('bleh_auth', key);
-    localStorage.setItem('bleh_auth_valid', 'true');
+    set_storage('bleh_auth', key);
+    set_storage('bleh_auth_valid', 'true');
 
     render(
         page.structure.main,

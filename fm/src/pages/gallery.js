@@ -14,6 +14,7 @@ import { html, render } from 'lighterhtml';
 import { share } from '../components/share.js';
 import tippy from 'tippy.js';
 import { correct_artist, correct_item_by_artist } from '../components/lotus.js';
+import { set_storage } from '../build/tools.js';
 
 export function bleh_gallery() {
     if (page.subpage != 'image') return;
@@ -745,8 +746,5 @@ function update_image_bookmark(button, id) {
         log(`image ${id} from ${page.name} added to bookmarks`, 'gallery');
     }
 
-    localStorage.setItem(
-        'bleh_bookmarked_images',
-        JSON.stringify(bookmarked_images)
-    );
+    set_storage('bleh_bookmarked_images', JSON.stringify(bookmarked_images));
 }

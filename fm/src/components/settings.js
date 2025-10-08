@@ -20,6 +20,7 @@ import { select } from './select.js';
 import { input } from './input.js';
 import { status } from './status.js';
 import { chart_reflow } from '../chart.js';
+import { set_storage } from '../build/tools.js';
 
 export function setting({
     id = '',
@@ -1273,7 +1274,7 @@ export function compile_settings() {
 
     clone.version = version.build;
 
-    localStorage.setItem('bleh', JSON.stringify(clone));
+    set_storage('bleh', JSON.stringify(clone));
 
     return clone;
 }
