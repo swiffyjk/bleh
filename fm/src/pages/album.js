@@ -35,6 +35,7 @@ import { expand_avatar } from '../avatar.js';
 import { setting } from '../components/settings.js';
 import tippy from 'tippy.js';
 import { oracle_process } from '../components/oracle.js';
+import { save_hoshino_artwork } from '../components/hoshino.js';
 
 export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');
@@ -102,6 +103,14 @@ export function bleh_albums() {
         let position = album_header.querySelector(
             '.header-new-chart-position-number'
         );
+
+        if (avatar) {
+            save_hoshino_artwork(
+                avatar.getAttribute('content').replace('/ar0/', '/avatar300s/'),
+                page.name,
+                page.sister
+            );
+        }
 
         let redesigned_album_header = html.node`
             <section class="redesigned-header redesigned-album-header no-background">

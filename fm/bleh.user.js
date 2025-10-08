@@ -29958,6 +29958,77 @@
 
   // src/components/music_grid.js
   var import_color_thief_browser = __toESM(require_color_thief_min(), 1);
+
+  // src/components/hoshino.js
+  function hoshino(artwork, name, sister, link2 = null) {
+    if (!ff("hoshino")) return;
+    let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
+    const name_lower = name.toLowerCase();
+    const sister_lower = sister.toLowerCase();
+    const album_name = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
+    const album_sister = oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
+    const href = oracle_cache[sister_lower]?.[name_lower]?.track?.link;
+    if (!album_name || !album_sister) {
+      log("no cache to be used", "hoshino", "info", {
+        artwork,
+        name,
+        sister
+      });
+      return;
+    }
+    const art = load_hoshino_artwork(album_name, album_sister);
+    artwork.src = art;
+    log(`loaded cover art ${art}`, "hoshino", "info", {
+      art,
+      artwork,
+      name,
+      sister
+    });
+    artwork.setAttribute("data-hoshino", true);
+    artwork.alt = album_name;
+    if (link2 && href) {
+      link2.setAttribute("href", href);
+    }
+  }
+  function load_hoshino_artwork(name, sister) {
+    let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
+    const name_lower = name.toLowerCase();
+    const sister_lower = sister.toLowerCase();
+    const artwork = hoshino_cache[sister_lower]?.[name_lower];
+    log(`loaded artwork ${artwork} from cache`, "hoshino", "info", {
+      name,
+      sister
+    });
+    return artwork;
+  }
+  function save_hoshino_artwork(artwork, name, sister) {
+    let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
+    const name_lower = name.toLowerCase();
+    const sister_lower = sister.toLowerCase();
+    if (!hoshino_cache[sister_lower]) hoshino_cache[sister_lower] = {};
+    if (!artwork) {
+      delete hoshino_cache[sister_lower][name_lower];
+      log("cleared artwork from cache", "hoshino", "info", {
+        artwork,
+        name,
+        sister
+      });
+      localStorage.setItem(
+        "bleh_hoshino_cache",
+        JSON.stringify(hoshino_cache)
+      );
+      return;
+    }
+    hoshino_cache[sister_lower][name_lower] = artwork;
+    log(`saved artwork ${artwork} to cache`, "hoshino", "info", {
+      artwork,
+      name,
+      sister
+    });
+    localStorage.setItem("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
+  }
+
+  // src/components/music_grid.js
   function music_grids(search = page.structure.main, use_colour = true) {
     if (!search) return;
     let insights = {
@@ -30126,6 +30197,11 @@
         if (!artist)
           artist = grid.querySelector(".grid-items-item-aux-text");
         if (!artist) return;
+        save_hoshino_artwork(
+          image.src.replace("/500x500/", "/avatar300s/"),
+          name.textContent.trim(),
+          artist.textContent.trim()
+        );
         if (settings.format_guest_features) {
           let name_elem = name;
           let artist_elem = artist;
@@ -32802,77 +32878,6 @@
 
   // src/components/track.js
   var import_color_thief_browser2 = __toESM(require_color_thief_min(), 1);
-
-  // src/components/hoshino.js
-  function hoshino(artwork, name, sister, link2 = null) {
-    if (!ff("hoshino")) return;
-    let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
-    const name_lower = name.toLowerCase();
-    const sister_lower = sister.toLowerCase();
-    const album_name = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
-    const album_sister = oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
-    const href = oracle_cache[sister_lower]?.[name_lower]?.track?.link;
-    if (!album_name || !album_sister) {
-      log("no cache to be used", "hoshino", "info", {
-        artwork,
-        name,
-        sister
-      });
-      return;
-    }
-    const art = load_hoshino_artwork(album_name, album_sister);
-    artwork.src = art;
-    log(`loaded cover art ${art}`, "hoshino", "info", {
-      art,
-      artwork,
-      name,
-      sister
-    });
-    artwork.setAttribute("data-hoshino", true);
-    artwork.alt = album_name;
-    if (link2 && href) {
-      link2.setAttribute("href", href);
-    }
-  }
-  function load_hoshino_artwork(name, sister) {
-    let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
-    const name_lower = name.toLowerCase();
-    const sister_lower = sister.toLowerCase();
-    const artwork = hoshino_cache[sister_lower]?.[name_lower];
-    log(`loaded artwork ${artwork} from cache`, "hoshino", "info", {
-      name,
-      sister
-    });
-    return artwork;
-  }
-  function save_hoshino_artwork(artwork, name, sister) {
-    let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
-    const name_lower = name.toLowerCase();
-    const sister_lower = sister.toLowerCase();
-    if (!hoshino_cache[sister_lower]) hoshino_cache[sister_lower] = {};
-    if (!artwork) {
-      delete hoshino_cache[sister_lower][name_lower];
-      log("cleared artwork from cache", "hoshino", "info", {
-        artwork,
-        name,
-        sister
-      });
-      localStorage.setItem(
-        "bleh_hoshino_cache",
-        JSON.stringify(hoshino_cache)
-      );
-      return;
-    }
-    hoshino_cache[sister_lower][name_lower] = artwork;
-    log(`saved artwork ${artwork} to cache`, "hoshino", "info", {
-      artwork,
-      name,
-      sister
-    });
-    localStorage.setItem("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
-  }
-
-  // src/components/track.js
   function patch_titles(search = page.structure.main) {
     if (page.subpage === "tags_overview") return;
     if (!search) {
@@ -52477,6 +52482,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let position = album_header.querySelector(
         ".header-new-chart-position-number"
       );
+      if (avatar3) {
+        save_hoshino_artwork(
+          avatar3.getAttribute("content").replace("/ar0/", "/avatar300s/"),
+          page.name,
+          page.sister
+        );
+      }
       let redesigned_album_header = html.node`
             <section class="redesigned-header redesigned-album-header no-background">
                 ${is_subpage || ff("show_album_cover_always") ? html.node`

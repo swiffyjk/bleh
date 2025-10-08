@@ -23,6 +23,7 @@ import ColorThief from 'color-thief-browser';
 import { register_menu } from './menu';
 import tippy from 'tippy.js';
 import { expand_avatar } from '../avatar';
+import { save_hoshino_artwork } from './hoshino';
 
 export function music_grids(search = page.structure.main, use_colour = true) {
     if (!search) return;
@@ -249,6 +250,12 @@ export function music_grids(search = page.structure.main, use_colour = true) {
             if (!artist)
                 artist = grid.querySelector('.grid-items-item-aux-text');
             if (!artist) return;
+
+            save_hoshino_artwork(
+                image.src.replace('/500x500/', '/avatar300s/'),
+                name.textContent.trim(),
+                artist.textContent.trim()
+            );
 
             if (settings.format_guest_features) {
                 let name_elem = name;
