@@ -79,8 +79,7 @@ export function hoshino_return(name, sister) {
             sister,
             album: {
                 album_name,
-                album_sister,
-                href
+                album_sister
             }
         });
         return;

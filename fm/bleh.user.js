@@ -13849,16 +13849,16 @@
         }, replaceMail = function(options, globals) {
           "use strict";
           return function(wholeMatch, b, mail) {
-            var href2 = "mailto:";
+            var href = "mailto:";
             b = b || "";
             mail = showdown2.subParser("unescapeSpecialChars")(mail, options, globals);
             if (options.encodeEmails) {
-              href2 = showdown2.helper.encodeEmailAddress(href2 + mail);
+              href = showdown2.helper.encodeEmailAddress(href + mail);
               mail = showdown2.helper.encodeEmailAddress(mail);
             } else {
-              href2 = href2 + mail;
+              href = href + mail;
             }
-            return b + '<a href="' + href2 + '">' + mail + "</a>";
+            return b + '<a href="' + href + '">' + mail + "</a>";
           };
         };
         showdown2.subParser("autoLinks", function(text3, options, globals) {
@@ -29993,7 +29993,7 @@
     const sister_lower = sister.toLowerCase();
     const album_name = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
     const album_sister = oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
-    const href2 = oracle_cache[sister_lower]?.[name_lower]?.track?.link;
+    const href = oracle_cache[sister_lower]?.[name_lower]?.track?.link;
     if (!album_name || !album_sister) {
       log("no cache to be used", "hoshino", "info", {
         artwork,
@@ -30002,7 +30002,7 @@
         album: {
           album_name,
           album_sister,
-          href: href2
+          href
         }
       });
       return;
@@ -30017,10 +30017,10 @@
     });
     artwork.setAttribute("data-hoshino", true);
     artwork.alt = album_name;
-    if (link && href2) {
+    if (link && href) {
       if (link.nodeName != "A") {
         const new_link = html.node`
-                <a href=${href2} class=${link.classList} data-hoshino-recreated="true">
+                <a href=${href} class=${link.classList} data-hoshino-recreated="true">
                     ${artwork}
                 </a>
             `;
@@ -30028,7 +30028,7 @@
         link.remove();
         return;
       }
-      link.setAttribute("href", href2);
+      link.setAttribute("href", href);
     }
   }
   function hoshino_return(name, sister) {
@@ -30044,8 +30044,7 @@
         sister,
         album: {
           album_name,
-          album_sister,
-          href
+          album_sister
         }
       });
       return;
@@ -39932,8 +39931,8 @@
         page.structure.nav = navlist;
         let overview = page.structure.nav.querySelector(".secondary-nav-item--overview a");
         if (overview) {
-          const href2 = overview.getAttribute("href").replace(root, "");
-          if (href2 == "settings" || href2 == "inbox" || href2 == "charts") overview = null;
+          const href = overview.getAttribute("href").replace(root, "");
+          if (href == "settings" || href == "inbox" || href == "charts") overview = null;
         }
         if (overview) overview.textContent = tl2(trans2.home);
       }
@@ -44266,13 +44265,13 @@
   function patch_wiki_contents(wiki_block) {
     let links = wiki_block.querySelectorAll("a");
     links.forEach((link) => {
-      let href2 = link.getAttribute("href");
+      let href = link.getAttribute("href");
       let type;
       let name = link.textContent.trim();
       let sister;
-      if (!href2.startsWith(root)) {
-        if (href2 && is_link_external(href2)) {
-          const url = new URL(href2);
+      if (!href.startsWith(root)) {
+        if (href && is_link_external(href)) {
+          const url = new URL(href);
           const scheme = url.protocol;
           const hostname = url.hostname;
           const path = url.pathname + url.search + url.hash;
@@ -44281,9 +44280,9 @@
           link.addEventListener("click", (e) => {
             if (settings.trusted_sites.includes(hostname)) return;
             e.preventDefault();
-            external_url_prompt(href2, dangerous);
+            external_url_prompt(href, dangerous);
           });
-          if (link.textContent != href2) {
+          if (link.textContent != href) {
             tippy_esm_default(link, {
               theme: "name-sister-combo",
               content: html.node`
@@ -44317,13 +44316,13 @@
           return;
         }
       }
-      if (href2.endsWith("/+wiki")) return;
-      href2 = href2.replace(root, "").replace("music/+noredirect/", "music/").replace("music/", "");
-      if (href2.startsWith("user/")) return;
-      if (href2.startsWith("tag/")) {
+      if (href.endsWith("/+wiki")) return;
+      href = href.replace(root, "").replace("music/+noredirect/", "music/").replace("music/", "");
+      if (href.startsWith("user/")) return;
+      if (href.startsWith("tag/")) {
         type = "tag";
       } else {
-        let split = href2.split("/");
+        let split = href.split("/");
         if (split.length == 1) {
           type = "artist";
         } else if (split.length == 2) {
@@ -51535,7 +51534,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const link = notification.querySelector(
         ".inbox-notifications__item-link"
       );
-      const href2 = link.getAttribute("href");
+      const href = link.getAttribute("href");
       const active = link.classList.contains(
         "inbox-notifications__item--highlight"
       );
@@ -51549,13 +51548,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       };
       let involved = [];
       const strongs = link.querySelectorAll("strong");
-      let split = href2.replace(root, "").split("/");
+      let split = href.replace(root, "").split("/");
       const avatar2 = notification.querySelector(".avatar");
       avatar2.classList = "avatar";
       const time2 = notification.querySelector("time");
       let is_reply = false;
       let others_included = 0;
-      if (href2.endsWith("/obsessions/set")) {
+      if (href.endsWith("/obsessions/set")) {
         type = "obsession";
         involved.push(split[1]);
         const desc = strongs[0].textContent;
@@ -51566,7 +51565,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           desc_split[1],
           context.sister
         );
-      } else if (href2.endsWith("/listening-report/month")) {
+      } else if (href.endsWith("/listening-report/month")) {
         type = "listening-report";
         involved.push(strongs[0].textContent);
         let img = avatar2.querySelector("img");
@@ -51580,7 +51579,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         }
         context.type = "profile";
         context.name = split[1];
-      } else if (href2.startsWith(`${root}user/`)) {
+      } else if (href.startsWith(`${root}user/`)) {
         context.type = "profile";
         context.name = split[1];
         strongs.forEach((strong, index4) => {
@@ -51595,7 +51594,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           }
           involved.push(strong.textContent);
         });
-      } else if (href2.startsWith(`${root}music/`)) {
+      } else if (href.startsWith(`${root}music/`)) {
         if (split[2].startsWith("+")) {
           context.type = "artist";
           context.name = correct_artist(desanitise(split[1]));
@@ -51624,7 +51623,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           }
           involved.push(strong.textContent);
         });
-      } else if (href2.startsWith(`${root}tag/`)) {
+      } else if (href.startsWith(`${root}tag/`)) {
         context.type = "tag";
         context.name = split[1];
         strongs.forEach((strong, index4) => {
