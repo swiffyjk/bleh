@@ -440,3 +440,19 @@ export function int_from_string(string) {
 
     return string;
 }
+
+export function set_storage(key, val) {
+    try {
+        localStorage.setItem(key, val);
+    } catch (e) {
+        log(`failed to set ${key}`, 'storage', 'info', { key, val, e });
+        console.error(e);
+        notify({
+            id: 'storage',
+            title: `Failed to set ${key}`,
+            body: e.message ? e.message : e,
+            type: 'error',
+            persist: true
+        });
+    }
+}

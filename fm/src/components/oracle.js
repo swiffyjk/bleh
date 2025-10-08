@@ -13,7 +13,7 @@ import {
     page,
     root
 } from '../build/page';
-import { clean_number, romanise, sanitise } from '../build/tools';
+import { clean_number, romanise, sanitise, set_storage } from '../build/tools';
 import { ff } from '../sku';
 import {
     correct_artist,
@@ -93,7 +93,7 @@ export function oracle_process() {
         };
 
         log('saved to cache', 'oracle', 'info', { oracle_cache, cache });
-        localStorage.setItem('bleh_oracle_cache', JSON.stringify(oracle_cache));
+        set_storage('bleh_oracle_cache', JSON.stringify(oracle_cache));
     }
 
     page.structure.main.insertBefore(

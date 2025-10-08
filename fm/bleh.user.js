@@ -28049,6 +28049,21 @@
     if (match3) return clean_number(match3[0]);
     return string;
   }
+  function set_storage(key, val) {
+    try {
+      localStorage.setItem(key, val);
+    } catch (e) {
+      log(`failed to set ${key}`, "storage", "info", { key, val, e });
+      console.error(e);
+      notify({
+        id: "storage",
+        title: `Failed to set ${key}`,
+        body: e.message ? e.message : e,
+        type: "error",
+        persist: true
+      });
+    }
+  }
 
   // src/build/music.js
   var artist_corrections = {};
@@ -42513,9 +42528,6 @@
           ".obsession-history-item"
         );
         items.forEach((item) => {
-          let bg = item.querySelector(".obsession-history-item-background").style.getPropertyValue("background-image").trim();
-          let cover_substr = bg.indexOf("url");
-          let cover = bg.substring(cover_substr).replace('url("', "").replace('")', "").trim();
           let link = item.querySelector(
             ".obsession-history-item-heading-link"
           );
@@ -42527,34 +42539,41 @@
           let title = link.textContent.trim();
           link = link.getAttribute("href");
           let date = item.querySelector(".obsession-history-item-date").textContent.trim();
+          let bg = item.querySelector(".obsession-history-item-background").style.getPropertyValue("background-image").trim();
+          let cover_substr = bg.indexOf("url");
+          const cover = html.node`
+                    <img
+                    src=${bg.substring(cover_substr).replace('url("', "").replace('")', "").trim()}
+                    alt=${title} loading="lazy">
+                `;
+          hoshino(cover, title, artist);
           let obsession_is_first = item.querySelector(".obsession-first") != null;
-          let grid_item = document.createElement("li");
-          grid_item.classList.add("grid-items-item", "obsessions-item");
-          grid_item.innerHTML = `
-                    <div class="grid-items-cover-image">
-                        <div class="grid-items-cover-image-image ${cover.endsWith("4128a6eb29f94943c9d206c08e625904.jpg") ? "grid-items-cover-default" : ""}">
-                            <img src="${cover}" alt="${title}" loading="lazy">
+          const grid_item = html.node`
+                    <li class="grid-items-item obsessions-item ${obsession_is_first ? "first" : ""}">
+                        <div class="grid-items-cover-image">
+                            <div class="grid-items-cover-image-image ${cover.src.endsWith("4128a6eb29f94943c9d206c08e625904.jpg") ? "grid-items-cover-default" : ""}">
+                                ${cover}
+                            </div>
+                            <div class="grid-items-item-details">
+                                <p class="grid-items-item-main-text">
+                                    <a class="link-block-target" href="${link}" title="${title}">
+                                        ${title}
+                                    </a>
+                                </p>
+                                <p class="grid-items-item-aux-text obsessions-item-aux">
+                                    <a class="grid-items-item-aux-block" href="${artist_link}">
+                                        ${artist}
+                                    </a>
+                                    <a class="obsessions-item-date" href="${link}">
+                                        ${date}
+                                    </a>
+                                </p>
+                            </div>
+                            <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
                         </div>
-                        <div class="grid-items-item-details">
-                            <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${link}" title="${title}">
-                                    ${title}
-                                </a>
-                            </p>
-                            <p class="grid-items-item-aux-text obsessions-item-aux">
-                                <a class="grid-items-item-aux-block" href="${artist_link}">
-                                    ${artist}
-                                </a>
-                                <a class="obsessions-item-date" href="${link}">
-                                    ${date}
-                                </a>
-                            </p>
-                        </div>
-                        <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
-                    </div>
+                    </li>
                 `;
           if (obsession_is_first) {
-            grid_item.classList.add("first");
             tippy_esm_default(grid_item, {
               content: tl2(trans2.obsession_first)
             });
@@ -42835,6 +42854,12 @@
     name_elem.classList = "";
     artist_elem.classList = "source-album-artist";
     let artist_elem_full = artist_elem;
+    const img = art.querySelector(".cover-art");
+    hoshino(
+      img.querySelector(":scope > img"),
+      name_elem.textContent.trim(),
+      artist_elem.textContent.trim()
+    );
     if (settings.format_guest_features) {
       let song_title = name_elem.textContent;
       let formatted_title = name_includes(
@@ -42890,7 +42915,6 @@
       button.setAttribute("data-type", "delete");
       button.textContent = tl2(trans2.remove);
     }
-    let img = art.querySelector(".cover-art");
     let panel = html.node`
         <section class="featured-item-panel">
             <div class="sub-text">
@@ -46385,7 +46409,7 @@
         ...cache2
       };
       log("saved to cache", "oracle", "info", { oracle_cache, cache: cache2 });
-      localStorage.setItem("bleh_oracle_cache", JSON.stringify(oracle_cache));
+      set_storage("bleh_oracle_cache", JSON.stringify(oracle_cache));
     }
     page.structure.main.insertBefore(
       html.node`
