@@ -1257,7 +1257,7 @@ export function oracle_process() {
     ) {
         const entry = load_hoshino_artwork(title, artist);
 
-        if (entry) {
+        if (entry && entry.artwork && entry.listeners) {
             render(
                 parent,
                 html`

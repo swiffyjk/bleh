@@ -619,6 +619,20 @@ export function append_nav() {
 
     language_options.forEach((language_option) => {
         const button = language_option.querySelector('button');
+
+        if (!button)
+            log(
+                'random last.fm error where this button is non existent',
+                'language',
+                'error',
+                {
+                    language_options,
+                    language_option,
+                    raw: language_option.innerHTML,
+                    raw_options: language_options.innerHTML
+                }
+            );
+
         const key = button.getAttribute('name');
 
         button.classList.remove('mimic-link');

@@ -47238,7 +47238,7 @@
     }
     function load_cover_art(parent, title, artist2, stats = null, type = null, index3 = 1) {
       const entry = load_hoshino_artwork(title, artist2);
-      if (entry) {
+      if (entry && entry.artwork && entry.listeners) {
         render(
           parent,
           html`
@@ -51752,6 +51752,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     `;
     language_options.forEach((language_option) => {
       const button = language_option.querySelector("button");
+      if (!button)
+        log(
+          "random last.fm error where this button is non existent",
+          "language",
+          "error",
+          {
+            language_options,
+            language_option,
+            raw: language_option.innerHTML,
+            raw_options: language_options.innerHTML
+          }
+        );
       const key = button.getAttribute("name");
       button.classList.remove("mimic-link");
       button.classList.add(
