@@ -28052,8 +28052,9 @@
   function set_storage(key, val) {
     try {
       localStorage.setItem(key, val);
+      log(`set ${key}`, "storage", "info", { key, val });
     } catch (e) {
-      log(`failed to set ${key}`, "storage", "info", { key, val, e });
+      log(`failed to set ${key}`, "storage", "error", { key, val, e });
       console.error(e);
       notify({
         id: "storage",
