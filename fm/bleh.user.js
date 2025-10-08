@@ -46503,6 +46503,8 @@
             data: data2,
             release
           });
+          cache2.album.fetch = data2;
+          oracle_save_cache("album");
           return;
         }
         page.state.oracle_debug.release_id = release.id;

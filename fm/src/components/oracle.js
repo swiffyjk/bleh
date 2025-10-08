@@ -363,6 +363,10 @@ export function oracle_process() {
                     data,
                     release
                 });
+
+                cache.album.fetch = data;
+                oracle_save_cache('album');
+
                 return;
             }
 
