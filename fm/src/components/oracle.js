@@ -48,6 +48,48 @@ export function oracle_process() {
 
     const info_panel = page.structure.main.firstElementChild;
 
+    let oracle_cache =
+        JSON.parse(localStorage.getItem('bleh_oracle_cache')) || {};
+    if (!oracle_cache[artist]) oracle_cache[artist] = {};
+
+    let cache = oracle_cache[artist][item] || {
+        album: {},
+        track: {}
+    };
+
+    log('loaded cache', 'oracle', 'info', {
+        oracle_cache,
+        cache
+    });
+
+    if (!cache.album?.expire || Date.now() > cache.album.expire) {
+        log('album cache expired', 'oracle', 'info', {
+            expire: cache.album?.expire,
+            now: Date.now()
+        });
+        cache.album = {};
+    }
+
+    if (!cache.track?.expire || Date.now() > cache.track.expire) {
+        log('track cache expired', 'oracle', 'info', {
+            expire: cache.track?.expire,
+            now: Date.now()
+        });
+        cache.track = {};
+    }
+
+    function oracle_save_cache(type) {
+        const day = 24 * 60 * 60 * 1000;
+
+        cache[type].expire = Date.now() + day * 7;
+        cache[type].date = Date.now();
+
+        oracle_cache[artist][item] = cache;
+
+        log('saved to cache', 'oracle', 'info', { oracle_cache, cache });
+        localStorage.setItem('bleh_oracle_cache', JSON.stringify(oracle_cache));
+    }
+
     page.structure.main.insertBefore(
         html.node`
             <section class="oracle-notice">
@@ -220,24 +262,46 @@ export function oracle_process() {
         else if (page.type == 'album')
             url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND ${artist_template}`;
 
-        if (
-            page.type == 'album' &&
-            oracle_albums.hasOwnProperty(artist) &&
-            oracle_albums[artist][item] &&
-            oracle_albums[artist][item].id
-        ) {
-            log(
-                'skipping album search as an id was supplied',
-                'oracle',
-                'info',
-                { oracle_albums, item: oracle_albums[item] }
-            );
-            tries = 2;
+        if (page.type == 'album') {
+            const local =
+                oracle_albums[artist]?.[item] ||
+                oracle_cache[artist]?.[item]?.album;
 
-            oracle_album_fetch({
-                id: oracle_albums[artist][item].id
-            });
-            return;
+            if (local?.fetch || local?.id) {
+                tries = 2;
+
+                if (local.id) {
+                    log(
+                        'skipping album search for id (oracle database)',
+                        'oracle',
+                        'info',
+                        { local }
+                    );
+                    oracle_album_fetch({
+                        id: local.id
+                    });
+                } else {
+                    log(
+                        'skipping album search for id (local cache)',
+                        'oracle',
+                        'info',
+                        { local }
+                    );
+                    oracle_album(local.fetch);
+                }
+                return;
+            }
+        } else if (page.type == 'track') {
+            const local = oracle_cache[artist]?.[item]?.track;
+
+            if (local?.fetch) {
+                log('skipping track search (local cache)', 'oracle', 'info', {
+                    local
+                });
+
+                oracle_track_releases(local.fetch);
+                return;
+            }
         }
 
         log(
@@ -285,6 +349,9 @@ export function oracle_process() {
 
     function oracle(data) {
         if (page.type == 'track') {
+            cache.track.fetch = data;
+            oracle_save_cache('track');
+
             oracle_track_releases(data);
         } else if (page.type == 'album') {
             tries = 2;
@@ -484,6 +551,17 @@ export function oracle_process() {
 
         const url = `http://musicbrainz.org/ws/2/release/${data.id}?inc=recordings+labels+artist-credits`;
 
+        const local = oracle_cache[artist]?.[item];
+        if (local && local.album?.fetch) {
+            log('skipping album fetch (local cache)', 'oracle', 'info', {
+                local
+            });
+            page.state.oracle = local.album.fetch;
+            oracle_album(local.album.fetch);
+
+            return;
+        }
+
         log(
             `using url ${encodeURI(url)} with ${tries} tries available`,
             'oracle'
@@ -514,6 +592,9 @@ export function oracle_process() {
 
                 log('received connect album data', 'oracle', 'info', { data });
                 page.state.oracle = data;
+
+                cache.album.fetch = data;
+                oracle_save_cache('album');
 
                 oracle_album(data);
             },

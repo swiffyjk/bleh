@@ -15582,7 +15582,7 @@
   }
   function parseAttributes(node, holes, parts, path) {
     var attributes = node.attributes;
-    var cache3 = [];
+    var cache2 = [];
     var remove2 = [];
     var array = normalizeAttributes(attributes, parts);
     var length = array.length;
@@ -15593,8 +15593,8 @@
       var sparse;
       if (direct || 1 < (sparse = attribute2.value.split(UIDC)).length) {
         var name = attribute2.name;
-        if (cache3.indexOf(name) < 0) {
-          cache3.push(name);
+        if (cache2.indexOf(name) < 0) {
+          cache2.push(name);
           var realName = parts.shift().replace(
             direct ? /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ : new RegExp(
               "^(?:|[\\S\\s]*?\\s)(" + name + `)\\s*=\\s*('|")[\\S\\s]*`,
@@ -16133,13 +16133,13 @@
   // node_modules/lighterhtml/esm/index.js
   var { create, freeze, keys } = Object;
   var tProto = Tagger.prototype;
-  var cache2 = esm_default3(new esm_default());
+  var cache = esm_default3(new esm_default());
   var createRender = (Tagger2) => ({
     html: outer("html", Tagger2),
     svg: outer("svg", Tagger2),
     render(where, what) {
       const hole = typeof what === "function" ? what() : what;
-      const info = cache2.get(where) || cache2.set(where, createCache());
+      const info = cache.get(where) || cache.set(where, createCache());
       const wire = hole instanceof LighterHole ? unroll(Tagger2, info, hole) : hole;
       if (wire !== info.wire) {
         info.wire = wire;
@@ -16151,12 +16151,12 @@
   });
   var createCache = () => ({ stack: [], entry: null, wire: null });
   var outer = (type, Tagger2) => {
-    const cache3 = esm_default3(new esm_default());
+    const cache2 = esm_default3(new esm_default());
     const fixed = (info) => function() {
       return unroll(Tagger2, info, hole.apply(null, arguments));
     };
     hole.for = (ref2, id) => {
-      const memo = cache3.get(ref2) || cache3.set(ref2, create(null));
+      const memo = cache2.get(ref2) || cache2.set(ref2, create(null));
       return memo[id] || (memo[id] = fixed(createCache()));
     };
     hole.node = function() {
@@ -20541,17 +20541,17 @@
     if (isEqual2 === void 0) {
       isEqual2 = areInputsEqual;
     }
-    var cache3 = null;
+    var cache2 = null;
     function memoized() {
       var newArgs = [];
       for (var _i = 0; _i < arguments.length; _i++) {
         newArgs[_i] = arguments[_i];
       }
-      if (cache3 && cache3.lastThis === this && isEqual2(newArgs, cache3.lastArgs)) {
-        return cache3.lastResult;
+      if (cache2 && cache2.lastThis === this && isEqual2(newArgs, cache2.lastArgs)) {
+        return cache2.lastResult;
       }
       var lastResult = resultFn.apply(this, newArgs);
-      cache3 = {
+      cache2 = {
         lastResult,
         lastArgs: newArgs,
         lastThis: this
@@ -20559,7 +20559,7 @@
       return lastResult;
     }
     memoized.clear = function clear() {
-      cache3 = null;
+      cache2 = null;
     };
     return memoized;
   }
@@ -31589,14 +31589,14 @@
     }
     create_listen_item(listen_container, your_listens, page.type);
     if (settings.starred_friend != "") {
-      const cache3 = await load_profile_cache_externally(
+      const cache2 = await load_profile_cache_externally(
         settings.starred_friend
       );
       let shortcut_listens = {
         name: settings.starred_friend,
         listens: -1,
         link: scrobble_page,
-        avi: cache3.avatar,
+        avi: cache2.avatar,
         katsune
       };
       const listen_item = create_listen_item(
@@ -40619,30 +40619,30 @@
       chars.setAttribute("data-exceeded", value.length >= 500);
       render(preview, markdown(value, markdown_settings));
       let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      let cache3 = profile_cache[auth.name];
-      console.info("cache", cache3);
+      let cache2 = profile_cache[auth.name];
+      console.info("cache", cache2);
       render(
         banner_setting,
         html`
                 <div class="heading">
                     <h5>${tl2(trans2.profile_banner.name)}</h5>
                     <p>${tl2(trans2.profile_banner.body)}</p>
-                    ${cache3.banner ? html.node`
-                <p>${tl2(trans2.current_banner_value).replace("{v}", cache3.banner)}</p>
+                    ${cache2.banner ? html.node`
+                <p>${tl2(trans2.current_banner_value).replace("{v}", cache2.banner)}</p>
                 ` : ""}
                 </div>
                 ${() => {
-          if (!cache3.banner)
+          if (!cache2.banner)
             return html.node`
                         <div class="info">
                             <p>${tl2(trans2.none)}</p>
                         </div>
                     `;
           let banner_image = html.node`
-                    <div class="banner-image" style="background-image: url(${cache3.banner})" />
+                    <div class="banner-image" style="background-image: url(${cache2.banner})" />
                 `;
           tippy_esm_default(banner_image, {
-            content: cache3.banner
+            content: cache2.banner
           });
           return banner_image;
         }}
@@ -40652,9 +40652,9 @@
       console.info(
         "cache update",
         about.value,
-        cache3.hue,
-        cache3.sat,
-        cache3.lit
+        cache2.hue,
+        cache2.sat,
+        cache2.lit
       );
       let edit;
       render(
@@ -40672,7 +40672,7 @@
                 <div class="info">
                     <div
                         class="colour-tile colourful"
-                        style="--hue-over: ${cache3.hue}; --sat-over: ${cache3.sat}; --lit-over: ${cache3.lit}"
+                        style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}"
                     />
                     <div class="swatch-group palette">
                         <button
@@ -41941,14 +41941,14 @@
     );
     let new_account = false;
     let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    let cache3 = profile_cache[page.name] || {};
+    let cache2 = profile_cache[page.name] || {};
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
     if (page.subpage == "overview") {
       if (!about_me_sidebar) {
-        delete cache3.banner;
-        delete cache3.hue;
-        delete cache3.sat;
-        delete cache3.lit;
+        delete cache2.banner;
+        delete cache2.hue;
+        delete cache2.sat;
+        delete cache2.lit;
         about_me_sidebar = html.node`
                 <section class="about-me-sidebar">
                     <h2>${tl2(trans2.about)}</h2>
@@ -41962,7 +41962,7 @@
       } else {
         if (settings.bio_markdown) {
           let about_me_text = about_me_sidebar.querySelector("p");
-          let result = bio_parse(about_me_text, cache3);
+          let result = bio_parse(about_me_text, cache2);
           about_me_text.after(result);
           about_me_text.remove();
         }
@@ -41984,7 +41984,7 @@
       title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
     }
     let pronouns;
-    if (cache3.aka) pronouns = use_pronouns(cache3.aka);
+    if (cache2.aka) pronouns = use_pronouns(cache2.aka);
     let expander;
     let redesigned_profile_header = html.node`
         <section class="redesigned-header redesigned-profile-header no-background">
@@ -41994,21 +41994,21 @@
             <div class="info-side">
                 <div class="sub-text">${tl2(trans2.profile)}</div>
                 ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
-                ${sub_wrap ? sub_wrap : cache3.aka || cache3.created ? html.node`
+                ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
                 <p class="header-title-secondary">
-                    ${cache3.aka ? html.node`
+                    ${cache2.aka ? html.node`
                     <span class="header-title-secondary--pre">
                         ${pronouns ? tl2(trans2.account_pronouns) : tl2(trans2.aka)}
                     </span>
                     <span class="header-title-display-name">
-                        ${cache3.aka}
+                        ${cache2.aka}
                     </span>
                     ` : ""}
                     <span class="header-title-secondary--pre">
                         ${tl2(trans2.account_created)}
                     </span>
                     <span class="header-scrobble-since">
-                        ${cache3.created}
+                        ${cache2.created}
                     </span>
                 </p>
                 ` : ""}
@@ -42023,13 +42023,13 @@
         </section>
     `;
     const avatar_img = avatar3.querySelector(":scope > img");
-    if (avatar_img) cache3.avatar = avatar_img.src;
+    if (avatar_img) cache2.avatar = avatar_img.src;
     if (page.name == auth.name && !settings.profile_header_own) {
       register_background(null, "hidden");
     } else if (page.name != auth.name && !settings.profile_header_others) {
       register_background(null, "hidden");
-    } else if (cache3.banner) {
-      register_background(cache3.banner, "bio");
+    } else if (cache2.banner) {
+      register_background(cache2.banner, "bio");
     } else {
       if (settings.profile_avi_background) {
         if (avatar_img)
@@ -42201,7 +42201,7 @@
         ".redesigned-profile-header .header-title-secondary"
       );
       if (profile_sub_text)
-        parse_sub_text(profile_sub_text, page.name, cache3);
+        parse_sub_text(profile_sub_text, page.name, cache2);
       let featured_track_panel = profile_header.querySelector(
         ".header-featured-track"
       );
@@ -42265,21 +42265,21 @@
           refresh_all(instance.popper);
         }
       });
-      if (cache3.banner || cache3.hue || cache3.sat || cache3.lit) {
+      if (cache2.banner || cache2.hue || cache2.sat || cache2.lit) {
         tippy_esm_default(info_tip, {
           content: html.node`
                     <div class="profile-items">
-                        ${cache3.banner ? html.node`
+                        ${cache2.banner ? html.node`
                         <div class="profile-item" data-type="banner">
                             <span class="bleh-icon" style="--icon: var(--mask)" />
                             <p>${tl2(trans2.profile_banner.name)}</p>
                         </div>
                         ` : ""}
-                        ${cache3.hue > -1 && cache3.sat > -1 && cache3.lit > -1 ? html.node`
+                        ${cache2.hue > -1 && cache2.sat > -1 && cache2.lit > -1 ? html.node`
                         <div class="profile-item" data-type="accent">
                             <span class="bleh-icon" style="--icon: var(--mask)" />
                             <p>${tl2(trans2.profile_accent.name)}</p>
-                            <p class="subtle">${cache3.hue}, ${cache3.sat}, ${cache3.lit}</p>
+                            <p class="subtle">${cache2.hue}, ${cache2.sat}, ${cache2.lit}</p>
                         </div>
                         ` : ""}
                     </div>
@@ -42293,7 +42293,7 @@
       if (!is_own_profile && profile_note)
         create_profile_note_panel(page.name, profile_note);
     } else {
-      load_profile_cache(page.name, cache3, profile_cache);
+      load_profile_cache(page.name, cache2, profile_cache);
       let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage.startsWith("library")) {
@@ -42564,7 +42564,7 @@
       label_container.appendChild(badge);
     });
     profile_name_obj.appendChild(label_container);
-    save_profile_cache(cache3, profile_cache, page.name);
+    save_profile_cache(cache2, profile_cache, page.name);
   }
   function create_profile_note_panel(username2, has_note) {
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
@@ -43342,7 +43342,7 @@
       appendTo: document.body
     });
   }
-  function bio_parse(text3, cache3 = true, take_effect = true) {
+  function bio_parse(text3, cache2 = true, take_effect = true) {
     let temp = document.createElement("div");
     temp.classList.add("markdown-body");
     render(
@@ -43352,7 +43352,7 @@
         allow_banners: true,
         allow_icons: true,
         allow_hue: true,
-        cache: cache3,
+        cache: cache2,
         take_effect,
         allow_socials: true,
         allow_alignment: true
@@ -43496,9 +43496,9 @@
   }
   async function checkup_friend_cache(list = settings.friends) {
     for (const friend of list) {
-      const cache3 = await load_profile_cache_externally(friend);
+      const cache2 = await load_profile_cache_externally(friend);
       log(`finalised cache for friend ${friend}`, "profile", "info", {
-        cache: cache3
+        cache: cache2
       });
     }
   }
@@ -43520,53 +43520,53 @@
     if (!name) return;
     log(`requested profile cache for ${name}`, "cache");
     let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    let cache3 = profile_cache[name];
-    if (cache3) {
-      if (cache3.hue || cache3.sat || cache3.lit) {
+    let cache2 = profile_cache[name];
+    if (cache2) {
+      if (cache2.hue || cache2.sat || cache2.lit) {
         if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name)) {
-          delete cache3.hue;
-          delete cache3.sat;
-          delete cache3.lit;
+          delete cache2.hue;
+          delete cache2.sat;
+          delete cache2.lit;
         }
       }
       log(`returning pre-cached result for ${name}`, "cache", "info", {
-        cache: cache3
+        cache: cache2
       });
-      return cache3;
+      return cache2;
     }
     return await request_profile_cache(name);
   }
-  function load_profile_cache(name = page.name, cache3 = null, profile_cache = null) {
+  function load_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
     if (!name) return;
     if (!profile_cache)
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    if (!cache3) cache3 = profile_cache[name] || {};
-    if (cache3) {
-      if (cache3.hue || cache3.sat || cache3.lit) {
+    if (!cache2) cache2 = profile_cache[name] || {};
+    if (cache2) {
+      if (cache2.hue || cache2.sat || cache2.lit) {
         if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name)) {
-          delete cache3.hue;
-          delete cache3.sat;
-          delete cache3.lit;
+          delete cache2.hue;
+          delete cache2.sat;
+          delete cache2.lit;
         }
       }
-      const hue2 = cache3.hue;
-      const sat = cache3.sat;
-      const lit = cache3.lit;
-      const banner = cache3.banner;
+      const hue2 = cache2.hue;
+      const sat = cache2.sat;
+      const lit = cache2.lit;
+      const banner = cache2.banner;
       if (hue2) document.body.style.setProperty("--hue-album", hue2);
       if (sat) document.body.style.setProperty("--sat-album", sat);
       if (lit) document.body.style.setProperty("--lit-album", lit);
       if (banner) register_background(banner, "bio");
       return;
     }
-    return request_profile_cache(name, cache3, profile_cache);
+    return request_profile_cache(name, cache2, profile_cache);
   }
-  function request_profile_cache(name = page.name, cache3 = null, profile_cache = null) {
+  function request_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
     log(`requesting fetch of profile cache for ${name}`, "cache");
-    const will_cache = !cache3 || !profile_cache;
+    const will_cache = !cache2 || !profile_cache;
     if (!profile_cache)
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    if (!cache3) cache3 = profile_cache[name] || {};
+    if (!cache2) cache2 = profile_cache[name] || {};
     return new Promise((resolve2, reject) => {
       fetch(`${root}user/${name}`).then(function(response) {
         console.log("returned", response, response.text);
@@ -43577,23 +43577,23 @@
         const about_me_sidebar = doc.querySelector(".about-me-sidebar");
         if (about_me_sidebar) {
           let about_me_text = about_me_sidebar.querySelector("p");
-          bio_parse(about_me_text, cache3 ? cache3 : true, false);
+          bio_parse(about_me_text, cache2 ? cache2 : true, false);
         } else {
-          delete cache3.banner;
-          delete cache3.hue;
-          delete cache3.sat;
-          delete cache3.lit;
+          delete cache2.banner;
+          delete cache2.hue;
+          delete cache2.sat;
+          delete cache2.lit;
         }
         const avatar3 = doc.querySelector(".header-avatar .avatar img");
-        if (avatar3) cache3.avatar = avatar3.src;
+        if (avatar3) cache2.avatar = avatar3.src;
         const secondary = doc.querySelector(".header-title-secondary");
-        parse_sub_text(secondary, name, cache3);
-        if (will_cache) save_profile_cache(cache3, profile_cache, name);
-        resolve2(cache3 || {});
+        parse_sub_text(secondary, name, cache2);
+        if (will_cache) save_profile_cache(cache2, profile_cache, name);
+        resolve2(cache2 || {});
       }).catch(reject);
     });
   }
-  function parse_sub_text(profile_sub_text, name = page.name, cache3) {
+  function parse_sub_text(profile_sub_text, name = page.name, cache2) {
     const display_name = profile_sub_text.querySelector(
       ".header-title-display-name"
     );
@@ -43618,8 +43618,8 @@
     `,
       scrobble_since
     );
-    cache3.aka = display_name.textContent.trim();
-    cache3.created = scrobble_since.textContent.trim();
+    cache2.aka = display_name.textContent.trim();
+    cache2.created = scrobble_since.textContent.trim();
   }
   function bleh_profile_events() {
     const selected_tab = page.structure.toolbar?.querySelector(
@@ -45186,7 +45186,7 @@
     allow_icons = false,
     allow_hue = false,
     take_effect = false,
-    cache: cache3 = false,
+    cache: cache2 = false,
     allow_socials = false,
     allow_lists = true,
     allow_alignment = false,
@@ -45415,8 +45415,8 @@
     const body = html.node([parsed2]);
     log("rendered", "markdown", "info", { body });
     let profile_cache;
-    const will_cache = cache3 === true;
-    log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache3 });
+    const will_cache = cache2 === true;
+    log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache2 });
     const link_strings = {
       "open.spotify.com": "Spotify",
       "spotify.com": "Spotify",
@@ -45480,15 +45480,15 @@
     }
     if ((allow_banners || allow_hue) && will_cache) {
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      cache3 = profile_cache[page.name] || {};
+      cache2 = profile_cache[page.name] || {};
     }
     if (allow_banners) {
       const banner2 = body.querySelector('img[alt="banner"]');
       if (banner2) {
         const src = banner2.src;
-        cache3.banner = src;
+        cache2.banner = src;
       } else {
-        delete cache3.banner;
+        delete cache2.banner;
       }
     }
     if (body.nodeName != "#text") {
@@ -45516,26 +45516,26 @@
           document.body.style.setProperty("--lit-album", lit);
           load_chart_colours();
         }
-        cache3.hue = hue2;
-        cache3.sat = sat;
-        cache3.lit = lit;
+        cache2.hue = hue2;
+        cache2.sat = sat;
+        cache2.lit = lit;
         log("custom accent settings present", "profile", "info", {
           hue: hue2,
           sat,
           lit
         });
       } else {
-        if (cache3.hue) delete cache3.hue;
-        if (cache3.sat) delete cache3.sat;
-        if (cache3.lit) delete cache3.lit;
+        if (cache2.hue) delete cache2.hue;
+        if (cache2.sat) delete cache2.sat;
+        if (cache2.lit) delete cache2.lit;
         log("cleared custom accent settings", "profile", "log");
       }
     }
-    if (cache3 && will_cache) {
+    if (cache2 && will_cache) {
       log("finalised cache from markdown parsing", "markdown", "info", {
-        cache: cache3
+        cache: cache2
       });
-      save_profile_cache(cache3, profile_cache, name);
+      save_profile_cache(cache2, profile_cache, name);
     }
     return body;
   }
@@ -46241,6 +46241,38 @@
     let artist_data;
     let artist_template = `artist:"${page.sister}"`;
     const info_panel = page.structure.main.firstElementChild;
+    let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
+    if (!oracle_cache[artist]) oracle_cache[artist] = {};
+    let cache2 = oracle_cache[artist][item] || {
+      album: {},
+      track: {}
+    };
+    log("loaded cache", "oracle", "info", {
+      oracle_cache,
+      cache: cache2
+    });
+    if (!cache2.album?.expire || Date.now() > cache2.album.expire) {
+      log("album cache expired", "oracle", "info", {
+        expire: cache2.album?.expire,
+        now: Date.now()
+      });
+      cache2.album = {};
+    }
+    if (!cache2.track?.expire || Date.now() > cache2.track.expire) {
+      log("track cache expired", "oracle", "info", {
+        expire: cache2.track?.expire,
+        now: Date.now()
+      });
+      cache2.track = {};
+    }
+    function oracle_save_cache(type) {
+      const day = 24 * 60 * 60 * 1e3;
+      cache2[type].expire = Date.now() + day * 7;
+      cache2[type].date = Date.now();
+      oracle_cache[artist][item] = cache2;
+      log("saved to cache", "oracle", "info", { oracle_cache, cache: cache2 });
+      localStorage.setItem("bleh_oracle_cache", JSON.stringify(oracle_cache));
+    }
     page.structure.main.insertBefore(
       html.node`
             <section class="oracle-notice">
@@ -46359,11 +46391,11 @@
           }
           log("received artist data", "oracle", "info", { data: data2 });
           artist_data = data2.artists[0];
-          cache[artist] = artist_data;
-          if (Object.keys(cache).length > 100) delete cache[0];
+          cache2[artist] = artist_data;
+          if (Object.keys(cache2).length > 100) delete cache2[0];
           localStorage.setItem(
             "oracle_artist_ids",
-            JSON.stringify(cache)
+            JSON.stringify(cache2)
           );
           tries = 2;
           oracle_connect();
@@ -46386,18 +46418,40 @@
         url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND ${artist_template} AND status:Official`;
       else if (page.type == "album")
         url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), " ")}" AND ${artist_template}`;
-      if (page.type == "album" && oracle_albums.hasOwnProperty(artist) && oracle_albums[artist][item] && oracle_albums[artist][item].id) {
-        log(
-          "skipping album search as an id was supplied",
-          "oracle",
-          "info",
-          { oracle_albums, item: oracle_albums[item] }
-        );
-        tries = 2;
-        oracle_album_fetch({
-          id: oracle_albums[artist][item].id
-        });
-        return;
+      if (page.type == "album") {
+        const local = oracle_albums[artist]?.[item] || oracle_cache[artist]?.[item]?.album;
+        if (local?.fetch || local?.id) {
+          tries = 2;
+          if (local.id) {
+            log(
+              "skipping album search for id (oracle database)",
+              "oracle",
+              "info",
+              { local }
+            );
+            oracle_album_fetch({
+              id: local.id
+            });
+          } else {
+            log(
+              "skipping album search for id (local cache)",
+              "oracle",
+              "info",
+              { local }
+            );
+            oracle_album(local.fetch);
+          }
+          return;
+        }
+      } else if (page.type == "track") {
+        const local = oracle_cache[artist]?.[item]?.track;
+        if (local?.fetch) {
+          log("skipping track search (local cache)", "oracle", "info", {
+            local
+          });
+          oracle_track_releases(local.fetch);
+          return;
+        }
       }
       log(
         `using url ${encodeURI(url)} with ${tries} tries available`,
@@ -46438,6 +46492,8 @@
     }
     function oracle(data2) {
       if (page.type == "track") {
+        cache2.track.fetch = data2;
+        oracle_save_cache("track");
         oracle_track_releases(data2);
       } else if (page.type == "album") {
         tries = 2;
@@ -46560,6 +46616,15 @@
       if (tries < 1) return;
       tries--;
       const url = `http://musicbrainz.org/ws/2/release/${data2.id}?inc=recordings+labels+artist-credits`;
+      const local = oracle_cache[artist]?.[item];
+      if (local && local.album?.fetch) {
+        log("skipping album fetch (local cache)", "oracle", "info", {
+          local
+        });
+        page.state.oracle = local.album.fetch;
+        oracle_album(local.album.fetch);
+        return;
+      }
       log(
         `using url ${encodeURI(url)} with ${tries} tries available`,
         "oracle"
@@ -46587,6 +46652,8 @@
           }
           log("received connect album data", "oracle", "info", { data: data3 });
           page.state.oracle = data3;
+          cache2.album.fetch = data3;
+          oracle_save_cache("album");
           oracle_album(data3);
         },
         onerror: function(err) {
@@ -48653,7 +48720,7 @@
         return;
       }
       register_skip_to([]);
-      const cache3 = await load_profile_cache_externally(auth.name);
+      const cache2 = await load_profile_cache_externally(auth.name);
       let friends;
       let starred2;
       console.info("friends", settings.friends, settings);
@@ -48700,8 +48767,8 @@
           "/avatar300s/"
         )})"
                             ></div>
-                            ${cache3.banner ? html.node`
-                        <div class="profile-mockup-background from-banner" style="background-image: url(${cache3.banner})"></div>
+                            ${cache2.banner ? html.node`
+                        <div class="profile-mockup-background from-banner" style="background-image: url(${cache2.banner})"></div>
                         ` : html.node`
                         <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
                         `}
@@ -51608,8 +51675,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         badges = load_badges(auth.name);
         let page_2;
         let side;
-        const cache3 = await load_profile_cache_externally(auth.name);
-        console.info("awaited", cache3);
+        const cache2 = await load_profile_cache_externally(auth.name);
+        console.info("awaited", cache2);
         let status_container;
         const current = settings.navigation_items;
         let length = current.length;
@@ -51624,8 +51691,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             <div class="avatar">
                                 <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
                             </div>
-                            ${cache3.banner ? html.node`
-                            <div class="bg" style="background-image: url(${cache3.banner})" />
+                            ${cache2.banner ? html.node`
+                            <div class="bg" style="background-image: url(${cache2.banner})" />
                             ` : !auth.avatar.endsWith(
           "818148bf682d429dc215c1705eb27b98.png"
         ) ? html.node`
@@ -53744,11 +53811,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    let cache3;
+    let cache2;
     if (auth.name) {
-      cache3 = await load_profile_cache_externally(auth.name);
-      if (cache3.banner)
-        register_background(cache3.banner);
+      cache2 = await load_profile_cache_externally(auth.name);
+      if (cache2.banner)
+        register_background(cache2.banner);
       else if (auth.avatar && !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
         register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
       else
@@ -54324,11 +54391,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </div>
         </section>
     `, page.structure.container.firstElementChild);
-    let cache3;
+    let cache2;
     if (auth.name) {
-      cache3 = await load_profile_cache_externally(auth.name);
-      if (cache3.banner)
-        register_background(cache3.banner);
+      cache2 = await load_profile_cache_externally(auth.name);
+      if (cache2.banner)
+        register_background(cache2.banner);
       else if (auth.avatar && !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
         register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
       else
@@ -54932,9 +54999,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    const cache3 = await load_profile_cache_externally(auth.name);
-    if (cache3.banner)
-      register_background(cache3.banner);
+    const cache2 = await load_profile_cache_externally(auth.name);
+    if (cache2.banner)
+      register_background(cache2.banner);
     else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
       register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     else
@@ -55285,8 +55352,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       log("unable to find elements", "page structure");
     }
     checkup_page_structure();
-    const cache3 = await load_profile_cache_externally(auth.name);
-    if (cache3.banner) register_background(cache3.banner);
+    const cache2 = await load_profile_cache_externally(auth.name);
+    if (cache2.banner) register_background(cache2.banner);
     else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
       register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     else register_background(null);
@@ -64713,14 +64780,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     return longest;
   }
-  function _longestText(ctx, font, arrayOfThings, cache3) {
-    cache3 = cache3 || {};
-    let data2 = cache3.data = cache3.data || {};
-    let gc = cache3.garbageCollect = cache3.garbageCollect || [];
-    if (cache3.font !== font) {
-      data2 = cache3.data = {};
-      gc = cache3.garbageCollect = [];
-      cache3.font = font;
+  function _longestText(ctx, font, arrayOfThings, cache2) {
+    cache2 = cache2 || {};
+    let data2 = cache2.data = cache2.data || {};
+    let gc = cache2.garbageCollect = cache2.garbageCollect || [];
+    if (cache2.font !== font) {
+      data2 = cache2.data = {};
+      gc = cache2.garbageCollect = [];
+      cache2.font = font;
     }
     ctx.save();
     ctx.font = font;
@@ -65121,7 +65188,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (typeof fallback === "undefined") {
       fallback = _resolve("_fallback", scopes);
     }
-    const cache3 = {
+    const cache2 = {
       [Symbol.toStringTag]: "Object",
       _cacheable: true,
       _scopes: scopes,
@@ -65133,7 +65200,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         ...scopes
       ], prefixes, finalRootScopes, fallback)
     };
-    return new Proxy(cache3, {
+    return new Proxy(cache2, {
       /**
       * A trap for the delete operator.
       */
@@ -65186,7 +65253,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
   }
   function _attachContext(proxy, context, subProxy, descriptorDefaults) {
-    const cache3 = {
+    const cache2 = {
       _cacheable: false,
       _proxy: proxy,
       _context: context,
@@ -65196,7 +65263,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       setContext: (ctx) => _attachContext(proxy, ctx, subProxy, descriptorDefaults),
       override: (scope) => _attachContext(proxy.override(scope), context, subProxy, descriptorDefaults)
     };
-    return new Proxy(cache3, {
+    return new Proxy(cache2, {
       /**
       * A trap for the delete operator.
       */
@@ -66121,15 +66188,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (!prevStyle) {
       return false;
     }
-    const cache3 = [];
+    const cache2 = [];
     const replacer = function(key, value) {
       if (!isPatternOrGradient(value)) {
         return value;
       }
-      if (!cache3.includes(value)) {
-        cache3.push(value);
+      if (!cache2.includes(value)) {
+        cache2.push(value);
       }
-      return cache3.indexOf(value);
+      return cache2.indexOf(value);
     };
     return JSON.stringify(style, replacer) !== JSON.stringify(prevStyle, replacer);
   }
@@ -67101,9 +67168,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     _resolveElementOptions(elementType, mode = "default", index3) {
       const active = mode === "active";
-      const cache3 = this._cachedDataOpts;
+      const cache2 = this._cachedDataOpts;
       const cacheKey = elementType + "-" + mode;
-      const cached = cache3[cacheKey];
+      const cached = cache2[cacheKey];
       const sharing = this.enableOptionSharing && defined(index3);
       if (cached) {
         return cloneIfNotShared(cached, sharing);
@@ -67125,15 +67192,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const values = config.resolveNamedOptions(scopes, names2, context, prefixes);
       if (values.$shared) {
         values.$shared = sharing;
-        cache3[cacheKey] = Object.freeze(cloneIfNotShared(values, sharing));
+        cache2[cacheKey] = Object.freeze(cloneIfNotShared(values, sharing));
       }
       return values;
     }
     _resolveAnimations(index3, transition, active) {
       const chart = this.chart;
-      const cache3 = this._cachedDataOpts;
+      const cache2 = this._cachedDataOpts;
       const cacheKey = `animation-${transition}`;
-      const cached = cache3[cacheKey];
+      const cached = cache2[cacheKey];
       if (cached) {
         return cached;
       }
@@ -67146,7 +67213,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       const animations = new Animations(chart, options && options.animations);
       if (options && options._cacheable) {
-        cache3[cacheKey] = Object.freeze(animations);
+        cache2[cacheKey] = Object.freeze(animations);
       }
       return animations;
     }
@@ -69817,13 +69884,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     return lineValue;
   }
   function garbageCollect(caches, length) {
-    each(caches, (cache3) => {
-      const gc = cache3.gc;
+    each(caches, (cache2) => {
+      const gc = cache2.gc;
       const gcLen = gc.length / 2;
       let i;
       if (gcLen > length) {
         for (i = 0; i < gcLen; ++i) {
-          delete cache3.data[gc[i]];
+          delete cache2.data[gc[i]];
         }
         gc.splice(0, gcLen);
       }
@@ -70348,25 +70415,25 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const increment = Math.floor(length / getTicksLimit(length, maxTicksLimit));
       let widestLabelSize = 0;
       let highestLabelSize = 0;
-      let i, j, jlen, label, tickFont, fontString, cache3, lineHeight, width, height, nestedLabel;
+      let i, j, jlen, label, tickFont, fontString, cache2, lineHeight, width, height, nestedLabel;
       for (i = 0; i < length; i += increment) {
         label = ticks[i].label;
         tickFont = this._resolveTickFontOptions(i);
         ctx.font = fontString = tickFont.string;
-        cache3 = caches[fontString] = caches[fontString] || {
+        cache2 = caches[fontString] = caches[fontString] || {
           data: {},
           gc: []
         };
         lineHeight = tickFont.lineHeight;
         width = height = 0;
         if (!isNullOrUndef(label) && !isArray2(label)) {
-          width = _measureText(ctx, cache3.data, cache3.gc, width, label);
+          width = _measureText(ctx, cache2.data, cache2.gc, width, label);
           height = lineHeight;
         } else if (isArray2(label)) {
           for (j = 0, jlen = label.length; j < jlen; ++j) {
             nestedLabel = label[j];
             if (!isNullOrUndef(nestedLabel) && !isArray2(nestedLabel)) {
-              width = _measureText(ctx, cache3.data, cache3.gc, width, nestedLabel);
+              width = _measureText(ctx, cache2.data, cache2.gc, width, nestedLabel);
               height += lineHeight;
             }
           }
@@ -71577,17 +71644,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     _cachedScopes(mainScope, resetCache) {
       const _scopeCache = this._scopeCache;
-      let cache3 = _scopeCache.get(mainScope);
-      if (!cache3 || resetCache) {
-        cache3 = /* @__PURE__ */ new Map();
-        _scopeCache.set(mainScope, cache3);
+      let cache2 = _scopeCache.get(mainScope);
+      if (!cache2 || resetCache) {
+        cache2 = /* @__PURE__ */ new Map();
+        _scopeCache.set(mainScope, cache2);
       }
-      return cache3;
+      return cache2;
     }
     getOptionScopes(mainScope, keyLists, resetCache) {
       const { options, type } = this;
-      const cache3 = this._cachedScopes(mainScope, resetCache);
-      const cached = cache3.get(keyLists);
+      const cache2 = this._cachedScopes(mainScope, resetCache);
+      const cached = cache2.get(keyLists);
       if (cached) {
         return cached;
       }
@@ -71607,7 +71674,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         array.push(/* @__PURE__ */ Object.create(null));
       }
       if (keysCached.has(keyLists)) {
-        cache3.set(keyLists, array);
+        cache2.set(keyLists, array);
       }
       return array;
     }
@@ -71651,20 +71718,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
   };
   function getResolver(resolverCache, scopes, prefixes) {
-    let cache3 = resolverCache.get(scopes);
-    if (!cache3) {
-      cache3 = /* @__PURE__ */ new Map();
-      resolverCache.set(scopes, cache3);
+    let cache2 = resolverCache.get(scopes);
+    if (!cache2) {
+      cache2 = /* @__PURE__ */ new Map();
+      resolverCache.set(scopes, cache2);
     }
     const cacheKey = prefixes.join();
-    let cached = cache3.get(cacheKey);
+    let cached = cache2.get(cacheKey);
     if (!cached) {
       const resolver = _createResolver(scopes, prefixes);
       cached = {
         resolver,
         subPrefixes: prefixes.filter((p) => !p.toLowerCase().includes("hover"))
       };
-      cache3.set(cacheKey, cached);
+      cache2.set(cacheKey, cached);
     }
     return cached;
   }
