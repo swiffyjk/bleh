@@ -10,6 +10,7 @@ import { auth, page, root } from '../build/page';
 import {
     clamp_lit,
     clamp_sat,
+    clean_number,
     desanitise,
     hex_to_hsl,
     sanitise
@@ -104,13 +105,20 @@ export function bleh_albums() {
             '.header-new-chart-position-number'
         );
 
-        if (avatar) {
-            save_hoshino_artwork(
-                avatar.getAttribute('content').replace('/ar0/', '/avatar300s/'),
-                page.name,
-                page.sister
-            );
-        }
+        const avatar_img = avatar
+            ?.getAttribute('content')
+            .replace('/ar0/', '/avatar300s/');
+
+        const listeners = document.body.querySelector(
+            '.header-new-info-desktop .header-metadata-tnew-display > p > abbr'
+        );
+
+        save_hoshino_artwork(
+            avatar_img,
+            page.name,
+            page.sister,
+            clean_number(listeners?.title)
+        );
 
         let redesigned_album_header = html.node`
             <section class="redesigned-header redesigned-album-header no-background">

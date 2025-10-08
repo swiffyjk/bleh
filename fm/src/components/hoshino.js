@@ -25,7 +25,7 @@ export function hoshino(artwork, name, sister, link = null) {
         return;
     }
 
-    const art = load_hoshino_artwork(album_name, album_sister);
+    const art = load_hoshino_artwork(album_name, album_sister)?.artwork;
 
     artwork.src = art;
     log(`loaded cover art ${art}`, 'hoshino', 'info', {
@@ -54,23 +54,24 @@ export function hoshino(artwork, name, sister, link = null) {
     }
 }
 
-function load_hoshino_artwork(name, sister) {
+export function load_hoshino_artwork(name, sister) {
     let hoshino_cache =
         JSON.parse(localStorage.getItem('bleh_hoshino_cache')) || {};
 
     const name_lower = name.toLowerCase();
     const sister_lower = sister.toLowerCase();
 
-    const artwork = hoshino_cache[sister_lower]?.[name_lower];
+    const entry = hoshino_cache[sister_lower]?.[name_lower];
 
-    log(`loaded artwork ${artwork} from cache`, 'hoshino', 'info', {
+    log(`loaded artwork ${entry?.artwork} from cache`, 'hoshino', 'info', {
+        entry,
         name,
         sister
     });
-    return artwork;
+    return entry;
 }
 
-export function save_hoshino_artwork(artwork, name, sister) {
+export function save_hoshino_artwork(artwork, name, sister, listeners = null) {
     let hoshino_cache =
         JSON.parse(localStorage.getItem('bleh_hoshino_cache')) || {};
 
@@ -78,28 +79,28 @@ export function save_hoshino_artwork(artwork, name, sister) {
     const sister_lower = sister.toLowerCase();
 
     if (!hoshino_cache[sister_lower]) hoshino_cache[sister_lower] = {};
+    if (!hoshino_cache[sister_lower][name_lower])
+        hoshino_cache[sister_lower][name_lower] = {};
 
     if (!artwork || artwork.endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg')) {
-        delete hoshino_cache[sister_lower][name_lower];
+        if (artwork) delete hoshino_cache[sister_lower][name_lower].artwork;
 
-        log('cleared artwork from cache', 'hoshino', 'info', {
-            artwork,
-            name,
-            sister
-        });
         localStorage.setItem(
             'bleh_hoshino_cache',
             JSON.stringify(hoshino_cache)
         );
-        return;
+    } else {
+        hoshino_cache[sister_lower][name_lower].artwork = artwork;
     }
 
-    hoshino_cache[sister_lower][name_lower] = artwork;
+    if (listeners)
+        hoshino_cache[sister_lower][name_lower].listeners = listeners;
 
     log(`saved artwork ${artwork} to cache`, 'hoshino', 'info', {
         artwork,
         name,
-        sister
+        sister,
+        listeners
     });
     localStorage.setItem('bleh_hoshino_cache', JSON.stringify(hoshino_cache));
 }

@@ -125,6 +125,8 @@ function round_two(value) {
  * @returns {number}
  */
 export function clean_number(string) {
+    if (!string) return 0;
+
     return int(string.replaceAll(',', '').replaceAll('.', ''));
 }
 

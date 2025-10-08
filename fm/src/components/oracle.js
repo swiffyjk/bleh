@@ -13,7 +13,7 @@ import {
     page,
     root
 } from '../build/page';
-import { romanise, sanitise } from '../build/tools';
+import { clean_number, romanise, sanitise } from '../build/tools';
 import { ff } from '../sku';
 import {
     correct_artist,
@@ -22,13 +22,13 @@ import {
     smart_artists,
     smart_title
 } from './lotus';
-import { tl, trans } from '../build/trans';
+import { lang, tl, trans } from '../build/trans';
 import { clean_title, fix_title } from '../build/music';
 import { version } from '../main';
 import { settings } from '../build/config';
 import { dialog } from './dialog';
 import tippy, { followCursor } from 'tippy.js';
-import { save_hoshino_artwork } from './hoshino';
+import { load_hoshino_artwork, save_hoshino_artwork } from './hoshino';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -835,9 +835,11 @@ export function oracle_process() {
                 title: release.querySelector('.source-album-name').textContent,
                 artist: release.querySelector('.source-album-artist')
                     .textContent,
-                plays: release
-                    .querySelector('.source-album-stats')
-                    .firstChild.textContent.trim(),
+                plays: clean_number(
+                    release
+                        .querySelector('.source-album-stats')
+                        .firstChild.textContent.trim()
+                ),
                 artwork: release.querySelector(
                     '.source-album-art > .cover-art > img'
                 ).src
@@ -1136,7 +1138,7 @@ export function oracle_process() {
                                                             html.node`
                                                                 <span class="plays">
                                                                     <span class="bleh-icon" />
-                                                                    ${plays}
+                                                                    ${plays.toLocaleString(lang)}
                                                                 </span>
                                                             `
                                                         :   ''
@@ -1156,7 +1158,8 @@ export function oracle_process() {
                                             save_hoshino_artwork(
                                                 artwork,
                                                 title,
-                                                artist
+                                                artist,
+                                                plays
                                             );
                                             oracle_save_cache('track', false);
                                         }
@@ -1249,6 +1252,30 @@ export function oracle_process() {
         type = null,
         index = 1
     ) {
+        const entry = load_hoshino_artwork(title, artist);
+
+        if (entry) {
+            render(
+                parent,
+                html`
+                    <span class="cover-art">
+                        <img src=${entry.artwork} alt=${title} />
+                    </span>
+                `
+            );
+
+            render(
+                stats,
+                html`
+                    ${type}
+                    <span class="plays">
+                        <span class="bleh-icon" />
+                        ${entry.listeners.toLocaleString(lang)}
+                    </span>
+                `
+            );
+        }
+
         render(
             parent,
             html`
@@ -1290,6 +1317,9 @@ export function oracle_process() {
                 const background_image = doc.querySelector(
                     '.header-new-background-image'
                 );
+
+                let artwork = null;
+
                 if (!background_image) {
                     render(
                         parent,
@@ -1299,30 +1329,23 @@ export function oracle_process() {
                             </span>
                         `
                     );
+                } else {
+                    artwork = background_image
+                        .getAttribute('content')
+                        .replace('/ar0/', '/300x300/');
 
-                    if (index == 0) {
-                        cache.track.name = title;
-                        cache.track.sister = artist;
-                        cache.track.link = `${root}music/${sanitise(artist)}/${sanitise(title)}`;
-
-                        save_hoshino_artwork(null, title, artist);
-                        oracle_save_cache('track', false);
-                    }
-
-                    return;
+                    render(
+                        parent,
+                        html`
+                            <span class="cover-art">
+                                <img src=${artwork} alt=${title} />
+                            </span>
+                        `
+                    );
                 }
 
-                const artwork = background_image
-                    .getAttribute('content')
-                    .replace('/ar0/', '/300x300/');
-
-                render(
-                    parent,
-                    html`
-                        <span class="cover-art">
-                            <img src=${artwork} alt=${title} />
-                        </span>
-                    `
+                const listeners = doc.querySelector(
+                    '.header-new-info-desktop .header-metadata-tnew-display > p > abbr'
                 );
 
                 if (index == 0) {
@@ -1330,17 +1353,14 @@ export function oracle_process() {
                     cache.track.sister = artist;
                     cache.track.link = `${root}music/${sanitise(artist)}/${sanitise(title)}`;
 
-                    save_hoshino_artwork(artwork, title, artist);
+                    save_hoshino_artwork(
+                        artwork,
+                        title,
+                        artist,
+                        clean_number(listeners?.title)
+                    );
                     oracle_save_cache('track', false);
                 }
-
-                if (!stats || !type) return;
-
-                const listeners = doc.querySelector(
-                    '.header-new-info-desktop .header-metadata-tnew-display > p > abbr'
-                );
-                console.info('oracle', listeners);
-                if (!listeners) return;
 
                 render(
                     stats,
@@ -1348,7 +1368,9 @@ export function oracle_process() {
                         ${type}
                         <span class="plays">
                             <span class="bleh-icon" />
-                            ${listeners.title}
+                            ${clean_number(
+                                listeners?.title.toLocaleString(lang)
+                            )}
                         </span>
                     `
                 );

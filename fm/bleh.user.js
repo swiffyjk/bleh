@@ -27857,6 +27857,7 @@
     return Math.round(value * 100) / 100;
   }
   function clean_number(string) {
+    if (!string) return 0;
     return int2(string.replaceAll(",", "").replaceAll(".", ""));
   }
   function sanitise(text3, method = "+") {
@@ -29976,7 +29977,7 @@
       });
       return;
     }
-    const art = load_hoshino_artwork(album_name, album_sister);
+    const art = load_hoshino_artwork(album_name, album_sister)?.artwork;
     artwork.src = art;
     log(`loaded cover art ${art}`, "hoshino", "info", {
       art,
@@ -30004,36 +30005,37 @@
     let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
     const name_lower = name.toLowerCase();
     const sister_lower = sister.toLowerCase();
-    const artwork = hoshino_cache[sister_lower]?.[name_lower];
-    log(`loaded artwork ${artwork} from cache`, "hoshino", "info", {
+    const entry = hoshino_cache[sister_lower]?.[name_lower];
+    log(`loaded artwork ${entry?.artwork} from cache`, "hoshino", "info", {
+      entry,
       name,
       sister
     });
-    return artwork;
+    return entry;
   }
-  function save_hoshino_artwork(artwork, name, sister) {
+  function save_hoshino_artwork(artwork, name, sister, listeners = null) {
     let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
     const name_lower = name.toLowerCase();
     const sister_lower = sister.toLowerCase();
     if (!hoshino_cache[sister_lower]) hoshino_cache[sister_lower] = {};
+    if (!hoshino_cache[sister_lower][name_lower])
+      hoshino_cache[sister_lower][name_lower] = {};
     if (!artwork || artwork.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg")) {
-      delete hoshino_cache[sister_lower][name_lower];
-      log("cleared artwork from cache", "hoshino", "info", {
-        artwork,
-        name,
-        sister
-      });
+      if (artwork) delete hoshino_cache[sister_lower][name_lower].artwork;
       localStorage.setItem(
         "bleh_hoshino_cache",
         JSON.stringify(hoshino_cache)
       );
-      return;
+    } else {
+      hoshino_cache[sister_lower][name_lower].artwork = artwork;
     }
-    hoshino_cache[sister_lower][name_lower] = artwork;
+    if (listeners)
+      hoshino_cache[sister_lower][name_lower].listeners = listeners;
     log(`saved artwork ${artwork} to cache`, "hoshino", "info", {
       artwork,
       name,
-      sister
+      sister,
+      listeners
     });
     localStorage.setItem("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
   }
@@ -46922,7 +46924,9 @@
         lastfm_releases.push({
           title: release.querySelector(".source-album-name").textContent,
           artist: release.querySelector(".source-album-artist").textContent,
-          plays: release.querySelector(".source-album-stats").firstChild.textContent.trim(),
+          plays: clean_number(
+            release.querySelector(".source-album-stats").firstChild.textContent.trim()
+          ),
           artwork: release.querySelector(
             ".source-album-art > .cover-art > img"
           ).src
@@ -47134,7 +47138,7 @@
                                                     ${match3 ? html.node`
                                                                 <span class="plays">
                                                                     <span class="bleh-icon" />
-                                                                    ${plays}
+                                                                    ${plays.toLocaleString(lang)}
                                                                 </span>
                                                             ` : ""}
                                                 </p>
@@ -47150,7 +47154,8 @@
                   save_hoshino_artwork(
                     artwork,
                     title,
-                    artist2
+                    artist2,
+                    plays
                   );
                   oracle_save_cache("track", false);
                 }
@@ -47229,6 +47234,27 @@
       }
     }
     function load_cover_art(parent, title, artist2, stats = null, type = null, index3 = 1) {
+      const entry = load_hoshino_artwork(title, artist2);
+      if (entry) {
+        render(
+          parent,
+          html`
+                    <span class="cover-art">
+                        <img src=${entry.artwork} alt=${title} />
+                    </span>
+                `
+        );
+        render(
+          stats,
+          html`
+                    ${type}
+                    <span class="plays">
+                        <span class="bleh-icon" />
+                        ${entry.listeners.toLocaleString(lang)}
+                    </span>
+                `
+        );
+      }
       render(
         parent,
         html`
@@ -47261,6 +47287,7 @@
         const background_image = doc.querySelector(
           ".header-new-background-image"
         );
+        let artwork = null;
         if (!background_image) {
           render(
             parent,
@@ -47270,44 +47297,41 @@
                             </span>
                         `
           );
-          if (index3 == 0) {
-            cache2.track.name = title;
-            cache2.track.sister = artist2;
-            cache2.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
-            save_hoshino_artwork(null, title, artist2);
-            oracle_save_cache("track", false);
-          }
-          return;
+        } else {
+          artwork = background_image.getAttribute("content").replace("/ar0/", "/300x300/");
+          render(
+            parent,
+            html`
+                            <span class="cover-art">
+                                <img src=${artwork} alt=${title} />
+                            </span>
+                        `
+          );
         }
-        const artwork = background_image.getAttribute("content").replace("/ar0/", "/300x300/");
-        render(
-          parent,
-          html`
-                        <span class="cover-art">
-                            <img src=${artwork} alt=${title} />
-                        </span>
-                    `
+        const listeners = doc.querySelector(
+          ".header-new-info-desktop .header-metadata-tnew-display > p > abbr"
         );
         if (index3 == 0) {
           cache2.track.name = title;
           cache2.track.sister = artist2;
           cache2.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
-          save_hoshino_artwork(artwork, title, artist2);
+          save_hoshino_artwork(
+            artwork,
+            title,
+            artist2,
+            clean_number(listeners?.title)
+          );
           oracle_save_cache("track", false);
         }
-        if (!stats || !type) return;
-        const listeners = doc.querySelector(
-          ".header-new-info-desktop .header-metadata-tnew-display > p > abbr"
-        );
-        console.info("oracle", listeners);
-        if (!listeners) return;
         render(
           stats,
           html`
                         ${type}
                         <span class="plays">
                             <span class="bleh-icon" />
-                            ${listeners.title}
+                            ${clean_number(
+            listeners?.title.toLocaleString(lang)
+          )}
                         </span>
                     `
         );
@@ -52493,13 +52517,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let position = album_header.querySelector(
         ".header-new-chart-position-number"
       );
-      if (avatar3) {
-        save_hoshino_artwork(
-          avatar3.getAttribute("content").replace("/ar0/", "/avatar300s/"),
-          page.name,
-          page.sister
-        );
-      }
+      const avatar_img = avatar3?.getAttribute("content").replace("/ar0/", "/avatar300s/");
+      const listeners = document.body.querySelector(
+        ".header-new-info-desktop .header-metadata-tnew-display > p > abbr"
+      );
+      save_hoshino_artwork(
+        avatar_img,
+        page.name,
+        page.sister,
+        clean_number(listeners?.title)
+      );
       let redesigned_album_header = html.node`
             <section class="redesigned-header redesigned-album-header no-background">
                 ${is_subpage || ff("show_album_cover_always") ? html.node`
