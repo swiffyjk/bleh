@@ -46608,11 +46608,15 @@
       } else if (page.type == "track") {
         const local = oracle_cache[artist]?.[item]?.track;
         if (local?.fetch) {
+          delete local.fetch;
+          log("deleted legacy track fetch data", "oracle");
+          oracle_save_cache("track");
+        }
+        if (local?.recording) {
           log("skipping track search (local cache)", "oracle", "info", {
             local
           });
-          page.state.oracle_debug.recording_id = local.fetch.id;
-          oracle_track_releases(local.fetch);
+          oracle_track_releases(local.recording);
           return;
         }
       }
@@ -46655,8 +46659,6 @@
     }
     function oracle(data2) {
       if (page.type == "track") {
-        cache2.track.fetch = data2;
-        oracle_save_cache("track");
         oracle_track_releases(data2);
       } else if (page.type == "album") {
         tries = 2;
@@ -46972,24 +46974,14 @@
             `;
       }
     }
-    function oracle_track_releases(data2) {
+    function oracle_track_releases_process(data2) {
+      const recording = oracle_pick_recording(data2);
+      if (recording) cache2.track.recording = recording;
+      oracle_track_releases(recording);
+    }
+    function oracle_track_releases(recording) {
       let releases = [];
       let releases_to_move = [];
-      let lastfm_releases = [];
-      const lastfm_source_albums = albums_and_lyrics_row?.querySelectorAll(".source-album");
-      lastfm_source_albums?.forEach((release) => {
-        lastfm_releases.push({
-          title: release.querySelector(".source-album-name").textContent,
-          artist: release.querySelector(".source-album-artist").textContent,
-          plays: clean_number(
-            release.querySelector(".source-album-stats").firstChild.textContent.trim()
-          ),
-          artwork: release.querySelector(
-            ".source-album-art > .cover-art > img"
-          ).src
-        });
-      });
-      const recording = oracle_pick_recording(data2);
       if (!recording) {
         if (releases_panel) {
           render(
@@ -47010,10 +47002,22 @@
         }
         return;
       }
-      cache2.track.recording = recording;
+      let lastfm_releases = [];
+      const lastfm_source_albums = albums_and_lyrics_row?.querySelectorAll(".source-album");
+      lastfm_source_albums?.forEach((release) => {
+        lastfm_releases.push({
+          title: release.querySelector(".source-album-name").textContent,
+          artist: release.querySelector(".source-album-artist").textContent,
+          plays: clean_number(
+            release.querySelector(".source-album-stats").firstChild.textContent.trim()
+          ),
+          artwork: release.querySelector(
+            ".source-album-art > .cover-art > img"
+          ).src
+        });
+      });
       page.state.oracle_debug.recording_id = recording.id;
       log("picked recording, proceeding", "oracle", "info", {
-        data: data2,
         recording
       });
       if (recording) {

@@ -300,12 +300,17 @@ export function oracle_process() {
             const local = oracle_cache[artist]?.[item]?.track;
 
             if (local?.fetch) {
+                delete local.fetch;
+                log('deleted legacy track fetch data', 'oracle');
+                oracle_save_cache('track');
+            }
+
+            if (local?.recording) {
                 log('skipping track search (local cache)', 'oracle', 'info', {
                     local
                 });
 
-                page.state.oracle_debug.recording_id = local.fetch.id;
-                oracle_track_releases(local.fetch);
+                oracle_track_releases(local.recording);
                 return;
             }
         }
@@ -355,9 +360,6 @@ export function oracle_process() {
 
     function oracle(data) {
         if (page.type == 'track') {
-            cache.track.fetch = data;
-            oracle_save_cache('track');
-
             oracle_track_releases(data);
         } else if (page.type == 'album') {
             tries = 2;
@@ -819,13 +821,41 @@ export function oracle_process() {
         }
     }
 
-    function oracle_track_releases(data) {
+    function oracle_track_releases_process(data) {
+        const recording = oracle_pick_recording(data);
+        if (recording) cache.track.recording = recording;
+
+        oracle_track_releases(recording);
+    }
+
+    function oracle_track_releases(recording) {
         // let's comb through the releases to remove
         // various artists
         let releases = [];
         let releases_to_move = [];
 
-        // let's also look thru the last.fm provided ones
+        if (!recording) {
+            if (releases_panel) {
+                render(
+                    releases_panel,
+                    html`
+                        <h3 class="text-18">
+                            ${tl(trans.releases)}<span class="new-badge beta"
+                                >${tl(trans.beta)}</span
+                            >
+                        </h3>
+                        <div class="loading-data-container">
+                            <div class="loading-data-text failed">
+                                No releases found
+                            </div>
+                        </div>
+                    `
+                );
+            }
+            return;
+        }
+
+        // let's look thru the last.fm provided ones
         // to possibly get listener and cover data
         let lastfm_releases = [];
         const lastfm_source_albums =
@@ -849,34 +879,8 @@ export function oracle_process() {
             });
         });
 
-        const recording = oracle_pick_recording(data);
-
-        if (!recording) {
-            if (releases_panel) {
-                render(
-                    releases_panel,
-                    html`
-                        <h3 class="text-18">
-                            ${tl(trans.releases)}<span class="new-badge beta"
-                                >${tl(trans.beta)}</span
-                            >
-                        </h3>
-                        <div class="loading-data-container">
-                            <div class="loading-data-text failed">
-                                No releases found
-                            </div>
-                        </div>
-                    `
-                );
-            }
-            return;
-        }
-
-        cache.track.recording = recording;
-
         page.state.oracle_debug.recording_id = recording.id;
         log('picked recording, proceeding', 'oracle', 'info', {
-            data,
             recording
         });
 
