@@ -1,3 +1,4 @@
+import { html } from 'lighterhtml';
 import { log } from '../build/log';
 import { ff } from '../sku';
 
@@ -38,6 +39,17 @@ export function hoshino(artwork, name, sister, link = null) {
     artwork.alt = album_name;
 
     if (link && href) {
+        if (link.nodeName != 'A') {
+            const new_link = html.node`
+                <a href=${href} class=${link.classList} data-hoshino-recreated="true">
+                    ${artwork}
+                </a>
+            `;
+            link.parentElement.insertBefore(new_link, link);
+            link.remove();
+            return;
+        }
+
         link.setAttribute('href', href);
     }
 }
