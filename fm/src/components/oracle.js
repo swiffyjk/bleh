@@ -935,6 +935,48 @@ export function oracle_process() {
                 return rank(a.status) - rank(b.status);
             });
 
+            // lets change titles before filtering
+            releases.forEach((release) => {
+                let title = fix_title(release.title);
+                const artist = fix_title(
+                    oracle_aliases(
+                        release['artist-credit']?.[0] ||
+                            recording['artist-credit'][0],
+                        page.sister
+                    )
+                );
+
+                const artist_lower = artist.toLowerCase();
+                const title_lower = title.toLowerCase();
+
+                const defaults = {
+                    guests_in_title: false
+                };
+
+                const oracle_entry = {
+                    ...defaults,
+                    ...((
+                        oracle_albums.hasOwnProperty(artist_lower) &&
+                        oracle_albums[artist_lower].hasOwnProperty(title_lower)
+                    ) ?
+                        oracle_albums[artist_lower][title_lower]
+                    :   {})
+                };
+                log('entry', 'oracle', 'info', {
+                    oracle_entry
+                });
+
+                if (oracle_entry.disambiguation) {
+                    if (oracle_entry.disambiguation[release.disambiguation])
+                        title =
+                            oracle_entry.disambiguation[release.disambiguation];
+                    else if (oracle_entry.disambiguation.other)
+                        title = oracle_entry.disambiguation.other;
+                }
+
+                release.title = title;
+            });
+
             releases = releases.filter(
                 (release, index, self) =>
                     index ==
@@ -1016,7 +1058,7 @@ export function oracle_process() {
                                     log('release', 'oracle', 'log', {
                                         release
                                     });
-                                    let title = fix_title(release.title);
+                                    let title = release.title;
                                     const artist = fix_title(
                                         oracle_aliases(
                                             release['artist-credit']?.[0] ||
@@ -1038,50 +1080,6 @@ export function oracle_process() {
                                         ];
                                     if (type && type.toLowerCase() in types)
                                         type = types[type.toLowerCase()];
-
-                                    const artist_lower = artist.toLowerCase();
-                                    const title_lower = title.toLowerCase();
-
-                                    const defaults = {
-                                        guests_in_title: false
-                                    };
-
-                                    const oracle_entry = {
-                                        ...defaults,
-                                        ...((
-                                            oracle_albums.hasOwnProperty(
-                                                artist_lower
-                                            ) &&
-                                            oracle_albums[
-                                                artist_lower
-                                            ].hasOwnProperty(title_lower)
-                                        ) ?
-                                            oracle_albums[artist_lower][
-                                                title_lower
-                                            ]
-                                        :   {})
-                                    };
-                                    log('entry', 'oracle', 'info', {
-                                        oracle_entry
-                                    });
-
-                                    if (oracle_entry.disambiguation) {
-                                        if (
-                                            oracle_entry.disambiguation[
-                                                release.disambiguation
-                                            ]
-                                        )
-                                            title =
-                                                oracle_entry.disambiguation[
-                                                    release.disambiguation
-                                                ];
-                                        else if (
-                                            oracle_entry.disambiguation.other
-                                        )
-                                            title =
-                                                oracle_entry.disambiguation
-                                                    .other;
-                                    }
 
                                     // is there a matching last.fm entry available atm?
                                     const match = lastfm_releases.find(

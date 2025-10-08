@@ -47408,6 +47408,34 @@
           };
           return rank(a.status) - rank(b.status);
         });
+        releases.forEach((release) => {
+          let title = fix_title(release.title);
+          const artist2 = fix_title(
+            oracle_aliases(
+              release["artist-credit"]?.[0] || recording["artist-credit"][0],
+              page.sister
+            )
+          );
+          const artist_lower = artist2.toLowerCase();
+          const title_lower = title.toLowerCase();
+          const defaults2 = {
+            guests_in_title: false
+          };
+          const oracle_entry = {
+            ...defaults2,
+            ...oracle_albums.hasOwnProperty(artist_lower) && oracle_albums[artist_lower].hasOwnProperty(title_lower) ? oracle_albums[artist_lower][title_lower] : {}
+          };
+          log("entry", "oracle", "info", {
+            oracle_entry
+          });
+          if (oracle_entry.disambiguation) {
+            if (oracle_entry.disambiguation[release.disambiguation])
+              title = oracle_entry.disambiguation[release.disambiguation];
+            else if (oracle_entry.disambiguation.other)
+              title = oracle_entry.disambiguation.other;
+          }
+          release.title = title;
+        });
         releases = releases.filter(
           (release, index3, self3) => index3 == self3.findIndex((r) => {
             const r_artist = r["artist-credit"]?.[0]?.name;
@@ -47467,7 +47495,7 @@
               log("release", "oracle", "log", {
                 release
               });
-              let title = fix_title(release.title);
+              let title = release.title;
               const artist2 = fix_title(
                 oracle_aliases(
                   release["artist-credit"]?.[0] || recording["artist-credit"][0],
@@ -47483,26 +47511,6 @@
               let type = release["release-group"]["primary-type"];
               if (type && type.toLowerCase() in types)
                 type = types[type.toLowerCase()];
-              const artist_lower = artist2.toLowerCase();
-              const title_lower = title.toLowerCase();
-              const defaults2 = {
-                guests_in_title: false
-              };
-              const oracle_entry = {
-                ...defaults2,
-                ...oracle_albums.hasOwnProperty(
-                  artist_lower
-                ) && oracle_albums[artist_lower].hasOwnProperty(title_lower) ? oracle_albums[artist_lower][title_lower] : {}
-              };
-              log("entry", "oracle", "info", {
-                oracle_entry
-              });
-              if (oracle_entry.disambiguation) {
-                if (oracle_entry.disambiguation[release.disambiguation])
-                  title = oracle_entry.disambiguation[release.disambiguation];
-                else if (oracle_entry.disambiguation.other)
-                  title = oracle_entry.disambiguation.other;
-              }
               const match3 = lastfm_releases.find(
                 (r) => r.title == title && r.artist == artist2
               );
