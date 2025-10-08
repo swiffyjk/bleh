@@ -46535,6 +46535,7 @@
               "info",
               { local }
             );
+            page.state.oracle_debug.release_id = local.id;
             oracle_album_fetch({
               id: local.id
             });
@@ -46545,6 +46546,7 @@
               "info",
               { local }
             );
+            page.state.oracle_debug.release_id = local.fetch.id;
             oracle_album(local.fetch);
           }
           return;
@@ -46555,6 +46557,7 @@
           log("skipping track search (local cache)", "oracle", "info", {
             local
           });
+          page.state.oracle_debug.recording_id = local.fetch.id;
           oracle_track_releases(local.fetch);
           return;
         }

@@ -280,6 +280,7 @@ export function oracle_process() {
                         'info',
                         { local }
                     );
+                    page.state.oracle_debug.release_id = local.id;
                     oracle_album_fetch({
                         id: local.id
                     });
@@ -290,6 +291,7 @@ export function oracle_process() {
                         'info',
                         { local }
                     );
+                    page.state.oracle_debug.release_id = local.fetch.id;
                     oracle_album(local.fetch);
                 }
                 return;
@@ -302,6 +304,7 @@ export function oracle_process() {
                     local
                 });
 
+                page.state.oracle_debug.recording_id = local.fetch.id;
                 oracle_track_releases(local.fetch);
                 return;
             }
