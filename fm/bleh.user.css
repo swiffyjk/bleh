@@ -9762,7 +9762,7 @@
                     inset: 0;
                     pointer-events: none;
                     margin: calc(-1 * var(--item-list-gap));
-                    background-position: 0 50%;
+                    background-position: center;
                     opacity: 0.15;
 
                     --mask: linear-gradient(180deg, transparent 0%, black 90%);
