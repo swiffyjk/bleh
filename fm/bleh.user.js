@@ -47272,7 +47272,7 @@
             const artist3 = artists[i];
             const joinphrase = (artists[i - 1].joinphrase || "").trim().toLowerCase();
             if (!found_feature) {
-              if (joinphrase.includes("feat")) {
+              if (["feat", "with"].includes(joinphrase)) {
                 found_feature = true;
                 first_joinphrase = joinphrase;
                 guests.push(artist3);

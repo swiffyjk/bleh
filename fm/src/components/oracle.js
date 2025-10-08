@@ -749,7 +749,7 @@ export function oracle_process() {
                                     .toLowerCase();
 
                                 if (!found_feature) {
-                                    if (joinphrase.includes('feat')) {
+                                    if (['feat', 'with'].includes(joinphrase)) {
                                         found_feature = true;
                                         first_joinphrase = joinphrase;
 
