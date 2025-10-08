@@ -279,8 +279,6 @@ export function patch_titles(search = page.structure.main) {
                     track_artist
                 );
 
-            let image = track.querySelector('.chartlist-image img');
-
             const album_link = track.querySelector('.chartlist-image a');
 
             const show_album_text =
@@ -290,11 +288,13 @@ export function patch_titles(search = page.structure.main) {
             track.setAttribute('data-show-album-text', show_album_text);
 
             const image_wrap = track.querySelector('.chartlist-image');
+            let link;
+            let image;
             if (image_wrap) {
-                let link = image_wrap.querySelector('.cover-art');
-                let image = link.querySelector('img');
+                link = image_wrap.querySelector('.cover-art');
+                image = link.querySelector('img');
 
-                if (!is_album) {
+                if (!is_album && has_bar) {
                     hoshino(
                         image,
                         track_title.getAttribute('data-name'),

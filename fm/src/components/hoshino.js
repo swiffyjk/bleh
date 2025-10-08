@@ -67,7 +67,7 @@ export function save_hoshino_artwork(artwork, name, sister) {
 
     if (!hoshino_cache[sister_lower]) hoshino_cache[sister_lower] = {};
 
-    if (!artwork) {
+    if (!artwork || artwork.endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg')) {
         delete hoshino_cache[sister_lower][name_lower];
 
         log('cleared artwork from cache', 'hoshino', 'info', {
