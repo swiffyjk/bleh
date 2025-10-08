@@ -127,7 +127,7 @@ export function bleh_tracks() {
 
         const hoshino_entry = hoshino_return(page.name, page.sister);
 
-        if (hoshino_entry) {
+        if (hoshino_entry && ff('ruby')) {
             create_avatar(
                 page.state.avatar_side,
                 hoshino_entry,

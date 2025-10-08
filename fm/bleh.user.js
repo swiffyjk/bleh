@@ -46634,7 +46634,7 @@
             </section>
         `;
       const hoshino_entry = hoshino_return(page.name, page.sister);
-      if (hoshino_entry) {
+      if (hoshino_entry && ff("ruby")) {
         create_avatar(
           page.state.avatar_side,
           hoshino_entry,
@@ -63557,12 +63557,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         date: "2025-10-03"
       },
       hoshino: {
-        default: false,
+        default: true,
         name: "Leverage oracle cache to re-assign artwork to tracks",
         date: "2025-10-08"
       },
       ruby: {
-        default: false,
+        default: true,
         name: "Replace album/track artwork and metadata on dedicated pages",
         date: "2025-10-08"
       }
