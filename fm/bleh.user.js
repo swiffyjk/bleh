@@ -46659,7 +46659,7 @@
     }
     function oracle(data2) {
       if (page.type == "track") {
-        oracle_track_releases(data2);
+        oracle_track_releases_process(data2);
       } else if (page.type == "album") {
         tries = 2;
         const release = oracle_pick_release(data2);

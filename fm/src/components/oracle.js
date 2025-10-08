@@ -360,7 +360,7 @@ export function oracle_process() {
 
     function oracle(data) {
         if (page.type == 'track') {
-            oracle_track_releases(data);
+            oracle_track_releases_process(data);
         } else if (page.type == 'album') {
             tries = 2;
 
