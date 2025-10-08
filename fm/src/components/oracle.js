@@ -28,6 +28,7 @@ import { version } from '../main';
 import { settings } from '../build/config';
 import { dialog } from './dialog';
 import tippy, { followCursor } from 'tippy.js';
+import { save_hoshino_artwork } from './hoshino';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -1148,10 +1149,15 @@ export function oracle_process() {
 
                                     if (index == 0) {
                                         cache.track.name = title;
+                                        cache.track.sister = artist;
                                         cache.track.link = `${root}music/${sanitise(artist)}/${sanitise(title)}`;
 
                                         if (artwork) {
-                                            cache.track.artwork = artwork;
+                                            save_hoshino_artwork(
+                                                artwork,
+                                                title,
+                                                artist
+                                            );
                                             oracle_save_cache('track', false);
                                         }
                                     }
@@ -1295,7 +1301,11 @@ export function oracle_process() {
                     );
 
                     if (index == 0) {
-                        cache.track.artwork = '';
+                        cache.track.name = title;
+                        cache.track.sister = artist;
+                        cache.track.link = `${root}music/${sanitise(artist)}/${sanitise(title)}`;
+
+                        save_hoshino_artwork(null, title, artist);
                         oracle_save_cache('track', false);
                     }
 
@@ -1316,7 +1326,11 @@ export function oracle_process() {
                 );
 
                 if (index == 0) {
-                    cache.track.artwork = artwork;
+                    cache.track.name = title;
+                    cache.track.sister = artist;
+                    cache.track.link = `${root}music/${sanitise(artist)}/${sanitise(title)}`;
+
+                    save_hoshino_artwork(artwork, title, artist);
                     oracle_save_cache('track', false);
                 }
 
