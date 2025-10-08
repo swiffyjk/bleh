@@ -47254,6 +47254,7 @@
                     </span>
                 `
         );
+        return;
       }
       render(
         parent,
@@ -47329,9 +47330,7 @@
                         ${type}
                         <span class="plays">
                             <span class="bleh-icon" />
-                            ${clean_number(
-            listeners?.title.toLocaleString(lang)
-          )}
+                            ${listeners?.title.toLocaleString(lang)}
                         </span>
                     `
         );
