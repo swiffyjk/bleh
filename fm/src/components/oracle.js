@@ -1229,16 +1229,6 @@ export function oracle_process() {
                         e.scrollTop = 0;
                     });
                 }
-            } else {
-                const hoshino_entry = hoshino_return(page.name, page.sister);
-
-                if (hoshino_entry) {
-                    create_avatar(
-                        page.state.avatar_side,
-                        hoshino_entry,
-                        page.state.avatar_side_override
-                    );
-                }
             }
 
             const artist_elem = header.querySelector('h2');

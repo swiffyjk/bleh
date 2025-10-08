@@ -24,6 +24,7 @@ import { html, render } from 'lighterhtml';
 import { expand_avatar } from '../avatar.js';
 import tippy from 'tippy.js';
 import { oracle_process } from '../components/oracle.js';
+import { hoshino_return } from '../components/hoshino.js';
 
 export function bleh_tracks() {
     let track_header = document.body.querySelector('.header-new--track');
@@ -124,7 +125,15 @@ export function bleh_tracks() {
             </section>
         `;
 
-        if (album_avatar) {
+        const hoshino_entry = hoshino_return(page.name, page.sister);
+
+        if (hoshino_entry) {
+            create_avatar(
+                page.state.avatar_side,
+                hoshino_entry,
+                page.state.avatar_side_override
+            );
+        } else if (album_avatar) {
             create_avatar(
                 page.state.avatar_side,
                 album_avatar.src.replace('300x300', 'avatar300s'),

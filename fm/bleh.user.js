@@ -46633,7 +46633,14 @@
                 </div>
             </section>
         `;
-      if (album_avatar) {
+      const hoshino_entry = hoshino_return(page.name, page.sister);
+      if (hoshino_entry) {
+        create_avatar(
+          page.state.avatar_side,
+          hoshino_entry,
+          page.state.avatar_side_override
+        );
+      } else if (album_avatar) {
         create_avatar(
           page.state.avatar_side,
           album_avatar.src.replace("300x300", "avatar300s"),
@@ -47619,15 +47626,6 @@
               e.preventDefault();
               e.scrollTop = 0;
             });
-          }
-        } else {
-          const hoshino_entry = hoshino_return(page.name, page.sister);
-          if (hoshino_entry) {
-            create_avatar(
-              page.state.avatar_side,
-              hoshino_entry,
-              page.state.avatar_side_override
-            );
           }
         }
         const artist_elem = header.querySelector("h2");
