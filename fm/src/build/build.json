@@ -324,6 +324,16 @@
             "default": false,
             "name": "Replace browser menus with in-house",
             "date": "2025-10-03"
+        },
+        "hoshino": {
+            "default": false,
+            "name": "Leverage oracle cache to re-assign artwork to tracks",
+            "date": "2025-10-08"
+        },
+        "ruby": {
+            "default": false,
+            "name": "Replace album/track artwork and metadata on dedicated pages",
+            "date": "2025-10-08"
         }
     }
 }

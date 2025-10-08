@@ -32,6 +32,7 @@ import { notify } from './notify.js';
 import { redirect } from './music.js';
 import tippy from 'tippy.js';
 import ColorThief from 'color-thief-browser';
+import { hoshino } from './hoshino.js';
 
 export function patch_titles(search = page.structure.main) {
     if (page.subpage === 'tags_overview') return;
@@ -282,6 +283,27 @@ export function patch_titles(search = page.structure.main) {
 
             const album_link = track.querySelector('.chartlist-image a');
 
+            const show_album_text =
+                (is_active || settings.expand_tracks == 'always') &&
+                settings.expand_tracks != 'never' &&
+                settings.stacked_chartlist_info;
+            track.setAttribute('data-show-album-text', show_album_text);
+
+            const image_wrap = track.querySelector('.chartlist-image');
+            if (image_wrap) {
+                let link = image_wrap.querySelector('.cover-art');
+                let image = link.querySelector('img');
+
+                if (!is_album) {
+                    hoshino(
+                        image,
+                        track_title.getAttribute('data-name'),
+                        track_artist,
+                        link
+                    );
+                }
+            }
+
             if (settings.format_guest_features) {
                 let formatted_title = name_includes(
                     track_title.getAttribute('data-name'),
@@ -359,7 +381,7 @@ export function patch_titles(search = page.structure.main) {
                         <div class="track-preview">
                             <div class="image">
                                 <div class="inner-image">
-                                    ${image ? html.node`<img src=${image.getAttribute('src')} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
+                                    ${image ? html.node`<img src=${image.src} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
                                 </div>
                             </div>
                             <div class="info">
@@ -994,17 +1016,7 @@ export function patch_titles(search = page.structure.main) {
                 );
             }
 
-            const show_album_text =
-                (is_active || settings.expand_tracks == 'always') &&
-                settings.expand_tracks != 'never' &&
-                settings.stacked_chartlist_info;
-            track.setAttribute('data-show-album-text', show_album_text);
-
-            const image_wrap = track.querySelector('.chartlist-image');
             if (image_wrap) {
-                let link = image_wrap.querySelector('.cover-art');
-                let image = link.querySelector('img');
-
                 if (
                     !is_album &&
                     show_album_text &&

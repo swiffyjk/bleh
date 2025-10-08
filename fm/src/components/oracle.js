@@ -78,11 +78,13 @@ export function oracle_process() {
         cache.track = {};
     }
 
-    function oracle_save_cache(type) {
-        const day = 24 * 60 * 60 * 1000;
+    function oracle_save_cache(type, bump = true) {
+        if (bump) {
+            const day = 24 * 60 * 60 * 1000;
 
-        cache[type].expire = Date.now() + day * 7;
-        cache[type].date = Date.now();
+            cache[type].expire = Date.now() + day * 7;
+            cache[type].date = Date.now();
+        }
 
         oracle_cache[artist][item] = cache;
 
@@ -864,6 +866,9 @@ export function oracle_process() {
             return;
         }
 
+        cache.track.recording = recording;
+        oracle_save_cache('track', false);
+
         page.state.oracle_debug.recording_id = recording.id;
         log('picked recording, proceeding', 'oracle', 'info', {
             data,
@@ -1141,13 +1146,24 @@ export function oracle_process() {
                                         </div>
                                     `;
 
+                                    if (index == 0) {
+                                        cache.track.name = title;
+                                        cache.track.link = `${root}music/${sanitise(artist)}/${sanitise(title)}`;
+
+                                        if (artwork) {
+                                            cache.track.artwork = artwork;
+                                            oracle_save_cache('track', false);
+                                        }
+                                    }
+
                                     if (!artwork && index < 2)
                                         load_cover_art(
                                             artwork_container,
                                             title,
                                             artist,
                                             stats,
-                                            type
+                                            type,
+                                            index
                                         );
 
                                     return elem;
@@ -1219,7 +1235,14 @@ export function oracle_process() {
         }
     }
 
-    function load_cover_art(parent, title, artist, stats = null, type = null) {
+    function load_cover_art(
+        parent,
+        title,
+        artist,
+        stats = null,
+        type = null,
+        index = 1
+    ) {
         render(
             parent,
             html`
@@ -1233,6 +1256,8 @@ export function oracle_process() {
         );
 
         if (!ff('oracle_fetch_artwork')) return;
+
+        log(`loading cover art for index ${index}`, 'oracle');
 
         fetch(`${root}music/${sanitise(artist)}/${sanitise(title)}/`)
             .then((res) => {
@@ -1268,22 +1293,32 @@ export function oracle_process() {
                             </span>
                         `
                     );
+
+                    if (index == 0) {
+                        cache.track.artwork = '';
+                        oracle_save_cache('track', false);
+                    }
+
                     return;
                 }
+
+                const artwork = background_image
+                    .getAttribute('content')
+                    .replace('/ar0/', '/300x300/');
 
                 render(
                     parent,
                     html`
                         <span class="cover-art">
-                            <img
-                                src=${background_image
-                                    .getAttribute('content')
-                                    .replace('/ar0/', '/300x300/')}
-                                alt=${title}
-                            />
+                            <img src=${artwork} alt=${title} />
                         </span>
                     `
                 );
+
+                if (index == 0) {
+                    cache.track.artwork = artwork;
+                    oracle_save_cache('track', false);
+                }
 
                 if (!stats || !type) return;
 

@@ -6671,13 +6671,13 @@
             function CacheStorage2() {
             }
             CacheStorage2.getOrigin = function(url) {
-              var link = CacheStorage2._link;
-              if (!link) {
+              var link2 = CacheStorage2._link;
+              if (!link2) {
                 return "about:blank";
               }
-              link.href = url;
-              link.href = link.href;
-              return link.protocol + link.hostname + link.port;
+              link2.href = url;
+              link2.href = link2.href;
+              return link2.protocol + link2.hostname + link2.port;
             };
             CacheStorage2.isSameOrigin = function(src) {
               return CacheStorage2.getOrigin(src) === CacheStorage2._origin;
@@ -13832,11 +13832,11 @@
         });
         var simpleURLRegex = /([*~_]+|\b)(((https?|ftp|dict):\/\/|www\.)[^'">\s]+?\.[^'">\s]+?)()(\1)?(?=\s|$)(?!["<>])/gi, simpleURLRegex2 = /([*~_]+|\b)(((https?|ftp|dict):\/\/|www\.)[^'">\s]+\.[^'">\s]+?)([.!?,()\[\]])?(\1)?(?=\s|$)(?!["<>])/gi, delimUrlRegex = /()<(((https?|ftp|dict):\/\/|www\.)[^'">\s]+)()>()/gi, simpleMailRegex = /(^|\s)(?:mailto:)?([A-Za-z0-9!#$%&'*+-/=?^_`{|}~.]+@[-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+)(?=$|\s)/gmi, delimMailRegex = /<()(?:mailto:)?([-.\w]+@[-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+)>/gi, replaceLink = function(options) {
           "use strict";
-          return function(wm, leadingMagicChars, link, m2, m3, trailingPunctuation, trailingMagicChars) {
-            link = link.replace(showdown2.helper.regexes.asteriskDashAndColon, showdown2.helper.escapeCharactersCallback);
-            var lnkTxt = link, append = "", target = "", lmc = leadingMagicChars || "", tmc = trailingMagicChars || "";
-            if (/^www\./i.test(link)) {
-              link = link.replace(/^www\./i, "http://www.");
+          return function(wm, leadingMagicChars, link2, m2, m3, trailingPunctuation, trailingMagicChars) {
+            link2 = link2.replace(showdown2.helper.regexes.asteriskDashAndColon, showdown2.helper.escapeCharactersCallback);
+            var lnkTxt = link2, append = "", target = "", lmc = leadingMagicChars || "", tmc = trailingMagicChars || "";
+            if (/^www\./i.test(link2)) {
+              link2 = link2.replace(/^www\./i, "http://www.");
             }
             if (options.excludeTrailingPunctuationFromURLs && trailingPunctuation) {
               append = trailingPunctuation;
@@ -13844,7 +13844,7 @@
             if (options.openLinksInNewWindow) {
               target = ' rel="noopener noreferrer" target="\xA8E95Eblank"';
             }
-            return lmc + '<a href="' + link + '"' + target + ">" + lnkTxt + "</a>" + append + tmc;
+            return lmc + '<a href="' + link2 + '"' + target + ">" + lnkTxt + "</a>" + append + tmc;
           };
         }, replaceMail = function(options, globals) {
           "use strict";
@@ -27968,10 +27968,10 @@
   }
   function convert_gif_to_png(url) {
     const available_hosts = ["www.last.fm", "lastfm.freetls.fastly.net"];
-    const link = new URL(url, `https://www.last.fm${root}`);
-    if (!available_hosts.includes(link.hostname))
+    const link2 = new URL(url, `https://www.last.fm${root}`);
+    if (!available_hosts.includes(link2.hostname))
       return Promise.reject(
-        new Error("url is not in valid hosts list: " + link.hostname)
+        new Error("url is not in valid hosts list: " + link2.hostname)
       );
     return new Promise((resolve2, reject) => {
       const image = html.node`
@@ -28019,8 +28019,8 @@
   }
   function is_link_external(url) {
     try {
-      const link = new URL(url, window.location.origin);
-      return link.hostname != window.location.hostname;
+      const link2 = new URL(url, window.location.origin);
+      return link2.hostname != window.location.hostname;
     } catch {
       return false;
     }
@@ -30514,12 +30514,12 @@
   }
   function download(url, filename = null) {
     log(`downloading ${filename}`, "download");
-    let link = html.node`
+    let link2 = html.node`
         <a href=${url} download />
     `;
     if (filename)
-      link.setAttribute("download", filename);
-    link.click();
+      link2.setAttribute("download", filename);
+    link2.click();
     notify({
       id: "downloaded",
       title: tl2(trans2.downloaded),
@@ -31092,11 +31092,11 @@
                 <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl2(trans2.enter_username)}">
                 <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
         let name = input2.value;
-        let link = id;
+        let link2 = id;
         dialog_rm({
           id: "other_listener"
         });
-        window.location.href = `${root}user/${name}/library/music/${link}`;
+        window.location.href = `${root}user/${name}/library/music/${link2}`;
       }}>${tl2(trans2.done)}</button>
             </div>
         </div>
@@ -31893,26 +31893,26 @@
       play_on.parentElement.remove();
       play_links = play_on.querySelectorAll("li");
       play_links.forEach((item) => {
-        const link = item.querySelector(
+        const link2 = item.querySelector(
           ".play-this-track-playlink:not(.visible-xs)"
         );
-        link.classList.remove("play-this-track-playlink");
-        link.classList.add("music-link");
+        link2.classList.remove("play-this-track-playlink");
+        link2.classList.add("music-link");
         const replace = item.querySelector(".replace-playlink");
-        if (link.classList.contains("play-this-track-playlink--youtube")) {
-          link.textContent = "YouTube";
+        if (link2.classList.contains("play-this-track-playlink--youtube")) {
+          link2.textContent = "YouTube";
           if (!settings.music_links.includes("youtube")) return;
-        } else if (link.classList.contains("play-this-track-playlink--spotify")) {
-          link.textContent = "Spotify";
+        } else if (link2.classList.contains("play-this-track-playlink--spotify")) {
+          link2.textContent = "Spotify";
           if (!settings.music_links.includes("spotify")) return;
-        } else if (link.classList.contains("play-this-track-playlink--itunes")) {
-          link.textContent = "Apple";
+        } else if (link2.classList.contains("play-this-track-playlink--itunes")) {
+          link2.textContent = "Apple";
           if (!settings.music_links.includes("itunes")) return;
         }
         if (replace) {
           replace.classList.add("dropdown-menu-clickable-item");
           item.removeChild(replace);
-          let menu = tippy_esm_default(link, {
+          let menu = tippy_esm_default(link2, {
             theme: "context-menu",
             content: replace,
             placement: "right-start",
@@ -31927,7 +31927,7 @@
               });
             }
           });
-          register_menu(link, menu);
+          register_menu(link2, menu);
         }
         link_container.appendChild(item);
       });
@@ -32210,16 +32210,16 @@
           let externals_links = externals.querySelectorAll(
             ".resource-external-link"
           );
-          externals_links.forEach((link) => {
-            link.classList.add("music-link");
-            let type = link.classList[1];
+          externals_links.forEach((link2) => {
+            link2.classList.add("music-link");
+            let type = link2.classList[1];
             if (type == "resource-external-link--homepage")
-              link.textContent = tl2(trans2.website);
+              link2.textContent = tl2(trans2.website);
             else if (type == "resource-external-link--twitter")
-              link.textContent = "Twitter";
+              link2.textContent = "Twitter";
             else if (type == "resource-external-link--facebook")
-              link.textContent = "Facebook";
-            link_container.appendChild(link);
+              link2.textContent = "Facebook";
+            link_container.appendChild(link2);
           });
         }
       }
@@ -32262,13 +32262,13 @@
         </section>
     `);
   }
-  function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
+  function create_listen_item(parent, { name, listens, link: link2, avi, count = 0, button = false, katsune = false }, header_type) {
     if (!name) return;
     log(
       `creating listen item of ${name}, ${count}, ${listens}`,
       "artist",
       "info",
-      { avi, link }
+      { avi, link: link2 }
     );
     let listen_item;
     if (button) listen_item = html.node`<button />`;
@@ -32276,7 +32276,7 @@
     listen_item.classList.add("btn", "listen-item");
     listen_item.setAttribute(
       "href",
-      `${root}user/${name}/library/music/${redirect()}${link}`
+      `${root}user/${name}/library/music/${redirect()}${link2}`
     );
     listen_item.setAttribute("data-listens", listens);
     listen_item.setAttribute("id", `listen-item--${name}`);
@@ -32358,7 +32358,7 @@
     } else if (listens == -3) {
       listen_item.classList.add("listen-item-other");
       listen_item.removeAttribute("href");
-      listen_item.setAttribute("onclick", `_other_listener('${link}')`);
+      listen_item.setAttribute("onclick", `_other_listener('${link2}')`);
       tippy_esm_default(listen_item, {
         content: tl2(trans2.view_others_library)
       });
@@ -32413,11 +32413,11 @@
         scrobbles.value = clean_number(value.getAttribute("title"));
         scrobbles.abbr = value.textContent.trim();
       } else if (index3 == 2) {
-        let link = item.querySelector("a");
-        if (!link) return;
+        let link2 = item.querySelector("a");
+        if (!link2) return;
         metascore.text = text3;
         metascore.abbr = value.textContent.trim();
-        metascore.link = link.getAttribute("href");
+        metascore.link = link2.getAttribute("href");
       }
     });
     page.structure.side.classList.remove("hidden-xs");
@@ -32802,6 +32802,40 @@
 
   // src/components/track.js
   var import_color_thief_browser2 = __toESM(require_color_thief_min(), 1);
+
+  // src/components/hoshino.js
+  function hoshino(artwork, name, sister, link2 = null) {
+    if (!ff("hoshino")) return;
+    let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
+    const name_lower = name.toLowerCase();
+    const sister_lower = sister.toLowerCase();
+    const art = oracle_cache[sister_lower]?.[name_lower]?.track?.artwork;
+    const href = oracle_cache[sister_lower]?.[name_lower]?.track?.link;
+    const alt = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
+    if (!art) {
+      log("no cache to be used", "hoshino", "info", {
+        artwork,
+        name,
+        sister
+      });
+      return;
+    }
+    artwork.src = art;
+    log(`loaded cover art ${art}`, "hoshino", "info", {
+      art,
+      artwork,
+      name,
+      sister
+    });
+    if (alt) {
+      artwork.alt = alt;
+    }
+    if (link2 && href) {
+      link2.setAttribute("href", href);
+    }
+  }
+
+  // src/components/track.js
   function patch_titles(search = page.structure.main) {
     if (page.subpage === "tags_overview") return;
     if (!search) {
@@ -32890,8 +32924,8 @@
         let is_user = track.querySelector(".chartlist-image .avatar");
         let is_artist = false;
         if (is_user) {
-          let link = track_title.getAttribute("href");
-          if (link.startsWith(`${root}music/`)) {
+          let link2 = track_title.getAttribute("href");
+          if (link2.startsWith(`${root}music/`)) {
             is_user = false;
             is_artist = true;
           }
@@ -32992,6 +33026,21 @@
           );
         let image = track.querySelector(".chartlist-image img");
         const album_link = track.querySelector(".chartlist-image a");
+        const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never" && settings.stacked_chartlist_info;
+        track.setAttribute("data-show-album-text", show_album_text);
+        const image_wrap = track.querySelector(".chartlist-image");
+        if (image_wrap) {
+          let link2 = image_wrap.querySelector(".cover-art");
+          let image2 = link2.querySelector("img");
+          if (!is_album) {
+            hoshino(
+              image2,
+              track_title.getAttribute("data-name"),
+              track_artist,
+              link2
+            );
+          }
+        }
         if (settings.format_guest_features) {
           let formatted_title = name_includes(
             track_title.getAttribute("data-name"),
@@ -33051,7 +33100,7 @@
                         <div class="track-preview">
                             <div class="image">
                                 <div class="inner-image">
-                                    ${image ? html.node`<img src=${image.getAttribute("src")} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
+                                    ${image ? html.node`<img src=${image.src} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
                                 </div>
                             </div>
                             <div class="info">
@@ -33574,16 +33623,11 @@
             track_title.getAttribute("data-name")
           );
         }
-        const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never" && settings.stacked_chartlist_info;
-        track.setAttribute("data-show-album-text", show_album_text);
-        const image_wrap = track.querySelector(".chartlist-image");
         if (image_wrap) {
-          let link = image_wrap.querySelector(".cover-art");
-          let image2 = link.querySelector("img");
           if (!is_album && show_album_text && !has_bar && !settings.album_text) {
             let alt = romanise(
               correct_item_by_artist(
-                image2.getAttribute("alt"),
+                image.getAttribute("alt"),
                 track_artist
               )
             );
@@ -33596,11 +33640,11 @@
           if (!settings.colourful_tracks && !settings.colourful_tracks_all)
             return;
           if (!settings.colourful_tracks_all && !is_active) return;
-          image2.setAttribute("crossorigin", "anonymous");
+          image.setAttribute("crossorigin", "anonymous");
           try {
-            image2.addEventListener("load", function() {
+            image.addEventListener("load", function() {
               let thief = new import_color_thief_browser2.default();
-              let colour2 = thief.getColor(image2);
+              let colour2 = thief.getColor(image);
               let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
               let hue2 = hsl.h;
               let sat = clamp_sat2(hsl.s / 100 * 3);
@@ -38608,9 +38652,9 @@
     if (new_run) page.structure.side.appendChild(scrobble_insights_panel);
   }
   function bleh_glacier_library_open_index(index3) {
-    const link = page.state.glacier.links[index3];
-    log(`opening link ${link}`, "glacier library");
-    window.location.href = link;
+    const link2 = page.state.glacier.links[index3];
+    log(`opening link ${link2}`, "glacier library");
+    window.location.href = link2;
   }
   function bleh_glacier_library_request(request_url) {
     log(`making our own request with ${request_url}`, "glacier library");
@@ -38820,11 +38864,11 @@
     let artist = legacy_header.querySelector(".text-colour-link");
     if (artist) artist = artist.textContent.trim();
     let image = legacy_header.querySelector(".library-header-image img");
-    let link = `${root}music/${redirect()}${sanitise(header_title)}`;
+    let link2 = `${root}music/${redirect()}${sanitise(header_title)}`;
     if (type == "album")
-      link = `${root}music/${redirect()}${sanitise(artist)}/${sanitise(header_title)}`;
+      link2 = `${root}music/${redirect()}${sanitise(artist)}/${sanitise(header_title)}`;
     else if (type == "track")
-      link = `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(header_title)}`;
+      link2 = `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(header_title)}`;
     let header = document.createElement("section");
     header.classList.add(
       "glacier-library-top",
@@ -38843,7 +38887,7 @@
                     ${tl2(trans2[type])}
                 </div>
                 <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                    <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? html`${{ html: tl2(trans2.by_artist, { a: `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>` }) }}` : ""}
+                    <a href="${link2}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? html`${{ html: tl2(trans2.by_artist, { a: `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>` }) }}` : ""}
                 </div>
             </div>
         </div>
@@ -39545,7 +39589,7 @@
   }
   function create_profile_top_item(parent, {
     name,
-    link,
+    link: link2,
     text: text3 = "",
     type,
     new_release = false,
@@ -39555,14 +39599,14 @@
     allow_html = false,
     tooltip_theme = ""
   }) {
-    log(`creating top item of ${name}, ${link}, ${text3}`, "profile");
+    log(`creating top item of ${name}, ${link2}, ${text3}`, "profile");
     let side_action;
     if (action === "button") {
       side_action = html.node`
             <button
                 class="btn side-action"
                 data-type=${type}
-                onclick=${link}
+                onclick=${link2}
             >
                 ${tl2(trans2[type])}
                 ${new_release ? html.node`<div class="new-badge">${tl2(trans2.new)}</div>` : ""}
@@ -39574,7 +39618,7 @@
             <a
                 class="btn side-action"
                 data-type=${type}
-                href=${link}
+                href=${link2}
             >
                 ${tl2(trans2[type])}
                 ${new_release ? html.node`<div class="new-badge">${tl2(trans2.new)}</div>` : ""}
@@ -41727,7 +41771,7 @@
     let scrobbles = obsession_container.querySelector(
       ".obsession-meta-scrobbles"
     );
-    let link = track_title.querySelector("a").getAttribute("href");
+    let link2 = track_title.querySelector("a").getAttribute("href");
     let by = track_artist.querySelector(".obsession-meta-artist-by");
     track_artist.removeChild(by);
     let artist_name = track_artist.querySelector("a");
@@ -41794,7 +41838,7 @@
             <div class="info-side">
                 <div class="sub-text">${tl2(trans2.obsession)}</div>
                 <div class="title-container">
-                    <h1><a href="${link}">${track_title}</a></h1>
+                    <h1><a href="${link2}">${track_title}</a></h1>
                 </div>
                 <h2>${html.node([track_artist.innerHTML])}</h2>
             </div>
@@ -42407,7 +42451,7 @@
           let bg = item.querySelector(".obsession-history-item-background").style.getPropertyValue("background-image").trim();
           let cover_substr = bg.indexOf("url");
           let cover = bg.substring(cover_substr).replace('url("', "").replace('")', "").trim();
-          let link = item.querySelector(
+          let link2 = item.querySelector(
             ".obsession-history-item-heading-link"
           );
           let artist = item.querySelector(
@@ -42415,8 +42459,8 @@
           );
           let artist_link = artist.getAttribute("href");
           artist = artist.textContent.trim();
-          let title = link.textContent.trim();
-          link = link.getAttribute("href");
+          let title = link2.textContent.trim();
+          link2 = link2.getAttribute("href");
           let date = item.querySelector(".obsession-history-item-date").textContent.trim();
           let obsession_is_first = item.querySelector(".obsession-first") != null;
           let grid_item = document.createElement("li");
@@ -42428,7 +42472,7 @@
                         </div>
                         <div class="grid-items-item-details">
                             <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${link}" title="${title}">
+                                <a class="link-block-target" href="${link2}" title="${title}">
                                     ${title}
                                 </a>
                             </p>
@@ -42436,12 +42480,12 @@
                                 <a class="grid-items-item-aux-block" href="${artist_link}">
                                     ${artist}
                                 </a>
-                                <a class="obsessions-item-date" href="${link}">
+                                <a class="obsessions-item-date" href="${link2}">
                                     ${date}
                                 </a>
                             </p>
                         </div>
-                        <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
+                        <a class="link-block-cover-link" href="${link2}" tabindex="-1" aria-hidden="true"></a>
                     </div>
                 `;
           if (obsession_is_first) {
@@ -42604,14 +42648,14 @@
   function patch_profile_following() {
     let navlist = page.structure.nav.querySelector(".navlist-items");
     let following_tab = navlist.querySelector(".secondary-nav-item--following");
-    let link = following_tab.querySelector("a");
+    let link2 = following_tab.querySelector("a");
     if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours") {
-      link.href = `${root}user/${page.name}/friends`;
-      link.textContent = tl2(trans2.friends);
+      link2.href = `${root}user/${page.name}/friends`;
+      link2.textContent = tl2(trans2.friends);
       return;
     }
     if (page.subpage != "following")
-      link.classList.add("secondary-nav-item-link--active");
+      link2.classList.add("secondary-nav-item-link--active");
     let followers_tab = navlist.querySelector(".secondary-nav-item--followers");
     let neighbours_tab = navlist.querySelector(
       ".secondary-nav-item--neighbours"
@@ -42629,8 +42673,8 @@
             </nav>
         </div>
     `;
-    link.href = `${root}user/${page.name}/friends`;
-    link.textContent = tl2(trans2.friends);
+    link2.href = `${root}user/${page.name}/friends`;
+    link2.textContent = tl2(trans2.friends);
     page.structure.content_top.after(friends_nav);
     page.structure.row.classList.add("col-main-is-primary");
     following_tab = friends_nav.querySelector(
@@ -42719,7 +42763,7 @@
     let details = object.querySelector(".featured-item-details");
     let form = document.body.querySelector(".header-info-primary form");
     let heading = details.querySelector(".featured-item-heading");
-    let link = heading.querySelector("a")?.getAttribute("href");
+    let link2 = heading.querySelector("a")?.getAttribute("href");
     details.removeChild(heading);
     let name_elem = details.querySelector(".featured-item-name");
     let artist_elem = details.querySelector(".featured-item-artist");
@@ -42786,7 +42830,7 @@
         <section class="featured-item-panel">
             <div class="sub-text">
                 ${form ? html.node`
-                <a class="has-icon" data-type="obsession" href=${link}>
+                <a class="has-icon" data-type="obsession" href=${link2}>
                     <div class="bleh-icon" style="--icon: var(--mask)" />
                     ${tl2(trans2.obsession)}
                 </a>
@@ -42821,7 +42865,7 @@
     let more_link = panel.nextElementSibling;
     panel.appendChild(more_link);
     let form = panel.querySelector("#recent-tracks-settings");
-    let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');
+    let link2 = panel.querySelector('[aria-controls="recent-tracks-settings"]');
     let tooltip;
     let view_buttons = document.createElement("div");
     view_buttons.classList.add("view-buttons", "blend", "blend-v2");
@@ -43015,10 +43059,10 @@
         let btn = list.querySelector(
           ".dropdown-menu-clickable-item--selected"
         );
-        let link = new URL(
+        let link2 = new URL(
           "https://www.last.fm" + btn.getAttribute("href")
         );
-        let selected = link.searchParams.get("artists_date_preset");
+        let selected = link2.searchParams.get("artists_date_preset");
         window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
       }}>${tl2(trans2.collage)}</button>
                 ${form ? html.node`
@@ -43140,10 +43184,10 @@
         let btn = list.querySelector(
           ".dropdown-menu-clickable-item--selected"
         );
-        let link = new URL(
+        let link2 = new URL(
           "https://www.last.fm" + btn.getAttribute("href")
         );
-        let selected = link.searchParams.get("albums_date_preset");
+        let selected = link2.searchParams.get("albums_date_preset");
         window.location.href = `${root}bleh/minis/collage?type=albums&timeframe=date_preset=${selected}`;
       }}>${tl2(trans2.collage)}</button>
                 ${form ? html.node`
@@ -43265,10 +43309,10 @@
         let btn = list.querySelector(
           ".dropdown-menu-clickable-item--selected"
         );
-        let link = new URL(
+        let link2 = new URL(
           "https://www.last.fm" + btn.getAttribute("href")
         );
-        let selected = link.searchParams.get("tracks_date_preset");
+        let selected = link2.searchParams.get("tracks_date_preset");
         window.location.href = `${root}bleh/minis/collage?type=tracks&timeframe=date_preset=${selected}`;
       }}>${tl2(trans2.collage)}</button>
                 ${form ? html.node`
@@ -44109,10 +44153,10 @@
   }
   function patch_wiki_contents(wiki_block) {
     let links = wiki_block.querySelectorAll("a");
-    links.forEach((link) => {
-      let href = link.getAttribute("href");
+    links.forEach((link2) => {
+      let href = link2.getAttribute("href");
       let type;
-      let name = link.textContent.trim();
+      let name = link2.textContent.trim();
       let sister;
       if (!href.startsWith(root)) {
         if (href && is_link_external(href)) {
@@ -44122,13 +44166,13 @@
           const path = url.pathname + url.search + url.hash;
           let dangerous = false;
           if (!scheme || !scheme.startsWith("http")) dangerous = true;
-          link.addEventListener("click", (e) => {
+          link2.addEventListener("click", (e) => {
             if (settings.trusted_sites.includes(hostname)) return;
             e.preventDefault();
             external_url_prompt(href, dangerous);
           });
-          if (link.textContent != href) {
-            tippy_esm_default(link, {
+          if (link2.textContent != href) {
+            tippy_esm_default(link2, {
               theme: "name-sister-combo",
               content: html.node`
                             <span class="name">
@@ -44181,14 +44225,14 @@
         }
       }
       if (sister)
-        tippy_esm_default(link, {
+        tippy_esm_default(link2, {
           theme: "name-sister-combo",
           content: html.node`
                     <span class="name">${name}</span>
                     <span class="sister">${sister}</span>
                 `
         });
-      if (type) link.setAttribute("data-link-type", type);
+      if (type) link2.setAttribute("data-link-type", type);
     });
   }
 
@@ -45319,16 +45363,16 @@
               url = line;
             }
             try {
-              const link = new URL(url, `https://www.last.fm${root}`);
-              const host = link.hostname;
-              const protocol = link.protocol;
-              const path = link.pathname;
-              console.info("proto", protocol, link);
+              const link2 = new URL(url, `https://www.last.fm${root}`);
+              const host = link2.hostname;
+              const protocol = link2.protocol;
+              const path = link2.pathname;
+              console.info("proto", protocol, link2);
               if (protocol != "http:" && protocol != "https:") return;
               let final = {
                 host,
                 path,
-                url: link.href
+                url: link2.href
               };
               if (name2)
                 final.name = purify.sanitize(name2, {
@@ -45450,15 +45494,15 @@
                     ${tl2(trans2.links)}
                 </div>
                 <div class="music-links social-links">
-                    ${links.map((link) => {
-        let label = link.host;
-        if (link.name) {
-          label = link.name;
-        } else if (link_strings.hasOwnProperty(link.host)) {
-          label = link_strings[link.host];
+                    ${links.map((link2) => {
+        let label = link2.host;
+        if (link2.name) {
+          label = link2.name;
+        } else if (link_strings.hasOwnProperty(link2.host)) {
+          label = link_strings[link2.host];
         }
         return html.node`
-                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host} data-path=${link.path}>
+                            <a class="music-link social-link" href=${link2.url} target="_blank" data-host=${link2.host} data-path=${link2.path}>
                                 ${label}
                             </a>
                         `;
@@ -45720,10 +45764,10 @@
       `prompted warning for url ${url}, dangerous is ${dangerous}`,
       "markdown"
     );
-    const link = new URL(url);
-    const scheme = link.protocol;
-    const hostname = link.hostname;
-    const path = link.pathname + link.search + link.hash;
+    const link2 = new URL(url);
+    const scheme = link2.protocol;
+    const hostname = link2.hostname;
+    const path = link2.pathname + link2.search + link2.hash;
     let trust_site;
     dialog({
       id: "external_url",
@@ -46265,10 +46309,12 @@
       });
       cache2.track = {};
     }
-    function oracle_save_cache(type) {
-      const day = 24 * 60 * 60 * 1e3;
-      cache2[type].expire = Date.now() + day * 7;
-      cache2[type].date = Date.now();
+    function oracle_save_cache(type, bump = true) {
+      if (bump) {
+        const day = 24 * 60 * 60 * 1e3;
+        cache2[type].expire = Date.now() + day * 7;
+        cache2[type].date = Date.now();
+      }
       oracle_cache[artist][item] = cache2;
       log("saved to cache", "oracle", "info", { oracle_cache, cache: cache2 });
       localStorage.setItem("bleh_oracle_cache", JSON.stringify(oracle_cache));
@@ -46845,6 +46891,8 @@
         }
         return;
       }
+      cache2.track.recording = recording;
+      oracle_save_cache("track", false);
       page.state.oracle_debug.recording_id = recording.id;
       log("picked recording, proceeding", "oracle", "info", {
         data: data2,
@@ -47036,13 +47084,22 @@
                                             </div>
                                         </div>
                                     `;
+              if (index3 == 0) {
+                cache2.track.name = title;
+                cache2.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
+                if (artwork) {
+                  cache2.track.artwork = artwork;
+                  oracle_save_cache("track", false);
+                }
+              }
               if (!artwork && index3 < 2)
                 load_cover_art(
                   artwork_container,
                   title,
                   artist2,
                   stats,
-                  type
+                  type,
+                  index3
                 );
               return elem;
             })}
@@ -47108,7 +47165,7 @@
         }
       }
     }
-    function load_cover_art(parent, title, artist2, stats = null, type = null) {
+    function load_cover_art(parent, title, artist2, stats = null, type = null, index3 = 1) {
       render(
         parent,
         html`
@@ -47121,6 +47178,7 @@
             `
       );
       if (!ff("oracle_fetch_artwork")) return;
+      log(`loading cover art for index ${index3}`, "oracle");
       fetch(`${root}music/${sanitise(artist2)}/${sanitise(title)}/`).then((res) => {
         if (!res.ok) {
           log("error fetching cover art", "oracle", "error", { res });
@@ -47149,19 +47207,25 @@
                             </span>
                         `
           );
+          if (index3 == 0) {
+            cache2.track.artwork = "";
+            oracle_save_cache("track", false);
+          }
           return;
         }
+        const artwork = background_image.getAttribute("content").replace("/ar0/", "/300x300/");
         render(
           parent,
           html`
                         <span class="cover-art">
-                            <img
-                                src=${background_image.getAttribute("content").replace("/ar0/", "/300x300/")}
-                                alt=${title}
-                            />
+                            <img src=${artwork} alt=${title} />
                         </span>
                     `
         );
+        if (index3 == 0) {
+          cache2.track.artwork = artwork;
+          oracle_save_cache("track", false);
+        }
         if (!stats || !type) return;
         const listeners = doc.querySelector(
           ".header-new-info-desktop .header-metadata-tnew-display > p > abbr"
@@ -50555,7 +50619,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function create_correction(type, name = page.name, sister = page.sister) {
     let title;
     let current = page.name;
-    let link = window.location.href;
+    let link2 = window.location.href;
     let correction;
     let sources;
     let template;
@@ -50601,7 +50665,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <button class="btn primary continue" onclick=${() => {
         console.info("sources", sources.value());
         open(
-          `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${sanitise(title, " ")}&current=${sanitise(current, " ")}&correction=${sanitise(correction.value(), " ")}&link=${link}&sources=${sanitise(sources.value(), " ")}`
+          `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${sanitise(title, " ")}&current=${sanitise(current, " ")}&correction=${sanitise(correction.value(), " ")}&link=${link2}&sources=${sanitise(sources.value(), " ")}`
         );
       }}>
                     ${tl2(trans2.suggest)}
@@ -50947,11 +51011,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let notifications = list.querySelectorAll(".inbox-notifications__item");
     notifications.forEach((notification, index3) => {
       if (mini && index3 > 4) notification.style.display = "none";
-      const link = notification.querySelector(
+      const link2 = notification.querySelector(
         ".inbox-notifications__item-link"
       );
-      const href = link.getAttribute("href");
-      const active = link.classList.contains(
+      const href = link2.getAttribute("href");
+      const active = link2.classList.contains(
         "inbox-notifications__item--highlight"
       );
       notification.classList = "notification";
@@ -50963,7 +51027,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         sister: null
       };
       let involved = [];
-      const strongs = link.querySelectorAll("strong");
+      const strongs = link2.querySelectorAll("strong");
       let split = href.replace(root, "").split("/");
       const avatar3 = notification.querySelector(".avatar");
       avatar3.classList = "avatar";
@@ -51099,7 +51163,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="notification-time">${time2}</div>
                 <a
                     class="link-block-cover-link"
-                    href=${link.getAttribute("href")}
+                    href=${link2.getAttribute("href")}
                 />
             `
       );
@@ -51160,9 +51224,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     });
     register_menu(home_link, head_menu);
-    let link;
+    let link2;
     if (update_required === "false") {
-      link = html.node`
+      link2 = html.node`
             <a class="bleh--version" href="${root}bleh">
                 ${version.build}
                 <div class="new-badge sku spacing">
@@ -51176,7 +51240,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </a>
         `;
     } else {
-      link = html.node`
+      link2 = html.node`
             <a class="bleh--version" onclick=${() => prompt_for_update()}>
                 <div class="update-container">
                     <div class="bleh-icon" style="--icon: var(--icon-16-update)" />
@@ -51192,12 +51256,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </div>
             </a>
         `;
-      tippy_esm_default(link, {
+      tippy_esm_default(link2, {
         content: tl2(trans2.update_available_to_install)
       });
     }
     const last_checked = localStorage.getItem("bleh_update_checked") || null;
-    const link_menu = tippy_esm_default(link, {
+    const link_menu = tippy_esm_default(link2, {
       theme: "context-menu",
       content: html.node`
             <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
@@ -51220,8 +51284,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         });
       }
     });
-    register_menu(link, link_menu);
-    masthead_logo.appendChild(link);
+    register_menu(link2, link_menu);
+    masthead_logo.appendChild(link2);
   }
   function append_nav() {
     if (ff("developer") && !page.structure.indicator) {
@@ -52901,7 +52965,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             let aux = item.querySelector(
               ".artist-header-featured-items-item-aux-text"
             )?.textContent.trim();
-            let link = item.querySelector(".link-block-cover-link")?.getAttribute("href");
+            let link2 = item.querySelector(".link-block-cover-link")?.getAttribute("href");
             let img = item.querySelector("img")?.src;
             if (type == "track") {
               const top_track = page.structure.main.querySelector(
@@ -52929,11 +52993,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                         </div>
                                         <div class="source-album-details">
                                             <h4 class="source-album-name">
-                                                <a class="smart-title" href=${link}>${name}</a>
+                                                <a class="smart-title" href=${link2}>${name}</a>
                                             </h4>
                                             <p class="source-album-stats">${aux}</p>
                                         </div>
-                                        <a class="js-link-block-cover-link link-block-cover-link" href=${link} tabindex="-1" aria-hidden="true" />
+                                        <a class="js-link-block-cover-link link-block-cover-link" href=${link2} tabindex="-1" aria-hidden="true" />
                                     </div>
                                 </div>
                             `;
@@ -53729,7 +53793,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         let image = item.querySelector(".globalchart-image img");
         let rank = item.querySelector(".globalchart-rank");
         let name = item.querySelector(".globalchart-name a");
-        let link = name.getAttribute("href");
+        let link2 = name.getAttribute("href");
         image.setAttribute(
           "src",
           image.getAttribute("src").replace("/avatar70s/", "/avatar300s/")
@@ -53751,7 +53815,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                     <div class="charts-list-rank-overlay">${rank.textContent}</div>
                                 </div>
                             </div>
-                            <a class="link-block-cover-link" href=${link}></a>
+                            <a class="link-block-cover-link" href=${link2}></a>
                         </div>
                     </li>
                 `;
@@ -53782,7 +53846,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                     <div class="charts-list-rank-overlay">${rank.textContent}</div>
                                 </div>
                             </div>
-                            <a class="link-block-cover-link" href=${link}></a>
+                            <a class="link-block-cover-link" href=${link2}></a>
                         </div>
                     </li>
                 `;
@@ -54069,8 +54133,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let event_description = event_header.querySelector(".header-title-secondary");
     if (settings.corrections) {
       let links = event_description.querySelectorAll("a");
-      links.forEach((link) => {
-        link.textContent = correct_artist(link.textContent);
+      links.forEach((link2) => {
+        link2.textContent = correct_artist(link2.textContent);
       });
     }
     let redesigned_event_header = document.createElement("section");
@@ -54292,8 +54356,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       return;
       let notif_links = notifications.querySelectorAll(".inbox-notifications__item-link");
       notif_links.forEach((notification) => {
-        let link = notification.getAttribute("href");
-        if (link.endsWith("/obsessions/set") || link.endsWith("/listening-report/month")) return;
+        let link2 = notification.getAttribute("href");
+        if (link2.endsWith("/obsessions/set") || link2.endsWith("/listening-report/month")) return;
         let avatar3 = notification.querySelector(".avatar");
         let name = notification.querySelector(".inbox-notifications__item-description strong");
         if (!name) return;
@@ -54822,12 +54886,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let settings_btn;
     if (page.subpage == "shoutbox_shout") {
       panel = page.structure.main.querySelector(":scope > section");
-      let link = window.location.href;
+      let link2 = window.location.href;
       panel.insertBefore(
         html.node`
             <div class="top-container">
                 <h2>
-                    <a class="text-colour-link" href=${link}>${tl2(trans2.shouts)}</a>
+                    <a class="text-colour-link" href=${link2}>${tl2(trans2.shouts)}</a>
                 </h2>
                 <div class="accompany view-buttons blend blend-v2">
                     <p class="notice">${tl2(trans2.single_shout)}</p>
@@ -54846,16 +54910,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
       let header = panel.querySelector("h2");
       if (header) header.parentElement.removeChild(header);
-      let link = window.location.href;
+      let link2 = window.location.href;
       let shoutbox_link = "+shoutbox";
       if (page.type == "user" || page.type == "event")
         shoutbox_link = "shoutbox";
-      if (!page.subpage.startsWith("shoutbox")) link += `/${shoutbox_link}`;
+      if (!page.subpage.startsWith("shoutbox")) link2 += `/${shoutbox_link}`;
       panel.insertBefore(
         html.node`
             <div class="top-container">
                 <h2>
-                    <a class="text-colour-link" href=${link}>${tl2(trans2.shouts)}</a>
+                    <a class="text-colour-link" href=${link2}>${tl2(trans2.shouts)}</a>
                 </h2>
                 ${select_btn ? html.node`
                     <div class="accompany view-buttons blend blend-v2">
@@ -63257,6 +63321,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         default: false,
         name: "Replace browser menus with in-house",
         date: "2025-10-03"
+      },
+      hoshino: {
+        default: false,
+        name: "Leverage oracle cache to re-assign artwork to tracks",
+        date: "2025-10-08"
+      },
+      ruby: {
+        default: false,
+        name: "Replace album/track artwork and metadata on dedicated pages",
+        date: "2025-10-08"
       }
     }
   };
