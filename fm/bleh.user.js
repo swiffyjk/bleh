@@ -29986,7 +29986,7 @@
   var import_color_thief_browser = __toESM(require_color_thief_min(), 1);
 
   // src/components/hoshino.js
-  function hoshino(artwork2, name, sister, link = null) {
+  function hoshino(artwork, name, sister, link = null) {
     if (!ff("hoshino")) return;
     let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
     const name_lower = name.toLowerCase();
@@ -29996,7 +29996,7 @@
     const href2 = oracle_cache[sister_lower]?.[name_lower]?.track?.link;
     if (!album_name || !album_sister) {
       log("no cache to be used", "hoshino", "info", {
-        artwork: artwork2,
+        artwork,
         name,
         sister,
         album: {
@@ -30008,20 +30008,20 @@
       return;
     }
     const art = load_hoshino_artwork(album_name, album_sister)?.artwork;
-    artwork2.src = art;
+    artwork.src = art;
     log(`loaded cover art ${art}`, "hoshino", "info", {
       art,
-      artwork: artwork2,
+      artwork,
       name,
       sister
     });
-    artwork2.setAttribute("data-hoshino", true);
-    artwork2.alt = album_name;
+    artwork.setAttribute("data-hoshino", true);
+    artwork.alt = album_name;
     if (link && href2) {
       if (link.nodeName != "A") {
         const new_link = html.node`
                 <a href=${href2} class=${link.classList} data-hoshino-recreated="true">
-                    ${artwork2}
+                    ${artwork}
                 </a>
             `;
         link.parentElement.insertBefore(new_link, link);
@@ -30040,7 +30040,6 @@
     const album_sister = oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
     if (!album_name || !album_sister) {
       log("no cache to be used", "hoshino", "info", {
-        artwork,
         name,
         sister,
         album: {
@@ -30066,23 +30065,23 @@
     });
     return entry;
   }
-  function save_hoshino_artwork(artwork2, name, sister, listeners = null) {
+  function save_hoshino_artwork(artwork, name, sister, listeners = null) {
     let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
     const name_lower = name.toLowerCase();
     const sister_lower = sister.toLowerCase();
     if (!hoshino_cache[sister_lower]) hoshino_cache[sister_lower] = {};
     if (!hoshino_cache[sister_lower][name_lower])
       hoshino_cache[sister_lower][name_lower] = {};
-    if (!artwork2 || artwork2.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg")) {
-      if (artwork2) delete hoshino_cache[sister_lower][name_lower].artwork;
+    if (!artwork || artwork.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg")) {
+      if (artwork) delete hoshino_cache[sister_lower][name_lower].artwork;
       set_storage("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
     } else {
-      hoshino_cache[sister_lower][name_lower].artwork = artwork2;
+      hoshino_cache[sister_lower][name_lower].artwork = artwork;
     }
     if (listeners)
       hoshino_cache[sister_lower][name_lower].listeners = listeners;
-    log(`saved artwork ${artwork2} to cache`, "hoshino", "info", {
-      artwork: artwork2,
+    log(`saved artwork ${artwork} to cache`, "hoshino", "info", {
+      artwork,
       name,
       sister,
       listeners
@@ -47509,10 +47508,10 @@
                 (r) => r.title == title && r.artist == artist2
               );
               let plays = 0;
-              let artwork2;
+              let artwork;
               if (match3) {
                 plays = match3.plays;
-                artwork2 = match3.artwork;
+                artwork = match3.artwork;
               }
               let artwork_container;
               let stats;
@@ -47539,9 +47538,9 @@
               const elem = html.node`
                                         <div class="source-album js-link-block link-block-cover-link">
                                             <div class="source-album-art" ref=${(el) => artwork_container = el}>
-                                                ${artwork2 ? html.node`
+                                                ${artwork ? html.node`
                                                             <span class="cover-art">
-                                                                <img src=${artwork2} alt=${title}>
+                                                                <img src=${artwork} alt=${title}>
                                                             </span>
                                                         ` : html.node`
                                                         <span class="cover-art">
@@ -47569,21 +47568,21 @@
                 cache2.track.name = title;
                 cache2.track.sister = artist2;
                 cache2.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
-                if (artwork2) {
+                if (artwork) {
                   create_avatar(
                     page.state.avatar_side,
-                    artwork2,
+                    artwork,
                     page.state.avatar_side_override
                   );
                   save_hoshino_artwork(
-                    artwork2,
+                    artwork,
                     title,
                     artist2,
                     plays
                   );
                 }
               }
-              if (!artwork2 && index3 < 2)
+              if (!artwork && index3 < 2)
                 load_cover_art(
                   artwork_container,
                   title,
@@ -47719,7 +47718,7 @@
         const background_image = doc.querySelector(
           ".header-new-background-image"
         );
-        let artwork2 = null;
+        let artwork = null;
         if (!background_image) {
           render(
             parent,
@@ -47730,12 +47729,12 @@
                         `
           );
         } else {
-          artwork2 = background_image.getAttribute("content").replace("/ar0/", "/300x300/");
+          artwork = background_image.getAttribute("content").replace("/ar0/", "/300x300/");
           render(
             parent,
             html`
                             <span class="cover-art">
-                                <img src=${artwork2} alt=${title} />
+                                <img src=${artwork} alt=${title} />
                             </span>
                         `
           );
@@ -47749,11 +47748,11 @@
           cache2.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
           create_avatar(
             page.state.avatar_side,
-            artwork2,
+            artwork,
             page.state.avatar_side_override
           );
           save_hoshino_artwork(
-            artwork2,
+            artwork,
             title,
             artist2,
             clean_number(listeners?.title)

@@ -75,7 +75,6 @@ export function hoshino_return(name, sister) {
 
     if (!album_name || !album_sister) {
         log('no cache to be used', 'hoshino', 'info', {
-            artwork,
             name,
             sister,
             album: {
