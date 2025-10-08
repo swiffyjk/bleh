@@ -87,7 +87,10 @@ export function oracle_process() {
             cache[type].date = Date.now();
         }
 
-        oracle_cache[artist][item] = cache;
+        oracle_cache[artist][item] = {
+            ...oracle_cache[artist][item],
+            ...cache
+        };
 
         log('saved to cache', 'oracle', 'info', { oracle_cache, cache });
         localStorage.setItem('bleh_oracle_cache', JSON.stringify(oracle_cache));
@@ -873,7 +876,6 @@ export function oracle_process() {
         }
 
         cache.track.recording = recording;
-        oracle_save_cache('track', false);
 
         page.state.oracle_debug.recording_id = recording.id;
         log('picked recording, proceeding', 'oracle', 'info', {
@@ -956,9 +958,9 @@ export function oracle_process() {
 
                     type = type.toLowerCase();
 
-                    if (type == 'album') return 0;
-                    if (type == 'ep') return 1;
-                    if (type != 'single') return 2;
+                    if (type == 'single') return 0;
+                    if (type == 'album') return 1;
+                    if (type == 'ep') return 2;
                     return 3;
                 };
 
@@ -1164,7 +1166,6 @@ export function oracle_process() {
                                                 artist,
                                                 plays
                                             );
-                                            oracle_save_cache('track', false);
                                         }
                                     }
 
@@ -1184,6 +1185,7 @@ export function oracle_process() {
                         </div>
                     `
                 );
+                oracle_save_cache('track', false);
 
                 if (releases.length > 2 && allow_overflow) {
                     if (settings.simulate_scroll) {

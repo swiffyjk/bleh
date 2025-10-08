@@ -46375,7 +46375,10 @@
         cache2[type].expire = Date.now() + day * 7;
         cache2[type].date = Date.now();
       }
-      oracle_cache[artist][item] = cache2;
+      oracle_cache[artist][item] = {
+        ...oracle_cache[artist][item],
+        ...cache2
+      };
       log("saved to cache", "oracle", "info", { oracle_cache, cache: cache2 });
       localStorage.setItem("bleh_oracle_cache", JSON.stringify(oracle_cache));
     }
@@ -46957,7 +46960,6 @@
         return;
       }
       cache2.track.recording = recording;
-      oracle_save_cache("track", false);
       page.state.oracle_debug.recording_id = recording.id;
       log("picked recording, proceeding", "oracle", "info", {
         data: data2,
@@ -47012,9 +47014,9 @@
           const rank = (type) => {
             if (!type) return 4;
             type = type.toLowerCase();
-            if (type == "album") return 0;
-            if (type == "ep") return 1;
-            if (type != "single") return 2;
+            if (type == "single") return 0;
+            if (type == "album") return 1;
+            if (type == "ep") return 2;
             return 3;
           };
           const artist_matches = (release) => {
@@ -47160,7 +47162,6 @@
                     artist2,
                     plays
                   );
-                  oracle_save_cache("track", false);
                 }
               }
               if (!artwork && index3 < 2)
@@ -47178,6 +47179,7 @@
                         </div>
                     `
           );
+          oracle_save_cache("track", false);
           if (releases.length > 2 && allow_overflow) {
             if (settings.simulate_scroll) {
               source_albums.addEventListener("wheel", (e) => {
