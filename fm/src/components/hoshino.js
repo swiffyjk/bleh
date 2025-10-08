@@ -20,7 +20,12 @@ export function hoshino(artwork, name, sister, link = null) {
         log('no cache to be used', 'hoshino', 'info', {
             artwork,
             name,
-            sister
+            sister,
+            album: {
+                album_name,
+                album_sister,
+                href
+            }
         });
         return;
     }
