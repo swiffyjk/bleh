@@ -28,7 +28,12 @@ import { version } from '../main';
 import { settings } from '../build/config';
 import { dialog } from './dialog';
 import tippy, { followCursor } from 'tippy.js';
-import { load_hoshino_artwork, save_hoshino_artwork } from './hoshino';
+import {
+    hoshino_return,
+    load_hoshino_artwork,
+    save_hoshino_artwork
+} from './hoshino';
+import { create_avatar } from '../pages/track';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -1161,6 +1166,12 @@ export function oracle_process() {
                                         cache.track.link = `${root}music/${sanitise(artist)}/${sanitise(title)}`;
 
                                         if (artwork) {
+                                            create_avatar(
+                                                page.state.avatar_side,
+                                                artwork,
+                                                page.state.avatar_side_override
+                                            );
+
                                             save_hoshino_artwork(
                                                 artwork,
                                                 title,
@@ -1218,6 +1229,16 @@ export function oracle_process() {
                         e.scrollTop = 0;
                     });
                 }
+            } else {
+                const hoshino_entry = hoshino_return(page.name, page.sister);
+
+                if (hoshino_entry) {
+                    create_avatar(
+                        page.state.avatar_side,
+                        hoshino_entry,
+                        page.state.avatar_side_override
+                    );
+                }
             }
 
             const artist_elem = header.querySelector('h2');
@@ -1269,6 +1290,14 @@ export function oracle_process() {
                     </span>
                 `
             );
+
+            if (index == 0) {
+                create_avatar(
+                    page.state.avatar_side,
+                    entry.artwork,
+                    page.state.avatar_side_override
+                );
+            }
 
             render(
                 stats,
@@ -1360,6 +1389,12 @@ export function oracle_process() {
                     cache.track.name = title;
                     cache.track.sister = artist;
                     cache.track.link = `${root}music/${sanitise(artist)}/${sanitise(title)}`;
+
+                    create_avatar(
+                        page.state.avatar_side,
+                        artwork,
+                        page.state.avatar_side_override
+                    );
 
                     save_hoshino_artwork(
                         artwork,

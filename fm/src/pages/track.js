@@ -20,7 +20,7 @@ import { register_background, update_page } from '../page';
 import { ff } from '../sku';
 import { bleh_tags_mini } from './tag';
 import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from './wiki';
-import { html } from 'lighterhtml';
+import { html, render } from 'lighterhtml';
 import { expand_avatar } from '../avatar.js';
 import tippy from 'tippy.js';
 import { oracle_process } from '../components/oracle.js';
@@ -100,23 +100,19 @@ export function bleh_tracks() {
         if (source_album)
             album_avatar = source_album.querySelector('.source-album-art img');
 
+        const should_expand =
+            settings.default_avatar_action == 'expand' &&
+            (album_avatar || artist_avatar);
+        page.state.avatar_side_override =
+            should_expand ? 'expand' : (
+                source_album
+                    .querySelector('.link-block-cover-link')
+                    .getAttribute('href')
+            );
+
         let redesigned_track_header = html.node`
             <section class="redesigned-header redesigned-track-header no-background">
-                <div class="avatar-side">
-                    ${
-                        album_avatar ?
-                            html.node`
-                    <img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}">
-                    <a class="bleh--avatar-clickable-link"></a>
-                    `
-                        : artist_avatar ?
-                            html.node`
-                    <img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
-                    <a class="bleh--avatar-clickable-link"></a>
-                    `
-                        :   html.node`<img class="missing-track">`
-                    }
-                </div>
+                <div class="avatar-side" ref=${(el) => (page.state.avatar_side = el)} />
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.track)}</div>
                     <div class="title-container">
@@ -128,86 +124,33 @@ export function bleh_tracks() {
             </section>
         `;
 
-        let bg;
-
-        if (
-            album_avatar &&
-            !album_avatar
-                .getAttribute('src')
-                .endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg')
-        )
-            bg = register_background(
-                album_avatar.getAttribute('src').replace('/300x300/', '/ar0/')
+        if (album_avatar) {
+            create_avatar(
+                page.state.avatar_side,
+                album_avatar.src.replace('300x300', 'avatar300s'),
+                page.state.avatar_side_override
             );
-        else if (artist_avatar)
-            bg = register_background(artist_avatar.getAttribute('content'));
-        else bg = register_background(null);
+        } else if (artist_avatar) {
+            create_avatar(
+                page.state.avatar_side,
+                artist_avatar
+                    .getAttribute('content')
+                    .replace('/ar0/', '/avatar170s/'),
+                page.state.avatar_side_override
+            );
+        } else {
+            create_avatar(
+                page.state.avatar_side,
+                '',
+                page.state.avatar_side_override
+            );
+        }
 
         page.structure.container.insertBefore(
             redesigned_track_header,
             page.structure.container.firstElementChild
         );
         track_header.classList.add('legacy-header');
-
-        let avatar_side = redesigned_track_header.querySelector('.avatar-side');
-        let avatar_link = avatar_side.querySelector('a');
-
-        let expand_link;
-        if (album_avatar)
-            expand_link = `_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')`;
-        else if (artist_avatar)
-            expand_link = `_expand_avatar('${artist_avatar.getAttribute('content')}')`;
-
-        if (
-            settings.default_avatar_action == 'expand' &&
-            (album_avatar || artist_avatar)
-        )
-            avatar_link.setAttribute('onclick', expand_link);
-        else if (settings.default_avatar_action == 'gallery' && album_avatar)
-            avatar_link.href = source_album
-                .querySelector('.link-block-cover-link')
-                .getAttribute('href');
-
-        let menu = tippy(avatar_side, {
-            theme: 'context-menu',
-            content: html.node`
-                ${
-                    album_avatar || artist_avatar ?
-                        html.node`
-                <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute('content'))} data-menu-item="expand">
-                    ${tl(trans.expand)}
-                </button>
-                `
-                    :   ''
-                }
-                ${
-                    album_avatar ?
-                        html.node`
-                <a class="dropdown-menu-clickable-item" href="${source_album.querySelector('.link-block-cover-link').getAttribute('href')}" data-menu-item="album">
-                    ${tl(trans.album)}
-                </a>
-                `
-                    :   ''
-                }
-                <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                    ${tl(trans.settings)}
-                </a>
-            `,
-            placement: 'right-start',
-            trigger: 'manual',
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-
-            onShow(instance) {
-                instance.popper.addEventListener('click', (event) => {
-                    instance.hide();
-                });
-            }
-        });
-
-        register_menu(avatar_side, menu);
     }
 
     if (!is_subpage) {
@@ -240,4 +183,80 @@ export function bleh_tracks() {
 
     log('status is', 'page', 'info', page);
     update_page();
+}
+
+export function create_avatar(parent, src, override = 'expand') {
+    log(`creating avatar for ${src} with override ${override}`, 'track');
+
+    if (src.endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg') || src == '') {
+        register_background(null);
+
+        render(
+            parent,
+            html`
+                <div class="media">
+                    <img class="missing-track" />
+                </div>
+            `
+        );
+    }
+
+    const full = src
+        .replace('/300x300/', '/ar0/')
+        .replace('/avatar300s/', '/ar0/')
+        .replace('/avatar170s/', '/ar0/');
+
+    register_background(full);
+
+    const media = html.node`
+        <div class="media">
+            <img src=${src}>
+            ${
+                override == 'expand' ?
+                    html.node`
+                <a class="bleh--avatar-clickable-link" onclick=${() => {
+                    expand_avatar(full);
+                }} />
+            `
+                :   html.node`
+                <a class="bleh--avatar-clickable-link" href=${override} />
+            `
+            }
+        </div>
+    `;
+
+    let menu = tippy(media, {
+        theme: 'context-menu',
+        content: html.node`
+            ${
+                override != 'expand' ?
+                    html.node`
+                        <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(full)} data-menu-item="expand">
+                            ${tl(trans.expand)}
+                        </button>
+                    `
+                :   ''
+            }
+            <div class="sep"></div>
+            <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
+                ${tl(trans.settings)}
+            </a>
+        `,
+        placement: 'right-start',
+        trigger: 'manual',
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        appendTo: document.body,
+
+        onShow(instance) {
+            instance.popper.addEventListener('click', (event) => {
+                instance.hide();
+            });
+        }
+    });
+
+    register_menu(media, menu);
+
+    render(parent, media);
 }

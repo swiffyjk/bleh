@@ -13849,16 +13849,16 @@
         }, replaceMail = function(options, globals) {
           "use strict";
           return function(wholeMatch, b, mail) {
-            var href = "mailto:";
+            var href2 = "mailto:";
             b = b || "";
             mail = showdown2.subParser("unescapeSpecialChars")(mail, options, globals);
             if (options.encodeEmails) {
-              href = showdown2.helper.encodeEmailAddress(href + mail);
+              href2 = showdown2.helper.encodeEmailAddress(href2 + mail);
               mail = showdown2.helper.encodeEmailAddress(mail);
             } else {
-              href = href + mail;
+              href2 = href2 + mail;
             }
-            return b + '<a href="' + href + '">' + mail + "</a>";
+            return b + '<a href="' + href2 + '">' + mail + "</a>";
           };
         };
         showdown2.subParser("autoLinks", function(text3, options, globals) {
@@ -29986,14 +29986,58 @@
   var import_color_thief_browser = __toESM(require_color_thief_min(), 1);
 
   // src/components/hoshino.js
-  function hoshino(artwork, name, sister, link = null) {
+  function hoshino(artwork2, name, sister, link = null) {
     if (!ff("hoshino")) return;
     let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
     const name_lower = name.toLowerCase();
     const sister_lower = sister.toLowerCase();
     const album_name = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
     const album_sister = oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
-    const href = oracle_cache[sister_lower]?.[name_lower]?.track?.link;
+    const href2 = oracle_cache[sister_lower]?.[name_lower]?.track?.link;
+    if (!album_name || !album_sister) {
+      log("no cache to be used", "hoshino", "info", {
+        artwork: artwork2,
+        name,
+        sister,
+        album: {
+          album_name,
+          album_sister,
+          href: href2
+        }
+      });
+      return;
+    }
+    const art = load_hoshino_artwork(album_name, album_sister)?.artwork;
+    artwork2.src = art;
+    log(`loaded cover art ${art}`, "hoshino", "info", {
+      art,
+      artwork: artwork2,
+      name,
+      sister
+    });
+    artwork2.setAttribute("data-hoshino", true);
+    artwork2.alt = album_name;
+    if (link && href2) {
+      if (link.nodeName != "A") {
+        const new_link = html.node`
+                <a href=${href2} class=${link.classList} data-hoshino-recreated="true">
+                    ${artwork2}
+                </a>
+            `;
+        link.parentElement.insertBefore(new_link, link);
+        link.remove();
+        return;
+      }
+      link.setAttribute("href", href2);
+    }
+  }
+  function hoshino_return(name, sister) {
+    if (!ff("hoshino")) return;
+    let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
+    const name_lower = name.toLowerCase();
+    const sister_lower = sister.toLowerCase();
+    const album_name = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
+    const album_sister = oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
     if (!album_name || !album_sister) {
       log("no cache to be used", "hoshino", "info", {
         artwork,
@@ -30008,28 +30052,7 @@
       return;
     }
     const art = load_hoshino_artwork(album_name, album_sister)?.artwork;
-    artwork.src = art;
-    log(`loaded cover art ${art}`, "hoshino", "info", {
-      art,
-      artwork,
-      name,
-      sister
-    });
-    artwork.setAttribute("data-hoshino", true);
-    artwork.alt = album_name;
-    if (link && href) {
-      if (link.nodeName != "A") {
-        const new_link = html.node`
-                <a href=${href} class=${link.classList} data-hoshino-recreated="true">
-                    ${artwork}
-                </a>
-            `;
-        link.parentElement.insertBefore(new_link, link);
-        link.remove();
-        return;
-      }
-      link.setAttribute("href", href);
-    }
+    return art;
   }
   function load_hoshino_artwork(name, sister) {
     let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
@@ -30043,23 +30066,23 @@
     });
     return entry;
   }
-  function save_hoshino_artwork(artwork, name, sister, listeners = null) {
+  function save_hoshino_artwork(artwork2, name, sister, listeners = null) {
     let hoshino_cache = JSON.parse(localStorage.getItem("bleh_hoshino_cache")) || {};
     const name_lower = name.toLowerCase();
     const sister_lower = sister.toLowerCase();
     if (!hoshino_cache[sister_lower]) hoshino_cache[sister_lower] = {};
     if (!hoshino_cache[sister_lower][name_lower])
       hoshino_cache[sister_lower][name_lower] = {};
-    if (!artwork || artwork.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg")) {
-      if (artwork) delete hoshino_cache[sister_lower][name_lower].artwork;
+    if (!artwork2 || artwork2.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg")) {
+      if (artwork2) delete hoshino_cache[sister_lower][name_lower].artwork;
       set_storage("bleh_hoshino_cache", JSON.stringify(hoshino_cache));
     } else {
-      hoshino_cache[sister_lower][name_lower].artwork = artwork;
+      hoshino_cache[sister_lower][name_lower].artwork = artwork2;
     }
     if (listeners)
       hoshino_cache[sister_lower][name_lower].listeners = listeners;
-    log(`saved artwork ${artwork} to cache`, "hoshino", "info", {
-      artwork,
+    log(`saved artwork ${artwork2} to cache`, "hoshino", "info", {
+      artwork: artwork2,
       name,
       sister,
       listeners
@@ -32776,7 +32799,7 @@
     let position = index3 + 1;
     if (page.requested.page != null && page.requested.page != "1" && key == "top-listeners")
       position += (parseInt(page.requested.page) - 1) * 30;
-    let avatar3 = listener.querySelector(`.${key}-item-image`);
+    let avatar2 = listener.querySelector(`.${key}-item-image`);
     let name_wrap = listener.querySelector(`.${key}-item-name a`);
     let name = name_wrap.textContent;
     let track_wrap = listener.querySelector(`.${key}-track`);
@@ -32796,7 +32819,7 @@
                     </a>
                 </h4>
                 <span class="avatar user-list-avatar" ref=${(el) => user_list_avatar = el}>
-                    ${{ html: avatar3.innerHTML }}
+                    ${{ html: avatar2.innerHTML }}
                 </span>
                 ${follow}
                 ${track_wrap ? html.node`
@@ -34902,8 +34925,8 @@
       html` <section class="minis">${return_to_minis("receipt")}</section> `
     );
   }
-  function render_user(name, avatar3, user, replace_page = false) {
-    if (avatar3 == "" && name != "") {
+  function render_user(name, avatar2, user, replace_page = false) {
+    if (avatar2 == "" && name != "") {
       fetch(`${root}user/${name}/tags`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
@@ -34911,17 +34934,17 @@
         let doc = new DOMParser().parseFromString(dom, "text/html");
         console.log("DOC", doc);
         try {
-          avatar3 = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+          avatar2 = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
           name = doc.querySelector(".header-title").textContent.trim();
           if (replace_page) {
-            page.avatar = avatar3;
+            page.avatar = avatar2;
             page.name = name;
           }
           if (!user)
             user = page.structure.main.querySelector(
               ".compare-user.focus"
             );
-          render(user, render_user(name, avatar3, user, replace_page));
+          render(user, render_user(name, avatar2, user, replace_page));
         } catch (e) {
           console.error(e);
         }
@@ -34934,7 +34957,7 @@
     return html`
         <div class="avatar">
             <img
-                src=${avatar3}
+                src=${avatar2}
                 alt=${tl2(trans2.avatar_for_user).replace("{u}", name)}
             />
         </div>
@@ -36935,7 +36958,7 @@
             message: "A text type requires a max defined in the settings store"
           });
         let reset_btn;
-        let avatar3;
+        let avatar2;
         let input2;
         let submit;
         let input_container;
@@ -36952,7 +36975,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl2(trans2.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar2)}>${tl2(trans2.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -36978,14 +37001,14 @@
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     ${settings_store[id].avatar ? html.node`
                     <div class="avatar-container">
-                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
+                        <div class="avatar-inner" ref=${(el) => avatar2 = el}>
                             <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
                         </div>
                     </div>
                     ` : ""}
                     <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${(el) => input_container = el}>
                         <input type="text" maxlength=${max2} value=${value} style="--max: ${max2}px" ref=${(el) => input2 = el} placeholder=${placeholder} />
-                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl2(trans2.save)}</button>
+                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar2)}>${tl2(trans2.save)}</button>
                     </div>
                 </div>
             `;
@@ -37535,7 +37558,7 @@
         </div>
     `;
   }
-  function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
+  function update_text(id, input2, submit, option, value, reset_btn, avatar2, silent = false) {
     if (settings_store[id].wait) {
       reset_btn.disabled = true;
       input2.disabled = true;
@@ -37557,7 +37580,7 @@
     }
     save_setting(id, value);
   }
-  function reset_text(id, input2, submit, option, reset_btn, avatar3) {
+  function reset_text(id, input2, submit, option, reset_btn, avatar2) {
     update_text(
       id,
       input2,
@@ -37565,7 +37588,7 @@
       option,
       settings_store[id].default,
       reset_btn,
-      avatar3,
+      avatar2,
       true
     );
     notify({
@@ -39910,8 +39933,8 @@
         page.structure.nav = navlist;
         let overview = page.structure.nav.querySelector(".secondary-nav-item--overview a");
         if (overview) {
-          const href = overview.getAttribute("href").replace(root, "");
-          if (href == "settings" || href == "inbox" || href == "charts") overview = null;
+          const href2 = overview.getAttribute("href").replace(root, "");
+          if (href2 == "settings" || href2 == "inbox" || href2 == "charts") overview = null;
         }
         if (overview) overview.textContent = tl2(trans2.home);
       }
@@ -40566,7 +40589,7 @@
                 <div class="avatar-side">
                     <div
                         class="avatar image-upload-preview"
-                        onclick=${() => avatar2(token)}
+                        onclick=${() => avatar(token)}
                     >
                         <img
                             src=${avatar_url}
@@ -40948,7 +40971,7 @@
       return true;
     return false;
   }
-  function avatar2(token = "") {
+  function avatar(token = "") {
     if (!token) token = page.token;
     else page.token = token;
     page.state.avatar_changer = dialog({
@@ -41034,7 +41057,7 @@
                     <button class="see-more cancel" onclick=${() => {
           if (cropper && cropper.destroy) cropper.destroy();
           cropper = null;
-          avatar2();
+          avatar();
         }}>${tl2(trans2.cancel)}</button>
                     <div class="fill"></div>
                     <button class="btn primary save" onclick=${() => {
@@ -42104,11 +42127,11 @@
           page.structure.main.firstElementChild
         );
     }
-    let avatar3 = profile_header.querySelector(".avatar");
+    let avatar2 = profile_header.querySelector(".avatar");
     let title_wrap = profile_header.querySelector(".header-title-label-wrap");
     let sub_wrap = profile_header.querySelector(".header-title-secondary");
-    if (!avatar3) {
-      avatar3 = profile_header.querySelector(".header-avatar-add");
+    if (!avatar2) {
+      avatar2 = profile_header.querySelector(".header-avatar-add");
       new_account = true;
     }
     if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
@@ -42120,7 +42143,7 @@
     let redesigned_profile_header = html.node`
         <section class="redesigned-header redesigned-profile-header no-background">
             <div class="avatar-side">
-                ${avatar3}
+                ${avatar2}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl2(trans2.profile)}</div>
@@ -42153,7 +42176,7 @@
             </div>
         </section>
     `;
-    const avatar_img = avatar3.querySelector(":scope > img");
+    const avatar_img = avatar2.querySelector(":scope > img");
     if (avatar_img) cache2.avatar = avatar_img.src;
     if (page.name == auth.name && !settings.profile_header_own) {
       register_background(null, "hidden");
@@ -42189,7 +42212,7 @@
     if (!new_account) {
       const src = avatar_img.src;
       page.avatar = src;
-      avatar3.addEventListener("click", () => {
+      avatar2.addEventListener("click", () => {
         expand_avatar(src.replace("/avatar170s/", "/ar0/"));
       });
     }
@@ -43602,7 +43625,7 @@
     });
     scrobble_canvas_container.appendChild(scrobble_canvas);
   }
-  function save_profile_cache({ avatar: avatar3, banner, hue: hue2, sat, lit, aka, created } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
+  function save_profile_cache({ avatar: avatar2, banner, hue: hue2, sat, lit, aka, created } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
     let profile_cache_o = Object.keys(profile_cache);
     if (profile_cache_o.length > 400) {
       const keys2 = Reflect.ownKeys(profile_cache);
@@ -43614,7 +43637,7 @@
       delete profile_cache[name];
     }
     profile_cache[name] = {
-      avatar: avatar3,
+      avatar: avatar2,
       banner,
       hue: hue2,
       sat,
@@ -43718,8 +43741,8 @@
           delete cache2.sat;
           delete cache2.lit;
         }
-        const avatar3 = doc.querySelector(".header-avatar .avatar img");
-        if (avatar3) cache2.avatar = avatar3.src;
+        const avatar2 = doc.querySelector(".header-avatar .avatar img");
+        if (avatar2) cache2.avatar = avatar2.src;
         const secondary = doc.querySelector(".header-title-secondary");
         parse_sub_text(secondary, name, cache2);
         if (will_cache) save_profile_cache(cache2, profile_cache, name);
@@ -43813,20 +43836,20 @@
   }
 
   // src/avatar.js
-  function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
-    if (avatar3.hasAttribute("data-bleh-avatar")) return {};
-    avatar3.setAttribute("data-bleh-avatar", "true");
-    const avatar_img = avatar3.querySelector("img");
+  function patch_avatar(avatar2, name, type = "", parent = null, side = "right") {
+    if (avatar2.hasAttribute("data-bleh-avatar")) return {};
+    avatar2.setAttribute("data-bleh-avatar", "true");
+    const avatar_img = avatar2.querySelector("img");
     if (!avatar_img) return {};
     avatar_img.setAttribute(
       "src",
       avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/")
     );
-    avatar3.setAttribute("title", "");
+    avatar2.setAttribute("title", "");
     let badges = load_badges(name);
-    let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
-    if (badges && pre_existing_badge) avatar3.removeChild(pre_existing_badge);
-    if (!parent) avatar3.classList.add("avatar-can-hoverbox");
+    let pre_existing_badge = avatar2.querySelector(".avatar-status-dot");
+    if (badges && pre_existing_badge) avatar2.removeChild(pre_existing_badge);
+    if (!parent) avatar2.classList.add("avatar-can-hoverbox");
     else parent.classList.add("parent-can-hoverbox");
     let pre_existing_badge_type;
     if (pre_existing_badge)
@@ -43839,9 +43862,9 @@
       pre_existing_badge_type = null;
     }
     if (badges)
-      avatar3.appendChild(create_badge(badges[badges.length - 1], true));
+      avatar2.appendChild(create_badge(badges[badges.length - 1], true));
     let image_header;
-    const popup = tippy_esm_default(parent ? parent : avatar3, {
+    const popup = tippy_esm_default(parent ? parent : avatar2, {
       theme: "context-menu",
       content: html.node`
             <div class="track-preview user-preview">
@@ -43900,18 +43923,18 @@
       trigger: "click",
       appendTo: document.body
     });
-    register_menu(parent ? parent : avatar3, popup);
+    register_menu(parent ? parent : avatar2, popup);
     control_gif_pause(avatar_img);
     if (badges) return badges[badges.length - 1];
     else if (pre_existing_badge)
       return { type: pre_existing_badge.classList[1] };
     else return { type: "none" };
   }
-  function return_name_from_avatar(avatar3) {
-    if (!avatar3) return;
-    if (!avatar3.hasAttribute("alt")) return;
-    if (avatar3.getAttribute("alt") == tl2(trans2.your_avatar)) return auth;
-    return avatar3.getAttribute("alt").replace(tl2(trans2.avatar_for_user), "");
+  function return_name_from_avatar(avatar2) {
+    if (!avatar2) return;
+    if (!avatar2.hasAttribute("alt")) return;
+    if (avatar2.getAttribute("alt") == tl2(trans2.your_avatar)) return auth;
+    return avatar2.getAttribute("alt").replace(tl2(trans2.avatar_for_user), "");
   }
   unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
@@ -44074,10 +44097,10 @@
     let entries2 = page.structure.main.querySelectorAll(".wiki-history-entry");
     entries2.forEach((entry) => {
       let author = entry.querySelector(".wiki-history-author");
-      let avatar3 = author.querySelector(".wiki-history-author-avatar");
+      let avatar2 = author.querySelector(".wiki-history-author-avatar");
       let name = author.querySelector(".link-block-target");
-      if (name && avatar3) {
-        let badge = patch_avatar(avatar3, name.textContent, "wiki");
+      if (name && avatar2) {
+        let badge = patch_avatar(avatar2, name.textContent, "wiki");
         if (badge && badge.type) {
           if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
             name.style.setProperty("--hue-over", badge.hue);
@@ -44244,13 +44267,13 @@
   function patch_wiki_contents(wiki_block) {
     let links = wiki_block.querySelectorAll("a");
     links.forEach((link) => {
-      let href = link.getAttribute("href");
+      let href2 = link.getAttribute("href");
       let type;
       let name = link.textContent.trim();
       let sister;
-      if (!href.startsWith(root)) {
-        if (href && is_link_external(href)) {
-          const url = new URL(href);
+      if (!href2.startsWith(root)) {
+        if (href2 && is_link_external(href2)) {
+          const url = new URL(href2);
           const scheme = url.protocol;
           const hostname = url.hostname;
           const path = url.pathname + url.search + url.hash;
@@ -44259,9 +44282,9 @@
           link.addEventListener("click", (e) => {
             if (settings.trusted_sites.includes(hostname)) return;
             e.preventDefault();
-            external_url_prompt(href, dangerous);
+            external_url_prompt(href2, dangerous);
           });
-          if (link.textContent != href) {
+          if (link.textContent != href2) {
             tippy_esm_default(link, {
               theme: "name-sister-combo",
               content: html.node`
@@ -44295,13 +44318,13 @@
           return;
         }
       }
-      if (href.endsWith("/+wiki")) return;
-      href = href.replace(root, "").replace("music/+noredirect/", "music/").replace("music/", "");
-      if (href.startsWith("user/")) return;
-      if (href.startsWith("tag/")) {
+      if (href2.endsWith("/+wiki")) return;
+      href2 = href2.replace(root, "").replace("music/+noredirect/", "music/").replace("music/", "");
+      if (href2.startsWith("user/")) return;
+      if (href2.startsWith("tag/")) {
         type = "tag";
       } else {
-        let split = href.split("/");
+        let split = href2.split("/");
         if (split.length == 1) {
           type = "artist";
         } else if (split.length == 2) {
@@ -46386,6 +46409,335 @@
     window.setTimeout(invoke_reload, 400);
   }
 
+  // src/components/about_artist.js
+  function bleh_about_artist() {
+    let legacy_container = page.structure.main.querySelector(".about-artist");
+    if (!legacy_container) return;
+    let avatar2 = legacy_container.querySelector(
+      ".gallery-preview-image--0 img"
+    );
+    let listeners = legacy_container.querySelector(".about-artist-listeners");
+    let tags = legacy_container.querySelector(".about-artist-tags");
+    let wiki = legacy_container.querySelector(".wiki-block.visible-lg");
+    if (wiki) wiki.classList.remove("visible-lg");
+    let about_artist_container = legacy_container.parentElement;
+    about_artist_container.classList.add("about-artist-container");
+    render(
+      about_artist_container,
+      html`
+            <div class="about-artist-panel">
+                <div class="avatar-side">
+                    ${avatar2 ? html.node`
+                    <img src=${avatar2.getAttribute("src")}>
+                    <a onclick=${() => expand_avatar(avatar2.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>
+                ` : html.node`
+                    <img class="missing-artist">
+                `}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${tl2(trans2.about)}</div>
+                    <h1>
+                        <a
+                            href="${root}music/${redirect()}${sanitise(
+        page.sister
+      )}"
+                            >${correct_artist(page.sister)}</a
+                        >
+                    </h1>
+                    ${listeners} ${tags} ${wiki}
+                </div>
+            </div>
+            ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl2(trans2.others_featured)}</div>` : ""}
+        `
+    );
+    if (page.sister_others.length > 0) {
+      about_artist_container.appendChild(html.node`
+            <div class="about-guest-features-panel">
+                ${page.sister_others.map((guest) => {
+        return html.node`
+                        <a class="about-guest-feature" href="${root}music/${redirect()}${sanitise(guest)}">
+                            ${guest}
+                        </a>
+                    `;
+      })}
+            </div>
+        `);
+    }
+    page.structure.side.appendChild(about_artist_container);
+  }
+
+  // src/pages/tag.js
+  function bleh_tags() {
+    let tag_header = document.body.querySelector(".header--tag");
+    if (!tag_header) return;
+    if (tag_header.hasAttribute("data-bwaa"))
+      return;
+    tag_header.setAttribute("data-bwaa", "true");
+    patch_header_title();
+    let is_subpage = tag_header.classList.contains("header--sub-page");
+    page.structure.container = document.body.querySelector(".page-content");
+    page.structure.row = page.structure.container.querySelector(".row");
+    try {
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    checkup_page_structure(is_subpage, tag_header);
+    if (ff("refreshed_music_nav")) {
+      let split = window.location.href.split("/");
+      let index3 = 4;
+      if (split[3] != "tag")
+        index3 = 5;
+      let title = desanitise(split[index3]);
+      page.name = title;
+      let redesigned_tag_header = document.createElement("section");
+      redesigned_tag_header.classList.add("redesigned-header", "redesigned-tag-header", "no-background");
+      redesigned_tag_header.innerHTML = `
+            <div class="tag-side">
+                <div class="tag-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${tl2(trans2.tag)}</div>
+                <h1>${title}</h1>
+            </div>
+        `;
+      let background = document.body.querySelector(".header-background--has-image");
+      if (background)
+        register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""));
+      else
+        register_background();
+      page.structure.container.insertBefore(redesigned_tag_header, page.structure.container.firstElementChild);
+      tag_header.classList.add("legacy-header");
+    }
+    if (!is_subpage) {
+      let col_main = page.structure.main.querySelector(".wiki-section");
+      let tags = document.createElement("div");
+      tags.classList.add("catalogue-tags");
+      let related = page.structure.main.querySelector(".tags-list");
+      if (related) {
+        page.structure.main.removeChild(related.parentElement);
+        tags.appendChild(related);
+        let header_tags = document.createElement("div");
+        header_tags.classList.add("sub-text", "music-small-header");
+        header_tags.textContent = tl2(trans2.related_to);
+        col_main.appendChild(header_tags);
+        col_main.appendChild(tags);
+      }
+      let bookmark_form = page.structure.side.querySelector(":scope > div");
+      let view_all_panel = document.createElement("section");
+      view_all_panel.classList.add("side-actions");
+      let button = bookmark_form.querySelector("button");
+      button.classList = "btn side-action";
+      button.setAttribute("data-type", "bookmark");
+      view_all_panel.appendChild(bookmark_form);
+      page.structure.side.appendChild(view_all_panel);
+      let new_playlist = page.structure.side.querySelector("form");
+      let header = new_playlist.querySelector("h3");
+      new_playlist.removeChild(header);
+      let playlist_button = new_playlist.querySelector("button");
+      playlist_button.classList = "btn side-action";
+      playlist_button.setAttribute("data-type", "playlist");
+      view_all_panel.appendChild(new_playlist);
+    } else {
+      if (page.subpage == "wiki_overview")
+        bleh_wiki();
+      else if (page.subpage == "wiki_history")
+        bleh_wiki_history();
+      else if (page.subpage == "wiki_edit")
+        bleh_wiki_editor();
+    }
+    log("status is", "page", "info", page);
+    update_page();
+  }
+  function bleh_tags_mini() {
+    let tag_user_avatar = page.structure.main.querySelector(".tags-user-avatar");
+    if (!tag_user_avatar) return;
+    let tags_list = tag_user_avatar.nextElementSibling;
+    let tags = tags_list.querySelectorAll(".tag a");
+    tags.forEach((tag) => {
+      tag.classList.add("user-created-tag");
+      tippy_esm_default(tag, {
+        content: tl2(trans2.personal_tag)
+      });
+    });
+  }
+
+  // src/pages/track.js
+  function bleh_tracks() {
+    let track_header = document.body.querySelector(".header-new--track");
+    page.sister = track_header.querySelector(
+      ".header-new-crumb span"
+    ).textContent;
+    page.name = document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name");
+    patch_header_title();
+    let is_subpage = track_header.classList.contains("header-new--subpage");
+    if (auth.pro) {
+      page.structure.container = document.body.querySelector(".page-content");
+    } else {
+      if (!is_subpage) {
+        page.structure.container = document.body.querySelector(
+          ".full-bleed-ad-container + .page-content:not(.visible-xs)"
+        );
+        if (!page.structure.container)
+          page.structure.container = document.body.querySelector(".page-content");
+      } else {
+        page.structure.container = document.body.querySelector(".page-content");
+      }
+    }
+    page.structure.row = page.structure.container.querySelector(".row");
+    try {
+      if (!is_subpage) {
+        page.structure.main = page.structure.row.querySelector(
+          ".col-main.buffer-standard"
+        );
+        if (page.structure.main.classList[2])
+          page.structure.main = page.structure.row.querySelector(
+            ".col-main.buffer-standard:not(:first-child)"
+          );
+      } else {
+        page.structure.main = page.structure.row.querySelector(".col-main");
+      }
+      page.structure.side = page.structure.row.querySelector(
+        ".col-sidebar:not(.track-overview-video-column)"
+      );
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    checkup_page_structure(is_subpage, track_header);
+    if (ff("refreshed_music_nav")) {
+      let artist_avatar = track_header.querySelector(
+        ".header-new-background-image"
+      );
+      let title = track_header.querySelector(".header-new-title");
+      let artist = track_header.querySelector('[itemprop="byArtist"]');
+      let position = track_header.querySelector(
+        ".header-new-chart-position-number"
+      );
+      let source_album = page.structure.main.querySelector(".source-album");
+      let album_avatar;
+      if (source_album)
+        album_avatar = source_album.querySelector(".source-album-art img");
+      const should_expand = settings.default_avatar_action == "expand" && (album_avatar || artist_avatar);
+      page.state.avatar_side_override = should_expand ? "expand" : source_album.querySelector(".link-block-cover-link").getAttribute("href");
+      let redesigned_track_header = html.node`
+            <section class="redesigned-header redesigned-track-header no-background">
+                <div class="avatar-side" ref=${(el) => page.state.avatar_side = el} />
+                <div class="info-side">
+                    <div class="sub-text">${tl2(trans2.track)}</div>
+                    <div class="title-container">
+                        ${title}
+                        ${position ? position : ""}
+                    </div>
+                    <h2>${artist}</h2>
+                </div>
+            </section>
+        `;
+      if (album_avatar) {
+        create_avatar(
+          page.state.avatar_side,
+          album_avatar.src.replace("300x300", "avatar300s"),
+          page.state.avatar_side_override
+        );
+      } else if (artist_avatar) {
+        create_avatar(
+          page.state.avatar_side,
+          artist_avatar.getAttribute("content").replace("/ar0/", "/avatar170s/"),
+          page.state.avatar_side_override
+        );
+      } else {
+        create_avatar(
+          page.state.avatar_side,
+          "",
+          page.state.avatar_side_override
+        );
+      }
+      page.structure.container.insertBefore(
+        redesigned_track_header,
+        page.structure.container.firstElementChild
+      );
+      track_header.classList.add("legacy-header");
+    }
+    if (!is_subpage) {
+      show_your_scrobbles();
+      bleh_music_page_charts();
+      bleh_about_artist();
+      bleh_tags_mini();
+      let similar_tracks = page.structure.main.querySelector(
+        ".track-similar-tracks"
+      );
+      if (similar_tracks) {
+        let similar_panel = similar_tracks.parentElement;
+        similar_panel.classList.add("similar-panel");
+      }
+    } else {
+      let btn_add = page.structure.side.querySelector(".add-button");
+      if (btn_add != null)
+        btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (page.subpage == "wiki_overview") bleh_wiki();
+      else if (page.subpage == "wiki_history") bleh_wiki_history();
+      else if (page.subpage == "wiki_edit") bleh_wiki_editor();
+    }
+    if (ff("oracle") && settings.oracle_beta) oracle_process();
+    log("status is", "page", "info", page);
+    update_page();
+  }
+  function create_avatar(parent, src, override = "expand") {
+    log(`creating avatar for ${src} with override ${override}`, "track");
+    if (src.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || src == "") {
+      register_background(null);
+      render(
+        parent,
+        html`
+                <div class="media">
+                    <img class="missing-track" />
+                </div>
+            `
+      );
+    }
+    const full = src.replace("/300x300/", "/ar0/").replace("/avatar300s/", "/ar0/").replace("/avatar170s/", "/ar0/");
+    register_background(full);
+    const media = html.node`
+        <div class="media">
+            <img src=${src}>
+            ${override == "expand" ? html.node`
+                <a class="bleh--avatar-clickable-link" onclick=${() => {
+      expand_avatar(full);
+    }} />
+            ` : html.node`
+                <a class="bleh--avatar-clickable-link" href=${override} />
+            `}
+        </div>
+    `;
+    let menu = tippy_esm_default(media, {
+      theme: "context-menu",
+      content: html.node`
+            ${override != "expand" ? html.node`
+                        <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(full)} data-menu-item="expand">
+                            ${tl2(trans2.expand)}
+                        </button>
+                    ` : ""}
+            <div class="sep"></div>
+            <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
+                ${tl2(trans2.settings)}
+            </a>
+        `,
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      appendTo: document.body,
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
+    register_menu(media, menu);
+    render(parent, media);
+  }
+
   // src/components/oracle.js
   function oracle_process() {
     log("beginning", "oracle");
@@ -47150,10 +47502,10 @@
                 (r) => r.title == title && r.artist == artist2
               );
               let plays = 0;
-              let artwork;
+              let artwork2;
               if (match3) {
                 plays = match3.plays;
-                artwork = match3.artwork;
+                artwork2 = match3.artwork;
               }
               let artwork_container;
               let stats;
@@ -47180,9 +47532,9 @@
               const elem = html.node`
                                         <div class="source-album js-link-block link-block-cover-link">
                                             <div class="source-album-art" ref=${(el) => artwork_container = el}>
-                                                ${artwork ? html.node`
+                                                ${artwork2 ? html.node`
                                                             <span class="cover-art">
-                                                                <img src=${artwork} alt=${title}>
+                                                                <img src=${artwork2} alt=${title}>
                                                             </span>
                                                         ` : html.node`
                                                         <span class="cover-art">
@@ -47210,16 +47562,21 @@
                 cache2.track.name = title;
                 cache2.track.sister = artist2;
                 cache2.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
-                if (artwork) {
+                if (artwork2) {
+                  create_avatar(
+                    page.state.avatar_side,
+                    artwork2,
+                    page.state.avatar_side_override
+                  );
                   save_hoshino_artwork(
-                    artwork,
+                    artwork2,
                     title,
                     artist2,
                     plays
                   );
                 }
               }
-              if (!artwork && index3 < 2)
+              if (!artwork2 && index3 < 2)
                 load_cover_art(
                   artwork_container,
                   title,
@@ -47263,6 +47620,15 @@
               e.scrollTop = 0;
             });
           }
+        } else {
+          const hoshino_entry = hoshino_return(page.name, page.sister);
+          if (hoshino_entry) {
+            create_avatar(
+              page.state.avatar_side,
+              hoshino_entry,
+              page.state.avatar_side_override
+            );
+          }
         }
         const artist_elem = header.querySelector("h2");
         if (recording.disambiguation == "explicit") {
@@ -47304,6 +47670,13 @@
                     </span>
                 `
         );
+        if (index3 == 0) {
+          create_avatar(
+            page.state.avatar_side,
+            entry.artwork,
+            page.state.avatar_side_override
+          );
+        }
         render(
           stats,
           html`
@@ -47348,7 +47721,7 @@
         const background_image = doc.querySelector(
           ".header-new-background-image"
         );
-        let artwork = null;
+        let artwork2 = null;
         if (!background_image) {
           render(
             parent,
@@ -47359,12 +47732,12 @@
                         `
           );
         } else {
-          artwork = background_image.getAttribute("content").replace("/ar0/", "/300x300/");
+          artwork2 = background_image.getAttribute("content").replace("/ar0/", "/300x300/");
           render(
             parent,
             html`
                             <span class="cover-art">
-                                <img src=${artwork} alt=${title} />
+                                <img src=${artwork2} alt=${title} />
                             </span>
                         `
           );
@@ -47376,8 +47749,13 @@
           cache2.track.name = title;
           cache2.track.sister = artist2;
           cache2.track.link = `${root}music/${sanitise(artist2)}/${sanitise(title)}`;
+          create_avatar(
+            page.state.avatar_side,
+            artwork2,
+            page.state.avatar_side_override
+          );
           save_hoshino_artwork(
-            artwork,
+            artwork2,
             title,
             artist2,
             clean_number(listeners?.title)
@@ -51160,7 +51538,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const link = notification.querySelector(
         ".inbox-notifications__item-link"
       );
-      const href = link.getAttribute("href");
+      const href2 = link.getAttribute("href");
       const active = link.classList.contains(
         "inbox-notifications__item--highlight"
       );
@@ -51174,13 +51552,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       };
       let involved = [];
       const strongs = link.querySelectorAll("strong");
-      let split = href.replace(root, "").split("/");
-      const avatar3 = notification.querySelector(".avatar");
-      avatar3.classList = "avatar";
+      let split = href2.replace(root, "").split("/");
+      const avatar2 = notification.querySelector(".avatar");
+      avatar2.classList = "avatar";
       const time2 = notification.querySelector("time");
       let is_reply = false;
       let others_included = 0;
-      if (href.endsWith("/obsessions/set")) {
+      if (href2.endsWith("/obsessions/set")) {
         type = "obsession";
         involved.push(split[1]);
         const desc = strongs[0].textContent;
@@ -51191,13 +51569,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           desc_split[1],
           context.sister
         );
-      } else if (href.endsWith("/listening-report/month")) {
+      } else if (href2.endsWith("/listening-report/month")) {
         type = "listening-report";
         involved.push(strongs[0].textContent);
-        let img = avatar3.querySelector("img");
+        let img = avatar2.querySelector("img");
         img.src = auth.avatar;
         img.alt = auth.name;
-        let label = avatar3.querySelector(".avatar-status-dot");
+        let label = avatar2.querySelector(".avatar-status-dot");
         if (auth.pro) {
           label.classList = "avatar-status-dot avatar-status-dot--subscriber";
         } else {
@@ -51205,7 +51583,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         }
         context.type = "profile";
         context.name = split[1];
-      } else if (href.startsWith(`${root}user/`)) {
+      } else if (href2.startsWith(`${root}user/`)) {
         context.type = "profile";
         context.name = split[1];
         strongs.forEach((strong, index4) => {
@@ -51220,7 +51598,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           }
           involved.push(strong.textContent);
         });
-      } else if (href.startsWith(`${root}music/`)) {
+      } else if (href2.startsWith(`${root}music/`)) {
         if (split[2].startsWith("+")) {
           context.type = "artist";
           context.name = correct_artist(desanitise(split[1]));
@@ -51249,7 +51627,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           }
           involved.push(strong.textContent);
         });
-      } else if (href.startsWith(`${root}tag/`)) {
+      } else if (href2.startsWith(`${root}tag/`)) {
         context.type = "tag";
         context.name = split[1];
         strongs.forEach((strong, index4) => {
@@ -51264,11 +51642,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         });
       }
       console.info(split, context, type, involved);
-      patch_avatar(avatar3, involved[0]);
+      patch_avatar(avatar2, involved[0]);
       render(
         notification,
         html`
-                <div class="notification-avatar">${avatar3}</div>
+                <div class="notification-avatar">${avatar2}</div>
                 <div
                     class="bleh-icon"
                     data-type=${type}
@@ -52296,7 +52674,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const links = doc.querySelectorAll(".user-now-artist-and-album a");
       let artist = links[0];
       const album = links[1];
-      const avatar3 = doc.querySelector(".cover-art img")?.src;
+      const avatar2 = doc.querySelector(".cover-art img")?.src;
       track.removeAttribute("target");
       artist.removeAttribute("target");
       album.removeAttribute("target");
@@ -52321,7 +52699,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         name: track,
         artist,
         album,
-        avatar: avatar3,
+        avatar: avatar2,
         active
       };
       return page.now;
@@ -52378,160 +52756,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
   }
 
-  // src/components/about_artist.js
-  function bleh_about_artist() {
-    let legacy_container = page.structure.main.querySelector(".about-artist");
-    if (!legacy_container) return;
-    let avatar3 = legacy_container.querySelector(
-      ".gallery-preview-image--0 img"
-    );
-    let listeners = legacy_container.querySelector(".about-artist-listeners");
-    let tags = legacy_container.querySelector(".about-artist-tags");
-    let wiki = legacy_container.querySelector(".wiki-block.visible-lg");
-    if (wiki) wiki.classList.remove("visible-lg");
-    let about_artist_container = legacy_container.parentElement;
-    about_artist_container.classList.add("about-artist-container");
-    render(
-      about_artist_container,
-      html`
-            <div class="about-artist-panel">
-                <div class="avatar-side">
-                    ${avatar3 ? html.node`
-                    <img src=${avatar3.getAttribute("src")}>
-                    <a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>
-                ` : html.node`
-                    <img class="missing-artist">
-                `}
-                </div>
-                <div class="info-side">
-                    <div class="sub-text">${tl2(trans2.about)}</div>
-                    <h1>
-                        <a
-                            href="${root}music/${redirect()}${sanitise(
-        page.sister
-      )}"
-                            >${correct_artist(page.sister)}</a
-                        >
-                    </h1>
-                    ${listeners} ${tags} ${wiki}
-                </div>
-            </div>
-            ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl2(trans2.others_featured)}</div>` : ""}
-        `
-    );
-    if (page.sister_others.length > 0) {
-      about_artist_container.appendChild(html.node`
-            <div class="about-guest-features-panel">
-                ${page.sister_others.map((guest) => {
-        return html.node`
-                        <a class="about-guest-feature" href="${root}music/${redirect()}${sanitise(guest)}">
-                            ${guest}
-                        </a>
-                    `;
-      })}
-            </div>
-        `);
-    }
-    page.structure.side.appendChild(about_artist_container);
-  }
-
-  // src/pages/tag.js
-  function bleh_tags() {
-    let tag_header = document.body.querySelector(".header--tag");
-    if (!tag_header) return;
-    if (tag_header.hasAttribute("data-bwaa"))
-      return;
-    tag_header.setAttribute("data-bwaa", "true");
-    patch_header_title();
-    let is_subpage = tag_header.classList.contains("header--sub-page");
-    page.structure.container = document.body.querySelector(".page-content");
-    page.structure.row = page.structure.container.querySelector(".row");
-    try {
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log("unable to find elements", "page structure");
-    }
-    checkup_page_structure(is_subpage, tag_header);
-    if (ff("refreshed_music_nav")) {
-      let split = window.location.href.split("/");
-      let index3 = 4;
-      if (split[3] != "tag")
-        index3 = 5;
-      let title = desanitise(split[index3]);
-      page.name = title;
-      let redesigned_tag_header = document.createElement("section");
-      redesigned_tag_header.classList.add("redesigned-header", "redesigned-tag-header", "no-background");
-      redesigned_tag_header.innerHTML = `
-            <div class="tag-side">
-                <div class="tag-icon"></div>
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${tl2(trans2.tag)}</div>
-                <h1>${title}</h1>
-            </div>
-        `;
-      let background = document.body.querySelector(".header-background--has-image");
-      if (background)
-        register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""));
-      else
-        register_background();
-      page.structure.container.insertBefore(redesigned_tag_header, page.structure.container.firstElementChild);
-      tag_header.classList.add("legacy-header");
-    }
-    if (!is_subpage) {
-      let col_main = page.structure.main.querySelector(".wiki-section");
-      let tags = document.createElement("div");
-      tags.classList.add("catalogue-tags");
-      let related = page.structure.main.querySelector(".tags-list");
-      if (related) {
-        page.structure.main.removeChild(related.parentElement);
-        tags.appendChild(related);
-        let header_tags = document.createElement("div");
-        header_tags.classList.add("sub-text", "music-small-header");
-        header_tags.textContent = tl2(trans2.related_to);
-        col_main.appendChild(header_tags);
-        col_main.appendChild(tags);
-      }
-      let bookmark_form = page.structure.side.querySelector(":scope > div");
-      let view_all_panel = document.createElement("section");
-      view_all_panel.classList.add("side-actions");
-      let button = bookmark_form.querySelector("button");
-      button.classList = "btn side-action";
-      button.setAttribute("data-type", "bookmark");
-      view_all_panel.appendChild(bookmark_form);
-      page.structure.side.appendChild(view_all_panel);
-      let new_playlist = page.structure.side.querySelector("form");
-      let header = new_playlist.querySelector("h3");
-      new_playlist.removeChild(header);
-      let playlist_button = new_playlist.querySelector("button");
-      playlist_button.classList = "btn side-action";
-      playlist_button.setAttribute("data-type", "playlist");
-      view_all_panel.appendChild(new_playlist);
-    } else {
-      if (page.subpage == "wiki_overview")
-        bleh_wiki();
-      else if (page.subpage == "wiki_history")
-        bleh_wiki_history();
-      else if (page.subpage == "wiki_edit")
-        bleh_wiki_editor();
-    }
-    log("status is", "page", "info", page);
-    update_page();
-  }
-  function bleh_tags_mini() {
-    let tag_user_avatar = page.structure.main.querySelector(".tags-user-avatar");
-    if (!tag_user_avatar) return;
-    let tags_list = tag_user_avatar.nextElementSibling;
-    let tags = tags_list.querySelectorAll(".tag a");
-    tags.forEach((tag) => {
-      tag.classList.add("user-created-tag");
-      tippy_esm_default(tag, {
-        content: tl2(trans2.personal_tag)
-      });
-    });
-  }
-
   // src/pages/album.js
   function bleh_albums() {
     let album_header = document.body.querySelector(".header-new--album");
@@ -52576,13 +52800,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     checkup_page_structure(is_subpage, album_header);
     if (ff("refreshed_music_nav")) {
-      let avatar3 = album_header.querySelector(".header-new-background-image");
+      let avatar2 = album_header.querySelector(".header-new-background-image");
       let title = album_header.querySelector(".header-new-title");
       let artist = album_header.querySelector('[itemprop="byArtist"]');
       let position = album_header.querySelector(
         ".header-new-chart-position-number"
       );
-      const avatar_img = avatar3?.getAttribute("content").replace("/ar0/", "/avatar300s/");
+      const avatar_img = avatar2?.getAttribute("content").replace("/ar0/", "/avatar300s/");
       const listeners = document.body.querySelector(
         ".header-new-info-desktop .header-metadata-tnew-display > p > abbr"
       );
@@ -52596,8 +52820,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <section class="redesigned-header redesigned-album-header no-background">
                 ${is_subpage || ff("show_album_cover_always") ? html.node`
                 <div class="avatar-side">
-                    ${avatar3 ? html.node`
-                    <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
+                    ${avatar2 ? html.node`
+                    <img src="${avatar2.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
                     <a class="bleh--avatar-clickable-link"></a>
                     ` : html.node`<img class="missing-album">`}
                 </div>
@@ -52619,7 +52843,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </div>
                 ` : ""}
         `;
-      if (avatar3) register_background(avatar3.getAttribute("content"));
+      if (avatar2) register_background(avatar2.getAttribute("content"));
       else register_background(null);
       page.structure.container.insertBefore(
         redesigned_album_header,
@@ -52628,19 +52852,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       album_header.classList.add("legacy-header");
       let avatar_side = redesigned_album_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
-      if (avatar3 && avatar_link) {
-        if (settings.default_avatar_action == "expand" && avatar3)
+      if (avatar2 && avatar_link) {
+        if (settings.default_avatar_action == "expand" && avatar2)
           avatar_link.setAttribute(
             "onclick",
-            `_expand_avatar('${avatar3.getAttribute("content")}')`
+            `_expand_avatar('${avatar2.getAttribute("content")}')`
           );
         else if (settings.default_avatar_action == "gallery")
           avatar_link.href = `${root}music/${redirect()}${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
         let menu = tippy_esm_default(avatar_side, {
           theme: "context-menu",
           content: html.node`
-                    ${avatar3 ? html.node`
-                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar3.getAttribute("content"))} data-menu-item="expand">
+                    ${avatar2 ? html.node`
+                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar2.getAttribute("content"))} data-menu-item="expand">
                         ${tl2(trans2.expand)}
                     </button>
                     ` : ""}
@@ -52896,7 +53120,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ".artist-header-featured-items"
     );
     if (ff("refreshed_music_nav")) {
-      let avatar3 = artist_header.querySelector(
+      let avatar2 = artist_header.querySelector(
         ".header-new-background-image"
       );
       let title = artist_header.querySelector(".header-new-title");
@@ -52909,8 +53133,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let redesigned_artist_header = html.node`
             <section class="redesigned-header redesigned-artist-header no-background">
                 <div class="avatar-side">
-                    ${avatar3 ? html.node`
-                    <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
+                    ${avatar2 ? html.node`
+                    <img src="${avatar2.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
                     <a class="bleh--avatar-clickable-link"></a>
                     ` : html.node`<img class="missing-artist">`}
                 </div>
@@ -52948,7 +53172,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         });
       }
       let bg;
-      if (avatar3) bg = register_background(avatar3.getAttribute("content"));
+      if (avatar2) bg = register_background(avatar2.getAttribute("content"));
       else bg = register_background(null);
       page.structure.container.insertBefore(
         redesigned_artist_header,
@@ -52957,19 +53181,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       artist_header.classList.add("legacy-header");
       let avatar_side = redesigned_artist_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
-      if (avatar3 != null && avatar_link != null) {
-        if (settings.default_avatar_action == "expand" && avatar3 != null)
+      if (avatar2 != null && avatar_link != null) {
+        if (settings.default_avatar_action == "expand" && avatar2 != null)
           avatar_link.setAttribute(
             "onclick",
-            `_expand_avatar('${avatar3.getAttribute("content")}')`
+            `_expand_avatar('${avatar2.getAttribute("content")}')`
           );
         else if (settings.default_avatar_action == "gallery")
           avatar_link.href = `${root}music/${redirect()}${sanitise(page.name)}/+images`;
         let menu = tippy_esm_default(avatar_side, {
           theme: "context-menu",
           content: html.node`
-                    ${avatar3 != null ? html.node`
-                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar3.getAttribute("content"))} data-menu-item="expand">
+                    ${avatar2 != null ? html.node`
+                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar2.getAttribute("content"))} data-menu-item="expand">
                         ${tl2(trans2.expand)}
                     </button>
                     ` : ""}
@@ -54375,9 +54599,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       let users = page.structure.main.querySelectorAll(".attendee-summary-user-inner-wrap");
       users.forEach((user) => {
-        let avatar3 = user.querySelector(".attendee-summary-user-avatar");
+        let avatar2 = user.querySelector(".attendee-summary-user-avatar");
         let name = user.querySelector(".attendee-summary-user-link").textContent;
-        patch_avatar(avatar3, name, "event");
+        patch_avatar(avatar2, name, "event");
       });
       let cancelled = page.structure.main.querySelector(".event-status--cancelled");
       if (cancelled) {
@@ -54413,9 +54637,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         refresh_all();
         let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
         users.forEach((user) => {
-          let avatar3 = user.querySelector(".user-list-avatar");
+          let avatar2 = user.querySelector(".user-list-avatar");
           let name = user.querySelector(".user-list-link").textContent;
-          let badge = patch_avatar(avatar3, name, "follow");
+          let badge = patch_avatar(avatar2, name, "follow");
           if (badge.type == "avatar-status-dot--staff")
             user.classList.add("staff-user");
         });
@@ -54526,11 +54750,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       notif_links.forEach((notification) => {
         let link = notification.getAttribute("href");
         if (link.endsWith("/obsessions/set") || link.endsWith("/listening-report/month")) return;
-        let avatar3 = notification.querySelector(".avatar");
+        let avatar2 = notification.querySelector(".avatar");
         let name = notification.querySelector(".inbox-notifications__item-description strong");
         if (!name) return;
-        let name_text = sanitise(return_name_from_avatar(avatar3.querySelector("img")));
-        let badge = patch_avatar(avatar3, name_text);
+        let name_text = sanitise(return_name_from_avatar(avatar2.querySelector("img")));
+        let badge = patch_avatar(avatar2, name_text);
         name.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
         if (notification.classList.contains("inbox-notifications__item--highlight"))
           notification.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
@@ -54543,9 +54767,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       let sender_time = inbox.querySelector(".inbox-message-timestamp");
       sender_panel.appendChild(sender_name);
       sender_panel.appendChild(sender_time);
-      let avatar3 = sender_panel.querySelector(".avatar");
+      let avatar2 = sender_panel.querySelector(".avatar");
       let name_text = sanitise(sender_name.textContent.trim());
-      let badge = patch_avatar(avatar3, name_text);
+      let badge = patch_avatar(avatar2, name_text);
       sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
     } else if (page.subpage == "compose") {
       let inbox = page.structure.container.querySelector(".inbox-compose-view");
@@ -54671,162 +54895,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         });
       }
     });
-  }
-
-  // src/pages/track.js
-  function bleh_tracks() {
-    let track_header = document.body.querySelector(".header-new--track");
-    page.sister = track_header.querySelector(
-      ".header-new-crumb span"
-    ).textContent;
-    page.name = document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name");
-    patch_header_title();
-    let is_subpage = track_header.classList.contains("header-new--subpage");
-    if (auth.pro) {
-      page.structure.container = document.body.querySelector(".page-content");
-    } else {
-      if (!is_subpage) {
-        page.structure.container = document.body.querySelector(
-          ".full-bleed-ad-container + .page-content:not(.visible-xs)"
-        );
-        if (!page.structure.container)
-          page.structure.container = document.body.querySelector(".page-content");
-      } else {
-        page.structure.container = document.body.querySelector(".page-content");
-      }
-    }
-    page.structure.row = page.structure.container.querySelector(".row");
-    try {
-      if (!is_subpage) {
-        page.structure.main = page.structure.row.querySelector(
-          ".col-main.buffer-standard"
-        );
-        if (page.structure.main.classList[2])
-          page.structure.main = page.structure.row.querySelector(
-            ".col-main.buffer-standard:not(:first-child)"
-          );
-      } else {
-        page.structure.main = page.structure.row.querySelector(".col-main");
-      }
-      page.structure.side = page.structure.row.querySelector(
-        ".col-sidebar:not(.track-overview-video-column)"
-      );
-    } catch (e) {
-      log("unable to find elements", "page structure");
-    }
-    checkup_page_structure(is_subpage, track_header);
-    if (ff("refreshed_music_nav")) {
-      let artist_avatar = track_header.querySelector(
-        ".header-new-background-image"
-      );
-      let title = track_header.querySelector(".header-new-title");
-      let artist = track_header.querySelector('[itemprop="byArtist"]');
-      let position = track_header.querySelector(
-        ".header-new-chart-position-number"
-      );
-      let source_album = page.structure.main.querySelector(".source-album");
-      let album_avatar;
-      if (source_album)
-        album_avatar = source_album.querySelector(".source-album-art img");
-      let redesigned_track_header = html.node`
-            <section class="redesigned-header redesigned-track-header no-background">
-                <div class="avatar-side">
-                    ${album_avatar ? html.node`
-                    <img src="${album_avatar.getAttribute("src").replace("300x300", "avatar300s")}">
-                    <a class="bleh--avatar-clickable-link"></a>
-                    ` : artist_avatar ? html.node`
-                    <img src="${artist_avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
-                    <a class="bleh--avatar-clickable-link"></a>
-                    ` : html.node`<img class="missing-track">`}
-                </div>
-                <div class="info-side">
-                    <div class="sub-text">${tl2(trans2.track)}</div>
-                    <div class="title-container">
-                        ${title}
-                        ${position ? position : ""}
-                    </div>
-                    <h2>${artist}</h2>
-                </div>
-            </section>
-        `;
-      let bg;
-      if (album_avatar && !album_avatar.getAttribute("src").endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg"))
-        bg = register_background(
-          album_avatar.getAttribute("src").replace("/300x300/", "/ar0/")
-        );
-      else if (artist_avatar)
-        bg = register_background(artist_avatar.getAttribute("content"));
-      else bg = register_background(null);
-      page.structure.container.insertBefore(
-        redesigned_track_header,
-        page.structure.container.firstElementChild
-      );
-      track_header.classList.add("legacy-header");
-      let avatar_side = redesigned_track_header.querySelector(".avatar-side");
-      let avatar_link = avatar_side.querySelector("a");
-      let expand_link;
-      if (album_avatar)
-        expand_link = `_expand_avatar('${album_avatar.getAttribute("src").replace("300x300", "ar0")}')`;
-      else if (artist_avatar)
-        expand_link = `_expand_avatar('${artist_avatar.getAttribute("content")}')`;
-      if (settings.default_avatar_action == "expand" && (album_avatar || artist_avatar))
-        avatar_link.setAttribute("onclick", expand_link);
-      else if (settings.default_avatar_action == "gallery" && album_avatar)
-        avatar_link.href = source_album.querySelector(".link-block-cover-link").getAttribute("href");
-      let menu = tippy_esm_default(avatar_side, {
-        theme: "context-menu",
-        content: html.node`
-                ${album_avatar || artist_avatar ? html.node`
-                <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute("content"))} data-menu-item="expand">
-                    ${tl2(trans2.expand)}
-                </button>
-                ` : ""}
-                ${album_avatar ? html.node`
-                <a class="dropdown-menu-clickable-item" href="${source_album.querySelector(".link-block-cover-link").getAttribute("href")}" data-menu-item="album">
-                    ${tl2(trans2.album)}
-                </a>
-                ` : ""}
-                <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                    ${tl2(trans2.settings)}
-                </a>
-            `,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event3) => {
-            instance.hide();
-          });
-        }
-      });
-      register_menu(avatar_side, menu);
-    }
-    if (!is_subpage) {
-      show_your_scrobbles();
-      bleh_music_page_charts();
-      bleh_about_artist();
-      bleh_tags_mini();
-      let similar_tracks = page.structure.main.querySelector(
-        ".track-similar-tracks"
-      );
-      if (similar_tracks) {
-        let similar_panel = similar_tracks.parentElement;
-        similar_panel.classList.add("similar-panel");
-      }
-    } else {
-      let btn_add = page.structure.side.querySelector(".add-button");
-      if (btn_add != null)
-        btn_add.setAttribute("data-page-subpage", page.subpage);
-      if (page.subpage == "wiki_overview") bleh_wiki();
-      else if (page.subpage == "wiki_history") bleh_wiki_history();
-      else if (page.subpage == "wiki_edit") bleh_wiki_editor();
-    }
-    if (ff("oracle") && settings.oracle_beta) oracle_process();
-    log("status is", "page", "info", page);
-    update_page();
   }
 
   // src/rain.js
@@ -55314,9 +55382,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ".user-list-item:not(.user-list-item-mobile-ad)"
     );
     users.forEach((user) => {
-      let avatar3 = user.querySelector(".user-list-avatar");
+      let avatar2 = user.querySelector(".user-list-avatar");
       let name = user.querySelector(".user-list-link");
-      const badge = patch_avatar(avatar3, name.textContent, "follow");
+      const badge = patch_avatar(avatar2, name.textContent, "follow");
       style_name_from_badge(name, badge);
       let artists = user.querySelectorAll(".user-list-shared-artists a");
       artists.forEach((artist) => {
@@ -61870,12 +61938,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (auth_link.state) {
       auth.avatar = auth_link.state.querySelector("img").getAttribute("src");
       if (auth.avatar != previous_avi) {
-        let avatar3 = auth_link.state.querySelector("img");
-        avatar3.setAttribute("crossorigin", "anonymous");
+        let avatar2 = auth_link.state.querySelector("img");
+        avatar2.setAttribute("crossorigin", "anonymous");
         try {
-          avatar3.addEventListener("load", () => {
+          avatar2.addEventListener("load", () => {
             let thief = new import_color_thief_browser3.default();
-            let colour2 = thief.getColor(avatar3);
+            let colour2 = thief.getColor(avatar2);
             let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
             auth.sets.hue = hsl.h;
             auth.sets.sat = clamp_sat2(hsl.s / 100 * 3);

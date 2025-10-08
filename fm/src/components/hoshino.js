@@ -60,6 +60,38 @@ export function hoshino(artwork, name, sister, link = null) {
     }
 }
 
+export function hoshino_return(name, sister) {
+    if (!ff('hoshino')) return;
+
+    let oracle_cache =
+        JSON.parse(localStorage.getItem('bleh_oracle_cache')) || {};
+
+    const name_lower = name.toLowerCase();
+    const sister_lower = sister.toLowerCase();
+
+    const album_name = oracle_cache[sister_lower]?.[name_lower]?.track?.name;
+    const album_sister =
+        oracle_cache[sister_lower]?.[name_lower]?.track?.sister;
+
+    if (!album_name || !album_sister) {
+        log('no cache to be used', 'hoshino', 'info', {
+            artwork,
+            name,
+            sister,
+            album: {
+                album_name,
+                album_sister,
+                href
+            }
+        });
+        return;
+    }
+
+    const art = load_hoshino_artwork(album_name, album_sister)?.artwork;
+
+    return art;
+}
+
 export function load_hoshino_artwork(name, sister) {
     let hoshino_cache =
         JSON.parse(localStorage.getItem('bleh_hoshino_cache')) || {};
