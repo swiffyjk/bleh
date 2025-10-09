@@ -46,7 +46,7 @@ import {
 } from './profile.js';
 import { select_prepare_list } from '../components/select.js';
 import { match } from '../components/dynamic_theming.js';
-import { oracle_data } from '../components/oracle.js';
+import { manage_oracle_data, oracle_data } from '../components/oracle.js';
 import { render_activity } from '../activity.js';
 import { DateTime } from 'luxon';
 import { sponsor, sponsor_manage } from '../sponsor.js';
@@ -1367,6 +1367,27 @@ export async function render_setting_page(page_id) {
                                 onclick=${() => oracle_data(true)}
                             >
                                 ${tl(trans.update_check)}
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${
+                            !oracle_artists.version ||
+                            !oracle_albums.version ||
+                            !oracle_tracks.version
+                        }
+                    >
+                        <div class="heading">
+                            <h5>${tl(trans.manage_data)}</h5>
+                        </div>
+                        <div class="info">
+                            <button
+                                class="see-more"
+                                onclick=${() => manage_oracle_data()}
+                            >
+                                ${tl(trans.view_all)}
                             </button>
                         </div>
                     </div>

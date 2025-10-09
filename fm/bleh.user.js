@@ -46967,7 +46967,7 @@
         if (local?.fetch) {
           delete local.fetch;
           log("deleted legacy track fetch data", "oracle");
-          oracle_save_cache("track");
+          oracle_save_cache("track", false);
         }
         if (local?.recording) {
           log("skipping track search (local cache)", "oracle", "info", {
@@ -47334,6 +47334,7 @@
     function oracle_track_releases_process(data2) {
       const recording = oracle_pick_recording(data2);
       if (recording) cache2.track.recording = recording;
+      oracle_save_cache("track");
       oracle_track_releases(recording);
     }
     function oracle_track_releases(recording) {
@@ -47927,6 +47928,109 @@
             </table>
         `
     });
+  }
+  function manage_oracle_data() {
+    const oracle = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
+    console.info("oracle data", oracle);
+    dialog({
+      id: "oracle",
+      title: tl2(trans2.manage_data),
+      body: html.node`
+            <div class="data-table">
+                ${Object.entries(oracle).map(([artist, data2]) => load_artist(artist, data2))}
+            </div>
+        `,
+      allow_scroll: true
+    });
+    function load_artist(artist, data2) {
+      const entry = html.node`
+            <div class="data-table-entry">
+                <div class="entry-header">
+                    <strong>${artist}</strong>
+                    <div class="entry-actions">
+                        <button class="btn icon danger-subtle chibi" data-type="delete" onclick=${() => delete_artist()}>${tl2(trans2.delete)}</button>
+                    </div>
+                </div>
+                <div class="entry-data">
+                    ${Object.entries(data2).map(([item, data3]) => load_item(item, data3))}
+                </div>
+            </div>
+        `;
+      function delete_artist() {
+        entry.remove();
+      }
+      return entry;
+    }
+    function load_item(item, data2) {
+      const entry = html.node`
+            <div class="data-table-entry">
+                <div class="entry-header">
+                    <strong>${item}</strong>
+                    <div class="entry-actions">
+                        <button class="btn icon danger-subtle chibi" data-type="delete" onclick=${() => delete_item()}>${tl2(trans2.delete)}</button>
+                    </div>
+                </div>
+                <div class="entry-data">
+                    ${Object.keys(data2.album).length > 0 ? load_item_data("album", data2.album) : ""}
+                    ${Object.keys(data2.track).length > 0 ? load_item_data("track", data2.track) : ""}
+                </div>
+            </div>
+        `;
+      function delete_item() {
+        entry.remove();
+      }
+      return entry;
+    }
+    function load_item_data(type, data2) {
+      const entry = html.node`
+                <div class="data-table-entry">
+                    <div class="entry-header">
+                        <strong class="entry-type">
+                            <span class="bleh-icon" data-type=${type} style="--icon: var(--mask)" />
+                            ${type}
+                        </strong>
+                        <div class="entry-subdata">
+                            ${data2.date ? html.node`
+                                <div class="entry-data-row">
+                                    <strong>fetched:</strong>
+                                    <p>${DateTime.fromMillis(data2.date).toRelative()}</p>
+                                </div>
+                            ` : ""}
+                            ${data2.expire ? html.node`
+                                <div class="entry-data-row">
+                                    <strong>expires:</strong>
+                                    <p>${DateTime.fromMillis(data2.expire).toRelative()}</p>
+                                </div>
+                            ` : ""}
+                        </div>
+                        <div class="entry-actions">
+                            <button class="btn icon danger-subtle chibi" data-type="delete" onclick=${() => delete_item()}>${tl2(trans2.delete)}</button>
+                        </div>
+                    </div>
+                    <div class="entry-subdata">
+                        ${data2.fetch ? html.node`
+                            <div class="entry-data-row colourful" data-danger=${type == "track"}>
+                                <p>fetch</p>
+                            </div>
+                        ` : ""}
+                        ${data2.recording ? html.node`
+                            <div class="entry-data-row">
+                                <p>recording</p>
+                            </div>
+                        ` : ""}
+                        ${data2.artwork ? html.node`
+                            <div class="entry-data-row">
+                                <p>artwork</p>
+                            </div>
+                        ` : ""}
+                    </div>
+                </div>
+            `;
+      function delete_item() {
+        entry.remove();
+      }
+      return entry;
+    }
   }
 
   // src/pages/bleh_config.js
@@ -49088,6 +49192,23 @@
                                 onclick=${() => oracle_data(true)}
                             >
                                 ${tl2(trans2.update_check)}
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
+                    >
+                        <div class="heading">
+                            <h5>${tl2(trans2.manage_data)}</h5>
+                        </div>
+                        <div class="info">
+                            <button
+                                class="see-more"
+                                onclick=${() => manage_oracle_data()}
+                            >
+                                ${tl2(trans2.view_all)}
                             </button>
                         </div>
                     </div>
@@ -58371,6 +58492,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Aktuelle Version",
       pt: "Vers\xE3o atual",
       sv: "Nuvarande version"
+    },
+    manage_data: {
+      en: "Manage data"
     },
     labs: {
       // labs by last.fm

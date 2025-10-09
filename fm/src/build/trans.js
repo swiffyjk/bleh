@@ -1904,6 +1904,9 @@ export const trans = {
         pt: 'Versão atual',
         sv: 'Nuvarande version'
     },
+    manage_data: {
+        en: 'Manage data'
+    },
     labs: {
         // labs by last.fm
         en: 'Labs',

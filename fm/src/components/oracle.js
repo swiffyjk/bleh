@@ -34,6 +34,7 @@ import {
     save_hoshino_artwork
 } from './hoshino';
 import { create_avatar } from '../pages/track';
+import { DateTime } from 'luxon';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -307,7 +308,7 @@ export function oracle_process() {
             if (local?.fetch) {
                 delete local.fetch;
                 log('deleted legacy track fetch data', 'oracle');
-                oracle_save_cache('track');
+                oracle_save_cache('track', false);
             }
 
             if (local?.recording) {
@@ -829,6 +830,8 @@ export function oracle_process() {
     function oracle_track_releases_process(data) {
         const recording = oracle_pick_recording(data);
         if (recording) cache.track.recording = recording;
+
+        oracle_save_cache('track');
 
         oracle_track_releases(recording);
     }
@@ -1588,4 +1591,139 @@ export function oracle_debug() {
             </table>
         `
     });
+}
+
+export function manage_oracle_data() {
+    const oracle = JSON.parse(localStorage.getItem('bleh_oracle_cache')) || {};
+
+    console.info('oracle data', oracle);
+
+    dialog({
+        id: 'oracle',
+        title: tl(trans.manage_data),
+        body: html.node`
+            <div class="data-table">
+                ${Object.entries(oracle).map(([artist, data]) => load_artist(artist, data))}
+            </div>
+        `,
+        allow_scroll: true
+    });
+
+    function load_artist(artist, data) {
+        const entry = html.node`
+            <div class="data-table-entry">
+                <div class="entry-header">
+                    <strong>${artist}</strong>
+                    <div class="entry-actions">
+                        <button class="btn icon danger-subtle chibi" data-type="delete" onclick=${() => delete_artist()}>${tl(trans.delete)}</button>
+                    </div>
+                </div>
+                <div class="entry-data">
+                    ${Object.entries(data).map(([item, data]) => load_item(item, data))}
+                </div>
+            </div>
+        `;
+
+        function delete_artist() {
+            entry.remove();
+        }
+
+        return entry;
+    }
+
+    function load_item(item, data) {
+        const entry = html.node`
+            <div class="data-table-entry">
+                <div class="entry-header">
+                    <strong>${item}</strong>
+                    <div class="entry-actions">
+                        <button class="btn icon danger-subtle chibi" data-type="delete" onclick=${() => delete_item()}>${tl(trans.delete)}</button>
+                    </div>
+                </div>
+                <div class="entry-data">
+                    ${Object.keys(data.album).length > 0 ? load_item_data('album', data.album) : ''}
+                    ${Object.keys(data.track).length > 0 ? load_item_data('track', data.track) : ''}
+                </div>
+            </div>
+        `;
+
+        function delete_item() {
+            entry.remove();
+        }
+
+        return entry;
+    }
+
+    function load_item_data(type, data) {
+        const entry = html.node`
+                <div class="data-table-entry">
+                    <div class="entry-header">
+                        <strong class="entry-type">
+                            <span class="bleh-icon" data-type=${type} style="--icon: var(--mask)" />
+                            ${type}
+                        </strong>
+                        <div class="entry-subdata">
+                            ${
+                                data.date ?
+                                    html.node`
+                                <div class="entry-data-row">
+                                    <strong>fetched:</strong>
+                                    <p>${DateTime.fromMillis(data.date).toRelative()}</p>
+                                </div>
+                            `
+                                :   ''
+                            }
+                            ${
+                                data.expire ?
+                                    html.node`
+                                <div class="entry-data-row">
+                                    <strong>expires:</strong>
+                                    <p>${DateTime.fromMillis(data.expire).toRelative()}</p>
+                                </div>
+                            `
+                                :   ''
+                            }
+                        </div>
+                        <div class="entry-actions">
+                            <button class="btn icon danger-subtle chibi" data-type="delete" onclick=${() => delete_item()}>${tl(trans.delete)}</button>
+                        </div>
+                    </div>
+                    <div class="entry-subdata">
+                        ${
+                            data.fetch ?
+                                html.node`
+                            <div class="entry-data-row colourful" data-danger=${type == 'track'}>
+                                <p>fetch</p>
+                            </div>
+                        `
+                            :   ''
+                        }
+                        ${
+                            data.recording ?
+                                html.node`
+                            <div class="entry-data-row">
+                                <p>recording</p>
+                            </div>
+                        `
+                            :   ''
+                        }
+                        ${
+                            data.artwork ?
+                                html.node`
+                            <div class="entry-data-row">
+                                <p>artwork</p>
+                            </div>
+                        `
+                            :   ''
+                        }
+                    </div>
+                </div>
+            `;
+
+        function delete_item() {
+            entry.remove();
+        }
+
+        return entry;
+    }
 }
