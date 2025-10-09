@@ -47974,8 +47974,8 @@
                     </div>
                 </div>
                 <div class="entry-data">
-                    ${Object.keys(data2.album).length > 0 ? load_item_data("album", data2.album, item, artist) : ""}
-                    ${Object.keys(data2.track).length > 0 ? load_item_data("track", data2.track, item, artist) : ""}
+                    ${data2.album && Object.keys(data2.album).length > 0 ? load_item_data("album", data2.album, item, artist) : ""}
+                    ${data2.track && Object.keys(data2.track).length > 0 ? load_item_data("track", data2.track, item, artist) : ""}
                 </div>
             </div>
         `;

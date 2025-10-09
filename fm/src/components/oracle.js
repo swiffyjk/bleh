@@ -1644,8 +1644,8 @@ export function manage_oracle_data() {
                     </div>
                 </div>
                 <div class="entry-data">
-                    ${Object.keys(data.album).length > 0 ? load_item_data('album', data.album, item, artist) : ''}
-                    ${Object.keys(data.track).length > 0 ? load_item_data('track', data.track, item, artist) : ''}
+                    ${data.album && Object.keys(data.album).length > 0 ? load_item_data('album', data.album, item, artist) : ''}
+                    ${data.track && Object.keys(data.track).length > 0 ? load_item_data('track', data.track, item, artist) : ''}
                 </div>
             </div>
         `;
