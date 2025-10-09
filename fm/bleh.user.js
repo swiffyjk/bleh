@@ -29268,22 +29268,27 @@
   // src/components/menu.js
   function register_menu(element, menu) {
     element.setAttribute("data-has-bleh-menu", true);
-    element.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      menu.setProps({
-        placement: "right-start",
-        offset: [0, 0],
-        getReferenceClientRect: () => ({
-          width: 0,
-          height: 0,
-          top: e.clientY,
-          bottom: e.clientY,
-          left: e.clientX,
-          right: e.clientX
-        })
-      });
-      menu.show();
-    });
+    element.addEventListener(
+      "contextmenu",
+      (e) => {
+        e.preventDefault();
+        log("requested", "menu", "info", { e });
+        menu.setProps({
+          placement: "right-start",
+          offset: [0, 0],
+          getReferenceClientRect: () => ({
+            width: 0,
+            height: 0,
+            top: e.clientY,
+            bottom: e.clientY,
+            left: e.clientX,
+            right: e.clientX
+          })
+        });
+        menu.show();
+      },
+      true
+    );
   }
   function page_menu() {
     if (!ff("menus")) return;
@@ -33268,7 +33273,9 @@
           const can_delete = is_own_profile && !is_active && !has_bar && !is_album;
           let more_button = html.node`
                     <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
-            console.info(menu);
+            log("requested track in-built", "menu", "info", {
+              menu
+            });
             menu.setProps({
               placement: "bottom",
               offset: [],
@@ -33284,8 +33291,7 @@
                     </button>
                 `;
           tippy_esm_default(more_button, {
-            content: tl2(trans2.more),
-            appendTo: document.body
+            content: tl2(trans2.more)
           });
           track.appendChild(html.node`
                     <td class="more-button-wrapper">
@@ -33693,14 +33699,16 @@
               offset: [0, 0],
               hideOnClick: false,
               appendTo: document.body,
-              onShow(instance) {
-                track.setAttribute("data-has-menu", true);
+              onCreate(instance) {
                 instance.popper.addEventListener(
                   "click",
                   (event3) => {
                     instance.hide();
                   }
                 );
+              },
+              onShow(instance) {
+                track.setAttribute("data-has-menu", true);
               },
               onClickOutside(instance) {
                 instance.hide();

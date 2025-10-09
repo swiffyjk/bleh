@@ -8,28 +8,34 @@ import { html } from 'lighterhtml';
 import tippy from 'tippy.js';
 import { tl, trans } from '../build/trans';
 import { ff } from '../sku';
+import { log } from '../build/log';
 
 export function register_menu(element, menu) {
     element.setAttribute('data-has-bleh-menu', true);
 
-    element.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
+    element.addEventListener(
+        'contextmenu',
+        (e) => {
+            e.preventDefault();
+            log('requested', 'menu', 'info', { e });
 
-        menu.setProps({
-            placement: 'right-start',
-            offset: [0, 0],
-            getReferenceClientRect: () => ({
-                width: 0,
-                height: 0,
-                top: e.clientY,
-                bottom: e.clientY,
-                left: e.clientX,
-                right: e.clientX
-            })
-        });
+            menu.setProps({
+                placement: 'right-start',
+                offset: [0, 0],
+                getReferenceClientRect: () => ({
+                    width: 0,
+                    height: 0,
+                    top: e.clientY,
+                    bottom: e.clientY,
+                    left: e.clientX,
+                    right: e.clientX
+                })
+            });
 
-        menu.show();
-    });
+            menu.show();
+        },
+        true
+    );
 }
 
 export function page_menu() {

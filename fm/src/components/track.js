@@ -474,7 +474,9 @@ export function patch_titles(search = page.structure.main) {
 
                 let more_button = html.node`
                     <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
-                        console.info(menu);
+                        log('requested track in-built', 'menu', 'info', {
+                            menu
+                        });
                         menu.setProps({
                             placement: 'bottom',
                             offset: [],
@@ -492,8 +494,7 @@ export function patch_titles(search = page.structure.main) {
                 `;
 
                 tippy(more_button, {
-                    content: tl(trans.more),
-                    appendTo: document.body
+                    content: tl(trans.more)
                 });
 
                 track.appendChild(html.node`
@@ -974,15 +975,17 @@ export function patch_titles(search = page.structure.main) {
                         hideOnClick: false,
                         appendTo: document.body,
 
-                        onShow(instance) {
-                            track.setAttribute('data-has-menu', true);
-
+                        onCreate(instance) {
                             instance.popper.addEventListener(
                                 'click',
                                 (event) => {
                                     instance.hide();
                                 }
                             );
+                        },
+
+                        onShow(instance) {
+                            track.setAttribute('data-has-menu', true);
 
                             /*let menu_items = track_legacy_menu.querySelectorAll('li > *');
                             let content = instance.popper.querySelector('.tippy-content');
