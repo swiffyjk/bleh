@@ -191,11 +191,19 @@ function bleh_main() {
 
         // last.fm is a single page application
         const observer = new MutationObserver((mutations) => {
+            if (!mutations[0]) return;
+            const nodes = [
+                ...mutations[0].addedNodes,
+                ...mutations[0].removedNodes
+            ];
             if (
-                mutations[0].addedNodes[0] &&
-                mutations[0].addedNodes.length == 0 &&
-                mutations[0].addedNodes[0].nodeType == 1 &&
-                mutations[0].addedNodes[0].hasAttribute('data-tippy-root')
+                nodes.length &&
+                nodes.every(
+                    (n) =>
+                        n.nodeType === 1 &&
+                        (n.hasAttribute('data-tippy-root') ||
+                            (n.id || '').startsWith('tippy-'))
+                )
             ) {
                 return;
             }
@@ -474,6 +482,9 @@ function assign_page_subpage() {
 }
 
 function load_page() {
+    if (page.state.activity_preview_timer)
+        clearInterval(page.state.activity_preview_timer);
+
     page.state.settings_page = '';
     //hideAll({duration: 0});
 

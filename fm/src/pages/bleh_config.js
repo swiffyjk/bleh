@@ -3006,9 +3006,9 @@ function activity_preview() {
     make_random_activity(preview, random_types, random_involved);
     make_random_activity(preview, random_types, random_involved);
 
-    let timer = setInterval(function () {
+    page.state.activity_preview_timer = setInterval(function () {
         if (!preview) {
-            clearInterval(timer);
+            clearInterval(page.state.activity_preview_timer);
             return;
         }
 

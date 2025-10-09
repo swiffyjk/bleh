@@ -50664,9 +50664,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     make_random_activity(preview, random_types, random_involved);
     make_random_activity(preview, random_types, random_involved);
     make_random_activity(preview, random_types, random_involved);
-    let timer = setInterval(function() {
+    page.state.activity_preview_timer = setInterval(function() {
       if (!preview) {
-        clearInterval(timer);
+        clearInterval(page.state.activity_preview_timer);
         return;
       }
       make_random_activity(preview, random_types, random_involved);
@@ -56076,7 +56076,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sponsors();
       main_flow();
       const observer = new MutationObserver((mutations) => {
-        if (mutations[0].addedNodes[0] && mutations[0].addedNodes.length == 0 && mutations[0].addedNodes[0].nodeType == 1 && mutations[0].addedNodes[0].hasAttribute("data-tippy-root")) {
+        if (!mutations[0]) return;
+        const nodes = [
+          ...mutations[0].addedNodes,
+          ...mutations[0].removedNodes
+        ];
+        if (nodes.length && nodes.every(
+          (n2) => n2.nodeType === 1 && (n2.hasAttribute("data-tippy-root") || (n2.id || "").startsWith("tippy-"))
+        )) {
           return;
         }
         log("loop", "mutation", "log", { mutations });
@@ -56268,6 +56275,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
   }
   function load_page() {
+    if (page.state.activity_preview_timer)
+      clearInterval(page.state.activity_preview_timer);
     page.state.settings_page = "";
     page.structure.notifications.setAttribute("data-auth-open", "false");
     set_season();
