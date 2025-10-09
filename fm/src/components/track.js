@@ -110,7 +110,26 @@ export function patch_titles(search = page.structure.main) {
             ':is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)'
         );
 
-        tracks.forEach((track, index) => {
+        let track_index = 0;
+
+        function batch() {
+            const batch_size = 15;
+            const end_index = Math.min(track_index + batch_size, tracks.length);
+
+            for (let i = track_index; i < end_index; i++) {
+                track(tracks[i], i);
+            }
+
+            track_index = end_index;
+
+            if (track_index < tracks.length) {
+                setTimeout(batch, 0);
+            }
+        }
+
+        batch();
+
+        function track(track, index) {
             console.log('track', track);
             if (track.getAttribute('data-track-type')) return;
 
@@ -1088,7 +1107,7 @@ export function patch_titles(search = page.structure.main) {
                     });
                 } catch (e) {}
             }
-        });
+        }
     });
 
     if (page.subpage.startsWith('library')) bleh_glacier_insights(insights);
