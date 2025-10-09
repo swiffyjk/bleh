@@ -47952,16 +47952,19 @@
                     </div>
                 </div>
                 <div class="entry-data">
-                    ${Object.entries(data2).map(([item, data3]) => load_item(item, data3))}
+                    ${Object.entries(data2).map(([item, data3]) => load_item(item, data3, artist))}
                 </div>
             </div>
         `;
       function delete_artist() {
+        delete oracle[artist];
+        log("deleted artist", "oracle", "info", { artist, oracle });
+        save_cache();
         entry.remove();
       }
       return entry;
     }
-    function load_item(item, data2) {
+    function load_item(item, data2, artist) {
       const entry = html.node`
             <div class="data-table-entry">
                 <div class="entry-header">
@@ -47971,17 +47974,20 @@
                     </div>
                 </div>
                 <div class="entry-data">
-                    ${Object.keys(data2.album).length > 0 ? load_item_data("album", data2.album) : ""}
-                    ${Object.keys(data2.track).length > 0 ? load_item_data("track", data2.track) : ""}
+                    ${Object.keys(data2.album).length > 0 ? load_item_data("album", data2.album, item, artist) : ""}
+                    ${Object.keys(data2.track).length > 0 ? load_item_data("track", data2.track, item, artist) : ""}
                 </div>
             </div>
         `;
       function delete_item() {
+        delete oracle[artist][item];
+        log("deleted item", "oracle", "info", { item, artist, oracle });
+        save_cache();
         entry.remove();
       }
       return entry;
     }
-    function load_item_data(type, data2) {
+    function load_item_data(type, data2, item, artist) {
       const entry = html.node`
                 <div class="data-table-entry">
                     <div class="entry-header">
@@ -48027,9 +48033,21 @@
                 </div>
             `;
       function delete_item() {
+        delete oracle[artist][item][type];
+        log("deleted item sub", "oracle", "info", {
+          type,
+          item,
+          artist,
+          oracle
+        });
+        save_cache();
         entry.remove();
       }
       return entry;
+    }
+    function save_cache() {
+      log("saved to cache", "oracle", "info", { oracle });
+      set_storage("bleh_oracle_cache", JSON.stringify(oracle));
     }
   }
 
