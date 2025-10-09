@@ -47491,7 +47491,19 @@
           const b_artist_match = artist_matches(b);
           if (a_artist_match && !b_artist_match) return -1;
           if (!a_artist_match && b_artist_match) return 1;
-          return rank(a["release-group"]["primary-type"]) - rank(b["release-group"]["primary-type"]);
+          const type_diff = rank(a["release-group"]["primary-type"]) - rank(b["release-group"]["primary-type"]);
+          if (type_diff != 0) return type_diff;
+          const parse_date = (release) => {
+            if (!release.date) return null;
+            const date = new Date(release.date);
+            return isNaN(date) ? null : date;
+          };
+          const a_date = parse_date(a);
+          const b_date = parse_date(b);
+          if (a_date && b_date) return a_date - b_date;
+          if (a_date && !b_date) return -1;
+          if (!a_date && b_date) return 1;
+          return 0;
         });
         log("releases in recording after filter", "oracle", "info", {
           releases
