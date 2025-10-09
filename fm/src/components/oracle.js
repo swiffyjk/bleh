@@ -487,34 +487,31 @@ export function oracle_process() {
         });
 
         filtered.sort((a, b) => {
-            const a_media = a.media?.[0]?.format === 'Digital Media';
-            const b_media = b.media?.[0]?.format === 'Digital Media';
-
-            // prefer a digital release
-            if (a_media && !b_media) return -1;
-            if (!a_media && b_media) return 1;
-
-            // now sort by dates
-            function parse_date(release) {
+            // parse dates
+            const parse_date = (release) => {
                 if (!release.date) return null;
-
                 const date = new Date(release.date);
                 return isNaN(date) ? null : date;
-            }
+            };
 
             const a_date = parse_date(a);
             const b_date = parse_date(b);
 
+            // earliest date first
             if (a_date && b_date) {
                 const diff = a_date - b_date;
-                if (diff !== 0) return diff;
-            } else if (a_date && !b_date) {
-                return -1;
-            } else if (!a_date && b_date) {
-                return 1;
-            }
+                if (diff != 0) return diff;
+            } else if (a_date && !b_date) return -1;
+            else if (!a_date && b_date) return 1;
 
-            // prefer albums with higher track counts
+            // if same date or no date, prefer digital
+            const a_media = a.media?.[0]?.format == 'Digital Media';
+            const b_media = b.media?.[0]?.format == 'Digital Media';
+
+            if (a_media && !b_media) return -1;
+            if (!a_media && b_media) return 1;
+
+            // then prefer higher track count
             const a_tracks = a['track-count'] || 0;
             const b_tracks = b['track-count'] || 0;
 
@@ -1579,67 +1576,114 @@ export function oracle_debug() {
         id: 'oracle_debug',
         title: 'oracle',
         body: html.node`
-            <table class="fancy-table oracle-debug">
-                <tbody>
-                    ${Object.entries(debug).map(([item, val]) => {
-                        let va;
-                        const entry = html.node`
-                            <tr>
-                                <td>${item}</td>
-                                <td ref=${(el) => (va = el)}>${val}</td>
-                            </tr>
-                        `;
+            <div class="setting-group">
+                ${Object.entries(debug).map(([item, val]) => {
+                    let va;
+                    const entry = html.node`
+                        <div class="setting" data-type="info">
+                            <div class="heading">
+                                <h5>${item}</h5>
+                            </div>
+                            <div class="info" ref=${(el) => (va = el)}>
+                                <p>${val}</p>
+                            </div>
+                        </tr>
+                    `;
 
-                        if (item == 'artist') {
-                            render(
-                                va,
-                                html`
-                                    <p>type: ${val.type}</p>
-                                    <p>name: ${val.name}</p>
-                                    ${val.type == 'id' ?
-                                        html.node`
-                                    <a
-                                        class="see-more"
-                                        href="https://musicbrainz.org/artist/${val.name}"
-                                        target="_blank"
-                                        >view</a
-                                    >
-                                    `
-                                    :   ''}
+                    if (item == 'artist') {
+                        render(
+                            va,
+                            html`
+                                <p>type: ${val.type}</p>
+                                <p>name: ${val.name}</p>
+                                ${val.type == 'id' ?
+                                    html.node`
+                                <a
+                                    class="see-more"
+                                    href="https://musicbrainz.org/artist/${val.name}"
+                                    target="_blank"
+                                    >view</a
+                                >
                                 `
-                            );
-                        } else if (item == 'release_id') {
-                            render(
-                                va,
-                                html`
-                                    <p>${val}</p>
-                                    <a
-                                        class="see-more"
-                                        href="https://musicbrainz.org/release/${val}"
-                                        target="_blank"
-                                        >view</a
-                                    >
-                                `
-                            );
-                        } else if (item == 'recording_id') {
-                            render(
-                                va,
-                                html`
-                                    <p>${val}</p>
-                                    <a
-                                        class="see-more"
-                                        href="https://musicbrainz.org/recording/${val}"
-                                        target="_blank"
-                                        >view</a
-                                    >
-                                `
-                            );
-                        }
+                                :   ''}
+                            `
+                        );
+                    } else if (item == 'release_id') {
+                        render(
+                            va,
+                            html`
+                                <p>${val}</p>
+                                <a
+                                    class="see-more"
+                                    href="https://musicbrainz.org/release/${val}"
+                                    target="_blank"
+                                    >view</a
+                                >
+                            `
+                        );
+                    } else if (item == 'recording_id') {
+                        render(
+                            va,
+                            html`
+                                <p>${val}</p>
+                                <a
+                                    class="see-more"
+                                    href="https://musicbrainz.org/recording/${val}"
+                                    target="_blank"
+                                    >view</a
+                                >
+                            `
+                        );
+                    }
 
-                        return entry;
-                    })}
-                </tbody>
-            </table>
+                    return entry;
+                })}
+                <div
+                    class="setting"
+                    data-type="info"
+                    disabled=${
+                        !oracle_artists.version ||
+                        !oracle_albums.version ||
+                        !oracle_tracks.version
+                    }
+                >
+                    <div class="heading">
+                        <h5>${tl(trans.current_version)}</h5>
+                    </div>
+                    <div class="info">
+                        <p>
+                            ${oracle_artists.version}, ${oracle_albums.version}, ${oracle_tracks.version}
+                        </p>
+                        <button
+                            class="see-more update-check"
+                            onclick=${() => oracle_data(true)}
+                        >
+                            ${tl(trans.update_check)}
+                        </button>
+                    </div>
+                </div>
+                <div
+                    class="setting"
+                    data-type="info"
+                    disabled=${
+                        !oracle_artists.version ||
+                        !oracle_albums.version ||
+                        !oracle_tracks.version
+                    }
+                >
+                    <div class="heading">
+                        <h5>${tl(trans.manage_data)}</h5>
+                    </div>
+                    <div class="info">
+                        <button
+                            class="see-more"
+                            onclick=${() => manage_oracle_data()}
+                        >
+                            ${tl(trans.view_all)}
+                        </button>
+                    </div>
+                </div>
+            </div>
         `
     });
 }
