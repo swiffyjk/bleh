@@ -454,7 +454,10 @@ export let includes = {
         '(the long pond studio',
         ': the long pond studio',
         '- recorded at long pond studio',
-        '(recorded at long pond studio'
+        '(recorded at long pond studio',
+        ': sad girl autumn version',
+        '(sad girl autumn',
+        '[sad girl autumn'
     ],
     bonus: [
         '- intro',
