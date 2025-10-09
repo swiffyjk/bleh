@@ -486,17 +486,39 @@ export function oracle_process() {
             return !various && official;
         });
 
-        // prefer a digital release
-        // and albums with higher track counts
         filtered.sort((a, b) => {
-            const a_media = a.media?.[0]?.format == 'Digital Media';
-            const b_media = b.media?.[0]?.format == 'Digital Media';
+            const a_media = a.media?.[0]?.format === 'Digital Media';
+            const b_media = b.media?.[0]?.format === 'Digital Media';
 
-            if (a_media == b_media) return 0;
+            // prefer a digital release
+            if (a_media && !b_media) return -1;
+            if (!a_media && b_media) return 1;
 
-            if (a_media != b_media) return a_media ? -1 : 1;
+            // now sort by dates
+            function parse_date(release) {
+                if (!release.date) return null;
 
-            return (b['track-count'] || 0) - (a['track-count'] || 0);
+                const date = new Date(release.date);
+                return isNaN(date) ? null : date;
+            }
+
+            const a_date = parse_date(a);
+            const b_date = parse_date(b);
+
+            if (a_date && b_date) {
+                const diff = a_date - b_date;
+                if (diff !== 0) return diff;
+            } else if (a_date && !b_date) {
+                return -1;
+            } else if (!a_date && b_date) {
+                return 1;
+            }
+
+            // prefer albums with higher track counts
+            const a_tracks = a['track-count'] || 0;
+            const b_tracks = b['track-count'] || 0;
+
+            return b_tracks - a_tracks;
         });
 
         if (filtered.length == 0) return null;
@@ -980,28 +1002,42 @@ export function oracle_process() {
                 release.title = title;
             });
 
-            releases = releases.filter(
-                (release, index, self) =>
+            releases = releases.filter((release, index, self) => {
+                const artist = release['artist-credit']?.[0]?.name;
+                const title = release.title;
+
+                // find duplicates
+                const duplicates = self.filter(
+                    (r) =>
+                        r.title == title &&
+                        r['artist-credit']?.[0]?.name == artist
+                );
+
+                // if multiple, prefer digital media pressing
+                // with a date if possible!!
+                if (duplicates.length > 1) {
+                    const digital_with_date = duplicates.find(
+                        (r) => r.media?.[0]?.format == 'Digital Media' && r.date
+                    );
+                    if (digital_with_date) return release == digital_with_date;
+
+                    // otherwise prefer any digital
+                    const digital = duplicates.find(
+                        (r) => r.media?.[0]?.format == 'Digital Media'
+                    );
+                    if (digital) return release == digital;
+                }
+
+                // otherwise, use what we have
+                return (
                     index ==
-                    self.findIndex((r) => {
-                        const r_artist = r['artist-credit']?.[0]?.name;
-                        const release_artist =
-                            release['artist-credit']?.[0]?.name;
-
-                        log('comparing releases', 'oracle', 'info', {
-                            index,
-                            release_title: r.title,
-                            compare_to: release.title,
-                            release_artist: r_artist,
-                            compare_to_artist: release_artist
-                        });
-
-                        return (
-                            r.title == release.title &&
-                            r_artist == release_artist
-                        );
-                    })
-            );
+                    self.findIndex(
+                        (r) =>
+                            r.title == title &&
+                            r['artist-credit']?.[0]?.name == artist
+                    )
+                );
+            });
 
             releases.sort((a, b) => {
                 const rank = (type) => {
@@ -1033,12 +1069,12 @@ export function oracle_process() {
                     rank(b['release-group']['primary-type']);
                 if (type_diff != 0) return type_diff;
 
-                const parse_date = (release) => {
+                function parse_date(release) {
                     if (!release.date) return null;
 
                     const date = new Date(release.date);
                     return isNaN(date) ? null : date;
-                };
+                }
 
                 const a_date = parse_date(a);
                 const b_date = parse_date(b);

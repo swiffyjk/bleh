@@ -47116,11 +47116,28 @@
         return !various && official;
       });
       filtered.sort((a, b) => {
-        const a_media = a.media?.[0]?.format == "Digital Media";
-        const b_media = b.media?.[0]?.format == "Digital Media";
-        if (a_media == b_media) return 0;
-        if (a_media != b_media) return a_media ? -1 : 1;
-        return (b["track-count"] || 0) - (a["track-count"] || 0);
+        const a_media = a.media?.[0]?.format === "Digital Media";
+        const b_media = b.media?.[0]?.format === "Digital Media";
+        if (a_media && !b_media) return -1;
+        if (!a_media && b_media) return 1;
+        function parse_date(release) {
+          if (!release.date) return null;
+          const date = new Date(release.date);
+          return isNaN(date) ? null : date;
+        }
+        const a_date = parse_date(a);
+        const b_date = parse_date(b);
+        if (a_date && b_date) {
+          const diff = a_date - b_date;
+          if (diff !== 0) return diff;
+        } else if (a_date && !b_date) {
+          return -1;
+        } else if (!a_date && b_date) {
+          return 1;
+        }
+        const a_tracks = a["track-count"] || 0;
+        const b_tracks = b["track-count"] || 0;
+        return b_tracks - a_tracks;
       });
       if (filtered.length == 0) return null;
       log("filtered releases before picking", "oracle", "info", { filtered });
@@ -47458,20 +47475,26 @@
           }
           release.title = title;
         });
-        releases = releases.filter(
-          (release, index3, self3) => index3 == self3.findIndex((r) => {
-            const r_artist = r["artist-credit"]?.[0]?.name;
-            const release_artist = release["artist-credit"]?.[0]?.name;
-            log("comparing releases", "oracle", "info", {
-              index: index3,
-              release_title: r.title,
-              compare_to: release.title,
-              release_artist: r_artist,
-              compare_to_artist: release_artist
-            });
-            return r.title == release.title && r_artist == release_artist;
-          })
-        );
+        releases = releases.filter((release, index3, self3) => {
+          const artist2 = release["artist-credit"]?.[0]?.name;
+          const title = release.title;
+          const duplicates = self3.filter(
+            (r) => r.title == title && r["artist-credit"]?.[0]?.name == artist2
+          );
+          if (duplicates.length > 1) {
+            const digital_with_date = duplicates.find(
+              (r) => r.media?.[0]?.format == "Digital Media" && r.date
+            );
+            if (digital_with_date) return release == digital_with_date;
+            const digital = duplicates.find(
+              (r) => r.media?.[0]?.format == "Digital Media"
+            );
+            if (digital) return release == digital;
+          }
+          return index3 == self3.findIndex(
+            (r) => r.title == title && r["artist-credit"]?.[0]?.name == artist2
+          );
+        });
         releases.sort((a, b) => {
           const rank = (type) => {
             if (!type) return 4;
@@ -47493,11 +47516,11 @@
           if (!a_artist_match && b_artist_match) return 1;
           const type_diff = rank(a["release-group"]["primary-type"]) - rank(b["release-group"]["primary-type"]);
           if (type_diff != 0) return type_diff;
-          const parse_date = (release) => {
+          function parse_date(release) {
             if (!release.date) return null;
             const date = new Date(release.date);
             return isNaN(date) ? null : date;
-          };
+          }
           const a_date = parse_date(a);
           const b_date = parse_date(b);
           if (a_date && b_date) return a_date - b_date;
