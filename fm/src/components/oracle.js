@@ -646,6 +646,11 @@ export function oracle_process() {
     }
 
     function oracle_album(data) {
+        if (data.offset != null) {
+            log('detected no results', 'oracle');
+            return;
+        }
+
         let labels = data['label-info'];
         if (labels && labels.length > 0 && page.subpage == 'overview') {
             // filter out visually duplicates

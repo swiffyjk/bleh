@@ -47224,6 +47224,10 @@
       });
     }
     function oracle_album(data2) {
+      if (data2.offset != null) {
+        log("detected no results", "oracle");
+        return;
+      }
       let labels = data2["label-info"];
       if (labels && labels.length > 0 && page.subpage == "overview") {
         const seen = /* @__PURE__ */ new Set();
