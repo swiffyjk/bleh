@@ -1,21 +1,21 @@
 {
-    "latest": "2025.1002",
+    "latest": "2025.1011",
     "sponsors": [
         "clairedoll", "kateshapedbox", "evangelicgirl",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
-        "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss",
+        "EliteHimself", "iwas15with100k", "keepsweet", "fucksophie",
         "softmancy", "carbon1k", "uix-uix", "scidal",
         "Carbonzer", "marrowchant", "FenrirXXII",
         "saettbyeol", "lyeule", "Taliyeh", "unstablerate",
-        "noapop", "celebrating", "myraisounds"
+        "noapop", "celebrating", "myraisounds", "riskyrizey"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
-        "vwvwvwvwvwvwv", "EliteHimself", "yourfriendoss",
+        "vwvwvwvwvwvwv", "EliteHimself", "fucksophie",
         "carbon1k", "uix-uix", "scidal",
         "Carbonzer", "FenrirXXII",
         "saettbyeol", "lyeule", "noapop",
-        "celebrating"
+        "celebrating", "riskyrizey"
     ],
     "sponsor_count_remove": 3,
     "sponsor_account": "kateshapedbox",
@@ -184,7 +184,7 @@
                 "lit": 0.3
             }
         ],
-        "yourfriendoss": [
+        "fucksophie": [
             {
                 "type": "contributor"
             },
@@ -311,6 +311,9 @@
             "type": "sponsor"
         },
         "celebrating": {
+            "type": "sponsor"
+        },
+        "riskyrizey": {
             "type": "sponsor"
         }
     }
