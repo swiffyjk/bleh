@@ -26,6 +26,8 @@ export function match(media = page.state.media) {
 }
 
 function apply_theme(time) {
+    if (settings.theme == settings[`theme_${time}`]) return;
+
     log(`applying theme for time ${time}`, 'dynamic theming');
     save_setting('theme', settings[`theme_${time}`]);
 }

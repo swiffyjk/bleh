@@ -35623,6 +35623,7 @@
     else apply_theme("day");
   }
   function apply_theme(time2) {
+    if (settings.theme == settings[`theme_${time2}`]) return;
     log(`applying theme for time ${time2}`, "dynamic theming");
     save_setting("theme", settings[`theme_${time2}`]);
   }
