@@ -113,7 +113,7 @@ export function patch_titles(search = page.structure.main) {
         let track_index = 0;
 
         function batch() {
-            const batch_size = 15;
+            const batch_size = 20;
             const end_index = Math.min(track_index + batch_size, tracks.length);
 
             for (let i = track_index; i < end_index; i++) {
@@ -127,7 +127,7 @@ export function patch_titles(search = page.structure.main) {
             }
         }
 
-        batch();
+        setTimeout(batch, 0);
 
         function track(track, index) {
             console.log('track', track);

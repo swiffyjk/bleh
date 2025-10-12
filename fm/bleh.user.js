@@ -28264,8 +28264,9 @@
       "(solo acoustic",
       "- acoustic",
       "(acoustic",
-      "- alternative",
-      "(alternative",
+      "- alt",
+      "(alt",
+      "[alt",
       "- chopped",
       "(chopped",
       "[chopped",
@@ -28388,9 +28389,6 @@
       "- without",
       "(without",
       "[without",
-      "- alternate version",
-      "(alternate version",
-      "[alternate version",
       "- cla mix",
       "(cla mix",
       "[cla mix",
@@ -33008,7 +33006,7 @@
       );
       let track_index = 0;
       function batch() {
-        const batch_size = 15;
+        const batch_size = 20;
         const end_index = Math.min(track_index + batch_size, tracks.length);
         for (let i = track_index; i < end_index; i++) {
           track(tracks[i], i);
@@ -33018,7 +33016,7 @@
           setTimeout(batch, 0);
         }
       }
-      batch();
+      setTimeout(batch, 0);
       function track(track2, index3) {
         console.log("track", track2);
         if (track2.getAttribute("data-track-type")) return;
