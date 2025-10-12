@@ -127,7 +127,7 @@ export function patch_titles(search = page.structure.main) {
             }
         }
 
-        setTimeout(batch, 0);
+        batch();
 
         function track(track, index) {
             console.log('track', track);

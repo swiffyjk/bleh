@@ -33016,7 +33016,7 @@
           setTimeout(batch, 0);
         }
       }
-      setTimeout(batch, 0);
+      batch();
       function track(track2, index3) {
         console.log("track", track2);
         if (track2.getAttribute("data-track-type") || track2.getAttribute("data-has-bleh-menu"))
