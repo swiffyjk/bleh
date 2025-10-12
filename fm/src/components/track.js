@@ -35,7 +35,7 @@ import ColorThief from 'color-thief-browser';
 import { hoshino } from './hoshino.js';
 
 export function patch_titles(search = page.structure.main) {
-    if (page.subpage === 'tags_overview') return;
+    if (page.subpage == 'tags_overview') return;
 
     if (!search) {
         log(
@@ -131,11 +131,7 @@ export function patch_titles(search = page.structure.main) {
 
         function track(track, index) {
             console.log('track', track);
-            if (
-                track.getAttribute('data-track-type') ||
-                track.getAttribute('data-has-bleh-menu')
-            )
-                return;
+            if (track.getAttribute('data-track-type')) return;
 
             // ads slowly move up the tree until eventually causing a crash
             if (track.classList[0] == 'chartlist-row--interlist-ad') {

@@ -32942,7 +32942,7 @@
   // src/components/track.js
   var import_color_thief_browser2 = __toESM(require_color_thief_min(), 1);
   function patch_titles(search = page.structure.main) {
-    if (page.subpage === "tags_overview") return;
+    if (page.subpage == "tags_overview") return;
     if (!search) {
       log(
         "tracks could not be searched as search was undefined",
@@ -33019,8 +33019,7 @@
       batch();
       function track(track2, index3) {
         console.log("track", track2);
-        if (track2.getAttribute("data-track-type") || track2.getAttribute("data-has-bleh-menu"))
-          return;
+        if (track2.getAttribute("data-track-type")) return;
         if (track2.classList[0] == "chartlist-row--interlist-ad") {
           track2.parentElement.removeChild(track2);
           return;
