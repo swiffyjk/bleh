@@ -131,10 +131,14 @@ export function patch_titles(search = page.structure.main) {
 
         function track(track, index) {
             console.log('track', track);
-            if (track.getAttribute('data-track-type')) return;
+            if (
+                track.getAttribute('data-track-type') ||
+                track.getAttribute('data-has-bleh-menu')
+            )
+                return;
 
             // ads slowly move up the tree until eventually causing a crash
-            if (track.classList[0] === 'chartlist-row--interlist-ad') {
+            if (track.classList[0] == 'chartlist-row--interlist-ad') {
                 track.parentElement.removeChild(track);
                 return;
             }

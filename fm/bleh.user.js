@@ -33019,8 +33019,9 @@
       setTimeout(batch, 0);
       function track(track2, index3) {
         console.log("track", track2);
-        if (track2.getAttribute("data-track-type")) return;
-        if (track2.classList[0] === "chartlist-row--interlist-ad") {
+        if (track2.getAttribute("data-track-type") || track2.getAttribute("data-has-bleh-menu"))
+          return;
+        if (track2.classList[0] == "chartlist-row--interlist-ad") {
           track2.parentElement.removeChild(track2);
           return;
         }
