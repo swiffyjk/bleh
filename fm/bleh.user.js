@@ -52919,12 +52919,71 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       });
       return btn;
     }}
-            <a class="btn mobile-control" aria-checked=${page.type == "user" && page.name == auth.name} data-menu-item="profile_mobile" href="${root}user/${auth.name}">
-                <span class="avatar">
-                    <img src=${auth.avatar} alt=${auth.name}>
-                </span>
-                ${auth.name}
-            </a>
+            ${() => {
+      const btn = html.node`
+                    <a class="btn mobile-control" aria-checked=${page.type == "user" && page.name == auth.name} data-menu-item="profile_mobile">
+                        <span class="avatar">
+                            <img src=${auth.avatar} alt=${auth.name}>
+                        </span>
+                        ${auth.name}
+                    </a>
+                `;
+      tippy_esm_default(btn, {
+        theme: "mobile",
+        content: html.node`
+                        <div class="window-menu-items">
+                            ${settings.navigation_items.map((val) => {
+          let elem;
+          const formal = page.state.quick_access_items[val];
+          if (formal.url)
+            elem = html.node`<a href=${formal.url} />`;
+          else
+            elem = html.node`<button onclick=${formal.action} />`;
+          elem.classList = "dropdown-menu-clickable-item";
+          elem.setAttribute("data-type", formal.icon);
+          elem.textContent = formal.name;
+          let count2 = 0;
+          if (val == "notifications") count2 = notif_count;
+          else if (val == "messages") count2 = inbox_count;
+          if (count2) {
+            render(
+              elem,
+              html`
+                                            <div class="auth-dropdown-item-row">
+                                                <span
+                                                    class="auth-dropdown-item-left"
+                                                >
+                                                    ${formal.name}
+                                                </span>
+                                                <span
+                                                    class="auth-dropdown-item-right"
+                                                >
+                                                    ${count2}
+                                                </span>
+                                            </div>
+                                        `
+            );
+          }
+          return elem;
+        })}
+                            ${settings.starred_friend != "" ? html.node`
+                                        <a class="dropdown-menu-clickable-item no-colour" data-type="starred_friend" data-is-shortcut="true" href="${root}user/${settings.starred_friend}">
+                                            ${settings.starred_friend}
+                                        </a>
+                                    ` : ""}
+                            <a class="dropdown-menu-clickable-item" data-type="user" href="${root}user/${auth.name}">
+                                ${auth.name}
+                            </a>
+                        </div>
+                    `,
+        placement: "top",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        appendTo: document.body
+      });
+      return btn;
+    }}
             ${() => {
       const btn = html.node`
                     <a class="btn mobile-control" aria-checked=${page.type == "inbox"} data-type="inbox">

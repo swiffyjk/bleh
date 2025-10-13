@@ -835,9 +835,7 @@
         --shout-margin-left: var(--shout-avatar-size) + 8px;
 
         --highlight-shadow: hsla(var(--b3), 0.25) 0 0 2px 1px;
-        --menu-shadow:
-            2px 2px 24px 0 hsla(var(--b7), 0.35),
-            0 6px 48px 16px hsla(var(--b7), 0.65);
+        --menu-shadow: 0 20px 52px 18px hsla(var(--b7), 0.4);
         --overlay-shadow: 0 4px 16px 3px hsla(var(--b7), 0.5);
         --menu-overlay-shadow: 0 -250px 10px 100px hsla(var(--b6), 70%);
         --avatar-shadow: 3px 6px 15px 10px hsla(var(--b7), 0.05);
@@ -1633,7 +1631,7 @@
 
         @media (max-width: 600px) {
             --size: 58px;
-            --margin: 20px;
+            --margin: 100px;
 
             position: fixed;
             top: unset !important;
@@ -10342,7 +10340,7 @@
         &[data-is-shortcut="true"] {
             --mask: var(--icon-16-starred-friend);
 
-            &:not(.rabbit-hole-item) {
+            &:not(.rabbit-hole-item, .no-colour) {
                 --hue-over: var(--hue-fav);
                 --sat-over: var(--sat-fav);
                 --lit-over: var(--lit-fav);
@@ -10639,6 +10637,12 @@
                 --right: 10px;
             }
         }
+
+        @media (max-width: 600px) {
+            --button-height: 36px;
+            --btn-top: 9px;
+            --btn-bottom: 9px;
+        }
     }
 
     .dropdown-menu-clickable-item[aria-checked="true"],
@@ -10848,7 +10852,7 @@
     }
 
     /*     DANGEROUS     */
-    .dropdown-menu-clickable-item[data-is-shortcut="true"],
+    .dropdown-menu-clickable-item[data-is-shortcut="true"]:not(.no-colour),
     .dropdown-menu-clickable-item.sponsor,
     .dropdown-menu-clickable-item.update,
     .dropdown-menu-clickable-item.swatch,
@@ -11628,11 +11632,13 @@
             }
         }
 
+        --modal-close-size: 26px;
+
         .bleh-modal-title {
             display: flex;
             gap: var(--item-list-gap);
             cursor: default;
-            margin-right: 32px;
+            margin-right: calc(var(--modal-close-size) + 10px);
 
             h1 {
                 margin: unset;
@@ -11658,11 +11664,16 @@
             --col: hsl(var(--c3));
             --mask-colour: currentColor;
             position: absolute;
-            top: 13px;
-            right: 13px;
-            --left: calc((32px - var(--icon-size)) / 2);
-            width: 32px;
-            height: 32px;
+            top: calc(
+                var(--card-padding) - ((var(--modal-close-size) - 20px) / 2)
+            );
+            right: calc(
+                var(--card-padding) - ((var(--modal-close-size) - 20px) / 2)
+            );
+            --icon-size: 16px;
+            --left: calc((var(--modal-close-size) - var(--icon-size)) / 2);
+            width: var(--modal-close-size);
+            height: var(--modal-close-size);
         }
 
         .bleh-modal-body {
