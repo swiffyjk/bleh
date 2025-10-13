@@ -200,11 +200,12 @@ function bleh_main() {
                 nodes.length &&
                 nodes.every(
                     (n) =>
-                        n.nodeType === 1 &&
+                        n.nodeType == 1 &&
                         (n.hasAttribute('data-tippy-root') ||
                             (n.id || '').startsWith('tippy-'))
                 )
             ) {
+                log('ignored', 'mutation', 'log', { mutations: mutations });
                 return;
             }
 

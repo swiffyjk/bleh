@@ -431,7 +431,7 @@ export function music_grids(search = page.structure.main, use_colour = true) {
             offset: [0, 0],
             appendTo: document.body,
 
-            onShow(instance) {
+            onCreate(instance) {
                 instance.popper.addEventListener('click', (event) => {
                     instance.hide();
                 });

@@ -30415,7 +30415,7 @@
         interactiveBorder: 10,
         offset: [0, 0],
         appendTo: document.body,
-        onShow(instance) {
+        onCreate(instance) {
           instance.popper.addEventListener("click", (event3) => {
             instance.hide();
           });
@@ -56288,8 +56288,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           ...mutations[0].removedNodes
         ];
         if (nodes.length && nodes.every(
-          (n2) => n2.nodeType === 1 && (n2.hasAttribute("data-tippy-root") || (n2.id || "").startsWith("tippy-"))
+          (n2) => n2.nodeType == 1 && (n2.hasAttribute("data-tippy-root") || (n2.id || "").startsWith("tippy-"))
         )) {
+          log("ignored", "mutation", "log", { mutations });
           return;
         }
         log("loop", "mutation", "log", { mutations });
