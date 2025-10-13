@@ -198,6 +198,12 @@
         --icon-half: 9px;
         --icon-gap: 4px;
 
+        @media (max-width: 600px) {
+            --button-sides: 9px;
+            --button-verts: 7px;
+            --button-height: 32px;
+        }
+
         --banner-height: 280px;
 
         [data-ff--short="true"] > & {
@@ -6880,6 +6886,10 @@
         .chartlist-name {
         margin-bottom: unset;
         width: 30%;
+
+        @media (max-width: 600px) {
+            width: 90%;
+        }
     }
     .chartlist:not(.chartlist--with-image)
         .chartlist-row--with-artist
@@ -6887,6 +6897,10 @@
         margin-top: unset;
         position: static;
         width: 20%;
+
+        @media (max-width: 600px) {
+            width: 90%;
+        }
     }
 
     .chartlist-timestamp,
