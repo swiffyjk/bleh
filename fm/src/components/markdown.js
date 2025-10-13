@@ -91,7 +91,8 @@ export function markdown(
             replace: (_, url) => {
                 try {
                     const safe = new URL(url);
-                    if (!['http:', 'https:'].includes(safe.protocol)) return '';
+                    if (!['http:', 'https:'].includes(safe.protocol))
+                        return `<img alt="banner" loading="lazy">`;
 
                     const escaped = safe.href.replace(/"/g, '&quot;');
 
@@ -102,7 +103,7 @@ export function markdown(
                         ALLOWED_ATTR: ['src', 'alt', 'loading']
                     });
                 } catch {
-                    return '';
+                    return `<img alt="banner" loading="lazy">`;
                 }
             }
         }
@@ -409,7 +410,12 @@ export function markdown(
 
         if (banner) {
             const src = banner.src;
-            cache.banner = src;
+
+            if (src) {
+                cache.banner = src;
+            } else {
+                cache.banner = 'accent';
+            }
         } else {
             delete cache.banner;
         }

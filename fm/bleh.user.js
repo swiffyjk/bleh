@@ -45413,7 +45413,8 @@
         replace: (_, url) => {
           try {
             const safe = new URL(url);
-            if (!["http:", "https:"].includes(safe.protocol)) return "";
+            if (!["http:", "https:"].includes(safe.protocol))
+              return `<img alt="banner" loading="lazy">`;
             const escaped = safe.href.replace(/"/g, "&quot;");
             const image = `<img src="${escaped}" alt="banner" loading="lazy">`;
             return purify.sanitize(image, {
@@ -45421,7 +45422,7 @@
               ALLOWED_ATTR: ["src", "alt", "loading"]
             });
           } catch {
-            return "";
+            return `<img alt="banner" loading="lazy">`;
           }
         }
       }
@@ -45661,7 +45662,11 @@
       const banner2 = body.querySelector('img[alt="banner"]');
       if (banner2) {
         const src = banner2.src;
-        cache2.banner = src;
+        if (src) {
+          cache2.banner = src;
+        } else {
+          cache2.banner = "accent";
+        }
       } else {
         delete cache2.banner;
       }
@@ -56698,10 +56703,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       "data-background-coloured",
       settings.hue_from_album
     );
-    if (page.structure.content)
-      page.structure.content.style.setProperty("--banner", `url(${url})`);
-    if (url) background.style.setProperty("background-image", `url(${url})`);
-    else background.style.removeProperty("background-image");
+    background.removeAttribute("data-accent-based");
+    background.style.removeProperty("background-image");
+    if (url) {
+      if (url == "accent") {
+        background.setAttribute("data-accent-based", true);
+      } else {
+        background.style.setProperty("background-image", `url(${url})`);
+      }
+    }
     if (page.type == "user") {
       if (page.name == auth.name) {
         background.setAttribute("data-page-user-is-self", "true");

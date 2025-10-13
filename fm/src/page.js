@@ -936,11 +936,16 @@ export async function register_background(url, origin = null) {
         settings.hue_from_album
     );
 
-    if (page.structure.content)
-        page.structure.content.style.setProperty('--banner', `url(${url})`);
+    background.removeAttribute('data-accent-based');
+    background.style.removeProperty('background-image');
 
-    if (url) background.style.setProperty('background-image', `url(${url})`);
-    else background.style.removeProperty('background-image');
+    if (url) {
+        if (url == 'accent') {
+            background.setAttribute('data-accent-based', true);
+        } else {
+            background.style.setProperty('background-image', `url(${url})`);
+        }
+    }
 
     if (page.type == 'user') {
         if (page.name == auth.name) {

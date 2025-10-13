@@ -23470,6 +23470,10 @@
             transition-duration: var(--trans);
             transition-timing-function: var(--trans-function);
 
+            &[data-accent-based] {
+                background-color: hsl(var(--h3));
+            }
+
             /*&:before {
                 content: '';
                 position: absolute;
