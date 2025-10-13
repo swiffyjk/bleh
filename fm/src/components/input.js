@@ -48,12 +48,12 @@ export function input({
         <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
             ${type == 'colour' ? html.node`<span class="colour-block" ref=${(el) => (colour_block = el)} />` : ''}
             ${
-                type == 'textarea'
-                    ? html.node`
+                type == 'textarea' ?
+                    html.node`
                 <textarea class="modern-input" disabled=${disabled} autofocus=${focus} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => (input_box = el)} />
             `
-                    : html.node`
-                <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => (input_box = el)} />
+                :   html.node`
+                <input class="modern-input" name=${name} disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => (input_box = el)} />
             `
             }
         </div>

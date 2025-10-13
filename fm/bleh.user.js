@@ -4310,7 +4310,7 @@
         var contains2 = function(bit, value) {
           return (bit & value) !== 0;
         };
-        var content = {
+        var content2 = {
           name: "content",
           initialValue: "none",
           type: 1,
@@ -4679,7 +4679,7 @@
           /** @class */
           /* @__PURE__ */ function() {
             function CSSParsedPseudoDeclaration2(context, declaration) {
-              this.content = parse4(context, content, declaration.content);
+              this.content = parse4(context, content2, declaration.content);
               this.quotes = parse4(context, quotes, declaration.quotes);
             }
             return CSSParsedPseudoDeclaration2;
@@ -13666,7 +13666,7 @@
               var pres = doc2.querySelectorAll("pre"), presPH = [];
               for (var i2 = 0; i2 < pres.length; ++i2) {
                 if (pres[i2].childElementCount === 1 && pres[i2].firstChild.tagName.toLowerCase() === "code") {
-                  var content = pres[i2].firstChild.innerHTML.trim(), language = pres[i2].firstChild.getAttribute("data-language") || "";
+                  var content2 = pres[i2].firstChild.innerHTML.trim(), language = pres[i2].firstChild.getAttribute("data-language") || "";
                   if (language === "") {
                     var classes = pres[i2].firstChild.className.split(" ");
                     for (var c = 0; c < classes.length; ++c) {
@@ -13677,8 +13677,8 @@
                       }
                     }
                   }
-                  content = showdown2.helper.unescapeHTMLEntities(content);
-                  presPH.push(content);
+                  content2 = showdown2.helper.unescapeHTMLEntities(content2);
+                  presPH.push(content2);
                   pres[i2].outerHTML = '<precode language="' + language + '" precodenum="' + i2.toString() + '"></precode>';
                 } else {
                   presPH.push(pres[i2].innerHTML);
@@ -14555,24 +14555,24 @@
             return text3;
           }
           text3 = globals.converter._dispatch("metadata.before", text3, options, globals);
-          function parseMetadataContents(content) {
-            globals.metadata.raw = content;
-            content = content.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
-            content = content.replace(/\n {4}/g, " ");
-            content.replace(/^([\S ]+): +([\s\S]+?)$/gm, function(wm, key, value) {
+          function parseMetadataContents(content2) {
+            globals.metadata.raw = content2;
+            content2 = content2.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+            content2 = content2.replace(/\n {4}/g, " ");
+            content2.replace(/^([\S ]+): +([\s\S]+?)$/gm, function(wm, key, value) {
               globals.metadata.parsed[key] = value;
               return "";
             });
           }
-          text3 = text3.replace(/^\s*«««+(\S*?)\n([\s\S]+?)\n»»»+\n/, function(wholematch, format, content) {
-            parseMetadataContents(content);
+          text3 = text3.replace(/^\s*«««+(\S*?)\n([\s\S]+?)\n»»»+\n/, function(wholematch, format, content2) {
+            parseMetadataContents(content2);
             return "\xA8M";
           });
-          text3 = text3.replace(/^\s*---+(\S*?)\n([\s\S]+?)\n---+\n/, function(wholematch, format, content) {
+          text3 = text3.replace(/^\s*---+(\S*?)\n([\s\S]+?)\n---+\n/, function(wholematch, format, content2) {
             if (format) {
               globals.metadata.format = format;
             }
-            parseMetadataContents(content);
+            parseMetadataContents(content2);
             return "\xA8M";
           });
           text3 = text3.replace(/¨M/g, "");
@@ -15286,8 +15286,8 @@
   var UID = "-" + Math.random().toFixed(6) + "%";
   var UID_IE = false;
   try {
-    if (!function(template, content, tabindex) {
-      return content in template && (template.innerHTML = "<p " + tabindex + '="' + UID + '"></p>', template[content].childNodes[0].getAttribute(tabindex) == UID);
+    if (!function(template, content2, tabindex) {
+      return content2 in template && (template.innerHTML = "<p " + tabindex + '="' + UID + '"></p>', template[content2].childNodes[0].getAttribute(tabindex) == UID);
     }(document.createElement("template"), "content", "tabindex")) {
       UID = "_dt: " + UID.slice(1, -1) + ";";
       UID_IE = true;
@@ -15384,7 +15384,7 @@
       template.innerHTML = html3;
       return template.content;
     } : function(html3) {
-      var content = create3(FRAGMENT);
+      var content2 = create3(FRAGMENT);
       var template = create3(TEMPLATE);
       var childNodes = null;
       if (/^[^\S]*?<(col(?:group)?|t(?:head|body|foot|r|d|h))/i.test(html3)) {
@@ -15395,8 +15395,8 @@
         template.innerHTML = html3;
         childNodes = template.childNodes;
       }
-      append(content, childNodes);
-      return content;
+      append(content2, childNodes);
+      return content2;
     };
     return function createContent2(markup, type) {
       return (type === "svg" ? createSVG : createHTML)(markup);
@@ -15410,11 +15410,11 @@
       return element === FRAGMENT ? document2.createDocumentFragment() : document2.createElementNS("http://www.w3.org/1999/xhtml", element);
     }
     function createSVG(svg3) {
-      var content = create3(FRAGMENT);
+      var content2 = create3(FRAGMENT);
       var template = create3("div");
       template.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg">' + svg3 + "</svg>";
-      append(content, template.firstChild.childNodes);
-      return content;
+      append(content2, template.firstChild.childNodes);
+      return content2;
     }
   }(document);
   var esm_default4 = createContent;
@@ -15491,8 +15491,8 @@
     var fragment = document2.createDocumentFragment();
     fragment[appendChild](document2[createTextNode]("g"));
     fragment[appendChild](document2[createTextNode](""));
-    var content = native ? document2[importNode2](fragment, true) : fragment[cloneNode](true);
-    return content.childNodes.length < 2 ? function importNode3(node, deep) {
+    var content2 = native ? document2[importNode2](fragment, true) : fragment[cloneNode](true);
+    return content2.childNodes.length < 2 ? function importNode3(node, deep) {
       var clone6 = node[cloneNode]();
       for (var childNodes = node.childNodes || [], length = childNodes.length, i = 0; deep && i < length; i++) {
         clone6[appendChild](importNode3(childNodes[i], deep));
@@ -15670,20 +15670,20 @@
     var transform2 = options.transform;
     if (transform2)
       markup = transform2(markup);
-    var content = esm_default4(markup, options.type);
-    cleanContent(content);
+    var content2 = esm_default4(markup, options.type);
+    cleanContent(content2);
     var holes = [];
-    parse(content, holes, template.slice(0), []);
+    parse(content2, holes, template.slice(0), []);
     return {
-      content,
-      updates: function(content2) {
+      content: content2,
+      updates: function(content3) {
         var updates = [];
         var len = holes.length;
         var i = 0;
         var off = 0;
         while (i < len) {
           var info = holes[i++];
-          var node = find(content2, info.path);
+          var node = find(content3, info.path);
           switch (info.type) {
             case "any":
               updates.push({ fn: options.any(node, []), sparse: false });
@@ -15728,7 +15728,7 @@
             } else
               update.fn(arguments[i2++]);
           }
-          return content2;
+          return content3;
         };
       }
     };
@@ -18095,15 +18095,15 @@
     }
     return arrow2;
   }
-  function setContent(content, props) {
+  function setContent(content2, props) {
     if (isElement2(props.content)) {
-      dangerouslySetInnerHTML(content, "");
-      content.appendChild(props.content);
+      dangerouslySetInnerHTML(content2, "");
+      content2.appendChild(props.content);
     } else if (typeof props.content !== "function") {
       if (props.allowHTML) {
-        dangerouslySetInnerHTML(content, props.content);
+        dangerouslySetInnerHTML(content2, props.content);
       } else {
-        content.textContent = props.content;
+        content2.textContent = props.content;
       }
     }
   }
@@ -18129,15 +18129,15 @@
     box.className = BOX_CLASS;
     box.setAttribute("data-state", "hidden");
     box.setAttribute("tabindex", "-1");
-    var content = div();
-    content.className = CONTENT_CLASS;
-    content.setAttribute("data-state", "hidden");
-    setContent(content, instance.props);
+    var content2 = div();
+    content2.className = CONTENT_CLASS;
+    content2.setAttribute("data-state", "hidden");
+    setContent(content2, instance.props);
     popper2.appendChild(box);
-    box.appendChild(content);
+    box.appendChild(content2);
     onUpdate(instance.props, instance.props);
     function onUpdate(prevProps, nextProps) {
-      var _getChildren = getChildren(popper2), box2 = _getChildren.box, content2 = _getChildren.content, arrow2 = _getChildren.arrow;
+      var _getChildren = getChildren(popper2), box2 = _getChildren.box, content3 = _getChildren.content, arrow2 = _getChildren.arrow;
       if (nextProps.theme) {
         box2.setAttribute("data-theme", nextProps.theme);
       } else {
@@ -18160,7 +18160,7 @@
         box2.removeAttribute("role");
       }
       if (prevProps.content !== nextProps.content || prevProps.allowHTML !== nextProps.allowHTML) {
-        setContent(content2, instance.props);
+        setContent(content3, instance.props);
       }
       if (nextProps.arrow) {
         if (!arrow2) {
@@ -18752,9 +18752,9 @@
       }
       invokeHook("onAfterUpdate", [instance, partialProps]);
     }
-    function setContent2(content) {
+    function setContent2(content2) {
       instance.setProps({
-        content
+        content: content2
       });
     }
     function show() {
@@ -18786,8 +18786,8 @@
         popper2.style.transition = "none";
       }
       if (getIsDefaultRenderFn()) {
-        var _getDefaultTemplateCh2 = getDefaultTemplateChildren(), box = _getDefaultTemplateCh2.box, content = _getDefaultTemplateCh2.content;
-        setTransitionDuration([box, content], 0);
+        var _getDefaultTemplateCh2 = getDefaultTemplateChildren(), box = _getDefaultTemplateCh2.box, content2 = _getDefaultTemplateCh2.content;
+        setTransitionDuration([box, content2], 0);
       }
       onFirstUpdate = function onFirstUpdate2() {
         var _instance$popperInsta2;
@@ -18842,10 +18842,10 @@
       removeDocumentPress();
       handleStyles(true);
       if (getIsDefaultRenderFn()) {
-        var _getDefaultTemplateCh4 = getDefaultTemplateChildren(), box = _getDefaultTemplateCh4.box, content = _getDefaultTemplateCh4.content;
+        var _getDefaultTemplateCh4 = getDefaultTemplateChildren(), box = _getDefaultTemplateCh4.box, content2 = _getDefaultTemplateCh4.content;
         if (instance.props.animation) {
-          setTransitionDuration([box, content], duration);
-          setVisibilityState([box, content], "hidden");
+          setTransitionDuration([box, content2], duration);
+          setVisibilityState([box, content2], "hidden");
         }
       }
       handleAriaContentAttribute();
@@ -29854,7 +29854,7 @@
             ${type == "textarea" ? html.node`
                 <textarea class="modern-input" disabled=${disabled} autofocus=${focus} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
             ` : html.node`
-                <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
+                <input class="modern-input" name=${name} disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
             `}
         </div>
     `;
@@ -34820,14 +34820,14 @@
     `;
   }
   function bleh_minis_collage() {
-    let content;
+    let content2;
     let mini_settings;
     render(
       page.structure.main,
       html`
             <section class="minis">
                 ${return_to_minis("collage")}
-                <div class="minis-content" ref=${(el) => content = el} />
+                <div class="minis-content" ref=${(el) => content2 = el} />
             </section>
         `
     );
@@ -34849,19 +34849,19 @@
         `
     );
     collage({
-      host: content,
+      host: content2,
       sidebar: mini_settings
     });
   }
   function bleh_minis_compare() {
-    let content;
+    let content2;
     let mini_settings;
     render(
       page.structure.main,
       html`
             <section class="minis">
                 ${return_to_minis("compare")}
-                <div class="minis-content" ref=${(el) => content = el} />
+                <div class="minis-content" ref=${(el) => content2 = el} />
             </section>
         `
     );
@@ -34883,12 +34883,12 @@
         `
     );
     compare({
-      host: content,
+      host: content2,
       sidebar: mini_settings
     });
   }
   function bleh_minis_pixel() {
-    let content;
+    let content2;
     let mini_settings;
     render(
       page.structure.main,
@@ -34897,7 +34897,7 @@
                 ${return_to_minis("pixel")}
                 <div
                     class="minis-content pixel-content"
-                    ref=${(el) => content = el}
+                    ref=${(el) => content2 = el}
                 />
             </section>
         `
@@ -34920,7 +34920,7 @@
         `
     );
     pixel({
-      host: content,
+      host: content2,
       sidebar: mini_settings
     });
   }
@@ -45005,7 +45005,7 @@
       });
     }
     const _sanitizeElements = function _sanitizeElements2(currentNode) {
-      let content = null;
+      let content2 = null;
       _executeHooks(hooks.beforeSanitizeElements, currentNode, null);
       if (_isClobbered(currentNode)) {
         _forceRemove(currentNode);
@@ -45061,15 +45061,15 @@
         return true;
       }
       if (SAFE_FOR_TEMPLATES && currentNode.nodeType === NODE_TYPE.text) {
-        content = currentNode.textContent;
+        content2 = currentNode.textContent;
         arrayForEach([MUSTACHE_EXPR2, ERB_EXPR2, TMPLIT_EXPR2], (expr) => {
-          content = stringReplace(content, expr, " ");
+          content2 = stringReplace(content2, expr, " ");
         });
-        if (currentNode.textContent !== content) {
+        if (currentNode.textContent !== content2) {
           arrayPush(DOMPurify.removed, {
             element: currentNode.cloneNode()
           });
-          currentNode.textContent = content;
+          currentNode.textContent = content2;
         }
       }
       _executeHooks(hooks.afterSanitizeElements, currentNode, null);
@@ -45431,12 +45431,12 @@
       {
         type: "lang",
         regex: /\[(center|left|right)]\s*([\s\S]*?)\s*\[\/\1]/g,
-        replace: (_, align, content, offset3, text4) => {
+        replace: (_, align, content2, offset3, text4) => {
           let backticks = 0;
           for (let i = 0; i < offset3; i++)
             if (text4[i] == "`") backticks++;
           if (backticks % 2 == 1) return _;
-          const inner = converter.makeHtml(content.trim());
+          const inner = converter.makeHtml(content2.trim());
           const clean2 = purify.sanitize(inner, {
             ALLOWED_TAGS,
             ALLOWED_ATTR
@@ -45479,8 +45479,8 @@
       {
         type: "lang",
         regex: /\[links\]([\s\S]*?)\[\/links\]/g,
-        replace: (_, content) => {
-          const lines = content.trim().split(/\n+/);
+        replace: (_, content2) => {
+          const lines = content2.trim().split(/\n+/);
           lines.forEach((line) => {
             line = line.trim();
             if (!line) return;
@@ -50329,9 +50329,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
               interactiveBorder: 10,
               trigger: "click",
               onShow(instance) {
-                const content = instance.popper.querySelector(".tippy-content");
+                const content2 = instance.popper.querySelector(".tippy-content");
                 render(
-                  content,
+                  content2,
                   html`
                                     ${exclusives[stored_season.id].forEach(
                     (colour3) => {
@@ -50355,7 +50355,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                 `
                 );
                 display_seasonal_exclusives(
-                  content,
+                  content2,
                   colours,
                   exclusives
                 );
@@ -52305,7 +52305,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const new_tab = e.button === 1 || cmd;
       if (!new_tab) e.preventDefault();
     });
-    let content;
     tippy_esm_default(inbox, {
       content: html.node`
             <div class="window-header">
@@ -52313,7 +52312,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="window-title">${tl2(trans2.inbox)}</div>
             </div>
             ${setting({ id: "inbox_view", func: render_inbox })}
-            <div class="window-content" ref=${(el) => content = el} />
+            <div class="window-content" />
         `,
       theme: "nav-window",
       placement: "top",
@@ -52321,7 +52320,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       interactiveBorder: 10,
       trigger: "click",
       onShow(instance) {
-        content = instance.popper.querySelector(".window-content");
+        console.info("navigation instance MAIN", instance, instance.popper);
+        page.state.inbox_content = instance.popper.querySelector(".window-content");
         render_inbox();
       }
     });
@@ -52329,7 +52329,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (settings.inbox_view != "notifications") return;
       bleh_notification_list(notifications, true);
       render(
-        content,
+        page.state.inbox_content,
         html`
                 <div class="mini-notifications">
                     ${notifications}
@@ -52345,7 +52345,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     function render_messages(messages) {
       if (settings.inbox_view != "messages") return;
       render(
-        content,
+        page.state.inbox_content,
         html`
                 <div class="mini-notifications">
                     <div class="alert alert-danger">
@@ -52372,22 +52372,21 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     function render_inbox() {
       const view = settings.inbox_view;
-      log(`rendering view ${view}`, "navigation");
-      if (!content) return;
-      if (content) {
-        render(
-          content,
-          html`
-                    <div class="mini-notifications content-loading">
-                        <div class="loading-data-container">
-                            <div class="loading-data-text">
-                                ${tl2(trans2.loading)}
-                            </div>
+      let content2 = page.state.inbox_content;
+      log(`rendering view ${view}`, "navigation", "info", { content: content2 });
+      if (!content2) return;
+      render(
+        content2,
+        html`
+                <div class="mini-notifications content-loading">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text">
+                            ${tl2(trans2.loading)}
                         </div>
                     </div>
-                `
-        );
-      }
+                </div>
+            `
+      );
       if (view == "notifications") {
         if (page.notifications.list)
           render_notifications(page.notifications.list);
@@ -52878,20 +52877,89 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
     masthead.appendChild(html.node`
         <div class="mobile-controls">
-            <a class="btn mobile-control" aria-checked="${page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts"}" data-menu-item="home" href="${root}music">
+            <a class="btn mobile-control" aria-checked=${page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts"} data-menu-item="home" href="${root}music">
                 ${tl2(trans2.home)}
             </a>
-            <a class="btn mobile-control" aria-checked="${page.type == "search"}" data-menu-item="search" href="${root}search">
-                ${tl2(trans2.search)}
-            </a>
-            <a class="btn mobile-control" aria-checked="${page.type == "user" && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+            ${() => {
+      const btn = html.node`
+                    <a class="btn mobile-control" aria-checked=${page.type == "search"} data-menu-item="search">
+                        ${tl2(trans2.search)}
+                    </a>
+                `;
+      let search_input;
+      tippy_esm_default(btn, {
+        theme: "mobile",
+        content: html.node`
+                        <div class="window-header">
+                            <div class="bleh-icon" data-type="search" style="--icon: var(--mask)" />
+                            <div class="window-title">${tl2(trans2.search)}</div>
+                        </div>
+                        ${() => {
+          const form2 = html.node`
+                                <form action="${root}search" method="get">
+                                    ${search_input = input({
+            name: "q",
+            func: () => {
+              form2.submit();
+            }
+          })}
+                                </form>
+                            `;
+          return form2;
+        }}
+                    `,
+        placement: "top",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        appendTo: document.body,
+        onShow() {
+          search_input.focus();
+        }
+      });
+      return btn;
+    }}
+            <a class="btn mobile-control" aria-checked=${page.type == "user" && page.name == auth.name} data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+                <span class="avatar">
+                    <img src=${auth.avatar} alt=${auth.name}>
+                </span>
                 ${auth.name}
             </a>
-            <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-type="inbox" href="${root}inbox/notifications">
-                ${tl2(trans2.inbox)}
-                ${inbox_count > 0 || notif_count > 0 ? html.node`<div class="notification-count-badge"></div>` : ""}
-            </a>
-            <a class="btn mobile-control" aria-checked="${page.type == "settings" || page.type == "bleh_settings"}" data-menu-item="settings" href="${root}bleh">
+            ${() => {
+      const btn = html.node`
+                    <a class="btn mobile-control" aria-checked=${page.type == "inbox"} data-type="inbox">
+                        ${tl2(trans2.inbox)}
+                        ${inbox_count > 0 || notif_count > 0 ? html.node`<div class="notification-count-badge"></div>` : ""}
+                    </a>
+                `;
+      tippy_esm_default(btn, {
+        theme: "mobile",
+        content: html.node`
+                        <div class="window-header">
+                            <div class="bleh-icon" data-type="inbox" style="--icon: var(--mask)" />
+                            <div class="window-title">${tl2(trans2.inbox)}</div>
+                        </div>
+                        ${setting({ id: "inbox_view", func: render_inbox })}
+                        <div class="window-content" />
+                    `,
+        placement: "top",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        appendTo: document.body,
+        onShow(instance) {
+          console.info(
+            "navigation instance",
+            instance,
+            instance.popper
+          );
+          page.state.inbox_content = instance.popper.querySelector(".window-content");
+          render_inbox();
+        }
+      });
+      return btn;
+    }}
+            <a class="btn mobile-control" aria-checked=${page.type == "settings" || page.type == "bleh_settings"} data-menu-item="settings" href="${root}bleh">
                 ${tl2(trans2.settings)}
             </a>
         </div>
@@ -54715,11 +54783,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           track_list.outerHTML = tracklist_panel.outerHTML;
       });
     } else if (page.type == "releases") {
-      let content = page.structure.main.querySelectorAll(":scope > *");
+      let content2 = page.structure.main.querySelectorAll(":scope > *");
       let panel = html.node`
             <section class="releases-panel" />
         `;
-      content.forEach((element) => {
+      content2.forEach((element) => {
         panel.appendChild(element);
       });
       render(page.structure.main, panel);

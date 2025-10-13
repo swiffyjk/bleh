@@ -36,6 +36,7 @@ import { copy, romanise } from './build/tools.js';
 import { submit_scrobble } from './components/scrobble.js';
 import { match } from './components/dynamic_theming.js';
 import { DateTime } from 'luxon';
+import { input } from './components/input.js';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -474,8 +475,6 @@ export function append_nav() {
         if (!new_tab) e.preventDefault();
     });
 
-    let content;
-
     tippy(inbox, {
         content: html.node`
             <div class="window-header">
@@ -483,7 +482,7 @@ export function append_nav() {
                 <div class="window-title">${tl(trans.inbox)}</div>
             </div>
             ${setting({ id: 'inbox_view', func: render_inbox })}
-            <div class="window-content" ref=${(el) => (content = el)} />
+            <div class="window-content" />
         `,
         theme: 'nav-window',
         placement: 'top',
@@ -492,7 +491,9 @@ export function append_nav() {
         trigger: 'click',
 
         onShow(instance) {
-            content = instance.popper.querySelector('.window-content');
+            console.info('navigation instance MAIN', instance, instance.popper);
+            page.state.inbox_content =
+                instance.popper.querySelector('.window-content');
 
             render_inbox();
         }
@@ -504,7 +505,7 @@ export function append_nav() {
         bleh_notification_list(notifications, true);
 
         render(
-            content,
+            page.state.inbox_content,
             html`
                 <div class="mini-notifications">
                     ${notifications}
@@ -522,7 +523,7 @@ export function append_nav() {
         if (settings.inbox_view != 'messages') return;
 
         render(
-            content,
+            page.state.inbox_content,
             html`
                 <div class="mini-notifications">
                     <div class="alert alert-danger">
@@ -553,24 +554,23 @@ export function append_nav() {
     function render_inbox() {
         const view = settings.inbox_view;
 
-        log(`rendering view ${view}`, 'navigation');
+        let content = page.state.inbox_content;
 
+        log(`rendering view ${view}`, 'navigation', 'info', { content });
         if (!content) return;
 
-        if (content) {
-            render(
-                content,
-                html`
-                    <div class="mini-notifications content-loading">
-                        <div class="loading-data-container">
-                            <div class="loading-data-text">
-                                ${tl(trans.loading)}
-                            </div>
+        render(
+            content,
+            html`
+                <div class="mini-notifications content-loading">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text">
+                            ${tl(trans.loading)}
                         </div>
                     </div>
-                `
-            );
-        }
+                </div>
+            `
+        );
 
         if (view == 'notifications') {
             if (page.notifications.list)
@@ -1174,20 +1174,99 @@ export function append_nav() {
     // mobile
     masthead.appendChild(html.node`
         <div class="mobile-controls">
-            <a class="btn mobile-control" aria-checked="${page.type == 'overview' || page.type == 'recommended' || page.type == 'releases' || page.type == 'bookmarks' || page.type == 'charts'}" data-menu-item="home" href="${root}music">
+            <a class="btn mobile-control" aria-checked=${page.type == 'overview' || page.type == 'recommended' || page.type == 'releases' || page.type == 'bookmarks' || page.type == 'charts'} data-menu-item="home" href="${root}music">
                 ${tl(trans.home)}
             </a>
-            <a class="btn mobile-control" aria-checked="${page.type == 'search'}" data-menu-item="search" href="${root}search">
-                ${tl(trans.search)}
-            </a>
-            <a class="btn mobile-control" aria-checked="${page.type == 'user' && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+            ${() => {
+                const btn = html.node`
+                    <a class="btn mobile-control" aria-checked=${page.type == 'search'} data-menu-item="search">
+                        ${tl(trans.search)}
+                    </a>
+                `;
+
+                let search_input;
+
+                tippy(btn, {
+                    theme: 'mobile',
+                    content: html.node`
+                        <div class="window-header">
+                            <div class="bleh-icon" data-type="search" style="--icon: var(--mask)" />
+                            <div class="window-title">${tl(trans.search)}</div>
+                        </div>
+                        ${() => {
+                            const form = html.node`
+                                <form action="${root}search" method="get">
+                                    ${(search_input = input({
+                                        name: 'q',
+                                        func: () => {
+                                            form.submit();
+                                        }
+                                    }))}
+                                </form>
+                            `;
+
+                            return form;
+                        }}
+                    `,
+                    placement: 'top',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    trigger: 'click',
+                    appendTo: document.body,
+
+                    onShow() {
+                        search_input.focus();
+                    }
+                });
+
+                return btn;
+            }}
+            <a class="btn mobile-control" aria-checked=${page.type == 'user' && page.name == auth.name} data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+                <span class="avatar">
+                    <img src=${auth.avatar} alt=${auth.name}>
+                </span>
                 ${auth.name}
             </a>
-            <a class="btn mobile-control" aria-checked="${page.type == 'inbox'}" data-type="inbox" href="${root}inbox/notifications">
-                ${tl(trans.inbox)}
-                ${inbox_count > 0 || notif_count > 0 ? html.node`<div class="notification-count-badge"></div>` : ''}
-            </a>
-            <a class="btn mobile-control" aria-checked="${page.type == 'settings' || page.type == 'bleh_settings'}" data-menu-item="settings" href="${root}bleh">
+            ${() => {
+                const btn = html.node`
+                    <a class="btn mobile-control" aria-checked=${page.type == 'inbox'} data-type="inbox">
+                        ${tl(trans.inbox)}
+                        ${inbox_count > 0 || notif_count > 0 ? html.node`<div class="notification-count-badge"></div>` : ''}
+                    </a>
+                `;
+
+                tippy(btn, {
+                    theme: 'mobile',
+                    content: html.node`
+                        <div class="window-header">
+                            <div class="bleh-icon" data-type="inbox" style="--icon: var(--mask)" />
+                            <div class="window-title">${tl(trans.inbox)}</div>
+                        </div>
+                        ${setting({ id: 'inbox_view', func: render_inbox })}
+                        <div class="window-content" />
+                    `,
+                    placement: 'top',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    trigger: 'click',
+                    appendTo: document.body,
+
+                    onShow(instance) {
+                        console.info(
+                            'navigation instance',
+                            instance,
+                            instance.popper
+                        );
+                        page.state.inbox_content =
+                            instance.popper.querySelector('.window-content');
+
+                        render_inbox();
+                    }
+                });
+
+                return btn;
+            }}
+            <a class="btn mobile-control" aria-checked=${page.type == 'settings' || page.type == 'bleh_settings'} data-menu-item="settings" href="${root}bleh">
                 ${tl(trans.settings)}
             </a>
         </div>
