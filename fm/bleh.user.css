@@ -28823,4 +28823,18 @@
             }
         }
     }
+
+    .flexy {
+        display: flex;
+        flex-direction: column;
+        gap: var(--item-list-gap);
+
+        & > h2 {
+            margin: unset !important;
+        }
+
+        &.h {
+            flex-direction: row;
+        }
+    }
 }

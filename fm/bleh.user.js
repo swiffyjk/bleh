@@ -56032,71 +56032,109 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     update_page();
     page.structure.row.removeChild(page.structure.row.firstElementChild);
     page.structure.row.removeChild(page.structure.row.firstElementChild);
-    render(page.structure.main, html`
-        <section class="flexy">
-            <h2>Buttons</h2>
-            <div class="button-group">
-                <button>Button</button>
-                <button class="primary">Button</button>
-                <button disabled>Button</button>
-                <button class="primary" disabled>Button</button>
-            </div>
-            <div class="button-group">
-                <button class="danger-subtle">Button</button>
-                <button class="primary danger">Button</button>
-                <button class="danger-subtle" disabled>Button</button>
-                <button class="primary danger" disabled>Button</button>
-            </div>
-        </section>
-        <section class="flexy">
-            <h2>Settings</h2>
-            <div class="setting-group">
-
-            </div>
-        </section>
-        <section class="flexy">
-            <h2>Notifications</h2>
-            <button class="continue" onclick=${() => notify({
-      id: "test",
-      title: "testing!",
-      body: "haaaiaiii test bodyyy......."
-    })}>Deliver notification</button>
-            <button class="continue" onclick=${() => notify({
-      id: "test",
-      title: "testing!",
-      body: "haaaiaiii test bodyyy.......",
-      persist: true
-    })}>Deliver persistent notification</button>
-            <button class="continue" onclick=${() => {
-      let notification = notify({
-        id: "async",
-        title: "progress",
-        body: "downloading...",
-        progress: true
-      });
-      download_with_progress(`https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`, (percent) => {
-        notification.set_body(`downloading... ${percent}%`);
-        notification.set(percent);
-      }).then(async (blob) => {
-        const text3 = await blob.text();
-        notification.set_body("download complete");
-        notification.set(100);
-        console.info(text3);
-      });
-    }}>Deliver async progress notification</button>
-        </section>
-        <section class="flexy">
-            <h2>Status alerts</h2>
-            <button class="continue" onclick=${() => status({
-      title: "test alert",
-      body: "haiaiai nothing to worry about >_<"
-    })}>Deliver status alert</button>
-        </section>
-        <section class="flexy">
-            <h2>Modals</h2>
-            <button class="continue" onclick=${() => dialog_loop()}>Open dialog loop</button>
-        </section>
-    `);
+    render(
+      page.structure.main,
+      html`
+            <section class="flexy">
+                <h2>Buttons</h2>
+                <div class="flexy h">
+                    <button>Button</button>
+                    <button class="primary">Button</button>
+                    <button disabled>Button</button>
+                    <button class="primary" disabled>Button</button>
+                </div>
+                <div class="flexy h">
+                    <button class="danger-subtle">Button</button>
+                    <button class="primary danger">Button</button>
+                    <button class="danger-subtle" disabled>Button</button>
+                    <button class="primary danger" disabled>Button</button>
+                </div>
+            </section>
+            <section class="flexy">
+                <h2>Settings</h2>
+                <div class="setting-group">
+                    ${setting({ id: "solarium" })} ${setting({ id: "gloss" })}
+                    ${setting({ id: "expand_tracks" })}
+                    ${setting({ id: "romanise_jp" })}
+                    ${setting({
+        id: "navigation_items",
+        list: page.state.quick_access_items
+      })}
+                </div>
+            </section>
+            <section class="flexy">
+                <h2>Notifications</h2>
+                <div class="flexy h">
+                    <button
+                        class="continue"
+                        onclick=${() => notify({
+        id: "test",
+        title: "testing!",
+        body: "haaaiaiii test bodyyy......."
+      })}
+                    >
+                        Deliver notification
+                    </button>
+                    <button
+                        class="continue"
+                        onclick=${() => notify({
+        id: "test",
+        title: "testing!",
+        body: "haaaiaiii test bodyyy.......",
+        persist: true
+      })}
+                    >
+                        Deliver persistent notification
+                    </button>
+                    <button
+                        class="continue"
+                        onclick=${() => {
+        let notification = notify({
+          id: "async",
+          title: "progress",
+          body: "downloading...",
+          progress: true
+        });
+        download_with_progress(
+          `https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`,
+          (percent) => {
+            notification.set_body(
+              `downloading... ${percent}%`
+            );
+            notification.set(percent);
+          }
+        ).then(async (blob) => {
+          const text3 = await blob.text();
+          notification.set_body("download complete");
+          notification.set(100);
+          console.info(text3);
+        });
+      }}
+                    >
+                        Deliver async progress notification
+                    </button>
+                </div>
+            </section>
+            <section class="flexy">
+                <h2>Status alerts</h2>
+                <button
+                    class="continue"
+                    onclick=${() => status({
+        title: "test alert",
+        body: "haiaiai nothing to worry about >_<"
+      })}
+                >
+                    Deliver status alert
+                </button>
+            </section>
+            <section class="flexy">
+                <h2>Modals</h2>
+                <button class="continue" onclick=${() => dialog_loop()}>
+                    Open dialog loop
+                </button>
+            </section>
+        `
+    );
   }
   function dialog_loop() {
     const num = Math.random();
