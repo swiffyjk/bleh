@@ -55784,9 +55784,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
 
   // src/components/dialog_extender.js
   function dialog_extender() {
-    let wrappers = document.body.querySelectorAll(":scope > .popup_wrapper, :scope > div > .popup_wrapper");
+    log("dialog extender", "loop");
+    let wrappers = document.body.querySelectorAll(
+      ":scope > .popup_wrapper, :scope > div > .popup_wrapper"
+    );
     wrappers.forEach((wrapper) => {
-      let modal_dialog = wrapper.querySelector(".modal-dialog:not([data-dialog-extender])");
+      let modal_dialog = wrapper.querySelector(
+        ".modal-dialog:not([data-dialog-extender])"
+      );
       if (!modal_dialog) return;
       modal_dialog.setAttribute("data-dialog-extender", "true");
       let body = modal_dialog.querySelector(".modal-body");
@@ -55800,50 +55805,66 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (form.action && form.action.endsWith("+bookmarks/modal/added")) {
         title.textContent = tl2(trans2.saved_to_bookmarks);
         let new_form;
-        render(contents, html`
-                <div class="big-modal-alert">
-                    ${{ html: tl2(trans2.bookmark_save_msg).replace("{link}", `<a class="see-more" href="${root}music/+bookmarks">${tl2(trans2.go_there_now_lower)}</a>`) }}
-                </div>
-                <form method="post" ref=${(el) => new_form = el} onsubmit=${async (e) => {
-          e.preventDefault();
-          let url = `${root}music/+bookmarks/modal/added`;
-          let form_data = new FormData(new_form);
-          console.info(form_data);
-          try {
-            await fetch(url, {
-              method: "POST",
-              body: form_data
-            }).then((res) => {
-              let data2 = res.json();
-              log("received response", "form", "info", { data: data2 });
-              dismiss.click();
-            });
-          } catch (e2) {
-            console.error(e2);
-          }
-        }}>
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                    <div class="modal-footer">
-                        ${toggle({
-          value: true,
-          type: "checkbox",
-          name: "always_show",
-          title: tl2(trans2.always_remind_me)
-        })}
-                        <button class="btn primary done" type="submit">
-                            ${tl2(trans2.done)}
-                        </button>
+        render(
+          contents,
+          html`
+                    <div class="big-modal-alert">
+                        ${{
+            html: tl2(trans2.bookmark_save_msg).replace(
+              "{link}",
+              `<a class="see-more" href="${root}music/+bookmarks">${tl2(trans2.go_there_now_lower)}</a>`
+            )
+          }}
                     </div>
-                </form>
-            `);
+                    <form
+                        method="post"
+                        ref=${(el) => new_form = el}
+                        onsubmit=${async (e) => {
+            e.preventDefault();
+            let url = `${root}music/+bookmarks/modal/added`;
+            let form_data = new FormData(new_form);
+            console.info(form_data);
+            try {
+              await fetch(url, {
+                method: "POST",
+                body: form_data
+              }).then((res) => {
+                let data2 = res.json();
+                log("received response", "form", "info", {
+                  data: data2
+                });
+                dismiss.click();
+              });
+            } catch (e2) {
+              console.error(e2);
+            }
+          }}
+                    >
+                        <input
+                            type="hidden"
+                            name="csrfmiddlewaretoken"
+                            value="${page.token}"
+                        />
+                        <div class="modal-footer">
+                            ${toggle({
+            value: true,
+            type: "checkbox",
+            name: "always_show",
+            title: tl2(trans2.always_remind_me)
+          })}
+                            <button class="btn primary done" type="submit">
+                                ${tl2(trans2.done)}
+                            </button>
+                        </div>
+                    </form>
+                `
+        );
       } else if (body.classList.contains("automatic-edit-modal-body-v2")) {
         let bulk_edit_active = false;
         let edit_all = body.querySelector('[name="edit_all"]');
         if (edit_all && edit_all.disabled) bulk_edit_active = true;
-        if (!bulk_edit_active)
-          title.textContent = tl2(trans2.edit_scrobble);
-        else
-          title.textContent = tl2(trans2.edit_scrobbles_in_bulk);
+        if (!bulk_edit_active) title.textContent = tl2(trans2.edit_scrobble);
+        else title.textContent = tl2(trans2.edit_scrobbles_in_bulk);
         modal_dialog.classList.add("automatic-edit-modal");
         let checkboxes = body.querySelectorAll(".checkbox");
         checkboxes.forEach((checkbox) => {
@@ -55852,18 +55873,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           let name = input_el.getAttribute("name");
           let text3 = checkbox.textContent.trim();
           let disabled = input_el.disabled;
-          render(checkbox.parentElement, html`
-                    ${toggle({
-            value,
-            type: "checkbox",
-            name,
-            title: text3,
-            disabled,
-            data: input_el.value
-          })}
-                `);
+          render(
+            checkbox.parentElement,
+            html`
+                        ${toggle({
+              value,
+              type: "checkbox",
+              name,
+              title: text3,
+              disabled,
+              data: input_el.value
+            })}
+                    `
+          );
         });
-        let original_fields = body.querySelectorAll(".edit-scrobble-label--originally");
+        let original_fields = body.querySelectorAll(
+          ".edit-scrobble-label--originally"
+        );
         original_fields.forEach((field) => {
           field.textContent = field.textContent.trim().replace(/"([^"]*)"/g, "\u2018$1\u2019");
         });
@@ -55871,29 +55897,43 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         submit.classList = "modal-footer";
         let delete_form = body.querySelector(".edit-scrobble-form-delete");
         let delete_btn;
-        if (delete_form) delete_btn = delete_form.querySelector(".btn-delete");
-        render(submit, html`
-                <button class="see-more cancel" type="button" onclick=${() => dismiss.click()}>
-                    ${tl2(trans2.cancel)}
-                </button>
-                <div class="fill" />
-                <div class="button-group">
-                    ${delete_form ? html.node`
+        if (delete_form)
+          delete_btn = delete_form.querySelector(".btn-delete");
+        render(
+          submit,
+          html`
+                    <button
+                        class="see-more cancel"
+                        type="button"
+                        onclick=${() => dismiss.click()}
+                    >
+                        ${tl2(trans2.cancel)}
+                    </button>
+                    <div class="fill" />
+                    <div class="button-group">
+                        ${delete_form ? html.node`
                     <button class="btn icon danger-subtle" data-type="delete" type="button" onclick=${() => {
-          delete_btn.click();
-        }}>
+            delete_btn.click();
+          }}>
                         ${tl2(trans2.delete)}
                     </button>
                     ` : ""}
-                    ${submit.querySelector("input")}
-                    <button class="btn primary icon" data-type="item-edit" type="submit">
-                        ${tl2(trans2.edit)}
-                    </button>
-                </div>
-            `);
+                        ${submit.querySelector("input")}
+                        <button
+                            class="btn primary icon"
+                            data-type="item-edit"
+                            type="submit"
+                        >
+                            ${tl2(trans2.edit)}
+                        </button>
+                    </div>
+                `
+        );
       } else if (body.querySelector(".lastfm-bulk-edit-list")) {
         let checks;
-        let controls = body.querySelector(".lastfm-bulk-edit-form-group-controls");
+        let controls = body.querySelector(
+          ".lastfm-bulk-edit-form-group-controls"
+        );
         if (controls) {
           let parent = controls.parentElement;
           parent.parentElement.removeChild(parent);
@@ -55927,29 +55967,44 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           let name = input_el.getAttribute("name");
           let disabled = input_el.disabled;
           let data2 = input_el.getAttribute("value");
-          let item_artist = correct_artist(checkbox.querySelector("div").title);
-          let item_name = correct_item_by_artist(checkbox.querySelector("strong").title, item_artist);
+          let item_artist = correct_artist(
+            checkbox.querySelector("div").title
+          );
+          let item_name = correct_item_by_artist(
+            checkbox.querySelector("strong").title,
+            item_artist
+          );
           let item_scrobbles = checkbox.querySelector("small").textContent.trim();
-          render(checkbox.parentElement, html`
-                    ${toggle({
-            value,
-            type: "checkbox",
-            name,
-            title: item_name + tl2(trans2.by_artist).replace("{a}", item_artist),
-            body: item_scrobbles,
-            disabled,
-            data: data2
-          })}
-                `);
+          render(
+            checkbox.parentElement,
+            html`
+                        ${toggle({
+              value,
+              type: "checkbox",
+              name,
+              title: item_name + tl2(trans2.by_artist).replace("{a}", item_artist),
+              body: item_scrobbles,
+              disabled,
+              data: data2
+            })}
+                    `
+          );
         });
         checks = list.querySelectorAll(".setting");
         let footer = body.querySelector(".form-group--submit");
         footer.classList = "modal-footer";
-        render(footer, html`
-                <button class="see-more cancel" type="reset">${tl2(trans2.cancel)}</button>
-                <div class="fill" />
-                <button class="btn primary continue" type="submit">${tl2(trans2.continue)}</button>
-            `);
+        render(
+          footer,
+          html`
+                    <button class="see-more cancel" type="reset">
+                        ${tl2(trans2.cancel)}
+                    </button>
+                    <div class="fill" />
+                    <button class="btn primary continue" type="submit">
+                        ${tl2(trans2.continue)}
+                    </button>
+                `
+        );
       }
     });
   }
@@ -56303,7 +56358,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         subtree: true
       });
       let performance_end = performance.now();
-      log(`finished in ${performance_end - performance_start}`, "load");
+      log(
+        `finished in ${(performance_end - performance_start) / 1e3} seconds`,
+        "load"
+      );
     } catch (e) {
       handle_error(e);
     }
@@ -56380,6 +56438,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     log("halted as root is inaccessible", "load");
   }
   function main_flow() {
+    let performance_start = performance.now();
     assign_page();
     if (page.state.error) return;
     if (page.type == "artist" || page.type == "album") {
@@ -56428,6 +56487,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     shout_messages();
     subscribe_to_events();
     dialog_extender();
+    let performance_end = performance.now();
+    log(
+      `finished in ${(performance_end - performance_start) / 1e3} seconds`,
+      "loop"
+    );
   }
   function assign_page() {
     document.documentElement.classList.add("bleh-supports-loading");

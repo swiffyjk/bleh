@@ -222,7 +222,10 @@ function bleh_main() {
         });
 
         let performance_end = performance.now();
-        log(`finished in ${performance_end - performance_start}`, 'load');
+        log(
+            `finished in ${(performance_end - performance_start) / 1000} seconds`,
+            'load'
+        );
     } catch (e) {
         handle_error(e);
     }
@@ -306,6 +309,7 @@ export function handle_error_500() {
 }
 
 function main_flow() {
+    let performance_start = performance.now();
     assign_page();
 
     if (page.state.error) return;
@@ -408,6 +412,12 @@ function main_flow() {
     subscribe_to_events();
 
     dialog_extender();
+
+    let performance_end = performance.now();
+    log(
+        `finished in ${(performance_end - performance_start) / 1000} seconds`,
+        'loop'
+    );
 }
 
 function assign_page() {
