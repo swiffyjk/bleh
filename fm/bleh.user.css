@@ -6935,14 +6935,17 @@
         overflow: hidden;
         background: var(--avatar-generic-background);
 
-        .cover-art,
-        img,
-        .avatar {
+        & > .cover-art,
+        & > .avatar {
             border-radius: inherit !important;
-            font-size: 0 !important;
+
+            & > img {
+                border-radius: inherit !important;
+                font-size: 0 !important;
+            }
         }
 
-        .avatar {
+        & > .avatar {
             font-size: 0 !important;
             aspect-ratio: 1 / 1;
 
@@ -12258,9 +12261,12 @@
         font-size: var(--font-size);
         line-height: var(--line-height);
 
-        width: 100%;
-        max-width: 400px;
+        width: 400px;
         height: 287px;
+
+        @media (max-width: 600px) {
+            width: 100%;
+        }
 
         &.content-loading {
             display: flex;
@@ -18798,6 +18804,8 @@
                     --mask-colour: var(--col);
 
                     &[aria-checked="true"] {
+                        --bg: var(--bg-atv) !important;
+                        --bg-hov: var(--bg) !important;
                         --shadow:
                             inset 0 0 0 4px hsl(var(--l3-c)),
                             0 3px 12px hsl(var(--h4), 25%),
