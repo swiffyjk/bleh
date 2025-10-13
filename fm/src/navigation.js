@@ -620,7 +620,7 @@ export function append_nav() {
     language_options.forEach((language_option) => {
         const button = language_option.querySelector('button');
 
-        if (!button)
+        if (!button) {
             log(
                 'random last.fm error where this button is non existent',
                 'language',
@@ -632,6 +632,8 @@ export function append_nav() {
                     raw_options: language_options.innerHTML
                 }
             );
+            return;
+        }
 
         const key = button.getAttribute('name');
 

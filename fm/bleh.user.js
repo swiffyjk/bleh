@@ -52423,7 +52423,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     `;
     language_options.forEach((language_option) => {
       const button = language_option.querySelector("button");
-      if (!button)
+      if (!button) {
         log(
           "random last.fm error where this button is non existent",
           "language",
@@ -52435,6 +52435,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             raw_options: language_options.innerHTML
           }
         );
+        return;
+      }
       const key = button.getAttribute("name");
       button.classList.remove("mimic-link");
       button.classList.add(
@@ -56339,6 +56341,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (document.head) {
         append_style();
         favi();
+        page.state.previous_title = document.title;
         document.title = "...";
         head_observer.disconnect();
       }
@@ -56347,6 +56350,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       childList: true
     });
     let pre_observer = new MutationObserver((mutations) => {
+      log("pre", "load", "info", { mutations });
       if (document.body) {
         log(`${JSON.stringify(document.body.classList)}`, "load");
         document.body.classList.add("bleh");

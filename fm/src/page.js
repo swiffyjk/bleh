@@ -94,6 +94,7 @@ export function bleh() {
         if (document.head) {
             append_style();
             favi();
+            page.state.previous_title = document.title;
             document.title = '...';
 
             head_observer.disconnect();
@@ -105,6 +106,7 @@ export function bleh() {
     });
 
     let pre_observer = new MutationObserver((mutations) => {
+        log('pre', 'load', 'info', { mutations });
         if (document.body) {
             log(`${JSON.stringify(document.body.classList)}`, 'load');
             document.body.classList.add('bleh');
