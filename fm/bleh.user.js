@@ -31950,6 +31950,7 @@
     }
     const metadata = col_main.querySelector(".metadata-column");
     if (metadata) {
+      metadata.classList.remove("hidden-xs");
       let groups = [];
       let headers = metadata.querySelectorAll(
         ".catalogue-metadata-heading:not(.visible-xs)"

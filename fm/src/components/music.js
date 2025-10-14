@@ -577,6 +577,8 @@ export async function show_your_scrobbles() {
 
     const metadata = col_main.querySelector('.metadata-column');
     if (metadata) {
+        metadata.classList.remove('hidden-xs');
+
         let groups = [];
 
         let headers = metadata.querySelectorAll(
