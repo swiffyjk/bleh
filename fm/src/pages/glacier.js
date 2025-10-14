@@ -575,23 +575,11 @@ function bleh_glacier_library_top(static_page = false) {
                 <div class="setting-group blend">
                     ${
                         page.subpage == 'library_artists' ?
-                            html.node`
-                    <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                        <div class="heading">
-                            <h5>${tl(trans.colourful_counts.name)}</h5>
-                            <p>${tl(trans.colourful_counts.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    `
+                            setting({ id: 'colourful_counts' })
                         :   html.node`
-                    ${setting({ id: 'format_guest_features' })}
-                    ${setting({ id: 'show_guest_features' })}
-                    `
+                                ${setting({ id: 'format_guest_features' })}
+                                ${setting({ id: 'show_guest_features' })}
+                            `
                     }
                     ${
                         (
@@ -600,8 +588,8 @@ function bleh_glacier_library_top(static_page = false) {
                             auth.pro
                         ) ?
                             html.node`
-                    ${setting({ id: 'grid_glow' })}
-                    `
+                                ${setting({ id: 'grid_glow' })}
+                            `
                         :   ''
                     }
                     ${setting({ id: 'glacier_library_graphs' })}
@@ -613,9 +601,14 @@ function bleh_glacier_library_top(static_page = false) {
         interactiveBorder: 10,
         trigger: 'click',
         appendTo: document.body,
+        hideOnClick: 'toggle',
 
-        onShow(instance) {
-            refresh_all(instance.popper);
+        onClickOutside(instance) {
+            if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
         }
     });
 
@@ -1431,9 +1424,14 @@ function bleh_glacier_library_focused() {
         interactiveBorder: 10,
         trigger: 'click',
         appendTo: document.body,
+        hideOnClick: 'toggle',
 
-        onShow(instance) {
-            refresh_all(instance.popper);
+        onClickOutside(instance) {
+            if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
         }
     });
 

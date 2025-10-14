@@ -38453,25 +38453,13 @@
       content: html.node`
             <div class="dialog-settings">
                 <div class="setting-group blend">
-                    ${page.subpage == "library_artists" ? html.node`
-                    <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                        <div class="heading">
-                            <h5>${tl2(trans2.colourful_counts.name)}</h5>
-                            <p>${tl2(trans2.colourful_counts.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    ` : html.node`
-                    ${setting({ id: "format_guest_features" })}
-                    ${setting({ id: "show_guest_features" })}
-                    `}
+                    ${page.subpage == "library_artists" ? setting({ id: "colourful_counts" }) : html.node`
+                                ${setting({ id: "format_guest_features" })}
+                                ${setting({ id: "show_guest_features" })}
+                            `}
                     ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
-                    ${setting({ id: "grid_glow" })}
-                    ` : ""}
+                                ${setting({ id: "grid_glow" })}
+                            ` : ""}
                     ${setting({ id: "glacier_library_graphs" })}
                 </div>
             </div>
@@ -38481,8 +38469,12 @@
       interactiveBorder: 10,
       trigger: "click",
       appendTo: document.body,
-      onShow(instance) {
-        refresh_all(instance.popper);
+      hideOnClick: "toggle",
+      onClickOutside(instance) {
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
       }
     });
     view_buttons.appendChild(configure_button);
@@ -39131,8 +39123,12 @@
       interactiveBorder: 10,
       trigger: "click",
       appendTo: document.body,
-      onShow(instance) {
-        refresh_all(instance.popper);
+      hideOnClick: "toggle",
+      onClickOutside(instance) {
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
       }
     });
     view_buttons.appendChild(configure_button);
