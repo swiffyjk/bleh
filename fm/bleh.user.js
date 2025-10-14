@@ -42433,8 +42433,12 @@
         interactiveBorder: 10,
         trigger: "click",
         appendTo: document.body,
-        onShow(instance) {
-          refresh_all(instance.popper);
+        hideOnClick: "toggle",
+        onClickOutside(instance) {
+          if (instance.popper.querySelector('[aria-expanded="true"]')) {
+            return;
+          }
+          instance.hide();
         }
       });
       if (cache2.banner || cache2.hue || cache2.sat || cache2.lit) {
@@ -43154,7 +43158,14 @@
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
-      appendTo: document.body
+      appendTo: document.body,
+      hideOnClick: "toggle",
+      onClickOutside(instance) {
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
+      }
     });
     view_buttons.appendChild(settings_btn);
   }
@@ -43280,7 +43291,14 @@
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
-      appendTo: document.body
+      appendTo: document.body,
+      hideOnClick: "toggle",
+      onClickOutside(instance) {
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
+      }
     });
   }
   function profile_albums() {
@@ -43405,7 +43423,14 @@
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
-      appendTo: document.body
+      appendTo: document.body,
+      hideOnClick: "toggle",
+      onClickOutside(instance) {
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
+      }
     });
   }
   function profile_tracks() {
@@ -43514,7 +43539,14 @@
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
-      appendTo: document.body
+      appendTo: document.body,
+      hideOnClick: "toggle",
+      onClickOutside(instance) {
+        if (instance.popper.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
+      }
     });
   }
   function bio_parse(text3, cache2 = true, take_effect = true) {

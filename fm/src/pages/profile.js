@@ -497,9 +497,14 @@ export async function bleh_profiles() {
             interactiveBorder: 10,
             trigger: 'click',
             appendTo: document.body,
+            hideOnClick: 'toggle',
 
-            onShow(instance) {
-                refresh_all(instance.popper);
+            onClickOutside(instance) {
+                if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                    return;
+                }
+
+                instance.hide();
             }
         });
 
@@ -1426,7 +1431,16 @@ function profile_recents() {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
-        appendTo: document.body
+        appendTo: document.body,
+        hideOnClick: 'toggle',
+
+        onClickOutside(instance) {
+            if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
+        }
     });
 
     view_buttons.appendChild(settings_btn);
@@ -1571,7 +1585,16 @@ function profile_artists() {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
-        appendTo: document.body
+        appendTo: document.body,
+        hideOnClick: 'toggle',
+
+        onClickOutside(instance) {
+            if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
+        }
     });
 }
 
@@ -1714,7 +1737,16 @@ function profile_albums() {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
-        appendTo: document.body
+        appendTo: document.body,
+        hideOnClick: 'toggle',
+
+        onClickOutside(instance) {
+            if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
+        }
     });
 }
 
@@ -1841,7 +1873,16 @@ function profile_tracks() {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
-        appendTo: document.body
+        appendTo: document.body,
+        hideOnClick: 'toggle',
+
+        onClickOutside(instance) {
+            if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
+        }
     });
 }
 

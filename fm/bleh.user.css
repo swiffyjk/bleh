@@ -5577,7 +5577,7 @@
         grid-template-areas:
             ". . . ."
             ". . . .";
-        gap: var(--item-list-gap);
+        gap: 6px;
 
         &.obsessions-grid {
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -5730,8 +5730,12 @@
         grid-template-areas:
             "b b . ."
             "b b . .";
-        gap: var(--item-list-gap);
+        gap: 6px;
         height: 426px;
+
+        @media (max-width: 1360px) {
+            height: 527px;
+        }
     }
     .grid-items.grid-items--big-first .grid-items-item--big {
         grid-area: b;
