@@ -46208,10 +46208,9 @@
     for (var member in settings) delete settings[member];
     Object.assign(settings, JSON.parse(localStorage.getItem("bleh")));
     let cached_style = localStorage.getItem("bleh_cached_style") || "";
-    let url = window.location.href;
-    let url_split = url.split("/");
-    let url_length = url_split.length - 1;
-    if (url_split[url_length] == "playback" && url_split[2] == "listening-report" || url_split[0] == "labs") {
+    const split = window.location.pathname.replace(root, "").split("/");
+    const length = split.length - 1;
+    if (split[length] == "playback" && split[2] == "listening-report" || split[0] == "labs") {
       log("disabled loading for special interface", "style");
       return;
     }
