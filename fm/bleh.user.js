@@ -31924,6 +31924,13 @@
       }
       interact_container.appendChild(scrobble_btn);
     }
+    if (ff("credits") && ff("oracle") && settings.oracle_beta && ["album", "track"].includes(page.type)) {
+      interact_container.appendChild(html.node`
+            <button class="btn side-action" data-type="credits">
+                ${tl2(trans2.credits)}
+            </button>
+        `);
+    }
     const play_btn = interact_container.querySelector(".header-new-playlink");
     if (play_btn) interact_container.removeChild(play_btn);
     if (auth.name) {
@@ -62390,6 +62397,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       body: {
         en: "Only recommended for desktop devices"
       }
+    },
+    credits: {
+      en: "Credits"
     }
   };
   function tl2(key, replacements = {}) {
@@ -64089,6 +64099,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         default: true,
         name: "Replace album/track artwork and metadata on dedicated pages",
         date: "2025-10-08"
+      },
+      credits: {
+        default: false,
+        name: "Present album and track credits via oracle",
+        date: "2025-10-14"
       }
     }
   };

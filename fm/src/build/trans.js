@@ -5407,6 +5407,9 @@ export const trans = {
         body: {
             en: 'Only recommended for desktop devices'
         }
+    },
+    credits: {
+        en: 'Credits'
     }
 };
 

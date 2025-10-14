@@ -2669,7 +2669,6 @@
                 border-radius: var(--card-radius) !important;
                 padding: 0;
                 gap: 0 !important;
-                overflow: hidden;
 
                 background-image: var(
                     --cards-overlay-image-subtle,
@@ -2760,6 +2759,8 @@
                             backdrop-filter: var(--solarium);
                             -webkit-backdrop-filter: var(--solarium);
 
+                            border-radius: inherit;
+
                             --mask: linear-gradient(
                                 180deg,
                                 white 86%,
@@ -2787,6 +2788,22 @@
                                 display: none;
                             }
                         }
+                    }
+
+                    &:first-child {
+                        & > .col-main {
+                            border-top-left-radius: var(--card-radius);
+                        }
+                        & > .col-sidebar {
+                            border-top-right-radius: var(--card-radius);
+                        }
+                    }
+
+                    & > .col-main {
+                        border-bottom-left-radius: var(--card-radius);
+                    }
+                    & > .col-sidebar {
+                        border-bottom-right-radius: var(--card-radius);
                     }
                 }
             }
@@ -13061,8 +13078,9 @@
                 }
             }
             .source-album-artist {
+                display: flex !important;
                 font-weight: var(--font-weight);
-                color: hsla(var(--c2), 80%);
+                color: hsl(var(--c3)) !important;
                 margin-top: 2px;
 
                 &.oracle-loading {
@@ -13071,7 +13089,11 @@
                 }
 
                 & > a {
-                    color: inherit;
+                    color: hsla(var(--c2), 80%);
+                }
+
+                & > a + a {
+                    margin-left: 4px;
                 }
             }
             .source-album-stats {
@@ -16784,9 +16806,16 @@
                 display: block;
                 margin-left: calc(-1 * var(--card-padding)) !important;
                 margin-right: calc(-1 * var(--card-padding)) !important;
+                border-bottom-right-radius: var(--card-radius);
             }
             & > .col-sidebar {
                 display: none !important;
+            }
+
+            &:first-child {
+                & > .col-main {
+                    border-top-right-radius: var(--card-radius);
+                }
             }
         }
 
@@ -20717,6 +20746,7 @@
             box-shadow: unset;
             padding: unset;
             border-radius: unset;
+            gap: var(--button-list-gap) !important;
         }
 
         &.view-buttons-middle {

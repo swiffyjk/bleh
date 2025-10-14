@@ -334,6 +334,11 @@
             "default": true,
             "name": "Replace album/track artwork and metadata on dedicated pages",
             "date": "2025-10-08"
+        },
+        "credits": {
+            "default": false,
+            "name": "Present album and track credits via oracle",
+            "date": "2025-10-14"
         }
     }
 }

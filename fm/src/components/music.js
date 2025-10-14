@@ -532,6 +532,19 @@ export async function show_your_scrobbles() {
         interact_container.appendChild(scrobble_btn);
     }
 
+    if (
+        ff('credits') &&
+        ff('oracle') &&
+        settings.oracle_beta &&
+        ['album', 'track'].includes(page.type)
+    ) {
+        interact_container.appendChild(html.node`
+            <button class="btn side-action" data-type="credits">
+                ${tl(trans.credits)}
+            </button>
+        `);
+    }
+
     // search similar!
     /*let search_btn = document.createElement('a');
     search_btn.classList.add('btn', 'side-action', 'search-similar-btn');
