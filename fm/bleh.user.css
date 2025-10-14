@@ -13774,9 +13774,8 @@
 
     /*     PLAYBACK 2023-2024 / LISTENING REPORT V3     */
     .report-box-container--overview {
-        margin-top: var(--card-gap);
-        margin-left: calc(((100vw - var(--cards-width)) / 2) * -1);
-        margin-right: calc(((100vw - var(--cards-width)) / 2) * -1);
+        margin-top: -30px;
+        width: 100vw;
 
         .col-sm-12 {
             width: var(--cards-width);

@@ -42494,7 +42494,7 @@
             "data-bleh--theme_type",
             "dark"
           );
-          page.structure.row.appendChild(report_box_container);
+          page.structure.row.after(report_box_container);
         } else {
           let dashboard = page.structure.container.querySelector(".user-dashboard");
           if (dashboard) {

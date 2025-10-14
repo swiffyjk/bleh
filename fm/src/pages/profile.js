@@ -577,7 +577,7 @@ export async function bleh_profiles() {
                     'dark'
                 );
 
-                page.structure.row.appendChild(report_box_container);
+                page.structure.row.after(report_box_container);
             } else {
                 let dashboard =
                     page.structure.container.querySelector('.user-dashboard');
