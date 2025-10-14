@@ -999,7 +999,10 @@ function patch_profile_following() {
     link.href = `${root}user/${page.name}/friends`;
     link.textContent = tl(trans.friends);
 
-    page.structure.content_top.after(friends_nav);
+    page.structure.row.insertBefore(
+        friends_nav,
+        page.structure.row.firstElementChild
+    );
     page.structure.row.classList.add('col-main-is-primary');
 
     following_tab = friends_nav.querySelector(

@@ -20746,7 +20746,7 @@
             box-shadow: unset;
             padding: unset;
             border-radius: unset;
-            gap: var(--button-list-gap) !important;
+            gap: var(--button-list-gap);
         }
 
         &.view-buttons-middle {

@@ -95,7 +95,10 @@ export function bleh_user_library() {
 
         page.structure.content_top.style.display = 'none';
 
-        page.structure.content_top.after(toolbar);
+        page.structure.row.insertBefore(
+            toolbar,
+            page.structure.row.firstElementChild
+        );
     }
 
     if (!ff('glacier_library')) return;
