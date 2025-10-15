@@ -6950,6 +6950,7 @@
         font-size: calc(var(--font-size) - 1px);
         color: hsl(var(--c3));
         height: fit-content;
+        cursor: default;
     }
     .chartlist-duration {
         display: inline-block !important;
@@ -7092,12 +7093,8 @@
 
     /*     LOVED - brought over from bleh     */
     .chartlist-love-button {
-        --bg: transparent !important;
-        --bg-hov: transparent !important;
-        --bg-atv: transparent !important;
-        --shadow: none !important;
         position: relative;
-        --left: calc((32px - var(--icon-size)) / 2);
+        --left: calc((var(--button-height) - var(--icon-size)) / 2);
         --mask: var(--icon-16-heart);
         --col: hsl(var(--l3-c));
         --mask-colour: currentColor;
@@ -7108,7 +7105,7 @@
         clip: unset !important;
         height: unset !important;
         margin: unset !important;
-        width: 32px !important;
+        width: var(--button-height) !important;
         overflow: unset !important;
 
         font-size: var(--font-size) !important;
@@ -9029,6 +9026,7 @@
         visibility: hidden;
     }
 
+    .chartlist-love-button,
     .track-more-button,
     .obsession-candidate-inner .btn-sm {
         --bg: transparent !important;
@@ -9629,8 +9627,6 @@
         ) !important;
         border: 1px solid var(--card-border-base) !important;
         overflow: hidden;
-        animation: menu_in 0.25s var(--trans-function);
-        transform-origin: top;
 
         backdrop-filter: var(--solarium);
         -webkit-backdrop-filter: var(--solarium);
@@ -10644,8 +10640,7 @@
     .auth-dropdown-menu,
     .navlist-hidden-list-wrap .navlist-hidden-list {
         padding: 4px !important;
-        animation: menu_in 0.25s var(--trans-function);
-        transform-origin: top;
+        animation: solarium 0.25s var(--trans-function);
     }
     .dropdown-menu-item-dark,
     .dropdown-menu-clickable-item,
@@ -13384,11 +13379,12 @@
             color: hsl(var(--c3));
         }
 
+        animation: var(--motion, solarium 0.22s var(--trans-function));
+
         &[data-theme="lotus-tooltip"],
         &[data-theme="lotus-tooltip-corrected"],
         &[data-theme="right-tooltip"] {
             animation: dropdown_side var(--trans-short) var(--trans-function);
-            transform-origin: left;
 
             &[data-state="hidden"] {
                 opacity: 0;
@@ -13420,8 +13416,6 @@
             ) !important;
             border: 1px solid var(--card-border-base) !important;
             color: hsl(var(--c2));
-            animation: menu_in 0.25s var(--trans-function);
-            transform-origin: top;
 
             [data-bleh--solarium="false"] & {
                 background: hsl(var(--menu-bg)) !important;
@@ -13473,8 +13467,6 @@
             }
 
             &[data-theme="context-menu"] {
-                transform-origin: top-left;
-
                 .menu-header {
                     color: hsl(var(--c3));
                     font-weight: var(--font-weight-medium);
@@ -13535,6 +13527,7 @@
             }
 
             &[data-state="hidden"] {
+                filter: blur(3px);
                 opacity: 0;
             }
 
@@ -13558,8 +13551,6 @@
             ) !important;
             border: 1px solid var(--card-border-base) !important;
             color: hsl(var(--c2));
-            animation: menu_in 0.25s var(--trans-function);
-            transform-origin: top;
 
             backdrop-filter: var(--solarium);
             -webkit-backdrop-filter: var(--solarium);
@@ -13592,8 +13583,6 @@
             ) !important;
             border: 1px solid var(--card-border-base) !important;
             color: hsl(var(--c2));
-            animation: menu_in 0.25s var(--trans-function);
-            transform-origin: top;
 
             backdrop-filter: var(--solarium);
             -webkit-backdrop-filter: var(--solarium);
@@ -13623,11 +13612,13 @@
             &[data-theme="select-menu"],
             &[data-theme="language-menu"] {
                 &[data-state="hidden"] {
+                    filter: blur(3px);
                     opacity: 0;
                 }
             }
 
             &[data-state="hidden"] {
+                filter: blur(3px);
                 opacity: 0;
             }
 
@@ -13684,6 +13675,7 @@
         }
 
         &[data-state="hidden"] {
+            filter: blur(3px);
             opacity: 0;
         }
 
@@ -13782,6 +13774,17 @@
 
     .user-dashboard-controls-tooltip {
         top: -40px !important;
+    }
+
+    @keyframes solarium {
+        from {
+            filter: blur(3px);
+            transform: scale(0.98);
+        }
+        to {
+            filter: blur(0);
+            transform: scale(1);
+        }
     }
 
     [data-type="theme_glass"],
@@ -27561,15 +27564,6 @@
 
     .style-warning {
         display: none !important;
-    }
-
-    @keyframes menu_in {
-        from {
-            transform: translateY(-2px);
-        }
-        to {
-            transform: translateY(0);
-        }
     }
 
     [data-modal-type="rabbit"] {
