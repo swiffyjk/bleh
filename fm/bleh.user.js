@@ -46327,7 +46327,7 @@
         open(url, "_blank");
         dialog_rm({ id: "external_url" });
       }}>
-                    ${tl2(trans2.visit)}
+                    ${!dangerous ? tl2(trans2.visit) : tl2(trans2.open)}
                 </button>
             </div>
         `

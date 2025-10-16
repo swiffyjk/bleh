@@ -764,7 +764,7 @@ export function external_url_prompt(url, dangerous = false) {
                     open(url, '_blank');
                     dialog_rm({ id: 'external_url' });
                 }}>
-                    ${tl(trans.visit)}
+                    ${!dangerous ? tl(trans.visit) : tl(trans.open)}
                 </button>
             </div>
         `
