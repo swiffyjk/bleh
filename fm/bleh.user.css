@@ -895,7 +895,7 @@
 
         --rain: 0, 0%, 100%;
 
-        --solarium: url(#solarium) var(--card-blur);
+        --solarium: var(--card-blur) url(#solarium);
 
         @supports (-moz-appearance: none) {
             --solarium: var(--card-blur);
@@ -11659,20 +11659,21 @@
         flex-direction: column;
         gap: var(--card-gap);
 
-        animation: dropdown var(--trans-short) var(--trans-function);
+        animation: var(--motion, solarium 0.24s var(--trans-function));
 
-        transition-property: transform, opacity;
-        transition-duration: var(--trans-short);
+        transition-property: transform, filter, opacity;
+        transition-duration: 0.24s;
         transition-timing-function: var(--trans-function);
 
         [data-bleh--reduced_motion="true"] & {
-            animation: fade_popup_reduced var(--trans) var(--trans-function) !important;
-
             transition-duration: var(--trans);
+            filter: none !important;
             transform: unset !important;
         }
 
         &.to-remove {
+            filter: blur(3px);
+            transform: scale(0.98);
             opacity: 0;
         }
 
@@ -21231,13 +21232,6 @@
         &.has-dialog {
             pointer-events: auto;
             background: var(--modal-bg);
-
-            .bleh-modal {
-                animation: var(
-                    --display-under-reduced-motion,
-                    modal 0.35s var(--trans-function)
-                );
-            }
         }
 
         .bleh-modal {
@@ -21248,11 +21242,6 @@
             &:not(:last-child) {
                 display: none;
             }
-
-            animation: var(
-                --display-under-reduced-motion,
-                modal_out 0.35s var(--trans-function)
-            );
 
             &[data-modal-type="setup"] {
                 width: 1000px;
@@ -28796,6 +28785,7 @@
         padding: var(--card-padding);
         margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) 0
             calc(-1 * var(--card-padding));
+        border-top-left-radius: var(--card-radius);
 
         &[data-mobile="true"] {
             background: hsl(var(--k4), 20%);
