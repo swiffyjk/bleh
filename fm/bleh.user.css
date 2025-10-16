@@ -2752,7 +2752,8 @@
                             top: 0;
                             left: 0;
                             right: 0;
-                            height: 505px;
+                            height: 100%;
+                            max-height: 505px;
                             display: block;
                             z-index: -1;
                             backdrop-filter: var(--solarium);
