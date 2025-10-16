@@ -11,6 +11,7 @@
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
 // @connect      musicbrainz.org
+// @connect      github.com
 // ==/UserScript==
 (() => {
   var __create = Object.create;
