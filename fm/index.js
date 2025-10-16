@@ -21,6 +21,7 @@ const banner = `// ==UserScript==
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
 // @connect      musicbrainz.org
+// @connect      raw.githubusercontent.com
 // ==/UserScript==`;
 
 (async () => {

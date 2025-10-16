@@ -5418,6 +5418,14 @@ export const trans = {
     },
     credits: {
         en: 'Credits'
+    },
+    branch: {
+        name: {
+            en: 'Choose branch'
+        },
+        body: {
+            en: 'Default release branch is ‘uwu’, do not change unless you know what you’re doing'
+        }
     }
 };
 

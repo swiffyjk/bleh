@@ -1293,5 +1293,13 @@ export let settings_store = {
         title: trans.inverse_compare.name,
         body: trans.inverse_compare.body,
         new_release: true
+    },
+    branch: {
+        default: 'uwu',
+        type: 'text',
+        max: 20,
+        title: trans.branch.name,
+        body: trans.branch.body,
+        warn_if_empty: true
     }
 };

@@ -46593,26 +46593,21 @@
     }
   }
   function load_cached_style(cached_style) {
-    let style_cache = html.node`
+    document.documentElement.appendChild(html.node`
         <style id="bleh--cached-style">${cached_style}</style>
-    `;
-    document.documentElement.appendChild(style_cache);
-    style_cache.onload = () => {
+    `);
+    requestAnimationFrame(() => {
       log("loaded cache", "style");
       chart_reflow();
       log("checking timeout", "style");
       check_if_style_cache_is_valid();
-    };
-    style_cache.onerror = () => {
-      log("error loading cache", "style", "error");
-      fetch_new_style();
-    };
+    });
   }
   function check_if_style_cache_is_valid() {
-    let cached_style_timeout = new Date(
+    const cached_style_timeout = new Date(
       localStorage.getItem("bleh_cached_style_timeout")
     );
-    let current_time = /* @__PURE__ */ new Date();
+    const current_time = /* @__PURE__ */ new Date();
     if (cached_style_timeout < current_time) {
       log("fetching new, expired timeout", "style");
       fetch_new_style();
@@ -46621,45 +46616,56 @@
     }
   }
   function fetch_new_style(delete_old_style = false, reload_on_finish = false, allow_incompatible = false) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
+    const url = `https://github.com/katelyynn/bleh/raw/refs/heads/${settings.branch}/fm/bleh.css?${Math.random()}`;
     log(`making request ${url}`, "style");
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`style responded ${xhr.status}`, "style");
-      let style = html.node`
-            <style>${this.response}</style>
-        `;
-      document.documentElement.appendChild(style);
-      style.onload = () => {
-        let theme_version2 = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        if (!allow_incompatible && theme_version2 != version.build) {
-          log("denied loading, incompatible version", "style", "info", {
-            theme: theme_version2,
-            script: version.build
-          });
-          document.documentElement.removeChild(style);
+    GM_xmlhttpRequest({
+      method: "GET",
+      url,
+      onload: (res) => {
+        log(`style responded ${res.status}`, "style");
+        if (res.status != 200) {
+          log("error fetching", "style", "error", { res });
           return;
         }
-        if (delete_old_style)
-          document.documentElement.removeChild(
-            document.getElementById("bleh--cached-style")
-          );
-        log("loaded", "style");
-        document.body.classList.add("bleh");
-        chart_reflow();
-        if (reload_on_finish) invoke_reload();
-      };
-      style.onerror = () => {
-        log("error loading", "style", "error");
-      };
-      set_storage("bleh_cached_style", this.response);
-      let api_expire = /* @__PURE__ */ new Date();
-      api_expire.setHours(api_expire.getHours() + 1);
-      set_storage("bleh_cached_style_timeout", api_expire);
-      log(`cached until ${api_expire}`, "style");
-    };
-    xhr.send();
+        const text3 = res.responseText;
+        const style = html.node`
+                <style>${text3}</style>
+            `;
+        document.documentElement.appendChild(style);
+        requestAnimationFrame(() => {
+          const theme_version2 = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
+          if (!allow_incompatible && theme_version2 != version.build) {
+            log(
+              "denied loading, incompatible version",
+              "style",
+              "info",
+              {
+                theme: theme_version2,
+                script: version.build
+              }
+            );
+            document.documentElement.removeChild(style);
+            return;
+          }
+          if (delete_old_style)
+            document.documentElement.removeChild(
+              document.getElementById("bleh--cached-style")
+            );
+          log("loaded", "style");
+          document.body.classList.add("bleh");
+          chart_reflow();
+          if (reload_on_finish) invoke_reload();
+        });
+        const expire = /* @__PURE__ */ new Date();
+        expire.setHours(expire.getHours() + 1);
+        localStorage.setItem("bleh_cached_style", text3);
+        localStorage.setItem("bleh_cached_style_timeout", expire);
+        log(`cached until ${expire}`, "style");
+      },
+      onerror: (e) => {
+        log("error fetching", "style", "error", { e });
+      }
+    });
   }
   function parse_version(v) {
     const parts = v.split(".").map(Number);
@@ -46749,7 +46755,9 @@
     });
   }
   function start_update() {
-    open(`https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js`);
+    open(
+      `https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`
+    );
     dialog({
       id: "bleh_update",
       title: tl2(trans2.update_to_version).replace(
@@ -49807,7 +49815,7 @@
                         ${tl2(trans2.beware_notice)}
                     </div>
                     <div class="setting-group">
-                        ${setting({ id: "dev" })}
+                        ${setting({ id: "dev" })} ${setting({ id: "branch" })}
                         <div class="setting" data-type="action">
                             <div class="heading">
                                 <h5>${tl2(trans2.force_refresh_style.name)}</h5>
@@ -62737,6 +62745,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     credits: {
       en: "Credits"
+    },
+    branch: {
+      name: {
+        en: "Choose branch"
+      },
+      body: {
+        en: "Default release branch is \u2018uwu\u2019, do not change unless you know what you\u2019re doing"
+      }
     }
   };
   function tl2(key, replacements = {}) {
@@ -64031,6 +64047,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       title: trans2.inverse_compare.name,
       body: trans2.inverse_compare.body,
       new_release: true
+    },
+    branch: {
+      default: "uwu",
+      type: "text",
+      max: 20,
+      title: trans2.branch.name,
+      body: trans2.branch.body,
+      warn_if_empty: true
     }
   };
 

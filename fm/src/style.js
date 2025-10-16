@@ -56,32 +56,25 @@ export function append_style() {
 }
 
 function load_cached_style(cached_style) {
-    let style_cache = html.node`
+    document.documentElement.appendChild(html.node`
         <style id="bleh--cached-style">${cached_style}</style>
-    `;
-    document.documentElement.appendChild(style_cache);
+    `);
 
-    style_cache.onload = () => {
+    requestAnimationFrame(() => {
         log('loaded cache', 'style');
-
         chart_reflow();
 
         // now, analyse if we should fetch a new one
         log('checking timeout', 'style');
         check_if_style_cache_is_valid();
-    };
-
-    style_cache.onerror = () => {
-        log('error loading cache', 'style', 'error');
-        fetch_new_style();
-    };
+    });
 }
 
 function check_if_style_cache_is_valid() {
-    let cached_style_timeout = new Date(
+    const cached_style_timeout = new Date(
         localStorage.getItem('bleh_cached_style_timeout')
     );
-    let current_time = new Date();
+    const current_time = new Date();
 
     // check if timeout has expired
     if (cached_style_timeout < current_time) {
@@ -97,64 +90,70 @@ function fetch_new_style(
     reload_on_finish = false,
     allow_incompatible = false
 ) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
+    const url = `https://github.com/katelyynn/bleh/raw/refs/heads/${settings.branch}/fm/bleh.css?${Math.random()}`;
     log(`making request ${url}`, 'style');
-    xhr.open('GET', url, true);
 
-    xhr.onload = function () {
-        log(`style responded ${xhr.status}`, 'style');
+    GM_xmlhttpRequest({
+        method: 'GET',
+        url,
+        onload: (res) => {
+            log(`style responded ${res.status}`, 'style');
 
-        // create style element
-        let style = html.node`
-            <style>${this.response}</style>
-        `;
-        document.documentElement.appendChild(style);
-
-        style.onload = () => {
-            let theme_version = getComputedStyle(document.body)
-                .getPropertyValue('--version-build')
-                .replaceAll("'", '')
-                .replaceAll('"', '');
-
-            if (!allow_incompatible && theme_version != version.build) {
-                log('denied loading, incompatible version', 'style', 'info', {
-                    theme: theme_version,
-                    script: version.build
-                });
-                document.documentElement.removeChild(style);
+            if (res.status != 200) {
+                log('error fetching', 'style', 'error', { res });
                 return;
             }
 
-            // remove the old style, if needed
-            if (delete_old_style)
-                document.documentElement.removeChild(
-                    document.getElementById('bleh--cached-style')
-                );
+            const text = res.responseText;
+            const style = html.node`
+                <style>${text}</style>
+            `;
+            document.documentElement.appendChild(style);
 
-            log('loaded', 'style');
-            document.body.classList.add('bleh');
+            requestAnimationFrame(() => {
+                const theme_version = getComputedStyle(document.body)
+                    .getPropertyValue('--version-build')
+                    .replaceAll("'", '')
+                    .replaceAll('"', '');
 
-            chart_reflow();
+                if (!allow_incompatible && theme_version != version.build) {
+                    log(
+                        'denied loading, incompatible version',
+                        'style',
+                        'info',
+                        {
+                            theme: theme_version,
+                            script: version.build
+                        }
+                    );
+                    document.documentElement.removeChild(style);
+                    return;
+                }
 
-            if (reload_on_finish) invoke_reload();
-        };
+                // remove the old style, if needed
+                if (delete_old_style)
+                    document.documentElement.removeChild(
+                        document.getElementById('bleh--cached-style')
+                    );
 
-        style.onerror = () => {
-            log('error loading', 'style', 'error');
-        };
+                log('loaded', 'style');
+                document.body.classList.add('bleh');
 
-        // save to cache for next page load
-        set_storage('bleh_cached_style', this.response);
+                chart_reflow();
 
-        // set expire date
-        let api_expire = new Date();
-        api_expire.setHours(api_expire.getHours() + 1);
-        set_storage('bleh_cached_style_timeout', api_expire);
-        log(`cached until ${api_expire}`, 'style');
-    };
+                if (reload_on_finish) invoke_reload();
+            });
 
-    xhr.send();
+            const expire = new Date();
+            expire.setHours(expire.getHours() + 1);
+            localStorage.setItem('bleh_cached_style', text);
+            localStorage.setItem('bleh_cached_style_timeout', expire);
+            log(`cached until ${expire}`, 'style');
+        },
+        onerror: (e) => {
+            log('error fetching', 'style', 'error', { e });
+        }
+    });
 }
 
 function parse_version(v) {
@@ -279,7 +278,9 @@ function ignore_update() {
 }
 
 export function start_update() {
-    open(`https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js`);
+    open(
+        `https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`
+    );
 
     dialog({
         id: 'bleh_update',

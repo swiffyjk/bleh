@@ -1520,7 +1520,7 @@ export async function render_setting_page(page_id) {
                         ${tl(trans.beware_notice)}
                     </div>
                     <div class="setting-group">
-                        ${setting({ id: 'dev' })}
+                        ${setting({ id: 'dev' })} ${setting({ id: 'branch' })}
                         <div class="setting" data-type="action">
                             <div class="heading">
                                 <h5>${tl(trans.force_refresh_style.name)}</h5>
