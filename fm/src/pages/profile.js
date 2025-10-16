@@ -14,7 +14,8 @@ import {
     control_gif_pause,
     lazy,
     romanise,
-    sanitise
+    sanitise,
+    set_storage
 } from '../build/tools';
 import { lang, tl, trans } from '../build/trans';
 import { prep_chart_colours } from '../chart';
@@ -51,6 +52,7 @@ import tippy from 'tippy.js';
 import { Chart } from '../main.js';
 import { expand_avatar } from '../avatar.js';
 import { status } from '../components/status.js';
+import { hoshino } from '../components/hoshino.js';
 
 export async function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -495,9 +497,14 @@ export async function bleh_profiles() {
             interactiveBorder: 10,
             trigger: 'click',
             appendTo: document.body,
+            hideOnClick: 'toggle',
 
-            onShow(instance) {
-                refresh_all(instance.popper);
+            onClickOutside(instance) {
+                if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                    return;
+                }
+
+                instance.hide();
             }
         });
 
@@ -575,7 +582,7 @@ export async function bleh_profiles() {
                     'dark'
                 );
 
-                page.structure.row.appendChild(report_box_container);
+                page.structure.row.after(report_box_container);
             } else {
                 let dashboard =
                     page.structure.container.querySelector('.user-dashboard');
@@ -681,17 +688,6 @@ export async function bleh_profiles() {
                 '.obsession-history-item'
             );
             items.forEach((item) => {
-                let bg = item
-                    .querySelector('.obsession-history-item-background')
-                    .style.getPropertyValue('background-image')
-                    .trim();
-                let cover_substr = bg.indexOf('url');
-                let cover = bg
-                    .substring(cover_substr)
-                    .replace('url("', '')
-                    .replace('")', '')
-                    .trim();
-
                 let link = item.querySelector(
                     '.obsession-history-item-heading-link'
                 );
@@ -708,37 +704,53 @@ export async function bleh_profiles() {
                     .querySelector('.obsession-history-item-date')
                     .textContent.trim();
 
+                let bg = item
+                    .querySelector('.obsession-history-item-background')
+                    .style.getPropertyValue('background-image')
+                    .trim();
+                let cover_substr = bg.indexOf('url');
+                const cover = html.node`
+                    <img
+                    src=${bg
+                        .substring(cover_substr)
+                        .replace('url("', '')
+                        .replace('")', '')
+                        .trim()}
+                    alt=${title} loading="lazy">
+                `;
+
+                hoshino(cover, title, artist);
+
                 let obsession_is_first =
                     item.querySelector('.obsession-first') != null;
 
-                let grid_item = document.createElement('li');
-                grid_item.classList.add('grid-items-item', 'obsessions-item');
-                grid_item.innerHTML = `
-                    <div class="grid-items-cover-image">
-                        <div class="grid-items-cover-image-image ${cover.endsWith('4128a6eb29f94943c9d206c08e625904.jpg') ? 'grid-items-cover-default' : ''}">
-                            <img src="${cover}" alt="${title}" loading="lazy">
+                const grid_item = html.node`
+                    <li class="grid-items-item obsessions-item ${obsession_is_first ? 'first' : ''}">
+                        <div class="grid-items-cover-image">
+                            <div class="grid-items-cover-image-image ${cover.src.endsWith('4128a6eb29f94943c9d206c08e625904.jpg') ? 'grid-items-cover-default' : ''}">
+                                ${cover}
+                            </div>
+                            <div class="grid-items-item-details">
+                                <p class="grid-items-item-main-text">
+                                    <a class="link-block-target" href="${link}" title="${title}">
+                                        ${title}
+                                    </a>
+                                </p>
+                                <p class="grid-items-item-aux-text obsessions-item-aux">
+                                    <a class="grid-items-item-aux-block" href="${artist_link}">
+                                        ${artist}
+                                    </a>
+                                    <a class="obsessions-item-date" href="${link}">
+                                        ${date}
+                                    </a>
+                                </p>
+                            </div>
+                            <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
                         </div>
-                        <div class="grid-items-item-details">
-                            <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${link}" title="${title}">
-                                    ${title}
-                                </a>
-                            </p>
-                            <p class="grid-items-item-aux-text obsessions-item-aux">
-                                <a class="grid-items-item-aux-block" href="${artist_link}">
-                                    ${artist}
-                                </a>
-                                <a class="obsessions-item-date" href="${link}">
-                                    ${date}
-                                </a>
-                            </p>
-                        </div>
-                        <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
-                    </div>
+                    </li>
                 `;
 
                 if (obsession_is_first) {
-                    grid_item.classList.add('first');
                     tippy(grid_item, {
                         content: tl(trans.obsession_first)
                     });
@@ -919,10 +931,7 @@ function create_profile_note_panel(username, has_note) {
                     delete notes[page.name];
 
                     note.value = '';
-                    localStorage.setItem(
-                        'bleh_profile_notes',
-                        JSON.stringify(notes)
-                    );
+                    set_storage('bleh_profile_notes', JSON.stringify(notes));
                 }}>${tl(trans.clear)}</button>
                 <button class="btn primary icon" data-type="save" onclick=${() => {
                     let notes =
@@ -937,10 +946,7 @@ function create_profile_note_panel(username, has_note) {
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#039;');
 
-                    localStorage.setItem(
-                        'bleh_profile_notes',
-                        JSON.stringify(notes)
-                    );
+                    set_storage('bleh_profile_notes', JSON.stringify(notes));
                 }}>${tl(trans.save)}</button>
             </div>
         </section>
@@ -993,7 +999,10 @@ function patch_profile_following() {
     link.href = `${root}user/${page.name}/friends`;
     link.textContent = tl(trans.friends);
 
-    page.structure.content_top.after(friends_nav);
+    page.structure.row.insertBefore(
+        friends_nav,
+        page.structure.row.firstElementChild
+    );
     page.structure.row.classList.add('col-main-is-primary');
 
     following_tab = friends_nav.querySelector(
@@ -1121,6 +1130,13 @@ function bleh_featured_profile_track(object) {
 
     let artist_elem_full = artist_elem;
 
+    const img = art.querySelector('.cover-art');
+    hoshino(
+        img.querySelector(':scope > img'),
+        name_elem.textContent.trim(),
+        artist_elem.textContent.trim()
+    );
+
     if (settings.format_guest_features) {
         let song_title = name_elem.textContent;
 
@@ -1187,8 +1203,6 @@ function bleh_featured_profile_track(object) {
         button.setAttribute('data-type', 'delete');
         button.textContent = tl(trans.remove);
     }
-
-    let img = art.querySelector('.cover-art');
 
     let panel = html.node`
         <section class="featured-item-panel">
@@ -1420,7 +1434,16 @@ function profile_recents() {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
-        appendTo: document.body
+        appendTo: document.body,
+        hideOnClick: 'toggle',
+
+        onClickOutside(instance) {
+            if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
+        }
     });
 
     view_buttons.appendChild(settings_btn);
@@ -1565,7 +1588,16 @@ function profile_artists() {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
-        appendTo: document.body
+        appendTo: document.body,
+        hideOnClick: 'toggle',
+
+        onClickOutside(instance) {
+            if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
+        }
     });
 }
 
@@ -1708,7 +1740,16 @@ function profile_albums() {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
-        appendTo: document.body
+        appendTo: document.body,
+        hideOnClick: 'toggle',
+
+        onClickOutside(instance) {
+            if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
+        }
     });
 }
 
@@ -1835,7 +1876,16 @@ function profile_tracks() {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
-        appendTo: document.body
+        appendTo: document.body,
+        hideOnClick: 'toggle',
+
+        onClickOutside(instance) {
+            if (instance.popper.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
+        }
     });
 }
 
@@ -2034,7 +2084,7 @@ export function save_profile_cache(
         name,
         cache: profile_cache[name]
     });
-    localStorage.setItem('bleh_profile_cache', JSON.stringify(profile_cache));
+    set_storage('bleh_profile_cache', JSON.stringify(profile_cache));
 }
 
 export async function checkup_friend_cache(list = settings.friends) {

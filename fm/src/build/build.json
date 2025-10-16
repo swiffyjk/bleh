@@ -1,7 +1,7 @@
 {
     "brand": "bleh",
-    "build": "2025.0930",
-    "sku": "alice",
+    "build": "2025.1016",
+    "sku": "hoshino",
     "bio": "bleh!!! ^-^",
     "author": "katelyn",
     "url": "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
@@ -319,6 +319,26 @@
             "default": false,
             "name": "Introduce new inverse comparison option",
             "date": "2025-09-28"
+        },
+        "menus": {
+            "default": false,
+            "name": "Replace browser menus with in-house",
+            "date": "2025-10-03"
+        },
+        "hoshino": {
+            "default": true,
+            "name": "Leverage oracle cache to re-assign artwork to tracks",
+            "date": "2025-10-08"
+        },
+        "ruby": {
+            "default": true,
+            "name": "Replace album/track artwork and metadata on dedicated pages",
+            "date": "2025-10-08"
+        },
+        "credits": {
+            "default": false,
+            "name": "Present album and track credits via oracle",
+            "date": "2025-10-14"
         }
     }
 }

@@ -4,9 +4,9 @@
 // Licensed under GPLv3
 //
 
-import esbuild from "esbuild"
-import fs from "fs"
-import build from "./src/build/build.json" with {type: "json"};
+import esbuild from 'esbuild';
+import fs from 'fs';
+import build from './src/build/build.json' with { type: 'json' };
 
 const banner = `// ==UserScript==
 // @name         ${build.brand}
@@ -20,8 +20,8 @@ const banner = `// ==UserScript==
 // @downloadURL  ${build.url}
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
+// @connect      musicbrainz.org
 // ==/UserScript==`;
-
 
 (async () => {
     const userscript = {
@@ -37,7 +37,7 @@ const banner = `// ==UserScript==
         loader: {
             '.css': 'text'
         }
-    }
+    };
 
     const extension = {
         entryPoints: ['./src/main.js'],
@@ -52,12 +52,12 @@ const banner = `// ==UserScript==
         loader: {
             '.css': 'text'
         }
-    }
+    };
 
     function normalise_version(version) {
         return version
             .split('.')
-            .map(part => String(parseInt(part, 10)))
+            .map((part) => String(parseInt(part, 10)))
             .join('.');
     }
 
@@ -80,7 +80,7 @@ const banner = `// ==UserScript==
             }
         ],
         host_permissions: ['https://katelyynn.github.io/*']
-    }
+    };
 
     if (process.argv[2] == 'dev') {
         const context = await esbuild.context(userscript);

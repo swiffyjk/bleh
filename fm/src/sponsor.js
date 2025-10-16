@@ -4,18 +4,18 @@
 // Licensed under GPLv3
 //
 
-import {html} from "lighterhtml";
-import {log} from "./build/log";
-import {auth, page, root} from "./build/page";
-import {sponsor_list} from "./build/sponsor";
-import {tl, trans} from "./build/trans";
-import {dialog} from "./components/dialog";
-import {ff} from "./sku";
+import { html } from 'lighterhtml';
+import { log } from './build/log';
+import { auth, page, root } from './build/page';
+import { sponsor_list } from './build/sponsor';
+import { tl, trans } from './build/trans';
+import { dialog } from './components/dialog';
+import { ff } from './sku';
 import { status } from './components/status';
+import { set_storage } from './build/tools';
 
 export function sponsors(force = false) {
-    if (!ff('sponsor'))
-        return;
+    if (!ff('sponsor')) return;
 
     let sponsor_data = localStorage.getItem('kat_sponsors');
     let sponsor_expire = new Date(localStorage.getItem('kat_sponsors_expire'));
@@ -32,7 +32,9 @@ export function sponsors(force = false) {
 
         if (sponsor_list) {
             auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-            auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
+            auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(
+                auth.name
+            );
         }
 
         // is it valid?
@@ -46,65 +48,74 @@ export function sponsors(force = false) {
 
 function sponsor_request(notify = false) {
     let button = document.body.querySelector('[onclick="_sponsor_check()"]');
-    if (button)
-        button.setAttribute('disabled', '');
+    if (button) button.setAttribute('disabled', '');
 
     let xhr = new XMLHttpRequest();
     let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
-    xhr.open('GET',url,true);
+    xhr.open('GET', url, true);
 
-    xhr.onload = function() {
+    xhr.onload = function () {
         log(`list responded with ${xhr.status}`, 'sponsor');
 
         // set expire date
         let api_expire = new Date();
 
         if (xhr.status != 200) {
-            log('request has been cancelled, will request again in 1h', 'sponsor');
+            log(
+                'request has been cancelled, will request again in 1h',
+                'sponsor'
+            );
             api_expire.setHours(api_expire.getHours() + 1);
         }
 
         if (xhr.status == 200) {
-            if (sponsor_list.latest != 0.0 || (sponsor_list && parseFloat(JSON.parse(this.response).latest) >= parseFloat(sponsor_list.latest))) {
+            if (
+                sponsor_list.latest != 0.0 ||
+                (sponsor_list &&
+                    parseFloat(JSON.parse(this.response).latest) >=
+                        parseFloat(sponsor_list.latest))
+            ) {
                 for (const member in sponsor_list) delete sponsor_list[member];
                 Object.assign(sponsor_list, JSON.parse(this.response));
 
                 if (sponsor_list) {
                     auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-                    auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
+                    auth.sponsor_full =
+                        !sponsor_list.sponsors_one_time.includes(auth.name);
                 }
 
                 if (notify)
                     status({
-                        title: tl(trans.downloaded_value).replace('{v}', tl(trans.sponsor_details))
+                        title: tl(trans.downloaded_value).replace(
+                            '{v}',
+                            tl(trans.sponsor_details)
+                        )
                     });
 
                 // save to cache for next page load
-                localStorage.setItem('kat_sponsors', this.response);
+                set_storage('kat_sponsors', this.response);
             }
 
             api_expire.setHours(api_expire.getHours() + 4);
             log(`list cached until ${api_expire}`, 'sponsor');
         }
 
-        localStorage.setItem('kat_sponsors_expire', api_expire);
+        set_storage('kat_sponsors_expire', api_expire);
 
-        if (button != null)
-            button.removeAttribute('disabled');
-    }
+        if (button != null) button.removeAttribute('disabled');
+    };
 
     xhr.send();
 }
 
-unsafeWindow._sponsor_check = function() {
+unsafeWindow._sponsor_check = function () {
     sponsors(true);
-}
+};
 
-
-unsafeWindow._sponsor = function(replace=false) {
+unsafeWindow._sponsor = function (replace = false) {
     sponsor(replace);
-}
-export function sponsor(replace=false) {
+};
+export function sponsor(replace = false) {
     dialog({
         id: 'sponsor',
         title: tl(trans.support_future_development),
@@ -115,10 +126,14 @@ export function sponsor(replace=false) {
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${
-                    html.node([
-                        tl(trans.why_sponsor).replace('katelyn', (sponsor_list && sponsor_list.special) ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : 'katelyn')
-                    ])}</p>
+                <p>${html.node([
+                    tl(trans.why_sponsor).replace(
+                        'katelyn',
+                        sponsor_list && sponsor_list.special ?
+                            `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>`
+                        :   'katelyn'
+                    )
+                ])}</p>
             </div>
             <div class="modal-footer">
                 <div class="fill"></div>
@@ -133,11 +148,14 @@ export function sponsor(replace=false) {
     });
 }
 
-unsafeWindow._sponsor_manage = function() {
+unsafeWindow._sponsor_manage = function () {
     sponsor_manage();
-}
+};
 export function sponsor_manage() {
-    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
+    if (
+        sponsor_list.sponsors_one_time &&
+        sponsor_list.sponsors_one_time.includes(auth.name)
+    ) {
         dialog({
             id: 'sponsor_manage',
             title: tl(trans.sponsor),
@@ -184,11 +202,12 @@ export function bleh_sponsor_page() {
     document.body.style.removeProperty('--sat-album');
     document.body.style.removeProperty('--lit-album');
 
-    let adaptive_skin_container = document.querySelector('.adaptive-skin-container:not([data-bleh])');
+    let adaptive_skin_container = document.querySelector(
+        '.adaptive-skin-container:not([data-bleh])'
+    );
 
-    if (adaptive_skin_container == null)
-        return;
-    adaptive_skin_container.setAttribute('data-bleh','true');
+    if (adaptive_skin_container == null) return;
+    adaptive_skin_container.setAttribute('data-bleh', 'true');
 
     // initial
     adaptive_skin_container.innerHTML = '';

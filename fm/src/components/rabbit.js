@@ -414,9 +414,9 @@ export function register_rabbit() {
             render(
                 rabbit_hole,
                 html`
-                    ${matches.length > 0
-                        ? matches.map((item, index) => () => {
-                              let button = html.node`
+                    ${matches.length > 0 ?
+                        matches.map((item, index) => () => {
+                            let button = html.node`
                         <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action} disabled=${item.disabled}>
                             <div class="info">
                                 <div class="text">${item.text}</div>
@@ -425,16 +425,16 @@ export function register_rabbit() {
                         </button>
                     `;
 
-                              if (!item.disabled) {
-                                  button.addEventListener('mouseover', () => {
-                                      selected = index;
-                                      rabbit_select(false, true);
-                                  });
-                              }
+                            if (!item.disabled) {
+                                button.addEventListener('mouseover', () => {
+                                    selected = index;
+                                    rabbit_select(false, true);
+                                });
+                            }
 
-                              return button;
-                          })
-                        : html.node`
+                            return button;
+                        })
+                    :   html.node`
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">${tl(trans.nothing_matches_your_search)}</div>
                     </div>
@@ -495,11 +495,11 @@ export function register_rabbit() {
             tip,
             html`
                 <div class="left">
-                    ${depth == 0
-                        ? html.node`
+                    ${depth == 0 ?
+                        html.node`
             <kbd>Esc</kbd> ${tl(trans.close)}
             `
-                        : html.node`
+                    :   html.node`
             <kbd>Esc</kbd> ${tl(trans.back)}
             `}
                 </div>
@@ -517,8 +517,11 @@ export function register_rabbit() {
             selected_search = 'primary';
         else selected_search = 'secondary';
 
+        let label = id;
+        if (label == 'user') label = 'profile';
+
         input_box.querySelector('input').placeholder = tl(trans.rabbit_search, {
-            v: tl(trans[id])
+            v: tl(trans[label])
         });
 
         depth = 3;

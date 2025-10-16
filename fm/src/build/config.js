@@ -659,6 +659,17 @@ export let settings_store = {
         body: trans.solarium.body,
         new_release: true
     },
+    noise: {
+        css: 'noise-opacity',
+        default: 0.5,
+        type: 'range',
+        min: 0,
+        max: 1,
+        step: 0.05,
+        title: trans.noise.name,
+        body: trans.noise.body,
+        new_release: true
+    },
     gloss: {
         css: 'gloss',
         default: 0,
@@ -700,7 +711,8 @@ export let settings_store = {
     format_guest_features: {
         default: true,
         title: trans.format_guest_features.name,
-        body: trans.format_guest_features.body
+        body: trans.format_guest_features.body,
+        require_reload: 'partial'
     },
     show_guest_features: {
         default: false,
@@ -810,7 +822,20 @@ export let settings_store = {
     },
     seasonal_particles: {
         default: 'all',
-        type: 'options'
+        type: 'radio',
+        title: trans.seasonal_particles.name,
+        body: trans.seasonal_particles.body,
+        values: {
+            all: {
+                name: trans.all_particles
+            },
+            less: {
+                name: trans.less_particles
+            },
+            none: {
+                name: trans.no_particles
+            }
+        }
     },
     seasonal_particles_fps: {
         default: false,
@@ -819,7 +844,10 @@ export let settings_store = {
         body: trans.seasonal_particles_fps.body
     },
     seasonal_overlays: {
-        default: true
+        default: true,
+        type: 'checkbox',
+        title: trans.seasonal_overlays.name,
+        body: trans.seasonal_overlays.body
     },
     profile_header_own: {
         default: true,
@@ -899,7 +927,17 @@ export let settings_store = {
     },
     default_avatar_action: {
         default: 'expand',
-        type: 'radio'
+        type: 'radio',
+        title: trans.default_avatar_action.name,
+        body: trans.default_avatar_action.body,
+        values: {
+            expand: {
+                name: trans.expand
+            },
+            gallery: {
+                name: trans.photos
+            }
+        }
     },
     collage_title: {
         default: true,
@@ -985,6 +1023,12 @@ export let settings_store = {
         type: 'checkbox',
         icon: 'icon-16-download',
         horizontal: true
+    },
+    simulate_scroll: {
+        default: true,
+        title: trans.simulate_scroll.name,
+        body: trans.simulate_scroll.body,
+        require_reload: 'partial'
     },
     rabbit: {
         default: true,
@@ -1215,13 +1259,15 @@ export let settings_store = {
         default: false,
         type: 'checkbox',
         title: trans.romanise_jp,
-        new_release: true
+        new_release: true,
+        incompatible: { format_guest_features: false, corrections: false }
     },
     romanise_ko: {
         default: false,
         type: 'checkbox',
         title: trans.romanise_ko,
-        new_release: true
+        new_release: true,
+        incompatible: { format_guest_features: false, corrections: false }
     },
     music_links: {
         default: [

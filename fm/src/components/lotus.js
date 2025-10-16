@@ -13,8 +13,14 @@ import {
     includes
 } from '../build/music';
 import { page, root } from '../build/page';
-import { return_artist_from_generic, romanise, sanitise } from '../build/tools';
-import { tl, trans, trans_legacy } from '../build/trans';
+import {
+    desanitise,
+    return_artist_from_generic,
+    romanise,
+    sanitise,
+    set_storage
+} from '../build/tools';
+import { tl, trans } from '../build/trans';
 import { prepare_corrections_page } from '../pages/bleh_config';
 import { dialog, dialog_rm } from './dialog';
 import { html, render } from 'lighterhtml';
@@ -145,12 +151,12 @@ function lotus_request(type = 'artist', send_notify = false) {
                 });
 
             // save to cache for next page load
-            localStorage.setItem(`lotus_${type}`, this.response);
+            set_storage(`lotus_${type}`, this.response);
             api_expire.setHours(api_expire.getHours() + 4);
             log(`${type} list cached until ${api_expire}`, 'lotus');
         }
 
-        localStorage.setItem(`lotus_${type}_expire`, api_expire);
+        set_storage(`lotus_${type}_expire`, api_expire);
 
         if (button != null) button.removeAttribute('disabled');
     };
@@ -165,11 +171,11 @@ unsafeWindow._lotus_check = function () {
 unsafeWindow._open_correction_modal = function () {
     dialog({
         id: 'corrections',
-        title: trans_legacy.en.settings.corrections.name,
+        title: tl(trans.music_corrections),
         body: html.node`
-            <h4>${trans_legacy.en.settings.corrections.listing.artists}</h4>
+            <h4>${tl(trans.artists)}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
-            <h4>${trans_legacy.en.settings.corrections.listing.albums_tracks}</h4>
+            <h4>${tl(trans.albums_and_tracks)}</h4>
             <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
         `,
         has_close: true,
@@ -215,7 +221,7 @@ export function correct_generic_combo(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
     if (albums.length == 0) return;
 
-    if (!settings.corrections) return;
+    if (!settings.format_guest_features && !settings.corrections) return;
 
     albums.forEach((album) => {
         if (!album.hasAttribute('data-kate-processed')) {
@@ -232,18 +238,26 @@ export function correct_generic_combo(parent) {
 
             if (!artist_name) return;
 
-            let corrected_album_name = romanise(
-                correct_item_by_artist(
+            if (settings.format_guest_features) {
+                const formatted = name_includes(
                     album_name.textContent,
                     artist_name.textContent
-                )
-            );
-            let corrected_artist_name = romanise(
+                );
+
+                album_name.classList.add('smart-title');
+                render(album_name, smart_title(formatted[0], formatted[1]));
+            } else if (settings.corrections) {
+                album_name.textContent = romanise(
+                    correct_item_by_artist(
+                        album_name.textContent,
+                        artist_name.textContent
+                    )
+                );
+            }
+
+            artist_name.textContent = romanise(
                 correct_artist(artist_name.textContent)
             );
-
-            album_name.textContent = corrected_album_name;
-            artist_name.textContent = corrected_artist_name;
         }
     });
 }
@@ -256,7 +270,7 @@ export function correct_generic_combo_no_artist(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
     if (albums.length == 0) return;
 
-    if (!settings.corrections) return;
+    if (!settings.format_guest_features && !settings.corrections) return;
 
     albums.forEach((album) => {
         if (!album.hasAttribute('data-kate-processed')) {
@@ -271,9 +285,19 @@ export function correct_generic_combo_no_artist(parent) {
                 album_name.getAttribute('href')
             );
 
-            album_name.textContent = romanise(
-                correct_item_by_artist(album_name.textContent, artist_name)
-            );
+            if (settings.format_guest_features) {
+                const formatted = name_includes(
+                    album_name.textContent,
+                    artist_name
+                );
+
+                album_name.classList.add('smart-title');
+                render(album_name, smart_title(formatted[0], formatted[1]));
+            } else if (settings.corrections) {
+                album_name.textContent = romanise(
+                    correct_item_by_artist(album_name.textContent, artist_name)
+                );
+            }
         }
     });
 }
@@ -340,12 +364,16 @@ export function correct_artist(artist, broadcast = false) {
 }
 
 // feat.
-export function name_includes(original_title, original_artist) {
+export function name_includes(
+    original_title,
+    original_artist,
+    inherit_guests = ''
+) {
     // track if we applied an album/track correction
     let original_title_corrected = false;
     // start with the raw title, then apply any album_track_corrections
     let formatted_title = original_title;
-    const artist_key = original_artist.toLowerCase();
+    const artist_key = original_artist?.toLowerCase();
     if (
         album_track_corrections.hasOwnProperty(artist_key) &&
         settings.corrections
@@ -388,8 +416,8 @@ export function name_includes(original_title, original_artist) {
         original_artist = correct_artist(artist_corrections[original_artist]);
     }
 
-    // no tags found → return original title and flags
-    if (matches.length === 0) {
+    // no tags found
+    if (matches.length == 0) {
         const result = [
             formatted_title,
             [],
@@ -413,15 +441,12 @@ export function name_includes(original_title, original_artist) {
     const extras = matches.map((match, i) => {
         const start = match.idx;
         const end =
-            i + 1 < matches.length
-                ? matches[i + 1].idx
-                : formatted_title.length;
+            i + 1 < matches.length ?
+                matches[i + 1].idx
+            :   formatted_title.length;
         const tag_text = formatted_title
             .slice(start, end)
-            // strip only leading brackets () [] {}, hyphens, colons, and whitespace
-            .replace(/^[\(\[\{\-\:\s]+/, '')
-            // strip any trailing brackets () [] {}, hyphens, colons, or whitespace
-            .replace(/[\)\]\}\-\:\s]+$/, '')
+            .replace(/^[\(\[\{\)\]\}\-\:\s]+|[\(\[\{\)\]\}\-\:\s]+$/g, '')
             .trim();
         return {
             group: match.group,
@@ -430,10 +455,14 @@ export function name_includes(original_title, original_artist) {
     });
 
     // collect all guest artists
-    // artists with commas in their title can mistakenly be separated
-    // into multiple artists, so we fix them manually
-    // see Tyler, The Creator
     let song_guests = [];
+
+    if (inherit_guests) {
+        song_guests = inherit_guests
+            .split(';')
+            .map((artist) => desanitise(artist, ' '));
+    }
+
     extras.forEach((extra) => {
         if (extra.group != 'guests') return;
         let normalised = extra.text
@@ -448,6 +477,9 @@ export function name_includes(original_title, original_artist) {
             .replace(/^[\.\-\s;]+/, '')
             .trim();
 
+        // artists with commas in their title can mistakenly be separated
+        // into multiple artists, so we fix them manually
+        // see Tyler, The Creator
         for (const [key, value] of Object.entries(combined_artists)) {
             if (key == 'version') continue;
 
@@ -477,6 +509,32 @@ export function name_includes(original_title, original_artist) {
 
     log('finalised', 'lotus', 'log', { result });
     return result;
+}
+
+export function smart_title(song_title, song_tags) {
+    return html`
+        <div class="title">${romanise(song_title.trim())}</div>
+        ${song_tags.map(
+            (tag) => html.node`
+                <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${romanise(tag.text)}</div>
+            `
+        )}
+    `;
+}
+
+export function smart_artists(song_artist, song_guests) {
+    return html`
+        <a href="${root}music/${redirect()}${sanitise(song_artist)}"
+            >${romanise(song_artist)}</a
+        >
+        ${song_guests.map(
+            (guest) => html.node`
+                ,<a href="${root}music/${redirect()}${sanitise(guest)}"
+                    >${romanise(guest)}</a
+                >
+            `
+        )}
+    `;
 }
 
 export function artist_title() {
@@ -600,17 +658,7 @@ export function patch_header_title() {
                 page.corrected = formatted_title[4];
 
                 // combine
-                render(
-                    track_title,
-                    html.node`
-                <div class="title">${romanise(song_title.trim())}</div>
-                ${song_tags.map(
-                    (tag) => html.node`
-                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${romanise(tag.text)}</div>
-                `
-                )}
-            `
-                );
+                render(track_title, smart_title(song_title, song_tags));
 
                 // (spotify) / (explicit) / (clean) in title
                 if (song_tags.some((tag) => tag.group == 'form'))

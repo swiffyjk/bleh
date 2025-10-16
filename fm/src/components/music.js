@@ -5,23 +5,23 @@
 //
 
 import { html, render } from 'lighterhtml';
-import { patch_avatar } from '../avatar';
+import { patch_avatar, style_name_from_badge } from '../avatar';
 import { settings } from '../build/config';
 import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
-import {
-    clean_number,
-    return_artist_from_track,
-    romanise,
-    sanitise
-} from '../build/tools';
+import { clean_number, romanise, sanitise } from '../build/tools';
 import { lang, tl, trans } from '../build/trans';
 import { prep_chart_colours } from '../chart';
 import { refresh_all } from '../config';
 import { create_divider } from '../pages/gallery';
 import { ff } from '../sku';
 import { parse_scrobbles_as_rank } from './colourful_counts';
-import { correct_item_by_artist, create_correction } from './lotus';
+import {
+    correct_item_by_artist,
+    create_correction,
+    name_includes,
+    smart_title
+} from './lotus';
 import { register_menu } from './menu';
 import { other_listener } from './profile_shortcut';
 import { submit_scrobble } from './scrobble.js';
@@ -32,7 +32,6 @@ import {
     load_profile_cache_externally,
     open_starred_friend_window
 } from '../pages/profile.js';
-import { oracle_debug, oracle_process } from './oracle.js';
 
 unsafeWindow._other_listener = function (id) {
     other_listener(id);
@@ -384,24 +383,6 @@ export async function show_your_scrobbles() {
     // append
     col_main.insertBefore(listen_container, col_main.firstElementChild);
 
-    if (ff('oracle') && settings.oracle_beta && page.type != 'artist') {
-        col_main.insertBefore(
-            html.node`
-            <div class="oracle">
-                <span class="bleh-icon" />
-                <p>${{ html: tl(trans.oracle_notice).replace('oracle', '<i>oracle</i>') }}</p>
-                <button class="see-more left-icon" data-type="debug" onclick=${() => oracle_debug()}>
-                    ${tl(trans.debug)}
-                </button>
-                <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
-                    ${tl(trans.send_feedback)}
-                </a>
-            </div>
-        `,
-            listen_container
-        );
-    }
-
     if (!katsune)
         col_main.insertBefore(top_container, col_main.firstElementChild);
     else
@@ -551,6 +532,19 @@ export async function show_your_scrobbles() {
         interact_container.appendChild(scrobble_btn);
     }
 
+    if (
+        ff('credits') &&
+        ff('oracle') &&
+        settings.oracle_beta &&
+        ['album', 'track'].includes(page.type)
+    ) {
+        interact_container.appendChild(html.node`
+            <button class="btn side-action" data-type="credits">
+                ${tl(trans.credits)}
+            </button>
+        `);
+    }
+
     // search similar!
     /*let search_btn = document.createElement('a');
     search_btn.classList.add('btn', 'side-action', 'search-similar-btn');
@@ -596,6 +590,8 @@ export async function show_your_scrobbles() {
 
     const metadata = col_main.querySelector('.metadata-column');
     if (metadata) {
+        metadata.classList.remove('hidden-xs');
+
         let groups = [];
 
         let headers = metadata.querySelectorAll(
@@ -670,11 +666,13 @@ export async function show_your_scrobbles() {
 
     let link_container;
     const link_group = html.node`
-        <div class="metadata-group">
-            <div class="sub-text music-small-header">
-                ${tl(trans.find_on)}
+        <div class="metadata-row">
+            <div class="metadata-group">
+                <div class="sub-text music-small-header">
+                    ${tl(trans.find_on)}
+                </div>
+                <div class="music-links" ref=${(el) => (link_container = el)} />
             </div>
-            <div class="music-links" ref=${(el) => (link_container = el)} />
         </div>
     `;
 
@@ -726,6 +724,7 @@ export async function show_your_scrobbles() {
                     interactive: true,
                     interactiveBorder: 10,
                     offset: [0, 0],
+                    appendTo: document.body,
 
                     onShow(instance) {
                         instance.popper.addEventListener('click', (event) => {
@@ -1099,12 +1098,14 @@ export async function show_your_scrobbles() {
 
     const tags = col_main.querySelector('.catalogue-tags');
     if (tags) {
-        let header_tags = document.createElement('div');
-        header_tags.classList.add('sub-text', 'music-small-header');
-        header_tags.textContent = tl(trans.tags);
-        col_main.appendChild(header_tags);
-
-        col_main.appendChild(tags);
+        link_group.appendChild(html.node`
+            <div class="metadata-group">
+                <div class="sub-text music-small-header">
+                    ${tl(trans.tags)}
+                </div>
+                ${tags}
+            </div>
+        `);
     }
 
     // no album info
@@ -1141,8 +1142,6 @@ export async function show_your_scrobbles() {
             }
         </section>
     `);
-
-    if (ff('oracle') && settings.oracle_beta) oracle_process();
 }
 
 function create_listen_item(
@@ -1671,6 +1670,7 @@ export function convert_top_listener(listener, index, key = 'top-listeners') {
 
     let follow = listener.querySelector('.class');
 
+    let name_link;
     let user_list_avatar;
     let about_me;
     const new_listener = html.node`
@@ -1680,7 +1680,7 @@ export function convert_top_listener(listener, index, key = 'top-listeners') {
                     ${position}
                 </span>
                 <h4 class="user-list-name">
-                    <a class="user-list-link link-block-target" href=${name_wrap.getAttribute('href')}>
+                    <a class="user-list-link link-block-target" href=${name_wrap.getAttribute('href')} ref=${(el) => (name_link = el)}>
                         ${name}
                     </a>
                 </h4>
@@ -1703,14 +1703,29 @@ export function convert_top_listener(listener, index, key = 'top-listeners') {
         </li>
     `;
 
-    let badge = patch_avatar(user_list_avatar, name, 'listener');
+    const badge = patch_avatar(user_list_avatar, name, 'listener');
+    style_name_from_badge(name_link, badge);
 
     if (track_wrap) {
         let track_link = about_me.querySelector('a');
 
-        track_link.textContent = romanise(
-            correct_item_by_artist(track_link.textContent.trim(), page.sister)
-        );
+        track_link.classList.add('top-track');
+        if (settings.format_guest_features) {
+            const formatted = name_includes(
+                track_link.textContent.trim(),
+                page.sister
+            );
+
+            track_link.classList.add('smart-title');
+            render(track_link, smart_title(formatted[0], formatted[1]));
+        } else if (settings.corrections) {
+            track_link.textContent = romanise(
+                correct_item_by_artist(
+                    track_link.textContent.trim(),
+                    page.sister
+                )
+            );
+        }
     }
 
     return new_listener;

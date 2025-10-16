@@ -4,18 +4,18 @@
 // Licensed under GPLv3
 //
 
-import {settings} from "../build/config";
-import {log} from "../build/log";
-import {auth, page, root} from "../build/page";
-import {sponsor_list} from "../build/sponsor";
-import {sanitise} from "../build/tools";
-import {tl, trans} from "../build/trans";
-import {ff} from "../sku";
-import {correct_artist} from "./lotus";
-import {html} from "lighterhtml";
-import {sponsor} from "../sponsor.js";
-import {redirect} from "./music.js";
-import tippy from "tippy.js";
+import { settings } from '../build/config';
+import { log } from '../build/log';
+import { auth, page, root } from '../build/page';
+import { sponsor_list } from '../build/sponsor';
+import { sanitise } from '../build/tools';
+import { tl, trans } from '../build/trans';
+import { ff } from '../sku';
+import { correct_artist } from './lotus';
+import { html } from 'lighterhtml';
+import { sponsor } from '../sponsor.js';
+import { redirect } from './music.js';
+import tippy from 'tippy.js';
 import { register_menu } from './menu.js';
 import { notify } from './notify.js';
 import { dialog, dialog_rm } from './dialog.js';
@@ -26,7 +26,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
     if (!base_header) return;
 
     let katsune = ff('katsune');
-
 
     // taste
     let taste = '';
@@ -41,15 +40,17 @@ export function redesign_profile_header(is_own_profile, is_following) {
 
             let artists = taste_meter.querySelectorAll('a');
             artists.forEach((artist) => {
-                taste_artists.push(correct_artist(artist.getAttribute('title')));
+                taste_artists.push(
+                    correct_artist(artist.getAttribute('title'))
+                );
             });
 
-            taste_percentage = taste_meter.querySelector('.tasteometer-viz').getAttribute('title');
-            if (taste_percentage == '99%')
-                taste_percentage = '100%';
+            taste_percentage = taste_meter
+                .querySelector('.tasteometer-viz')
+                .getAttribute('title');
+            if (taste_percentage == '99%') taste_percentage = '100%';
         }
     }
-
 
     // create new
     let about_me = page.structure.container.querySelector('.about-me-sidebar');
@@ -58,9 +59,15 @@ export function redesign_profile_header(is_own_profile, is_following) {
         <section class="side-actions" />
     `;
 
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account && auth.name) {
+    if (
+        !is_own_profile &&
+        page.name != sponsor_list.sponsor_account &&
+        auth.name
+    ) {
         // follow
-        let follow_wrap = document.body.querySelector('.header-avatar .class > div');
+        let follow_wrap = document.body.querySelector(
+            '.header-avatar .class > div'
+        );
 
         if (follow_wrap) {
             let follow_btn = follow_wrap.querySelector('button');
@@ -69,8 +76,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
             follow_btn.setAttribute('data-type', 'follow');
             profile_header.appendChild(follow_wrap);
 
-            if (is_following)
-                follow_btn.setAttribute('data-followed', 'true');
+            if (is_following) follow_btn.setAttribute('data-followed', 'true');
 
             let mutual_text = document.createElement('i');
             mutual_text.textContent = tl(trans.following_mutuals);
@@ -137,7 +143,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
             }
         }
 
-
         if (page.name != sponsor_list.sponsor_account) {
             if (ff('compare')) {
                 create_profile_top_item(profile_header, {
@@ -147,7 +152,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 });
             }
         }
-
 
         if (page.structure.container.querySelector('.user-status-staff')) {
             create_profile_top_item(profile_header, {
@@ -174,10 +178,10 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 name: page.name,
                 type: 'labs',
                 link: `${root}labs`,
-                tooltip: (`
+                tooltip: `
                     <strong>${tl(trans.labs_by_last)}</strong>
                     <p>${tl(trans.labs_by_last.tagline)}</p>
-                `),
+                `,
                 tooltip_style: 'stack',
                 allow_html: true
             });
@@ -199,13 +203,24 @@ export function redesign_profile_header(is_own_profile, is_following) {
     }
 
     if (!page.mobile)
-        page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+        page.structure.side.insertBefore(
+            profile_header,
+            page.structure.side.firstElementChild
+        );
     else
-        page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+        page.structure.main.insertBefore(
+            profile_header,
+            page.structure.main.firstElementChild
+        );
 
     let listen_container = page.structure.row.querySelector('.listen-panel');
 
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune && auth.name) {
+    if (
+        !is_own_profile &&
+        page.name != sponsor_list.sponsor_account &&
+        katsune &&
+        auth.name
+    ) {
         if (taste == '') {
             listen_container.appendChild(html.node`
                 <div class="loading-data-container">
@@ -217,7 +232,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
         }
 
         let taste_wrap = html.node`
-            <div class="btn listen-item ${(taste != 'super' && taste != 'very_low') ? 'icon' : ''} taste">
+            <div class="btn listen-item ${taste != 'super' && taste != 'very_low' ? 'icon' : ''} taste">
                 <div class="taste-icon colourful" data-taste=${taste}>
                     <div class="bleh-icon" />
                 </div>
@@ -225,14 +240,16 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
                     <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
                     <div class="info">
-                        <h3>${
-                            html.node([
-                                tl(trans.you_share_count_with).replace('{c}', `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`)
-                            ])}</h3>
+                        <h3>${html.node([
+                            tl(trans.you_share_count_with).replace(
+                                '{c}',
+                                `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`
+                            )
+                        ])}</h3>
                         <p>
-                            ${(taste_artists.length == 1) ? tl(trans.you_share_count_with.one).replace('{artist}', taste_artists[0]) : ''}
-                            ${(taste_artists.length == 2) ? tl(trans.you_share_count_with.two).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
-                            ${(taste_artists.length == 3) ? tl(trans.you_share_count_with.three).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
+                            ${taste_artists.length == 1 ? taste_artists[0] : ''}
+                            ${taste_artists.length == 2 ? tl(trans.you_share_count_with.two).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
+                            ${taste_artists.length == 3 ? tl(trans.you_share_count_with.three).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
                         </p>
                     </div>
                 </div>
@@ -246,7 +263,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     ${tl(trans.taste_similarity)}
                 </span>
                 <div class="hint">${tl(trans.click_for_more_options)}</div>
-            `,
+            `
         });
 
         if (taste_artists.length > 1) {
@@ -260,7 +277,9 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
-                    ${(taste_artists.length >= 2) ? html.node`
+                    ${
+                        taste_artists.length >= 2 ?
+                            html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
@@ -268,8 +287,12 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
-                    ` : ''}
-                    ${(taste_artists.length >= 3) ? html.node`
+                    `
+                        :   ''
+                    }
+                    ${
+                        taste_artists.length >= 3 ?
+                            html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
@@ -277,7 +300,9 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
                     </a>
-                    ` : ''}
+                    `
+                        :   ''
+                    }
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl(trans.compare)}</a>
                 `,
@@ -294,7 +319,21 @@ export function redesign_profile_header(is_own_profile, is_following) {
     }
 }
 
-export function create_profile_top_item(parent, {name, link, text='', type, new_release = false, updated = false, action='', tooltip='', allow_html=false, tooltip_theme=''}) {
+export function create_profile_top_item(
+    parent,
+    {
+        name,
+        link,
+        text = '',
+        type,
+        new_release = false,
+        updated = false,
+        action = '',
+        tooltip = '',
+        allow_html = false,
+        tooltip_theme = ''
+    }
+) {
     log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
     let side_action;
@@ -306,8 +345,8 @@ export function create_profile_top_item(parent, {name, link, text='', type, new_
                 onclick=${link}
             >
                 ${tl(trans[type])}
-                ${(new_release) ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
-                ${(updated) ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ''}
+                ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ''}
             </button>
         `;
     } else {
@@ -318,8 +357,8 @@ export function create_profile_top_item(parent, {name, link, text='', type, new_
                 href=${link}
             >
                 ${tl(trans[type])}
-                ${(new_release) ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
-                ${(updated) ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ''}
+                ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ''}
             </a>
         `;
     }
@@ -348,7 +387,7 @@ function friends_button(parent) {
                     body: html.node`
                         <p>${tl(trans.remove_friend.body).replace('{u}', page.name)}</p>
                         <div class="modal-footer">
-                            <button class="see-more cancel" onclick=${() => dialog_rm({id: 'remove_friend'})}>
+                            <button class="see-more cancel" onclick=${() => dialog_rm({ id: 'remove_friend' })}>
                                 ${tl(trans.cancel)}
                             </button>
                             <div class="fill"></div>
@@ -356,12 +395,14 @@ function friends_button(parent) {
                                 friend_state = false;
                                 star_state = false;
 
-                                const new_list = settings.friends.filter(item => item != page.name);
+                                const new_list = settings.friends.filter(
+                                    (item) => item != page.name
+                                );
 
                                 save_setting('friends', new_list);
                                 save_setting('starred_friend', '');
 
-                                dialog_rm({id: 'remove_friend'});
+                                dialog_rm({ id: 'remove_friend' });
                                 update_visual();
 
                                 notify({
@@ -376,7 +417,7 @@ function friends_button(parent) {
                             </button>
                         </div>
                     `
-                })
+                });
             } else {
                 friend_state = true;
 
@@ -410,7 +451,7 @@ function friends_button(parent) {
         offset: [0, 0],
 
         onShow(instance) {
-            instance.popper.addEventListener('click', event => {
+            instance.popper.addEventListener('click', (event) => {
                 instance.hide();
             });
 

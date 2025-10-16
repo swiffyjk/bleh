@@ -4,10 +4,9 @@
 // Licensed under GPLv3
 //
 
-import {settings} from "../build/config";
-import {page} from "../build/page";
-import {trans_legacy} from "../build/trans";
-import {notify} from "./notify";
+import { settings } from '../build/config';
+import { page } from '../build/page';
+import { notify } from './notify';
 
 export function nag_bar() {
     /*if (!page.structure.nag_bar) {
@@ -26,7 +25,7 @@ export function nag_bar() {
             if (!settings.travis) {
                 notify({
                     id: 'corrections',
-                    title: trans_legacy.en.nag_bar.corrections.title,
+                    title: tl(trans.redirected_from),
                     body: active_nag.querySelector('strong'),
                     icon: 'icon-16-refresh',
                     long: true

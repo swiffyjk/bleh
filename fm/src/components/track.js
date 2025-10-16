@@ -9,6 +9,7 @@ import { settings } from '../build/config';
 import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
 import {
+    clamp_lit,
     clamp_sat,
     copy,
     return_artist_from_track,
@@ -18,16 +19,23 @@ import {
 } from '../build/tools';
 import { bleh_glacier_insights } from '../pages/glacier';
 import { patch_artist_ranks_in_list_view } from './colourful_counts';
-import { correct_artist, correct_item_by_artist, name_includes } from './lotus';
+import {
+    correct_artist,
+    correct_item_by_artist,
+    name_includes,
+    smart_artists,
+    smart_title
+} from './lotus';
 import { register_menu } from './menu';
 import { tl, trans } from '../build/trans.js';
 import { notify } from './notify.js';
 import { redirect } from './music.js';
 import tippy from 'tippy.js';
 import ColorThief from 'color-thief-browser';
+import { hoshino } from './hoshino.js';
 
 export function patch_titles(search = page.structure.main) {
-    if (page.subpage === 'tags_overview') return;
+    if (page.subpage == 'tags_overview') return;
 
     if (!search) {
         log(
@@ -102,12 +110,31 @@ export function patch_titles(search = page.structure.main) {
             ':is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)'
         );
 
-        tracks.forEach((track, index) => {
+        let track_index = 0;
+
+        function batch() {
+            const batch_size = 20;
+            const end_index = Math.min(track_index + batch_size, tracks.length);
+
+            for (let i = track_index; i < end_index; i++) {
+                track(tracks[i], i);
+            }
+
+            track_index = end_index;
+
+            if (track_index < tracks.length) {
+                setTimeout(batch, 0);
+            }
+        }
+
+        batch();
+
+        function track(track, index) {
             console.log('track', track);
             if (track.getAttribute('data-track-type')) return;
 
             // ads slowly move up the tree until eventually causing a crash
-            if (track.classList[0] === 'chartlist-row--interlist-ad') {
+            if (track.classList[0] == 'chartlist-row--interlist-ad') {
                 track.parentElement.removeChild(track);
                 return;
             }
@@ -212,6 +239,10 @@ export function patch_titles(search = page.structure.main) {
                 track_title.getAttribute('href'),
                 is_album
             );
+            log(
+                `returned ${track_artist} from url ${track_title.getAttribute('href')}`,
+                'track'
+            );
             // when focused on a track in a library, an artist field is redundant
             if (!wide) track.classList.add('chartlist-row--with-artist');
 
@@ -267,14 +298,36 @@ export function patch_titles(search = page.structure.main) {
                     track_artist
                 );
 
-            let image = track.querySelector('.chartlist-image img');
-
             const album_link = track.querySelector('.chartlist-image a');
+
+            const show_album_text =
+                (is_active || settings.expand_tracks == 'always') &&
+                settings.expand_tracks != 'never' &&
+                settings.stacked_chartlist_info;
+            track.setAttribute('data-show-album-text', show_album_text);
+
+            const image_wrap = track.querySelector('.chartlist-image');
+            let link;
+            let image;
+            if (image_wrap) {
+                link = image_wrap.querySelector('.cover-art');
+                image = link.querySelector('img');
+
+                if (!is_album && has_bar) {
+                    hoshino(
+                        image,
+                        track_title.getAttribute('data-name'),
+                        track_artist,
+                        link
+                    );
+                }
+            }
 
             if (settings.format_guest_features) {
                 let formatted_title = name_includes(
                     track_title.getAttribute('data-name'),
-                    track_artist
+                    track_artist,
+                    track_title.getAttribute('data-inherit-artists')
                 );
                 console.log('formatted', formatted_title);
                 let song_title = track_title.getAttribute('data-name');
@@ -294,17 +347,7 @@ export function patch_titles(search = page.structure.main) {
                 );
 
                 // parse tags into text
-                render(
-                    track_title,
-                    html`
-                        <div class="title">${romanise(song_title.trim())}</div>
-                        ${song_tags.map(
-                            (tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
-                    `
-                        )}
-                    `
-                );
+                render(track_title, smart_title(song_title, song_tags));
 
                 let song_artist_element =
                     track.querySelector('.chartlist-artist');
@@ -339,21 +382,8 @@ export function patch_titles(search = page.structure.main) {
                     // replaces with corrected artist if applicable
                     render(
                         song_artist_element,
-                        html`<a
-                            href="${root}music/${redirect()}${sanitise(
-                                formatted_title[2]
-                            )}"
-                            >${romanise(formatted_title[2])}</a
-                        >`
+                        smart_artists(formatted_title[2], formatted_title[3])
                     );
-
-                    // append guests
-                    let song_guests = formatted_title[3];
-                    for (let guest in song_guests) {
-                        song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${romanise(song_guests[guest])}</a>
-                        `);
-                    }
                 }
 
                 if (track.getAttribute('data-disambig') == 'explicit') {
@@ -370,7 +400,7 @@ export function patch_titles(search = page.structure.main) {
                         <div class="track-preview">
                             <div class="image">
                                 <div class="inner-image">
-                                    ${image ? html.node`<img src=${image.getAttribute('src')} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
+                                    ${image ? html.node`<img src=${image.src} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
                                 </div>
                             </div>
                             <div class="info">
@@ -383,8 +413,29 @@ export function patch_titles(search = page.structure.main) {
                                     `
                                     )}
                                 </div>
-                                ${is_album ? '' : html.node`<p class="album">${image && album_link ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : album ? album.textContent : ''}</p>`}
+                                ${
+                                    is_album ? '' : (
+                                        html.node`<p class="album">${
+                                            image && album_link ?
+                                                correct_item_by_artist(
+                                                    image.getAttribute('alt'),
+                                                    track_artist
+                                                )
+                                            : album ? album.textContent
+                                            : ''
+                                        }</p>`
+                                    )
+                                }
                                 ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ''}
+                                ${
+                                    image?.getAttribute('data-hoshino') ?
+                                        html.node`
+                                            <div class="hoshino-marker">
+                                                <div class="bleh-icon" />
+                                            </div>
+                                        `
+                                    :   ''
+                                }
                             </div>
                         </div>
                     `;
@@ -394,15 +445,17 @@ export function patch_titles(search = page.structure.main) {
                     '.chartlist-artist a'
                 );
                 if (song_artist_element) {
-                    let corrected_title = correct_item_by_artist(
-                        track_title.textContent,
-                        song_artist_element.textContent
+                    let corrected_title = romanise(
+                        correct_item_by_artist(
+                            track_title.textContent,
+                            song_artist_element.textContent
+                        )
                     );
                     track_title.textContent = corrected_title;
                     track_title.setAttribute('data-name', corrected_title);
 
-                    let corrected_artist = correct_artist(
-                        song_artist_element.textContent
+                    let corrected_artist = romanise(
+                        correct_artist(song_artist_element.textContent)
                     );
                     song_artist_element.textContent = corrected_artist;
                     song_artist_element.setAttribute('title', corrected_artist);
@@ -440,7 +493,9 @@ export function patch_titles(search = page.structure.main) {
 
                 let more_button = html.node`
                     <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
-                        console.info(menu);
+                        log('requested track in-built', 'menu', 'info', {
+                            menu
+                        });
                         menu.setProps({
                             placement: 'bottom',
                             offset: [],
@@ -458,8 +513,7 @@ export function patch_titles(search = page.structure.main) {
                 `;
 
                 tippy(more_button, {
-                    content: tl(trans.more),
-                    appendTo: document.body
+                    content: tl(trans.more)
                 });
 
                 track.appendChild(html.node`
@@ -605,14 +659,13 @@ export function patch_titles(search = page.structure.main) {
                     }
 
                     let album_name = sanitise(
-                        image
-                            ? correct_item_by_artist(
-                                  image.getAttribute('alt'),
-                                  track_artist
-                              )
-                            : album
-                              ? album.textContent
-                              : ''
+                        image ?
+                            correct_item_by_artist(
+                                image.getAttribute('alt'),
+                                track_artist
+                            )
+                        : album ? album.textContent
+                        : ''
                     );
 
                     menu = tippy(more_button, {
@@ -620,8 +673,8 @@ export function patch_titles(search = page.structure.main) {
                         content: html.node`
                             ${track.preview}
                             ${
-                                can_edit
-                                    ? html.node`
+                                can_edit ?
+                                    html.node`
                             <div class="button-combo">
                                 ${() => {
                                     if (is_album) {
@@ -656,8 +709,8 @@ export function patch_titles(search = page.structure.main) {
                                     `;
                                 }}
                                 ${
-                                    bulk_edit_button
-                                        ? html.node`
+                                    bulk_edit_button ?
+                                        html.node`
                                     <div class="button-combo-sep" />
                                     ${() => {
                                         let button =
@@ -682,12 +735,12 @@ export function patch_titles(search = page.structure.main) {
                                         return button;
                                     }}
                                 `
-                                        : ''
+                                    :   ''
                                 }
                             </div>
                             <div class="sep" />
                             `
-                                    : ''
+                                :   ''
                             }
                             ${() => {
                                 let container =
@@ -709,8 +762,8 @@ export function patch_titles(search = page.structure.main) {
                                 return button;
                             }}
                             ${
-                                !is_album
-                                    ? html.node`
+                                !is_album ?
+                                    html.node`
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
@@ -737,11 +790,11 @@ export function patch_titles(search = page.structure.main) {
                                 }}
                             </div>
                             `
-                                    : ''
+                                :   ''
                             }
                             ${
-                                album_name && album_link
-                                    ? html.node`
+                                album_name && album_link ?
+                                    html.node`
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
@@ -768,8 +821,8 @@ export function patch_titles(search = page.structure.main) {
                                 }}
                             </div>
                             `
-                                    : is_album
-                                      ? html.node`
+                                : is_album ?
+                                    html.node`
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
@@ -796,7 +849,7 @@ export function patch_titles(search = page.structure.main) {
                                 }}
                             </div>
                             `
-                                      : ''
+                                :   ''
                             }
                             <div class="button-combo">
                                 ${() => {
@@ -941,15 +994,17 @@ export function patch_titles(search = page.structure.main) {
                         hideOnClick: false,
                         appendTo: document.body,
 
-                        onShow(instance) {
-                            track.setAttribute('data-has-menu', true);
-
+                        onCreate(instance) {
                             instance.popper.addEventListener(
                                 'click',
                                 (event) => {
                                     instance.hide();
                                 }
                             );
+                        },
+
+                        onShow(instance) {
+                            track.setAttribute('data-has-menu', true);
 
                             /*let menu_items = track_legacy_menu.querySelectorAll('li > *');
                             let content = instance.popper.querySelector('.tippy-content');
@@ -992,64 +1047,67 @@ export function patch_titles(search = page.structure.main) {
                 );
             }
 
-            const show_album_text =
-                (is_active || settings.expand_tracks == 'always') &&
-                settings.expand_tracks != 'never' &&
-                settings.stacked_chartlist_info;
-            track.setAttribute('data-show-album-text', show_album_text);
+            if (image_wrap) {
+                if (
+                    !is_album &&
+                    show_album_text &&
+                    !has_bar &&
+                    !settings.album_text
+                ) {
+                    let alt = romanise(
+                        correct_item_by_artist(
+                            image.getAttribute('alt'),
+                            track_artist
+                        )
+                    );
 
-            if (!is_album) {
-                let image_wrap = track.querySelector('.chartlist-image');
-                if (image_wrap) {
-                    let link = image_wrap.querySelector('.cover-art');
-                    let image = link.querySelector('img');
+                    track.appendChild(html.node`
+                        <td class="chartlist-album custom-album-text">
+                            <a href="${link.getAttribute('href')}">${alt}</a>
+                        </td>
+                    `);
+                }
 
-                    if (show_album_text && !has_bar && !settings.album_text) {
-                        let alt = romanise(
-                            correct_item_by_artist(
-                                image.getAttribute('alt'),
-                                track_artist
-                            )
+                if (
+                    !settings.colourful_tracks &&
+                    !settings.colourful_tracks_all
+                )
+                    return;
+
+                if (!settings.colourful_tracks_all && !is_active) return;
+
+                image.setAttribute('crossorigin', 'anonymous');
+                try {
+                    image.addEventListener('load', function () {
+                        let thief = new ColorThief();
+                        let colour = thief.getColor(image);
+
+                        let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+
+                        let hue = hsl.h;
+                        let sat = clamp_sat((hsl.s / 100) * 3);
+                        let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
+
+                        const to_colour = track.querySelectorAll(
+                            '.chartlist-count-bar, .chartlist-loved'
                         );
 
-                        track.appendChild(html.node`
-                            <td class="chartlist-album custom-album-text">
-                                <a href="${link.getAttribute('href')}">${alt}</a>
-                            </td>
-                        `);
-                    }
-
-                    if (
-                        !settings.colourful_tracks &&
-                        !settings.colourful_tracks_all
-                    )
-                        return;
-
-                    if (!settings.colourful_tracks_all && !is_active) return;
-
-                    image.setAttribute('crossorigin', 'anonymous');
-                    try {
-                        image.addEventListener('load', function () {
-                            let thief = new ColorThief();
-                            let colour = thief.getColor(image);
-
-                            let hsl = rgb_to_hsl(
-                                colour[0],
-                                colour[1],
-                                colour[2]
-                            );
-
-                            track.style.setProperty('--hue-over', hsl.h);
-                            track.style.setProperty(
-                                '--sat-over',
-                                clamp_sat((hsl.s / 100) * 3)
-                            );
-                            track.style.setProperty('--lit-over', 1);
-                        });
-                    } catch (e) {}
-                }
+                        if (is_active) {
+                            track.style.setProperty('--hue-over', hue);
+                            track.style.setProperty('--sat-over', sat);
+                            track.style.setProperty('--lit-over', lit);
+                        } else {
+                            to_colour.forEach((elem) => {
+                                elem.classList.add('colourful');
+                                elem.style.setProperty('--hue-over', hue);
+                                elem.style.setProperty('--sat-over', sat);
+                                elem.style.setProperty('--lit-over', lit);
+                            });
+                        }
+                    });
+                } catch (e) {}
             }
-        });
+        }
     });
 
     if (page.subpage.startsWith('library')) bleh_glacier_insights(insights);

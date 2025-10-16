@@ -4,29 +4,31 @@
 // Licensed under GPLv3
 //
 
-import {patch_avatar} from "../avatar";
-import {settings} from '../build/config';
-import {log} from '../build/log';
-import {artist_corrections} from '../build/music';
-import {page, root} from '../build/page';
-import {clamp_sat, rgb_to_hsl, sanitise} from '../build/tools';
-import {tl, trans} from '../build/trans';
-import {correct_item_by_artist, name_includes} from '../components/lotus';
-import {checkup_page_structure} from '../components/structure';
-import {register_background, update_page} from '../page';
-import {html, render} from "lighterhtml";
-import {redirect} from "../components/music.js";
+import { patch_avatar } from '../avatar';
+import { settings } from '../build/config';
+import { log } from '../build/log';
+import { artist_corrections } from '../build/music';
+import { page, root } from '../build/page';
+import { clamp_sat, rgb_to_hsl, sanitise } from '../build/tools';
+import { tl, trans } from '../build/trans';
+import { correct_item_by_artist, name_includes } from '../components/lotus';
+import { checkup_page_structure } from '../components/structure';
+import { register_background, update_page } from '../page';
+import { html, render } from 'lighterhtml';
+import { redirect } from '../components/music.js';
 
 export function bleh_obsession() {
     let obsession_container = document.querySelector('.obsession-container');
     if (!obsession_container) return;
 
-    page.structure.container = document.body.querySelector('.page-content:not(.obsession-container .page-content)');
+    page.structure.container = document.body.querySelector(
+        '.page-content:not(.obsession-container .page-content)'
+    );
     try {
         page.structure.row = page.structure.container.querySelector('.row');
         page.structure.main = page.structure.row.querySelector('.col-main');
         page.structure.side = page.structure.row.querySelector('.col-sidebar');
-    } catch(e) {
+    } catch (e) {
         log('unable to find elements', 'page structure');
     }
 
@@ -39,22 +41,40 @@ export function bleh_obsession() {
     page.structure.container.setAttribute('data-beret', 'false');
     page.structure.container.setAttribute('data-short', 'false');
 
-
-    let background = obsession_container.querySelector('.obsession-background-inner');
-    background = background.style.getPropertyValue('background-image').replace('url("', '').replace('")', '');
+    let background = obsession_container.querySelector(
+        '.obsession-background-inner'
+    );
+    background = background.style
+        .getPropertyValue('background-image')
+        .replace('url("', '')
+        .replace('")', '');
 
     if (!background.endsWith('/4128a6eb29f94943c9d206c08e625904.jpg')) {
         register_background(background);
 
         try {
-            let bg = obsession_container.style.getPropertyValue('background').replace('rgb(', '').replace(')', '').split(', ');
-            let hsl = rgb_to_hsl(parseInt(bg[0]), parseInt(bg[1]), parseInt(bg[2]));
+            let bg = obsession_container.style
+                .getPropertyValue('background')
+                .replace('rgb(', '')
+                .replace(')', '')
+                .split(', ');
+            let hsl = rgb_to_hsl(
+                parseInt(bg[0]),
+                parseInt(bg[1]),
+                parseInt(bg[2])
+            );
             document.body.style.setProperty('--hue-album', hsl.h);
-            document.body.style.setProperty('--sat-album', clamp_sat((hsl.s / 100) * 3));
-            document.body.style.setProperty('--lit-album', (hsl.l / 100) + 0.35);
+            document.body.style.setProperty(
+                '--sat-album',
+                clamp_sat((hsl.s / 100) * 3)
+            );
+            document.body.style.setProperty('--lit-album', hsl.l / 100 + 0.35);
 
-            log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat((hsl.s / 100) * 3)}, ${(hsl.l / 100) + 0.35})`, 'hue from album');
-        } catch(e) {
+            log(
+                `sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat((hsl.s / 100) * 3)}, ${hsl.l / 100 + 0.35})`,
+                'hue from album'
+            );
+        } catch (e) {
             console.error(e);
             log('no cover present', 'hue from album');
         }
@@ -62,10 +82,15 @@ export function bleh_obsession() {
         register_background('');
     }
 
-
-    let track_title = obsession_container.querySelector('.obsession-meta-track');
-    let track_artist = obsession_container.querySelector('.obsession-meta-artist');
-    let scrobbles = obsession_container.querySelector('.obsession-meta-scrobbles');
+    let track_title = obsession_container.querySelector(
+        '.obsession-meta-track'
+    );
+    let track_artist = obsession_container.querySelector(
+        '.obsession-meta-artist'
+    );
+    let scrobbles = obsession_container.querySelector(
+        '.obsession-meta-scrobbles'
+    );
 
     let link = track_title.querySelector('a').getAttribute('href');
 
@@ -76,26 +101,37 @@ export function bleh_obsession() {
     let artist_name = track_artist.querySelector('a');
     if (artist_corrections.hasOwnProperty(artist_name.textContent)) {
         let corrected_artist = artist_corrections[artist_name.textContent];
-        log(`corrected ${artist_name.textContent} as ${corrected_artist}`, 'lotus');
+        log(
+            `corrected ${artist_name.textContent} as ${corrected_artist}`,
+            'lotus'
+        );
         artist_name.textContent = corrected_artist;
     }
 
     artist_name.classList.add('header-new-crumb');
 
     if (settings.format_guest_features) {
-        let formatted_title = name_includes(track_title.textContent.trim(), artist_name.textContent);
+        let formatted_title = name_includes(
+            track_title.textContent.trim(),
+            artist_name.textContent
+        );
         let song_title = formatted_title[0];
         let song_tags = formatted_title[1];
 
         page.corrected = formatted_title[4];
 
         // combine
-        render(track_title, html.node`
+        render(
+            track_title,
+            html.node`
             <div class="title">${song_title.trim()}</div>
-            ${song_tags.map((tag) => html.node`
+            ${song_tags.map(
+                (tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-            `)}
-        `);
+            `
+            )}
+        `
+        );
 
         let song_guests = formatted_title[3];
         page.sister_others = formatted_title[3];
@@ -105,17 +141,26 @@ export function bleh_obsession() {
 
             let guest_element = document.createElement('a');
             guest_element.classList.add('header-new-crumb');
-            guest_element.setAttribute('href', `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
+            guest_element.setAttribute(
+                'href',
+                `${root}music/${redirect()}${sanitise(song_guests[guest])}`
+            );
             guest_element.textContent = song_guests[guest];
 
             track_artist.appendChild(guest_element);
         }
     } else {
         if (!track_title.hasAttribute('data-kate-processed')) {
-            track_title.setAttribute('data-kate-processed','true');
+            track_title.setAttribute('data-kate-processed', 'true');
 
-            let corrected_title = correct_item_by_artist(track_title.textContent.trim(), artist_name.textContent);
-            log(`corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`, 'lotus');
+            let corrected_title = correct_item_by_artist(
+                track_title.textContent.trim(),
+                artist_name.textContent
+            );
+            log(
+                `corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`,
+                'lotus'
+            );
 
             if (corrected_title != track_title.textContent)
                 page.corrected = true;
@@ -138,48 +183,68 @@ export function bleh_obsession() {
         </section>
     `;
 
-    page.structure.container.insertBefore(track_header, page.structure.container.firstElementChild);
+    page.structure.container.insertBefore(
+        track_header,
+        page.structure.container.firstElementChild
+    );
 
     let video = obsession_container.querySelector('.obsession-video-container');
     if (video) track_header.after(video);
 
-
     // remove quotations
-    let obsession_reason = obsession_container.querySelector('.obsession-reason');
+    let obsession_reason =
+        obsession_container.querySelector('.obsession-reason');
     if (obsession_reason) {
         let obsession_reason_text = obsession_reason.textContent;
-        obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
+        obsession_reason.textContent = obsession_reason_text
+            .trim()
+            .substr(1)
+            .slice(0, -1);
     }
 
-    let obsession_author = document.querySelector('.obsession-details-intro a').textContent;
-    let obsession_avatar = document.querySelector('.obsession-details-intro-avatar-wrap .avatar');
+    let obsession_author = document.querySelector(
+        '.obsession-details-intro a'
+    ).textContent;
+    let obsession_avatar = document.querySelector(
+        '.obsession-details-intro-avatar-wrap .avatar'
+    );
 
     page.name = obsession_author;
 
-    let date = obsession_container.querySelector('.obsession-details-date-short')
+    let date = obsession_container.querySelector(
+        '.obsession-details-date-short'
+    );
 
     let quote = html.node`
         <section class="obsession-quote sour">
-            ${(obsession_reason) ? html.node`
+            ${
+                obsession_reason ?
+                    html.node`
             <div class="quote">
                 ${obsession_reason.textContent}
             </div>
-            ` : html.node`
+            `
+                :   html.node`
             <div class="quote no-quote">
-                ${tl(trans.no_quote)}
+                ...
             </div>
-            `}
+            `
+            }
             <div class="sub-text">
                 <div class="obsession-author">
                     ${obsession_avatar}
                     <strong class="name">${obsession_author}</strong>
                     <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
                 </div>
-                ${(scrobbles) ? html.node`
+                ${
+                    scrobbles ?
+                        html.node`
                 <div class="obsession-listens">
                     ${html.node([scrobbles.innerHTML])}
                 </div>
-                ` : ''}
+                `
+                    :   ''
+                }
                 <div class="obsession-date">
                     ${date.textContent}
                 </div>
@@ -193,14 +258,26 @@ export function bleh_obsession() {
         quote.querySelector('button').textContent = tl(trans.delete);
     }
 
-    page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
+    page.structure.main.insertBefore(
+        quote,
+        page.structure.main.firstElementChild
+    );
 
     let author = quote.querySelector('.obsession-author');
-    let badge = patch_avatar(obsession_avatar, obsession_author, '', author, 'bottom');
+    let badge = patch_avatar(
+        obsession_avatar,
+        obsession_author,
+        '',
+        author,
+        'bottom'
+    );
 
     if (badge.type) {
         author.classList.add('colourful');
-        author.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${obsession_author}`);
+        author.classList.add(
+            `user-status--bleh-${badge.type}`,
+            `user-status--bleh-user-${obsession_author}`
+        );
     }
 
     let related = html.node`
@@ -211,7 +288,10 @@ export function bleh_obsession() {
 
     if (other_tracks) {
         let header = document.createElement('h2');
-        header.textContent = tl(trans.others_from_profile).replace('{user}', obsession_author);
+        header.textContent = tl(trans.others_from_profile).replace(
+            '{user}',
+            obsession_author
+        );
         related.appendChild(header);
 
         let see_more = other_tracks.nextElementSibling;
@@ -250,8 +330,6 @@ export function bleh_obsession() {
 
     quote.after(related);
 
-
     let pages = obsession_container.querySelector('.obsession-pagination');
-    if (pages)
-        page.structure.container.appendChild(pages);
+    if (pages) page.structure.container.appendChild(pages);
 }

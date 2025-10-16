@@ -91,7 +91,8 @@ export function markdown(
             replace: (_, url) => {
                 try {
                     const safe = new URL(url);
-                    if (!['http:', 'https:'].includes(safe.protocol)) return '';
+                    if (!['http:', 'https:'].includes(safe.protocol))
+                        return `<img alt="banner" loading="lazy">`;
 
                     const escaped = safe.href.replace(/"/g, '&quot;');
 
@@ -102,7 +103,7 @@ export function markdown(
                         ALLOWED_ATTR: ['src', 'alt', 'loading']
                     });
                 } catch {
-                    return '';
+                    return `<img alt="banner" loading="lazy">`;
                 }
             }
         }
@@ -317,6 +318,12 @@ export function markdown(
     });
 
     const body = html.node([parsed]);
+    log('rendered', 'markdown', 'info', { body });
+
+    let profile_cache;
+
+    const will_cache = cache === true;
+    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', { cache });
 
     const link_strings = {
         'open.spotify.com': 'Spotify',
@@ -372,20 +379,15 @@ export function markdown(
         `);
     }
 
-    patch_wiki_contents(body);
+    if (body.nodeName != '#text') patch_wiki_contents(body);
 
     // funny local restriction message
-    if (line_breaks) {
+    if (line_breaks && body.nodeName != '#text') {
         local_restriction(body);
         body.querySelectorAll('p').forEach((text) => {
             local_restriction(text);
         });
     }
-
-    let profile_cache;
-
-    const will_cache = cache === true;
-    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', { cache });
 
     // this looks like a mess, but essentially profile colours are
     // a nice 'thank you' vanity reward for sponsors <3
@@ -408,31 +410,38 @@ export function markdown(
 
         if (banner) {
             const src = banner.src;
-            cache.banner = src;
+
+            if (src) {
+                cache.banner = src;
+            } else {
+                cache.banner = 'accent';
+            }
         } else {
             delete cache.banner;
         }
     }
 
     // add lazy-loading to images
-    body.querySelectorAll('img').forEach((image) => {
-        if (!line_breaks) {
-            image.remove();
-            return;
-        }
+    if (body.nodeName != '#text') {
+        body.querySelectorAll('img').forEach((image) => {
+            if (!line_breaks) {
+                image.remove();
+                return;
+            }
 
-        image.setAttribute('loading', 'lazy');
+            image.setAttribute('loading', 'lazy');
 
-        let func = () => expand_avatar(image.src, image.alt);
-        if (in_dialog) func = () => open(image.src);
+            let func = () => expand_avatar(image.src, image.alt);
+            if (in_dialog) func = () => open(image.src);
 
-        const container = html.node`
-            <div class="markdown-image" onclick=${func} />
-        `;
+            const container = html.node`
+                <div class="markdown-image" onclick=${func} />
+            `;
 
-        image.after(container);
-        container.appendChild(image);
-    });
+            image.after(container);
+            container.appendChild(image);
+        });
+    }
 
     if (allow_hue) {
         console.info(hue, sat, lit);

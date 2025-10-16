@@ -4,18 +4,20 @@
 // Licensed under GPLv3
 //
 
-import {html} from "lighterhtml";
-import {log} from "./build/log";
-import {page, root} from "./build/page";
-import {tl, trans, trans_legacy} from "./build/trans";
-import {dialog, dialog_rm} from "./components/dialog";
-import {deliver_notif} from "./components/notify";
-import {sponsor_list} from "./build/sponsor.js";
+import { html } from 'lighterhtml';
+import { log } from './build/log';
+import { page } from './build/page';
+import { tl, trans } from './build/trans';
+import { dialog, dialog_rm } from './components/dialog';
+import { sponsor_list } from './build/sponsor.js';
 import { markdown } from './components/markdown.js';
+import { set_storage } from './build/tools.js';
 
 export function news() {
     let changelog = localStorage.getItem('bleh_changelog');
-    let changelog_expire = new Date(localStorage.getItem('bleh_changelog_expire'));
+    let changelog_expire = new Date(
+        localStorage.getItem('bleh_changelog_expire')
+    );
 
     let current_time = new Date();
 
@@ -23,29 +25,29 @@ export function news() {
         log('not cached, fetching', 'changelog');
         request_changelog();
 
-        dialog_rm({id: 'rabbit'});
+        dialog_rm({ id: 'rabbit' });
     } else {
-        if (changelog_expire < current_time)
-            request_changelog();
-        else
-            open_changelog(JSON.parse(changelog));
+        if (changelog_expire < current_time) request_changelog();
+        else open_changelog(JSON.parse(changelog));
     }
 }
 
 export function request_changelog(open_after = true) {
     let button = page.state.navigation_menu_news;
-    if (button)
-        button.setAttribute('disabled', '');
+    if (button) button.setAttribute('disabled', '');
 
     let xhr = new XMLHttpRequest();
     let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
-    xhr.open('GET',url,true);
+    xhr.open('GET', url, true);
 
-    xhr.onload = function() {
+    xhr.onload = function () {
         log(`responded with ${xhr.status}`, 'changelog');
 
         if (xhr.status != 200) {
-            log('request has been cancelled, will request again in 1h', 'changelog');
+            log(
+                'request has been cancelled, will request again in 1h',
+                'changelog'
+            );
             api_expire.setHours(api_expire.getHours() + 1);
         }
 
@@ -58,21 +60,23 @@ export function request_changelog(open_after = true) {
                     open_changelog(JSON.parse(this.response));
 
                     // save to cache for next page load
-                    localStorage.setItem('bleh_changelog', this.response);
+                    set_storage('bleh_changelog', this.response);
                     api_expire.setHours(api_expire.getHours() + 2);
                     log(`cached until ${api_expire}`, 'changelog');
 
-                    localStorage.setItem('bleh_changelog_expire', api_expire);
-                } catch(e) {
-                    deliver_notif('The changelog is currently unavailable due to errors, try again later.', true);
+                    set_storage('bleh_changelog_expire', api_expire);
+                } catch (e) {
+                    deliver_notif(
+                        'The changelog is currently unavailable due to errors, try again later.',
+                        true
+                    );
                     console.error(e);
                 }
             }
         }
 
-        if (button != null)
-            button.removeAttribute('disabled');
-    }
+        if (button != null) button.removeAttribute('disabled');
+    };
 
     xhr.send();
 }
@@ -80,7 +84,12 @@ export function request_changelog(open_after = true) {
 function open_changelog(changelog) {
     const window = dialog({
         id: 'changelog',
-        title: tl(trans.news_from_user).replace('{user}', (sponsor_list && sponsor_list.special) ? sponsor_list.special[0] : 'katelyn'),
+        title: tl(trans.news_from_user).replace(
+            '{user}',
+            sponsor_list && sponsor_list.special ?
+                sponsor_list.special[0]
+            :   'katelyn'
+        ),
         body: html.node`
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
@@ -104,17 +113,17 @@ function open_changelog(changelog) {
             <div class="changelog-version-item" data-changelog-type="${changelog[version].type}" data-changelog-latest="${index == 0 ? 'true' : 'false'}" data-changelog-version="${version}">
                 <div class="version-item-header">
                     <div class="sub-text">
-                    <div class="breadcrumb">
-                        <div class="breadcrumb-origin">
-                        ${version}
+                        <div class="breadcrumb">
+                            <div class="breadcrumb-origin">
+                                ${version}
+                            </div>
+                            <div class="breadcrumb-name">
+                                ${tl(trans.news.type[changelog[version].type])}
+                            </div>
                         </div>
-                        <div class="breadcrumb-name">
-                        ${trans_legacy.en.changelog.type[changelog[version].type]}
-                        </div>
-                    </div>
                     </div>
                     <h3>${changelog[version].name}</h3>
-                    ${(version == '2025.0113') ? html.node`<h4 class="header-over">${changelog[version].name}</h4>` : ''}
+                    ${version == '2025.0113' ? html.node`<h4 class="header-over">${changelog[version].name}</h4>` : ''}
                 </div>
                 <div class="version-item-body markdown-body">
                     ${markdown(changelog[version].bio, {
@@ -135,6 +144,6 @@ function open_changelog(changelog) {
     }
 }
 
-unsafeWindow._update_local_changelog_cache = function(json) {
-    localStorage.setItem('bleh_changelog', JSON.stringify(json));
-}
+unsafeWindow._update_local_changelog_cache = function (json) {
+    set_storage('bleh_changelog', JSON.stringify(json));
+};

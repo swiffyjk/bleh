@@ -4,20 +4,28 @@
 // Licensed under GPLv3
 //
 
-import {settings} from "../build/config";
-import {page, root} from "../build/page";
-import {clamp_sat, clean_number, copy, rgb_to_hsl, romanise} from "../build/tools";
-import {lang, tl, trans} from "../build/trans";
-import {bleh_glacier_insights} from "../pages/glacier";
-import {parse_scrobbles_as_rank} from "./colourful_counts";
-import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
-import {html, render} from "lighterhtml";
-import ColorThief from "color-thief-browser";
+import { settings } from '../build/config';
+import { page, root } from '../build/page';
+import {
+    clamp_lit,
+    clamp_sat,
+    copy,
+    int_from_string,
+    rgb_to_hsl,
+    romanise
+} from '../build/tools';
+import { lang, tl, trans } from '../build/trans';
+import { bleh_glacier_insights } from '../pages/glacier';
+import { parse_scrobbles_as_rank } from './colourful_counts';
+import { correct_artist, correct_item_by_artist, name_includes } from './lotus';
+import { html, render } from 'lighterhtml';
+import ColorThief from 'color-thief-browser';
 import { register_menu } from './menu';
 import tippy from 'tippy.js';
 import { expand_avatar } from '../avatar';
+import { save_hoshino_artwork } from './hoshino';
 
-export function music_grids(search=page.structure.main, use_colour = true) {
+export function music_grids(search = page.structure.main, use_colour = true) {
     if (!search) return;
 
     let insights = {
@@ -56,9 +64,11 @@ export function music_grids(search=page.structure.main, use_colour = true) {
         }
     };
 
-    let grids = search.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
+    let grids = search.querySelectorAll(
+        '.grid-items-item:not([data-bleh-music-grids])'
+    );
     grids.forEach((grid, index) => {
-        let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
+        let is_loading = grid.querySelector('.grid-items-empty-inner') != null;
         if (is_loading) return;
 
         grid.style.setProperty('--delay', index * 0.04 + 's');
@@ -68,10 +78,10 @@ export function music_grids(search=page.structure.main, use_colour = true) {
         let is_album;
         if (page.type == 'search') {
             // search, tag pages
-            is_album = (grid.querySelector('.stat-name') == null);
+            is_album = grid.querySelector('.stat-name') == null;
         } else {
             // profiles
-            is_album = (grid.querySelector('.grid-items-item-aux-block') != null);
+            is_album = grid.querySelector('.grid-items-item-aux-block') != null;
         }
 
         let image_wrap = grid.querySelector('.grid-items-cover-image-image');
@@ -80,27 +90,38 @@ export function music_grids(search=page.structure.main, use_colour = true) {
         if (grid.classList.contains('grid-items-item--big'))
             image.src = image.src.replace('/avatar300s/', '/500x500/');
 
-        if (image && !image_wrap.classList.contains('grid-items-cover-default') && use_colour) {
+        if (
+            image &&
+            !image_wrap.classList.contains('grid-items-cover-default') &&
+            use_colour
+        ) {
             let grid_colour = document.createElement('div');
             grid_colour.classList.add('grid-item-colour-bg');
             image_wrap.appendChild(grid_colour);
 
             image.setAttribute('crossorigin', 'anonymous');
             try {
-                image.addEventListener('load', function() {
+                image.addEventListener('load', function () {
                     let thief = new ColorThief();
                     let colour = thief.getColor(image);
 
                     let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
 
-                    grid_colour.style.setProperty('background', `rgb(${colour})`);
+                    grid_colour.style.setProperty(
+                        'background',
+                        `rgb(${colour})`
+                    );
+
+                    let hue = hsl.h;
+                    let sat = clamp_sat((hsl.s / 100) * 3);
+                    let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
 
                     grid.classList.add('grid-items-item-has-colour');
-                    grid.style.setProperty('--hue-over', hsl.h);
-                    grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
-                    grid.style.setProperty('--lit-over', 1);
+                    grid.style.setProperty('--hue-over', hue);
+                    grid.style.setProperty('--sat-over', sat);
+                    grid.style.setProperty('--lit-over', lit);
                 });
-            } catch(e) {}
+            } catch (e) {}
 
             // TODO: add a timeout to check if the image has had its
             // colour taken and if not do it manually after a set amount of time
@@ -141,14 +162,25 @@ export function music_grids(search=page.structure.main, use_colour = true) {
                 aux_text.appendChild(plays_elem);
             }
         } else {
-            plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
+            plays_elem = grid.querySelector(
+                '.grid-items-item-aux-text a:last-child'
+            );
         }
 
-        if (plays_elem && !grid.classList.contains('obsessions-item') && !grid.classList.contains('compare-item')) {
-            let plays = clean_number(plays_elem.textContent.trim().replace(`${tl(trans.plays_lower)}`, ''));
+        if (
+            plays_elem &&
+            !grid.classList.contains('obsessions-item') &&
+            !grid.classList.contains('compare-item')
+        ) {
+            let plays = int_from_string(plays_elem.textContent.trim());
             plays_elem.classList.add('grid-item-plays');
-            if (is_album)
+            if (is_album) {
                 plays_elem.textContent = plays.toLocaleString(lang);
+            } else {
+                plays_elem.textContent = tl(trans.count_plays, {
+                    c: plays.toLocaleString(lang)
+                });
+            }
 
             if (!is_album) {
                 insights.artist.display = true;
@@ -169,17 +201,36 @@ export function music_grids(search=page.structure.main, use_colour = true) {
 
             if (!is_album && settings.colourful_counts && page.type == 'user') {
                 if (
-                    !plays_elem.getAttribute('href')
-                    .includes('?from=') &&
-                    (!plays_elem.getAttribute('href')
-                    .includes('?date_preset=') || plays_elem.getAttribute('href').endsWith('?date_preset=ALL') || plays_elem.getAttribute('href').endsWith('?date_preset=null'))
+                    !plays_elem.getAttribute('href').includes('?from=') &&
+                    (!plays_elem
+                        .getAttribute('href')
+                        .includes('?date_preset=') ||
+                        plays_elem
+                            .getAttribute('href')
+                            .endsWith('?date_preset=ALL') ||
+                        plays_elem
+                            .getAttribute('href')
+                            .endsWith('?date_preset=null'))
                 ) {
-                    let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
+                    let parsed_scrobble_as_rank =
+                        parse_scrobbles_as_rank(plays);
 
-                    plays_elem.setAttribute('data-bleh--scrobble-milestone', parsed_scrobble_as_rank.milestone);
-                    plays_elem.style.setProperty('--hue-over', parsed_scrobble_as_rank.hue);
-                    plays_elem.style.setProperty('--sat-over', parsed_scrobble_as_rank.sat);
-                    plays_elem.style.setProperty('--lit-over', parsed_scrobble_as_rank.lit);
+                    plays_elem.setAttribute(
+                        'data-bleh--scrobble-milestone',
+                        parsed_scrobble_as_rank.milestone
+                    );
+                    plays_elem.style.setProperty(
+                        '--hue-over',
+                        parsed_scrobble_as_rank.hue
+                    );
+                    plays_elem.style.setProperty(
+                        '--sat-over',
+                        parsed_scrobble_as_rank.sat
+                    );
+                    plays_elem.style.setProperty(
+                        '--lit-over',
+                        parsed_scrobble_as_rank.lit
+                    );
                 }
             }
         }
@@ -190,12 +241,21 @@ export function music_grids(search=page.structure.main, use_colour = true) {
         let artist;
 
         if (!is_album) {
-            name.textContent = romanise(correct_artist(name.textContent.trim()));
+            name.textContent = romanise(
+                correct_artist(name.textContent.trim())
+            );
             insights.artist.labels.push(name.textContent);
         } else {
             artist = grid.querySelector('.grid-items-item-aux-block');
-            if (!artist) artist = grid.querySelector('.grid-items-item-aux-text');
+            if (!artist)
+                artist = grid.querySelector('.grid-items-item-aux-text');
             if (!artist) return;
+
+            save_hoshino_artwork(
+                image.src.replace('/500x500/', '/avatar300s/'),
+                name.textContent.trim(),
+                artist.textContent.trim()
+            );
 
             if (settings.format_guest_features) {
                 let name_elem = name;
@@ -203,7 +263,10 @@ export function music_grids(search=page.structure.main, use_colour = true) {
 
                 let song_title = name_elem.getAttribute('title');
 
-                let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
+                let formatted_title = name_includes(
+                    song_title,
+                    artist_elem.textContent.trim()
+                );
                 let song_tags = {};
 
                 if (formatted_title) {
@@ -214,23 +277,37 @@ export function music_grids(search=page.structure.main, use_colour = true) {
                 }
 
                 // combine
-                render(name_elem, html.node`
+                render(
+                    name_elem,
+                    html.node`
                     <span class="title">${song_title}</span>
-                    ${song_tags.map((tag) => html.node`
+                    ${song_tags.map(
+                        (tag) => html.node`
                         <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
-                    `)}
-                `);
+                    `
+                    )}
+                `
+                );
             } else {
-                artist.textContent = romanise(correct_artist(artist.textContent.trim()));
+                artist.textContent = romanise(
+                    correct_artist(artist.textContent.trim())
+                );
 
-                name.textContent = romanise(correct_item_by_artist(name.textContent.trim(), artist.textContent.trim()));
+                name.textContent = romanise(
+                    correct_item_by_artist(
+                        name.textContent.trim(),
+                        artist.textContent.trim()
+                    )
+                );
             }
         }
 
         const menu = tippy(grid, {
             theme: 'context-menu',
             content: html.node`
-                ${!is_album ? html.node`
+                ${
+                    !is_album ?
+                        html.node`
                 <div class="button-combo">
                     ${() => {
                         return html.node`
@@ -256,7 +333,8 @@ export function music_grids(search=page.structure.main, use_colour = true) {
                         return button;
                     }}
                 </div>
-                ` : html.node`
+                `
+                    :   html.node`
                 <div class="button-combo">
                     ${() => {
                         return html.node`
@@ -307,18 +385,23 @@ export function music_grids(search=page.structure.main, use_colour = true) {
                         return button;
                     }}
                 </div>
-                `}
+                `
+                }
                 <a class="dropdown-menu-clickable-item" data-type="gallery" href="${name.getAttribute('href')}/+images">
                     ${is_album ? tl(trans.artwork) : tl(trans.photos)}
                 </a>
                 <a class="dropdown-menu-clickable-item" data-type="wiki" href="${name.getAttribute('href')}/+wiki">
                     ${is_album ? tl(trans.wiki) : tl(trans.biography)}
                 </a>
-                ${!is_album ? html.node`
+                ${
+                    !is_album ?
+                        html.node`
                 <a class="dropdown-menu-clickable-item" data-type="listeners" href="${name.getAttribute('href')}/+listeners/you-know">
                     ${tl(trans.listeners)}
                 </a>
-                ` : ''}
+                `
+                    :   ''
+                }
                 <a class="dropdown-menu-clickable-item" data-type="shouts" href="${name.getAttribute('href')}/+shoutbox">
                     ${tl(trans.shouts)}
                 </a>
@@ -327,7 +410,11 @@ export function music_grids(search=page.structure.main, use_colour = true) {
                 </a>
                 <div class="sep" />
                 <button class="dropdown-menu-clickable-item" data-type="expand" onclick=${() => {
-                    expand_avatar(image.src.replace('/avatar300s/', '/ar0/').replace('/500x500/', 'ar0'));
+                    expand_avatar(
+                        image.src
+                            .replace('/avatar300s/', '/ar0/')
+                            .replace('/500x500/', 'ar0')
+                    );
                 }}>
                     ${tl(trans.expand)}
                 </button>
@@ -344,8 +431,8 @@ export function music_grids(search=page.structure.main, use_colour = true) {
             offset: [0, 0],
             appendTo: document.body,
 
-            onShow(instance) {
-                instance.popper.addEventListener('click', event => {
+            onCreate(instance) {
+                instance.popper.addEventListener('click', (event) => {
                     instance.hide();
                 });
             }
@@ -354,6 +441,5 @@ export function music_grids(search=page.structure.main, use_colour = true) {
         register_menu(grid, menu);
     });
 
-    if (page.subpage.startsWith('library'))
-        bleh_glacier_insights(insights);
+    if (page.subpage.startsWith('library')) bleh_glacier_insights(insights);
 }

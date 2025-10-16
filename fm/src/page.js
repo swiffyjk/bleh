@@ -23,7 +23,7 @@ import {
     sponsor_url
 } from './build/page';
 import { stored_season } from './build/seasonal';
-import { lang, lookup_lang, tl, trans } from './build/trans';
+import { lang, lookup_lang, tl, trans, translation_stats } from './build/trans';
 import { dialog, load_dialogs } from './components/dialog';
 import {
     correct_artist,
@@ -86,12 +86,15 @@ import { load_dismissed } from './components/dismissed.js';
 import { oracle_data } from './components/oracle.js';
 import { dynamic_theming } from './components/dynamic_theming.js';
 import { prepare_music } from './components/music.js';
+import { page_menu } from './components/menu.js';
+import { seasonal_colour_switch } from './components/settings.js';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
         if (document.head) {
             append_style();
             favi();
+            page.state.previous_title = document.title;
             document.title = '...';
 
             head_observer.disconnect();
@@ -103,6 +106,7 @@ export function bleh() {
     });
 
     let pre_observer = new MutationObserver((mutations) => {
+        log('pre', 'load', 'info', { mutations });
         if (document.body) {
             log(`${JSON.stringify(document.body.classList)}`, 'load');
             document.body.classList.add('bleh');
@@ -148,6 +152,10 @@ function bleh_main() {
 
     solarium();
 
+    translation_stats();
+
+    page_menu();
+
     // messaging
     load_dialogs();
     register_rabbit();
@@ -185,12 +193,21 @@ function bleh_main() {
 
         // last.fm is a single page application
         const observer = new MutationObserver((mutations) => {
+            if (!mutations[0]) return;
+            const nodes = [
+                ...mutations[0].addedNodes,
+                ...mutations[0].removedNodes
+            ];
             if (
-                mutations[0].addedNodes[0] &&
-                mutations[0].addedNodes.length == 0 &&
-                mutations[0].addedNodes[0].nodeType == 1 &&
-                mutations[0].addedNodes[0].hasAttribute('data-tippy-root')
+                nodes.length &&
+                nodes.every(
+                    (n) =>
+                        n.nodeType == 1 &&
+                        (n.hasAttribute('data-tippy-root') ||
+                            (n.id || '').startsWith('tippy-'))
+                )
             ) {
+                log('ignored', 'mutation', 'log', { mutations: mutations });
                 return;
             }
 
@@ -207,7 +224,10 @@ function bleh_main() {
         });
 
         let performance_end = performance.now();
-        log(`finished in ${performance_end - performance_start}`, 'load');
+        log(
+            `finished in ${(performance_end - performance_start) / 1000} seconds`,
+            'load'
+        );
     } catch (e) {
         handle_error(e);
     }
@@ -215,15 +235,8 @@ function bleh_main() {
 
 function solarium() {
     document.body.appendChild(html.node`
-        <svg style="position: absolute; width: 0; height: 0">
-            <filter
-                id="solarium"
-                x="0%"
-                y="0%"
-                width="100%"
-                height="100%"
-                filterUnits="objectBoundingBox"
-            >
+        <svg style="position:absolute; width:0; height:0">
+            <filter id="solarium" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
                 <feTurbulence
                     type="fractalNoise"
                     baseFrequency="0.001 0.005"
@@ -231,34 +244,20 @@ function solarium() {
                     seed="17"
                     result="turbulence"
                 />
-                <feComponentTransfer in="turbulence" result="mapped">
-                    <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5" />
-                    <feFuncG type="gamma" amplitude="0" exponent="1" offset="0" />
-                    <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
+                <feGaussianBlur in="turbulence" stdDeviation="10" result="softMap" />
+                <feFlood flood-color="white" result="flood" />
+                <feComposite in="flood" in2="SourceAlpha" operator="in" result="circleBase" />
+                <feMorphology in="circleBase" operator="erode" radius="0" result="innerCircle" />
+                <feGaussianBlur in="innerCircle" stdDeviation="150" result="radialFade" />
+                <feComponentTransfer in="radialFade" result="edgeMask">
+                    <feFuncR type="table" tableValues="0 1" />
+                    <feFuncG type="table" tableValues="0 1" />
+                    <feFuncB type="table" tableValues="0 1" />
                 </feComponentTransfer>
-                <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
-                <feSpecularLighting
-                    in="softMap"
-                    surfaceScale="5"
-                    specularConstant="1"
-                    specularExponent="100"
-                    lighting-color="white"
-                    result="specLight"
-                >
-                    <fePointLight x="-200" y="-200" z="300" />
-                </feSpecularLighting>
-                <feComposite
-                    in="specLight"
-                    operator="arithmetic"
-                    k1="0"
-                    k2="1"
-                    k3="1"
-                    k4="0"
-                    result="litImage"
-                />
+                <feBlend in="softMap" in2="edgeMask" mode="multiply" result="edgeDistortion" />
                 <feDisplacementMap
                     in="SourceGraphic"
-                    in2="softMap"
+                    in2="edgeDistortion"
                     scale="200"
                     xChannelSelector="R"
                     yChannelSelector="G"
@@ -312,6 +311,7 @@ export function handle_error_500() {
 }
 
 function main_flow() {
+    let performance_start = performance.now();
     assign_page();
 
     if (page.state.error) return;
@@ -414,6 +414,12 @@ function main_flow() {
     subscribe_to_events();
 
     dialog_extender();
+
+    let performance_end = performance.now();
+    log(
+        `finished in ${(performance_end - performance_start) / 1000} seconds`,
+        'loop'
+    );
 }
 
 function assign_page() {
@@ -489,6 +495,9 @@ function assign_page_subpage() {
 }
 
 function load_page() {
+    if (page.state.activity_preview_timer)
+        clearInterval(page.state.activity_preview_timer);
+
     page.state.settings_page = '';
     //hideAll({duration: 0});
 
@@ -566,9 +575,6 @@ function load_page() {
 
         if (settings.corrections) {
             if (page.type == 'artist') {
-                correct_generic_combo_no_artist(
-                    'artist-header-featured-items-item'
-                );
                 correct_generic_combo_no_artist('artist-top-albums-item');
             } else if (page.type == 'track') {
                 correct_generic_combo('source-album-details');
@@ -669,6 +675,8 @@ function load_page() {
                 shout_header(page.structure.main.querySelector('.shoutbox'));
         }
     }
+
+    seasonal_colour_switch();
 
     append_nav();
 
@@ -941,11 +949,16 @@ export async function register_background(url, origin = null) {
         settings.hue_from_album
     );
 
-    if (page.structure.content)
-        page.structure.content.style.setProperty('--banner', `url(${url})`);
+    background.removeAttribute('data-accent-based');
+    background.style.removeProperty('background-image');
 
-    if (url) background.style.setProperty('background-image', `url(${url})`);
-    else background.style.removeProperty('background-image');
+    if (url) {
+        if (url == 'accent') {
+            background.setAttribute('data-accent-based', true);
+        } else {
+            background.style.setProperty('background-image', `url(${url})`);
+        }
+    }
 
     if (page.type == 'user') {
         if (page.name == auth.name) {
@@ -971,16 +984,17 @@ function favi() {
     let favicon = document.querySelector('link[rel="icon"]');
     if (!favicon) return;
 
-    favicon.href = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? dark
-        : light;
+    favicon.href =
+        window.matchMedia('(prefers-color-scheme: dark)').matches ?
+            dark
+        :   light;
 
     window
         .matchMedia('(prefers-color-scheme: dark)')
         .addEventListener('change', function () {
-            favicon.href = window.matchMedia('(prefers-color-scheme: dark)')
-                .matches
-                ? dark
-                : light;
+            favicon.href =
+                window.matchMedia('(prefers-color-scheme: dark)').matches ?
+                    dark
+                :   light;
         });
 }

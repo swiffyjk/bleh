@@ -27,6 +27,7 @@ import { hex_to_hsl } from '../build/tools';
 import { log } from '../build/log';
 import { toggle } from '../components/toggle';
 import { status } from '../components/status';
+import { radio, radio_convert } from '../components/radio_toggle';
 
 let cropper;
 
@@ -1786,7 +1787,11 @@ function bleh_website() {
         .getAttribute('value');
 
     const auto_correct = page.structure.main.querySelector(
-        '[name="corrections_enabled"]'
+        '[name="corrections_enabled"]:checked'
+    );
+
+    const preferred_affiliate = page.structure.main.querySelector(
+        '[name="preferred_affiliate"]:checked'
     );
 
     const timezone = page.structure.main.querySelector('[name="timezone"]');
@@ -1801,94 +1806,141 @@ function bleh_website() {
     let timezone_text;
     page.structure.main.insertBefore(
         html.node`
-        <form class="dont-move" action="${root}settings/website" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <section class="bleh--panel">
-                <h4>${tl(trans.website)}</h4>
-                <div class="setting-group">
-                    ${toggle({
-                        value: auto_correct.checked,
-                        name: auto_correct.name,
-                        title: tl(trans.auto_correct_scrobbles.name),
-                        body: tl(trans.auto_correct_scrobbles.body),
-                        standalone: false
-                    })}
-                </div>
-                <div class="alert alert-danger">
-                    ${tl(trans.auto_correct_scrobbles.warning)}
-                </div>
-            </section>
-            <section class="bleh--panel">
-                <h4>${tl(trans.events)}</h4>
-                <div class="setting-group">
-                    <div class="setting v2" data-type="select">
-                        <div class="heading">
-                            <h5>${tl(trans.timezone)}</h5>
-                            <p ref=${(el) => (timezone_text = el)}>${help_text.textContent.trim()}</p>
-                        </div>
-                        ${select(
-                            select_prepare(timezone),
-                            timezone.value,
-                            timezone.name,
-                            (val) => {
-                                fetch(
-                                    `${root}settings/partial/timezone-help-text?tz=${val}&ajax=1`
-                                )
-                                    .then((res) => res.text())
-                                    .then((dom) => {
-                                        const parser = new DOMParser();
-                                        const doc = parser.parseFromString(
-                                            dom,
-                                            'text/html'
-                                        );
-
-                                        const text = doc.querySelector('p');
-                                        if (!text) return;
-
-                                        timezone_text.textContent =
-                                            text.textContent;
-                                    })
-                                    .catch((e) =>
-                                        log(
-                                            'unable to get text',
-                                            'timezone',
-                                            'error',
-                                            { e }
+            <form class="dont-move" action="${root}settings/website" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <section class="bleh--panel">
+                    <h4>${tl(trans.website)}</h4>
+                    <div class="setting-group">
+                        <div class="setting v2" data-type="options">
+                            <div class="heading">
+                                <h5>${tl(trans.auto_correct_scrobbles.name)}</h5>
+                                <p>${tl(trans.auto_correct_scrobbles.body)}</p>
+                            </div>
+                            ${radio({
+                                name: auto_correct.name,
+                                value: auto_correct.value,
+                                values: {
+                                    False: {
+                                        name: tl(
+                                            trans.auto_correct_scrobbles.false
                                         )
-                                    );
-                            }
-                        )}
-                    </div>
-                    <div class="setting v2" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.location.name)}</h5>
-                            <p>${tl(trans.location.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            ${location}
+                                    },
+                                    True: {
+                                        name: tl(
+                                            trans.auto_correct_scrobbles.true
+                                        )
+                                    }
+                                }
+                            })}
                         </div>
                     </div>
-                    <div class="setting v2" data-type="select">
-                        <div class="heading">
-                            <h5>${tl(trans.event_radius)}</h5>
-                        </div>
-                        ${select(select_prepare(radius), radius.value, radius.name)}
+                    <div class="alert alert-danger">
+                        ${tl(trans.auto_correct_scrobbles.warning)}
                     </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
-                    </button>
-                    <input type="hidden" value="website" name="submit">
-                </div>
+                </section>
+                <section class="bleh--panel">
+                    <h4>${tl(trans.events)}</h4>
+                    <div class="setting-group">
+                        <div class="setting v2" data-type="select">
+                            <div class="heading">
+                                <h5>${tl(trans.timezone)}</h5>
+                                <p ref=${(el) => (timezone_text = el)}>${help_text.textContent.trim()}</p>
+                            </div>
+                            ${select(
+                                select_prepare(timezone),
+                                timezone.value,
+                                timezone.name,
+                                (val) => {
+                                    fetch(
+                                        `${root}settings/partial/timezone-help-text?tz=${val}&ajax=1`
+                                    )
+                                        .then((res) => res.text())
+                                        .then((dom) => {
+                                            const parser = new DOMParser();
+                                            const doc = parser.parseFromString(
+                                                dom,
+                                                'text/html'
+                                            );
+
+                                            const text = doc.querySelector('p');
+                                            if (!text) return;
+
+                                            timezone_text.textContent =
+                                                text.textContent;
+                                        })
+                                        .catch((e) =>
+                                            log(
+                                                'unable to get text',
+                                                'timezone',
+                                                'error',
+                                                { e }
+                                            )
+                                        );
+                                }
+                            )}
+                        </div>
+                        <div class="setting v2" data-type="action">
+                            <div class="heading">
+                                <h5>${tl(trans.location.name)}</h5>
+                                <p>${tl(trans.location.body)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                ${location}
+                            </div>
+                        </div>
+                        <div class="setting v2" data-type="select">
+                            <div class="heading">
+                                <h5>${tl(trans.event_radius)}</h5>
+                            </div>
+                            ${select(select_prepare(radius), radius.value, radius.name)}
+                        </div>
+                    </div>
+                    <div class="settings-footer end">
+                        <button type="submit" class="btn-primary save">
+                            ${tl(trans.save)}
+                        </button>
+                        <input type="hidden" value="website" name="submit">
+                    </div>
+                </section>
+            </form>
+            <section class="bleh--panel">
+                <h4>${tl(trans.playback)}</h4>
+                <form action="${root}settings/website" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${token}>
+                    <div class="setting-group">
+                        <div class="setting v2" data-type="options">
+                            <div class="heading">
+                                <h5>${tl(trans.preferred_affiliate.name)}</h5>
+                                <p>${tl(trans.preferred_affiliate.body)}</p>
+                            </div>
+                            ${radio({
+                                name: preferred_affiliate.name,
+                                value: preferred_affiliate.value,
+                                values: radio_convert(
+                                    page.structure.main.querySelectorAll(
+                                        '#id_preferred_affiliate > .lfm-form-radio'
+                                    )
+                                )
+                            })}
+                        </div>
+                    </div>
+                    <div class="settings-footer end">
+                        <button type="submit" class="btn-primary save">
+                            ${tl(trans.save)}
+                        </button>
+                        <input type="hidden" value="playback" name="submit">
+                    </div>
+                </form>
             </section>
-        </form>
-    `,
+        `,
         page.structure.main.firstElementChild
     );
 
     const website = page.structure.main.querySelector('#website');
     website.remove();
+
+    const playback = page.structure.main.querySelector('#playback');
+    playback.remove();
 }
 
 function bleh_applications() {
@@ -1909,20 +1961,16 @@ function bleh_applications() {
         html`
             <section class="applications">
                 <div class="section-intro">
-                    <h3>Applications</h3>
-                    <p>
-                        Connect your account to third-party services for a
-                        better scrobbling experience. Make sure you trust the
-                        services below.
-                    </p>
+                    <h3>${tl(trans.applications)}</h3>
+                    <p>${tl(trans.applications_intro)}</p>
                 </div>
                 ${suggested ?
                     html`
-                        <h2>Suggested</h2>
+                        <h2>${tl(trans.suggested)}</h2>
                         ${suggested}
                     `
                 :   ''}
-                <h2>Connected</h2>
+                <h2>${tl(trans.connected)}</h2>
                 ${connected}
             </section>
         `

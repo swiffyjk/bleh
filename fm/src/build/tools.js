@@ -12,6 +12,7 @@ import { html } from 'lighterhtml';
 import { root } from './page.js';
 import * as wanakana from 'wanakana';
 import * as hangulRomanization from 'hangul-romanization';
+import { DateTime } from 'luxon';
 
 // https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
 /**
@@ -124,6 +125,8 @@ function round_two(value) {
  * @returns {number}
  */
 export function clean_number(string) {
+    if (!string) return 0;
+
     return int(string.replaceAll(',', '').replaceAll('.', ''));
 }
 
@@ -135,7 +138,9 @@ export function clean_number(string) {
  * @see desanitise
  */
 export function sanitise(text, method = '+') {
-    return encodeURIComponent(text.replaceAll(' ', method));
+    return encodeURIComponent(text)
+        .replaceAll('%2B', '%252B')
+        .replaceAll('%20', method);
 }
 
 /**
@@ -160,7 +165,10 @@ export function sanitise_text(text) {
  * @see sanitise
  */
 export function desanitise(text, method = '+') {
-    return decodeURIComponent(text).replaceAll(method, ' ');
+    return decodeURIComponent(text.replaceAll(method, '%20')).replaceAll(
+        '%252B',
+        '+'
+    );
 }
 
 /**
@@ -183,7 +191,7 @@ export function return_artist_from_track(url, is_album) {
     // leading to the % being encoded as %25 (very stupid)
     let passes = 0;
     while (/%[0-9A-Fa-f]{2}/.test(desanitised) && passes < 5) {
-        desanitised = desanitise(desanitised, '+');
+        desanitised = desanitise(desanitised);
         passes++;
     }
 
@@ -416,4 +424,36 @@ export function title_case(text) {
 
 export function int(num) {
     return parseInt(num.replace(/\u00A0/g, ''));
+}
+
+export function time(string = '') {
+    if (string == '') string = new Date().toString();
+
+    const date = DateTime.fromJSDate(new Date(string));
+
+    return date.toFormat('HH:mm:ss Z');
+}
+
+export function int_from_string(string) {
+    const match = string.match(/[\d.,\s\u00A0\u202F]+/);
+    if (match) return clean_number(match[0]);
+
+    return string;
+}
+
+export function set_storage(key, val) {
+    try {
+        localStorage.setItem(key, val);
+        log(`set ${key}`, 'storage', 'info', { key, val });
+    } catch (e) {
+        log(`failed to set ${key}`, 'storage', 'error', { key, val, e });
+        console.error(e);
+        notify({
+            id: 'storage',
+            title: `Failed to set ${key}`,
+            body: e.message ? e.message : e,
+            type: 'error',
+            persist: true
+        });
+    }
 }

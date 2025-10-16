@@ -4,19 +4,24 @@
 // Licensed under GPLv3
 //
 
-import {page, root} from "../build/page.js";
-import {tl, trans} from "../build/trans.js";
-import {html, render} from "lighterhtml";
-import {toggle} from "./toggle.js";
-import {log} from "../build/log.js";
-import {correct_artist, correct_item_by_artist} from "./lotus.js";
+import { page, root } from '../build/page.js';
+import { tl, trans } from '../build/trans.js';
+import { html, render } from 'lighterhtml';
+import { toggle } from './toggle.js';
+import { log } from '../build/log.js';
+import { correct_artist, correct_item_by_artist } from './lotus.js';
 
 export function dialog_extender() {
+    log('dialog extender', 'loop');
     // data-processed=true is signature of bulk edit
-    let wrappers = document.body.querySelectorAll(':scope > .popup_wrapper, :scope > div > .popup_wrapper');
+    let wrappers = document.body.querySelectorAll(
+        ':scope > .popup_wrapper, :scope > div > .popup_wrapper'
+    );
 
-    wrappers.forEach(wrapper => {
-        let modal_dialog = wrapper.querySelector('.modal-dialog:not([data-dialog-extender])');
+    wrappers.forEach((wrapper) => {
+        let modal_dialog = wrapper.querySelector(
+            '.modal-dialog:not([data-dialog-extender])'
+        );
         if (!modal_dialog) return;
 
         modal_dialog.setAttribute('data-dialog-extender', 'true');
@@ -25,7 +30,6 @@ export function dialog_extender() {
         let title = body.querySelector('.modal-title');
 
         let contents = body.querySelector(':scope > div');
-
 
         let form = contents.querySelector('form');
         if (!form) return;
@@ -41,46 +45,64 @@ export function dialog_extender() {
             title.textContent = tl(trans.saved_to_bookmarks);
 
             let new_form;
-            render(contents, html`
-                <div class="big-modal-alert">
-                    ${{html: tl(trans.bookmark_save_msg).replace('{link}', `<a class="see-more" href="${root}music/+bookmarks">${tl(trans.go_there_now_lower)}</a>`)}}
-                </div>
-                <form method="post" ref=${el => new_form = el} onsubmit=${async (e) => {
-                    e.preventDefault();
-
-                    let url = `${root}music/+bookmarks/modal/added`;
-                    let form_data = new FormData(new_form);
-
-                    console.info(form_data);
-
-                    try {
-                        await fetch(url, {
-                            method: 'POST',
-                            body: form_data
-                        }).then(res => {
-                            let data = res.json();
-
-                            log('received response', 'form', 'info', {data: data});
-                            dismiss.click();
-                        });
-                    } catch(e) {
-                        console.error(e);
-                    }
-                }}>
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                    <div class="modal-footer">
-                        ${toggle({
-                            value: true,
-                            type: 'checkbox',
-                            name: 'always_show',
-                            title: tl(trans.always_remind_me)
-                        })}
-                        <button class="btn primary done" type="submit">
-                            ${tl(trans.done)}
-                        </button>
+            render(
+                contents,
+                html`
+                    <div class="big-modal-alert">
+                        ${{
+                            html: tl(trans.bookmark_save_msg).replace(
+                                '{link}',
+                                `<a class="see-more" href="${root}music/+bookmarks">${tl(trans.go_there_now_lower)}</a>`
+                            )
+                        }}
                     </div>
-                </form>
-            `);
+                    <form
+                        method="post"
+                        ref=${(el) => (new_form = el)}
+                        onsubmit=${async (e) => {
+                            e.preventDefault();
+
+                            let url = `${root}music/+bookmarks/modal/added`;
+                            let form_data = new FormData(new_form);
+
+                            console.info(form_data);
+
+                            try {
+                                await fetch(url, {
+                                    method: 'POST',
+                                    body: form_data
+                                }).then((res) => {
+                                    let data = res.json();
+
+                                    log('received response', 'form', 'info', {
+                                        data: data
+                                    });
+                                    dismiss.click();
+                                });
+                            } catch (e) {
+                                console.error(e);
+                            }
+                        }}
+                    >
+                        <input
+                            type="hidden"
+                            name="csrfmiddlewaretoken"
+                            value="${page.token}"
+                        />
+                        <div class="modal-footer">
+                            ${toggle({
+                                value: true,
+                                type: 'checkbox',
+                                name: 'always_show',
+                                title: tl(trans.always_remind_me)
+                            })}
+                            <button class="btn primary done" type="submit">
+                                ${tl(trans.done)}
+                            </button>
+                        </div>
+                    </form>
+                `
+            );
         } else if (body.classList.contains('automatic-edit-modal-body-v2')) {
             // automatic edit v2
 
@@ -90,10 +112,8 @@ export function dialog_extender() {
             let edit_all = body.querySelector('[name="edit_all"]');
             if (edit_all && edit_all.disabled) bulk_edit_active = true;
 
-            if (!bulk_edit_active)
-                title.textContent = tl(trans.edit_scrobble);
-            else
-                title.textContent = tl(trans.edit_scrobbles_in_bulk);
+            if (!bulk_edit_active) title.textContent = tl(trans.edit_scrobble);
+            else title.textContent = tl(trans.edit_scrobbles_in_bulk);
 
             modal_dialog.classList.add('automatic-edit-modal');
 
@@ -106,21 +126,28 @@ export function dialog_extender() {
                 let text = checkbox.textContent.trim();
                 let disabled = input_el.disabled;
 
-                render(checkbox.parentElement, html`
-                    ${toggle({
-                        value: value,
-                        type: 'checkbox',
-                        name: name,
-                        title: text,
-                        disabled: disabled,
-                        data: input_el.value
-                    })}
-                `);
+                render(
+                    checkbox.parentElement,
+                    html`
+                        ${toggle({
+                            value: value,
+                            type: 'checkbox',
+                            name: name,
+                            title: text,
+                            disabled: disabled,
+                            data: input_el.value
+                        })}
+                    `
+                );
             });
 
-            let original_fields = body.querySelectorAll('.edit-scrobble-label--originally');
+            let original_fields = body.querySelectorAll(
+                '.edit-scrobble-label--originally'
+            );
             original_fields.forEach((field) => {
-                field.textContent = field.textContent.trim().replace(/"([^"]*)"/g, '‘$1’');
+                field.textContent = field.textContent
+                    .trim()
+                    .replace(/"([^"]*)"/g, '‘$1’');
             });
 
             let submit = body.querySelector('.form-group--submit');
@@ -128,36 +155,52 @@ export function dialog_extender() {
 
             let delete_form = body.querySelector('.edit-scrobble-form-delete');
             let delete_btn;
-            if (delete_form) delete_btn = delete_form.querySelector('.btn-delete');
+            if (delete_form)
+                delete_btn = delete_form.querySelector('.btn-delete');
 
-            render(submit, html`
-                <button class="see-more cancel" type="button" onclick=${() => dismiss.click()}>
-                    ${tl(trans.cancel)}
-                </button>
-                <div class="fill" />
-                <div class="button-group">
-                    ${delete_form ? html.node`
+            render(
+                submit,
+                html`
+                    <button
+                        class="see-more cancel"
+                        type="button"
+                        onclick=${() => dismiss.click()}
+                    >
+                        ${tl(trans.cancel)}
+                    </button>
+                    <div class="fill" />
+                    <div class="button-group">
+                        ${delete_form ?
+                            html.node`
                     <button class="btn icon danger-subtle" data-type="delete" type="button" onclick=${() => {
                         delete_btn.click();
                     }}>
                         ${tl(trans.delete)}
                     </button>
-                    ` : ''}
-                    ${submit.querySelector('input')}
-                    <button class="btn primary icon" data-type="item-edit" type="submit">
-                        ${tl(trans.edit)}
-                    </button>
-                </div>
-            `);
+                    `
+                        :   ''}
+                        ${submit.querySelector('input')}
+                        <button
+                            class="btn primary icon"
+                            data-type="item-edit"
+                            type="submit"
+                        >
+                            ${tl(trans.edit)}
+                        </button>
+                    </div>
+                `
+            );
         } else if (body.querySelector('.lastfm-bulk-edit-list')) {
             // bulk edit
             // select albums to edit
 
             let checks;
 
-            let controls = body.querySelector('.lastfm-bulk-edit-form-group-controls');
+            let controls = body.querySelector(
+                '.lastfm-bulk-edit-form-group-controls'
+            );
             if (controls) {
-                let parent = controls.parentElement
+                let parent = controls.parentElement;
                 parent.parentElement.removeChild(parent);
 
                 let disclaimer = body.querySelector('.form-disclaimer');
@@ -195,32 +238,51 @@ export function dialog_extender() {
                 let disabled = input_el.disabled;
                 let data = input_el.getAttribute('value');
 
-                let item_artist = correct_artist(checkbox.querySelector('div').title);
-                let item_name = correct_item_by_artist(checkbox.querySelector('strong').title, item_artist);
-                let item_scrobbles = checkbox.querySelector('small').textContent.trim();
+                let item_artist = correct_artist(
+                    checkbox.querySelector('div').title
+                );
+                let item_name = correct_item_by_artist(
+                    checkbox.querySelector('strong').title,
+                    item_artist
+                );
+                let item_scrobbles = checkbox
+                    .querySelector('small')
+                    .textContent.trim();
 
-                render(checkbox.parentElement, html`
-                    ${toggle({
-                        value: value,
-                        type: 'checkbox',
-                        name: name,
-                        title: item_name + tl(trans.by_artist).replace('{a}', item_artist),
-                        body: item_scrobbles,
-                        disabled: disabled,
-                        data: data
-                    })}
-                `);
+                render(
+                    checkbox.parentElement,
+                    html`
+                        ${toggle({
+                            value: value,
+                            type: 'checkbox',
+                            name: name,
+                            title:
+                                item_name +
+                                tl(trans.by_artist).replace('{a}', item_artist),
+                            body: item_scrobbles,
+                            disabled: disabled,
+                            data: data
+                        })}
+                    `
+                );
             });
 
             checks = list.querySelectorAll('.setting');
 
             let footer = body.querySelector('.form-group--submit');
             footer.classList = 'modal-footer';
-            render(footer, html`
-                <button class="see-more cancel" type="reset">${tl(trans.cancel)}</button>
-                <div class="fill" />
-                <button class="btn primary continue" type="submit">${tl(trans.continue)}</button>
-            `);
+            render(
+                footer,
+                html`
+                    <button class="see-more cancel" type="reset">
+                        ${tl(trans.cancel)}
+                    </button>
+                    <div class="fill" />
+                    <button class="btn primary continue" type="submit">
+                        ${tl(trans.continue)}
+                    </button>
+                `
+            );
         }
     });
 }

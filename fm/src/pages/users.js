@@ -7,8 +7,9 @@
 import { render } from 'lighterhtml';
 import { page } from '../build/page';
 import { markdown } from '../components/markdown';
-import { patch_avatar } from '../avatar.js';
+import { patch_avatar, style_name_from_badge } from '../avatar.js';
 import { correct_artist } from '../components/lotus.js';
+import { log } from '../build/log.js';
 
 export function bleh_users() {
     let users = page.structure.main.querySelectorAll(
@@ -16,16 +17,20 @@ export function bleh_users() {
     );
     users.forEach((user) => {
         let avatar = user.querySelector('.user-list-avatar');
-        let name = user.querySelector('.user-list-link').textContent;
+        let name = user.querySelector('.user-list-link');
 
-        patch_avatar(avatar, name, 'follow');
+        const badge = patch_avatar(avatar, name.textContent, 'follow');
+        style_name_from_badge(name, badge);
 
         let artists = user.querySelectorAll('.user-list-shared-artists a');
         artists.forEach((artist) => {
             artist.textContent = correct_artist(artist.textContent);
         });
 
-        let md = user.querySelector('.user-list-about-me');
+        const md = user.querySelector('.user-list-about-me');
+
+        log('patching', 'user', 'info', { user, name: name?.textContent, md });
+
         if (md) {
             render(
                 md,

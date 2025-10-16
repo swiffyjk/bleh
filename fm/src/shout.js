@@ -4,7 +4,7 @@
 // Licensed under GPLv3
 //
 
-import { patch_avatar } from './avatar';
+import { patch_avatar, style_name_from_badge } from './avatar';
 import { settings } from './build/config';
 import { log } from './build/log';
 import { auth, page, shout_parse_queue } from './build/page';
@@ -54,18 +54,7 @@ export function patch_shouts() {
                 if (badge.type && badge.type == 'avatar-status-dot--staff')
                     shout.classList.add('staff-shout');
 
-                if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
-                    shout_name.style.setProperty('--hue-over', badge.hue);
-                    shout_name.style.setProperty('--sat-over', badge.sat);
-                    shout_name.style.setProperty('--lit-over', badge.lit);
-                } else if (badge.type) {
-                    shout_name.classList.add(
-                        `user-status--bleh-${badge.type}`,
-                        `user-status--bleh-user-${badge.user}`
-                    );
-                }
-            } else if (badge) {
-                shout_name.classList.add(badge.type);
+                style_name_from_badge(shout_name, badge);
             }
 
             const shout_body = shout.querySelector('.shout-body p');
@@ -194,6 +183,7 @@ export function patch_shouts() {
         const textarea = shout_form.querySelector('textarea');
 
         let chars;
+        let preview;
         render(
             help_text,
             html`
@@ -206,6 +196,8 @@ export function patch_shouts() {
                 <div
                     class="tip preview"
                     onclick=${() => markdown_preview(textarea.value)}
+                    ref=${(el) => (preview = el)}
+                    disabled="true"
                 >
                     ${tl(trans.preview)}
                 </div>
@@ -221,6 +213,8 @@ export function patch_shouts() {
                 v: `${value.length}/1000`
             });
             chars.setAttribute('data-exceeded', value.length >= 1000);
+
+            preview.setAttribute('disabled', value.length <= 0);
         });
 
         shout_form.addEventListener('keydown', (e) => {

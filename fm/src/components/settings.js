@@ -20,6 +20,7 @@ import { select } from './select.js';
 import { input } from './input.js';
 import { status } from './status.js';
 import { chart_reflow } from '../chart.js';
+import { set_storage } from '../build/tools.js';
 
 export function setting({
     id = '',
@@ -42,11 +43,26 @@ export function setting({
             });
 
         const type = settings_store[id].type || 'toggle';
-        const title = settings_store[id].title
-            ? tl(settings_store[id].title)
-            : id;
+        const title =
+            settings_store[id].title ? tl(settings_store[id].title) : id;
         let body = settings_store[id].body ? tl(settings_store[id].body) : null;
         const icon = settings_store[id].icon;
+
+        if (
+            ![
+                'toggle',
+                'range',
+                'text',
+                'checkbox',
+                'tabs',
+                'radio',
+                'list',
+                'select'
+            ].includes(type)
+        )
+            return setting_fail(id, {
+                message: `Invalid type "${type}"`
+            });
 
         const incompatible_with = settings_store[id].incompatible;
         const hide_if_incompatible =
@@ -61,10 +77,20 @@ export function setting({
             settings_store[id].platforms &&
             !settings_store[id].platforms.includes(page.platform)
         ) {
+            const platforms = {
+                win32: 'Windows',
+                darwin: 'macOS',
+                ios: 'iOS',
+                android: 'Android',
+                linux: 'Linux',
+                other: tl(trans.platforms.other)
+            };
+
             disabled = true;
-            disabled_reason = tl(trans.item_is_unavailable_on_platform)
-                .replace('{i}', title)
-                .replace('{p}', tl(trans.platforms[page.platform]));
+            disabled_reason = tl(trans.item_is_unavailable_on_platform, {
+                i: title,
+                p: platforms[page.platform]
+            });
         }
 
         if (disabled && disabled_reason)
@@ -84,33 +110,33 @@ export function setting({
                 html.node`<span class="new-badge new">${tl(trans.new)}</span>`
             );
 
-        if (type === 'toggle') {
+        if (type == 'toggle') {
             let toggle;
 
             const elem = html.node`
                 <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="toggle" disabled=${disabled} data-hide=${hide_if_incompatible} onclick=${() => update_toggle()}>
                     ${
-                        icon
-                            ? html.node`
+                        icon ?
+                            html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        text
-                            ? html.node`
+                        text ?
+                            html.node`
                     <div class="heading">
                         <h5>${html_title}</h5>
                         ${body ? html.node`<p>${body}</p>` : ''}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        settings_store[id].extensions
-                            ? html.node`
+                        settings_store[id].extensions ?
+                            html.node`
                     <div class="extensions">
                         ${settings_store[id].extensions.map(
                             (extension) => () => {
@@ -131,7 +157,7 @@ export function setting({
                         )}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="toggle-wrap">
@@ -179,7 +205,7 @@ export function setting({
             elem.compat();
 
             return elem;
-        } else if (type === 'range') {
+        } else if (type == 'range') {
             let option;
 
             let min = settings_store[id].min || 0;
@@ -203,18 +229,18 @@ export function setting({
             const elem = html.node`
                 <div class="setting v2 ${standalone ? 'standalone' : ''} ${settings_store[id].vertical ? 'v' : ''}" data-type="range" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => (option = el)} data-modified=${value != settings_store[id].default}>
                     ${
-                        text
-                            ? html.node`
+                        text ?
+                            html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${(el) => (reset_btn = el)} onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ''}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        settings_store[id].extensions
-                            ? html.node`
+                        settings_store[id].extensions ?
+                            html.node`
                     <div class="extensions">
                         ${settings_store[id].extensions.map(
                             (extension) => () => {
@@ -233,11 +259,11 @@ export function setting({
                         )}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="range">
-                        <div class="track" style="--percent: ${((value - settings_store[id].min) / working_max) * 100}%" data-id=${id} ref=${(el) => (track = el)}>
+                        <div class="track colourful" style="--percent: ${((value - settings_store[id].min) / working_max) * 100}%" data-id=${id} ref=${(el) => (track = el)}>
                             <div class="fill" />
                             <div class="nub" />
                         </div>
@@ -301,7 +327,7 @@ export function setting({
             }
 
             return elem;
-        } else if (type === 'text') {
+        } else if (type == 'text') {
             let option;
 
             let min = settings_store[id].min || 0;
@@ -328,27 +354,27 @@ export function setting({
             let container = html.node`
                 <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="text" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => (option = el)} data-modified=${value != settings_store[id].default}>
                     ${
-                        icon
-                            ? html.node`
+                        icon ?
+                            html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        text
-                            ? html.node`
+                        text ?
+                            html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${(el) => (reset_btn = el)} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ''}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        settings_store[id].extensions
-                            ? html.node`
+                        settings_store[id].extensions ?
+                            html.node`
                     <div class="extensions">
                         ${settings_store[id].extensions.map(
                             (extension) => () => {
@@ -367,19 +393,19 @@ export function setting({
                         )}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     ${
-                        settings_store[id].avatar
-                            ? html.node`
+                        settings_store[id].avatar ?
+                            html.node`
                     <div class="avatar-container">
                         <div class="avatar-inner" ref=${(el) => (avatar = el)}>
                             <img src=${localStorage.getItem(`bleh_${id}_avi`) || ''} alt=${value} />
                         </div>
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${(el) => (input_container = el)}>
                         <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => (input = el)} placeholder=${placeholder} />
@@ -489,27 +515,27 @@ export function setting({
             const elem = html.node`
                 <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''} ${standalone ? 'standalone' : ''}" data-type="checkbox" disabled=${disabled} data-hide=${hide_if_incompatible} onclick=${() => update_toggle()}>
                     ${
-                        icon
-                            ? html.node`
+                        icon ?
+                            html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        text
-                            ? html.node`
+                        text ?
+                            html.node`
                     <div class="heading">
                         <h5>${html_title}</h5>
                         ${body ? html.node`<p>${body}</p>` : ''}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        settings_store[id].extensions
-                            ? html.node`
+                        settings_store[id].extensions ?
+                            html.node`
                     <div class="extensions">
                         ${settings_store[id].extensions.map(
                             (extension) => () => {
@@ -528,7 +554,7 @@ export function setting({
                         )}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="check">
@@ -622,27 +648,27 @@ export function setting({
             const elem = html.node`
                 <div class="setting v2" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
                     ${
-                        icon
-                            ? html.node`
+                        icon ?
+                            html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        text
-                            ? html.node`
+                        text ?
+                            html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${(el) => (reset_btn = el)} onclick=${() => reset_radio()}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ''}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        settings_store[id].extensions
-                            ? html.node`
+                        settings_store[id].extensions ?
+                            html.node`
                     <div class="extensions">
                         ${settings_store[id].extensions.map(
                             (extension) => () => {
@@ -661,21 +687,35 @@ export function setting({
                         )}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="primary-selections">
                         ${Object.entries(settings_store[id].values).map(
                             ([key, val]) => {
-                                const icon = val.icon || key;
+                                const icon = val.icon;
 
                                 const button = html.node`
-                                <button class="btn primary-selection no-icon" data-type=${icon} data-value=${key} onclick=${() => {
-                                    update_radio(key);
-                                }} aria-checked=${value == key}>
-                                    <h5>${typeof val.name === 'object' ? tl(val.name) : val.name}</h5>
-                                </button>
-                            `;
+                                    <div class="setting v2 standalone" data-type="radio" data-value=${key} onclick=${() => {
+                                        update_radio(key);
+                                    }}>
+                                        <div class="radio-cont">
+                                            <div class="radio" aria-checked=${value == key} />
+                                        </div>
+                                        ${
+                                            icon ?
+                                                html.node`
+                                                    <div class="icon">
+                                                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                                                    </div>
+                                                `
+                                            :   ''
+                                        }
+                                        <div class="heading">
+                                            <h5>${typeof val.name == 'object' ? tl(val.name) : val.name}</h5>
+                                        </div>
+                                    </div>
+                                `;
 
                                 buttons.push(button);
                                 return button;
@@ -718,7 +758,7 @@ export function setting({
                 );
 
                 buttons.forEach((btn) => {
-                    btn.setAttribute(
+                    btn.querySelector('.radio').setAttribute(
                         'aria-checked',
                         btn.getAttribute('data-value') == val
                     );
@@ -747,23 +787,23 @@ export function setting({
             const elem = html.node`
                 <div class="setting v2" data-type="list">
                     ${
-                        icon
-                            ? html.node`
+                        icon ?
+                            html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        text
-                            ? html.node`
+                        text ?
+                            html.node`
                     <div class="heading">
                         <h5>${html_title}</h5>
                         ${body ? html.node`<p>${body}</p>` : ''}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     <div class="setting-lists" ref=${(el) => (lists = el)} />
                 </div>
@@ -817,11 +857,11 @@ export function setting({
                                     if (func) func(new_list);
                                 }}>
                                     ${
-                                        list[val]?.icon != null
-                                            ? html.node`
+                                        list[val]?.icon != null ?
+                                            html.node`
                                     <div class="bleh-icon" data-type=${list[val].icon} />
                                     `
-                                            : ''
+                                        :   ''
                                     }
                                     <div class="info">
                                         ${list[val]?.name || val}
@@ -831,8 +871,8 @@ export function setting({
                                 </button>
                             `;
                         })}
-                        ${!settings_store[id].predefined
-                            ? html.node`
+                        ${!settings_store[id].predefined ?
+                            html.node`
                             <button class="setting-list-item current" onclick=${() => {
                                 let input_box;
 
@@ -883,9 +923,9 @@ export function setting({
                                 <div class="bleh-icon indicator" data-type="add" />
                             </button>
                         `
-                            : ''}
-                        ${settings_store[id].predefined
-                            ? html.node`
+                        :   ''}
+                        ${settings_store[id].predefined ?
+                            html.node`
                         ${Object.entries(available).map(([val, formal]) => {
                             return html.node`
                                 <button class="setting-list-item" data-host=${formal.host} onclick=${() => {
@@ -897,11 +937,11 @@ export function setting({
                                     if (func) func(new_list);
                                 }}>
                                     ${
-                                        formal.icon != null
-                                            ? html.node`
+                                        formal.icon != null ?
+                                            html.node`
                                     <div class="bleh-icon" data-type=${formal.icon} />
                                     `
-                                            : ''
+                                        :   ''
                                     }
                                     <div class="info">
                                         ${formal.name}
@@ -912,7 +952,7 @@ export function setting({
                             `;
                         })}
                     `
-                            : ''}
+                        :   ''}
                     `
                 );
             }
@@ -936,27 +976,27 @@ export function setting({
             elem = html.node`
                 <div class="setting v2" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
                     ${
-                        icon
-                            ? html.node`
+                        icon ?
+                            html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        text
-                            ? html.node`
+                        text ?
+                            html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${(el) => (reset_btn = el)} onclick=${() => reset_select()}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ''}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${
-                        settings_store[id].extensions
-                            ? html.node`
+                        settings_store[id].extensions ?
+                            html.node`
                     <div class="extensions">
                         ${settings_store[id].extensions.map(
                             (extension) => () => {
@@ -975,7 +1015,7 @@ export function setting({
                         )}
                     </div>
                     `
-                            : ''
+                        :   ''
                     }
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     ${(menu = select(list, value, '', (val) => {
@@ -1181,6 +1221,8 @@ export function save_setting(id, value) {
         );
     }
 
+    seasonal_colour_switch();
+
     if (
         settings_store[id].require_reload == true ||
         (settings_store[id].require_reload == 'partial' &&
@@ -1193,6 +1235,18 @@ export function save_setting(id, value) {
         settings: settings,
         settings_id: settings[id]
     });
+}
+
+export function seasonal_colour_switch() {
+    const has_user_accent = document.body.style.getPropertyValue('--hue-album');
+
+    document.documentElement.setAttribute(
+        'data-seasonal-accent',
+        settings.hue == 255 &&
+            settings.sat == 1 &&
+            settings.lit == 1 &&
+            !has_user_accent
+    );
 }
 
 export function compile_settings() {
@@ -1220,7 +1274,7 @@ export function compile_settings() {
 
     clone.version = version.build;
 
-    localStorage.setItem('bleh', JSON.stringify(clone));
+    set_storage('bleh', JSON.stringify(clone));
 
     return clone;
 }
