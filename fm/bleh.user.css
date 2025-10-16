@@ -190,10 +190,11 @@
         --trans: 0.1s;
         --trans-function: cubic-bezier(0.61, 0.36, 0.1, 0.93);
 
-        --button-sides: 8px;
+        --button-sides: 10px;
+        --button-sides-icon: calc(var(--button-sides) - 2px);
         --button-verts: 6px;
         --button-height: 30px;
-        --button-radius: 13px;
+        --button-radius: 12px;
         --icon-size: 18px;
         --icon-half: 9px;
         --icon-gap: 4px;
@@ -280,8 +281,8 @@
         --card-border-base-highlight: hsl(var(--b2), 0.55);
 
         --normal-shadow:
-            inset 0 1px 0 0 hsl(var(--b2)),
-            inset 0 -30px 20px -20px hsl(var(--b6), 40%);
+            inset 0 1px 0 0 hsl(var(--b2), 80%),
+            inset 0 -30px 6px -20px hsl(var(--b2), 40%);
         --input-shadow:
             inset 0 -1px 0 0 hsl(var(--b3), 70%),
             inset 0 1px 2px hsl(var(--b7), 0.2);
@@ -590,11 +591,9 @@
         --avatar-generic-background: hsl(var(--b4));
 
         --primary-shadow:
-            inset 0 1px 0 0 hsl(var(--h2)),
-            inset 0 -30px 20px -20px hsla(var(--h4), 45%);
-        --bar-shadow:
-            inset 0 0 0 1px hsla(var(--h3), 0.03),
-            inset 0 -30px 20px -20px hsla(var(--h4), 45%);
+            inset 0 1px 0 0 hsl(var(--h2), 80%),
+            inset 0 -30px 10px -20px hsla(var(--h2), 55%);
+        --bar-shadow: inset 0 1px 0 0 hsla(var(--h3), 25%);
 
         --shout-vote-indicator: linear-gradient(
             90deg,
@@ -704,10 +703,8 @@
 
             --primary-shadow:
                 inset 0 1px 0 0 hsl(var(--h4), 30%),
-                inset 0 -30px 20px -20px hsl(var(--h4), 70%);
-            --bar-shadow:
-                inset 0 0 0 1px hsla(var(--h4), 0.08),
-                inset 0 -30px 20px -20px hsl(var(--h4), 60%);
+                inset 0 -30px 10px -20px hsl(var(--h4), 40%);
+            --bar-shadow: inset 0 1px 0 0 hsl(var(--h4), 60%);
 
             --shout-vote-indicator: linear-gradient(
                 90deg,
@@ -771,10 +768,8 @@
 
             --primary-shadow:
                 inset 0 1px 0 0 hsl(var(--l2-c)),
-                inset 0 -30px 20px -20px hsl(var(--h4), 70%);
-            --bar-shadow:
-                inset 0 0 0 1px hsla(var(--h4), 0.08),
-                inset 0 -30px 20px -20px hsl(var(--h4), 60%);
+                inset 0 -30px 10px -20px hsl(var(--l2-c), 50%);
+            --bar-shadow: inset 0 1px 0 0 hsl(var(--h4), 60%);
 
             --shout-vote-indicator: linear-gradient(
                 90deg,
@@ -3961,7 +3956,7 @@
     .library-search-form .search-field[type="text"] {
         width: 100%;
         --padding: 12px var(--button-sides) 12px
-            calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
+            calc(var(--button-sides-icon) + var(--icon-size) + var(--icon-gap)) !important;
         --col: hsl(var(--c2)) !important;
         height: 32px;
     }
@@ -4124,7 +4119,10 @@
 
         &:not(.chibi) {
             --padding: 7px var(--button-sides) 7px
-                calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
+                calc(
+                    var(--button-sides-icon) + var(--icon-size) +
+                        var(--icon-gap)
+                ) !important;
         }
 
         z-index: 1;
@@ -4218,7 +4216,7 @@
     .secondary-nav-item-link {
         /* left padding for icon, otherwise just 12px 16px */
         --padding: 12px var(--button-sides) 12px
-            calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
+            calc(var(--button-sides-icon) + var(--icon-size) + var(--icon-gap)) !important;
         --bg: transparent !important;
         --bg-hov: transparent !important;
         --bg-atv: transparent !important;
@@ -4699,7 +4697,9 @@
     .secondary-nav-item--more > a {
         --mask: var(--icon-16-dots);
         --font-size: 0;
-        padding-left: calc(var(--button-sides) + var(--icon-size)) !important;
+        padding-left: calc(
+            var(--button-sides-icon) + var(--icon-size)
+        ) !important;
     }
 
     .redesigned-album-header h2,
@@ -7257,7 +7257,7 @@
             text-decoration: none !important;
 
             .chartlist-count-bar-slug {
-                background: hsl(var(--h4), 30%) !important;
+                background: hsl(var(--h4), 40%) !important;
                 box-shadow: var(--bar-shadow) !important;
             }
 
@@ -7316,7 +7316,7 @@
 
     .chartlist-count-bar,
     .chartlist-count-bar-slug {
-        border-radius: var(--item-small-radius); /* 50 */
+        border-radius: var(--item-med-radius); /* 50 */
     }
 
     .footnotes,
@@ -7401,10 +7401,10 @@
 
         --btn-left: var(--button-sides) !important;
         --btn-right: calc(
-            var(--button-sides) + var(--icon-size) + var(--icon-gap)
+            var(--button-sides-icon) + var(--icon-size) + var(--icon-gap)
         ) !important;
         --left: none;
-        --right: var(--button-sides);
+        --right: var(--button-sides-icon);
 
         /*&[data-analytics-action="PostShoutReply"] {
             --mask: var(--icon-16-reply) !important;
@@ -8646,7 +8646,7 @@
     .obsession-history-play-all,
     .done, .cancel, .btn-cancel, .download, .upload, .save, .btn-secondary.js-close:not(.modal-action-button), .form-group button[type="submit"]:not(.btn-post-shout, .image-upload-remove), .modal-button button[type="submit"] {
         --btn-left: calc(
-            var(--button-sides) + var(--icon-size) + var(--icon-gap)
+            var(--button-sides-icon) + var(--icon-size) + var(--icon-gap)
         ) !important;
     }
     .side-right .setting-item,
@@ -8666,7 +8666,7 @@
     .show-more a,
     .icon-r {
         --btn-right: calc(
-            var(--button-sides) + var(--icon-size) + var(--icon-gap)
+            var(--button-sides-icon) + var(--icon-size) + var(--icon-gap)
         ) !important;
     }
 
@@ -8936,7 +8936,7 @@
         content: "";
         display: var(--show-icon, block) !important;
         mask-position: 0 0 !important;
-        left: var(--left, var(--button-sides)) !important;
+        left: var(--left, var(--button-sides-icon)) !important;
         margin-top: var(
             --margin-top,
             calc(-1 * (var(--mask-size, var(--icon-size)) / 2))
@@ -8984,7 +8984,7 @@
     .language-nav,
     .auth-link {
         --left: none !important;
-        --right: var(--button-sides) !important;
+        --right: var(--button-sides-icon) !important;
     }
 
     .bleh-icon {
@@ -9127,7 +9127,7 @@
             --btn-right: calc(var(--button-sides) + 12px + 4px) !important;
             --mask-size: 12px;
             --margin-top: -6px;
-            --right: var(--button-sides);
+            --right: var(--button-sides-icon);
 
             &:after {
                 color: hsl(var(--c3));
@@ -9338,7 +9338,8 @@
                 --radius: var(--button-radius);
                 --padding: 7px var(--button-sides) 7px
                     calc(
-                        var(--button-sides) + var(--icon-size) + var(--icon-gap)
+                        var(--button-sides-icon) + var(--icon-size) +
+                            var(--icon-gap)
                     ) !important;
                 margin: 0 !important;
                 min-height: 36px !important;
@@ -9383,7 +9384,7 @@
                     --margin-top: calc(
                         -1 * (var(--mask-size, var(--icon-size)) / 2)
                     );
-                    --left: var(--button-sides);
+                    --left: var(--button-sides-icon);
                     background: var(--mask-colour) !important;
                 }
             }
@@ -9427,7 +9428,8 @@
                 --radius: var(--button-radius);
                 --padding: 7px var(--button-sides) 7px
                     calc(
-                        var(--button-sides) + var(--icon-size) + var(--icon-gap)
+                        var(--button-sides-icon) + var(--icon-size) +
+                            var(--icon-gap)
                     ) !important;
                 margin: 0 !important;
                 min-height: 32px !important;
@@ -9441,7 +9443,7 @@
                     --margin-top: calc(
                         -1 * (var(--mask-size, var(--icon-size)) / 2)
                     );
-                    --left: var(--button-sides);
+                    --left: var(--button-sides-icon);
                     background: var(--mask-colour) !important;
                 }
             }
@@ -10664,7 +10666,7 @@
         --btn-top: 6px;
         --btn-bottom: 6px;
 
-        --left: var(--button-sides);
+        --left: var(--button-sides-icon);
         --right: none;
 
         --icon-size: 16px;
@@ -11441,7 +11443,8 @@
             & > .modern-input {
                 cursor: pointer;
                 padding-left: calc(
-                    var(--button-sides) + var(--icon-size) + var(--icon-gap)
+                    var(--button-sides-icon) + var(--icon-size) +
+                        var(--icon-gap)
                 ) !important;
                 user-select: none;
             }
@@ -11461,7 +11464,8 @@
 
             & > .modern-input {
                 padding-left: calc(
-                    var(--button-sides) + var(--icon-size) + var(--icon-gap)
+                    var(--button-sides-icon) + var(--icon-size) +
+                        var(--icon-gap)
                 ) !important;
 
                 &::-webkit-calendar-picker-indicator {
@@ -17520,7 +17524,7 @@
 
         .btn {
             --btn-left: calc(
-                var(--button-sides) + var(--icon-size) + var(--icon-gap)
+                var(--button-sides-icon) + var(--icon-size) + var(--icon-gap)
             );
             width: 100%;
             text-align: left;
@@ -20481,7 +20485,7 @@
 
             &.with-icon {
                 padding-left: calc(
-                    var(--button-sides) + var(--icon-size) + 8px
+                    var(--button-sides-icon) + var(--icon-size) + 8px
                 );
                 --top: 12px;
                 --margin-top: 0;
@@ -20914,7 +20918,8 @@
             .video-item {
                 &.video-item--play {
                     --btn-left: calc(
-                        var(--button-sides) + var(--icon-size) + var(--icon-gap)
+                        var(--button-sides-icon) + var(--icon-size) +
+                            var(--icon-gap)
                     );
                     --mask: var(--icon-16-external);
                 }
@@ -21137,7 +21142,7 @@
         --btn-right: calc(var(--button-sides) + 12px + 6px);
         --mask: var(--icon-16-arrow-right);
         --mask-size: 12px;
-        --right: var(--button-sides);
+        --right: var(--button-sides-icon);
         --left: none;
         --margin-top: -6px;
     }
@@ -21767,7 +21772,7 @@
             --mask: var(--icon-16-dropdown);
             --mask-size: 12px;
             --margin-top: -6px;
-            --right: var(--button-sides);
+            --right: var(--button-sides-icon);
 
             transition-property: transform !important;
             transition-duration: var(--trans) !important;
@@ -27586,7 +27591,10 @@
             width: 400px;
             height: 48px;
             --padding: var(--card-gap) var(--button-sides) var(--card-gap)
-                calc(var(--button-sides) + var(--icon-size) + var(--icon-gap));
+                calc(
+                    var(--button-sides-icon) + var(--icon-size) +
+                        var(--icon-gap)
+                );
             --radius: var(--card-radius);
         }
 
@@ -27636,7 +27644,10 @@
         }
         .rabbit-hole-item {
             --padding: 9px var(--button-sides) 9px
-                calc(var(--button-sides) + var(--icon-size) + var(--icon-gap));
+                calc(
+                    var(--button-sides-icon) + var(--icon-size) +
+                        var(--icon-gap)
+                );
             display: flex;
 
             .info {
