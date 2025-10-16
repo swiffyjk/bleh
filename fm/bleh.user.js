@@ -11,6 +11,7 @@
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
 // @connect      musicbrainz.org
+// @connect      raw.githubusercontent.com
 // @connect      github.com
 // ==/UserScript==
 (() => {
