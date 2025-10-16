@@ -37281,7 +37281,7 @@
                                                     </div>
                                                 ` : ""}
                                         <div class="heading">
-                                            <h5>${typeof val.name === "object" ? tl2(val.name) : val.name}</h5>
+                                            <h5>${typeof val.name == "object" ? tl2(val.name) : val.name}</h5>
                                         </div>
                                     </div>
                                 `;
@@ -40074,26 +40074,26 @@
             btn_add.textContent = tl2(trans2.add);
             side_actions.appendChild(btn_add);
           }
-          let radio = page.structure.main.querySelector(
+          let radio2 = page.structure.main.querySelector(
             ":scope > .section-controls > .section-playlink"
           );
-          if (radio) {
+          if (radio2) {
             let side_actions = document.createElement("section");
             side_actions.classList.add("side-actions");
             if (!page.mobile)
               page.structure.side.appendChild(side_actions);
             else page.structure.main.appendChild(side_actions);
-            radio.classList = "btn stationlink js-playlink-station radio-button";
-            let type = radio.getAttribute("data-analytics-label");
+            radio2.classList = "btn stationlink js-playlink-station radio-button";
+            let type = radio2.getAttribute("data-analytics-label");
             render(
-              radio,
+              radio2,
               html`
                             <h3 class="sub-text">${tl2(trans2.radio)}</h3>
                             <h4>${tl2(trans2[type])}</h4>
                         `
             );
-            radio.removeAttribute("title");
-            side_actions.appendChild(radio);
+            radio2.removeAttribute("title");
+            side_actions.appendChild(radio2);
           }
         }
         let similar_artists = page.structure.side.querySelector(
@@ -40163,6 +40163,64 @@
 
   // src/pages/lastfm_settings.js
   var import_cropperjs = __toESM(require_cropper(), 1);
+
+  // src/components/radio_toggle.js
+  function radio({ name, value, values = {} }) {
+    let buttons = [];
+    let elem = html.node`
+        <div class="primary-selections">
+        ${Object.entries(values).map(([key, val]) => {
+      const icon = val.icon;
+      let input2;
+      const button = html.node`
+                <div class="setting v2 standalone" data-type="radio" data-value=${key} onclick=${() => {
+        update_radio(key);
+      }}>
+                    <div class="radio-cont">
+                        <input type="radio" name=${name} value=${key} required ref=${(el) => input2 = el}>
+                        <div class="radio" aria-checked=${value == key} />
+                    </div>
+                    ${icon ? html.node`
+                                <div class="icon">
+                                    <div class="bleh-icon" style="--icon: var(--${icon})" />
+                                </div>
+                            ` : ""}
+                    <div class="heading">
+                        <h5>${typeof val.name == "object" ? tl(val.name) : val.name}</h5>
+                    </div>
+                </div>
+            `;
+      input2.checked = value == key;
+      buttons.push(button);
+      return button;
+    })}
+        </div>
+    `;
+    function update_radio(val) {
+      buttons.forEach((btn) => {
+        btn.querySelector("input").checked = btn.getAttribute("data-value") == val;
+        btn.querySelector(".radio").setAttribute(
+          "aria-checked",
+          btn.getAttribute("data-value") == val
+        );
+      });
+    }
+    return elem;
+  }
+  function radio_convert(existing) {
+    if (!existing) return {};
+    let values = {};
+    existing.forEach((item) => {
+      const input2 = item.querySelector("input");
+      const label = item.querySelector("label");
+      values[input2.value] = {
+        name: label.textContent.trim()
+      };
+    });
+    return values;
+  }
+
+  // src/pages/lastfm_settings.js
   var cropper;
   function bleh_native_settings() {
     let no_data = page.structure.container.querySelector(
@@ -41732,7 +41790,10 @@
   function bleh_website() {
     const token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     const auto_correct = page.structure.main.querySelector(
-      '[name="corrections_enabled"]'
+      '[name="corrections_enabled"]:checked'
+    );
+    const preferred_affiliate = page.structure.main.querySelector(
+      '[name="preferred_affiliate"]:checked'
     );
     const timezone = page.structure.main.querySelector('[name="timezone"]');
     const help_text = page.structure.main.querySelector(".js-field-help-text");
@@ -41743,32 +41804,47 @@
     let timezone_text;
     page.structure.main.insertBefore(
       html.node`
-        <form class="dont-move" action="${root}settings/website" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <section class="bleh--panel">
-                <h4>${tl2(trans2.website)}</h4>
-                <div class="setting-group">
-                    ${toggle({
-        value: auto_correct.checked,
+            <form class="dont-move" action="${root}settings/website" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <section class="bleh--panel">
+                    <h4>${tl2(trans2.website)}</h4>
+                    <div class="setting-group">
+                        <div class="setting v2" data-type="options">
+                            <div class="heading">
+                                <h5>${tl2(trans2.auto_correct_scrobbles.name)}</h5>
+                                <p>${tl2(trans2.auto_correct_scrobbles.body)}</p>
+                            </div>
+                            ${radio({
         name: auto_correct.name,
-        title: tl2(trans2.auto_correct_scrobbles.name),
-        body: tl2(trans2.auto_correct_scrobbles.body),
-        standalone: false
+        value: auto_correct.value,
+        values: {
+          False: {
+            name: tl2(
+              trans2.auto_correct_scrobbles.false
+            )
+          },
+          True: {
+            name: tl2(
+              trans2.auto_correct_scrobbles.true
+            )
+          }
+        }
       })}
-                </div>
-                <div class="alert alert-danger">
-                    ${tl2(trans2.auto_correct_scrobbles.warning)}
-                </div>
-            </section>
-            <section class="bleh--panel">
-                <h4>${tl2(trans2.events)}</h4>
-                <div class="setting-group">
-                    <div class="setting v2" data-type="select">
-                        <div class="heading">
-                            <h5>${tl2(trans2.timezone)}</h5>
-                            <p ref=${(el) => timezone_text = el}>${help_text.textContent.trim()}</p>
                         </div>
-                        ${select(
+                    </div>
+                    <div class="alert alert-danger">
+                        ${tl2(trans2.auto_correct_scrobbles.warning)}
+                    </div>
+                </section>
+                <section class="bleh--panel">
+                    <h4>${tl2(trans2.events)}</h4>
+                    <div class="setting-group">
+                        <div class="setting v2" data-type="select">
+                            <div class="heading">
+                                <h5>${tl2(trans2.timezone)}</h5>
+                                <p ref=${(el) => timezone_text = el}>${help_text.textContent.trim()}</p>
+                            </div>
+                            ${select(
         select_prepare(timezone),
         timezone.value,
         timezone.name,
@@ -41794,36 +41870,67 @@
           );
         }
       )}
-                    </div>
-                    <div class="setting v2" data-type="action">
-                        <div class="heading">
-                            <h5>${tl2(trans2.location.name)}</h5>
-                            <p>${tl2(trans2.location.body)}</p>
                         </div>
-                        <div class="toggle-wrap">
-                            ${location}
+                        <div class="setting v2" data-type="action">
+                            <div class="heading">
+                                <h5>${tl2(trans2.location.name)}</h5>
+                                <p>${tl2(trans2.location.body)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                ${location}
+                            </div>
+                        </div>
+                        <div class="setting v2" data-type="select">
+                            <div class="heading">
+                                <h5>${tl2(trans2.event_radius)}</h5>
+                            </div>
+                            ${select(select_prepare(radius), radius.value, radius.name)}
                         </div>
                     </div>
-                    <div class="setting v2" data-type="select">
-                        <div class="heading">
-                            <h5>${tl2(trans2.event_radius)}</h5>
-                        </div>
-                        ${select(select_prepare(radius), radius.value, radius.name)}
+                    <div class="settings-footer end">
+                        <button type="submit" class="btn-primary save">
+                            ${tl2(trans2.save)}
+                        </button>
+                        <input type="hidden" value="website" name="submit">
                     </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl2(trans2.save)}
-                    </button>
-                    <input type="hidden" value="website" name="submit">
-                </div>
+                </section>
+            </form>
+            <section class="bleh--panel">
+                <h4>${tl2(trans2.playback)}</h4>
+                <form action="${root}settings/website" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${token}>
+                    <div class="setting-group">
+                        <div class="setting v2" data-type="options">
+                            <div class="heading">
+                                <h5>${tl2(trans2.preferred_affiliate.name)}</h5>
+                                <p>${tl2(trans2.preferred_affiliate.body)}</p>
+                            </div>
+                            ${radio({
+        name: preferred_affiliate.name,
+        value: preferred_affiliate.value,
+        values: radio_convert(
+          page.structure.main.querySelectorAll(
+            "#id_preferred_affiliate > .lfm-form-radio"
+          )
+        )
+      })}
+                        </div>
+                    </div>
+                    <div class="settings-footer end">
+                        <button type="submit" class="btn-primary save">
+                            ${tl2(trans2.save)}
+                        </button>
+                        <input type="hidden" value="playback" name="submit">
+                    </div>
+                </form>
             </section>
-        </form>
-    `,
+        `,
       page.structure.main.firstElementChild
     );
     const website = page.structure.main.querySelector("#website");
     website.remove();
+    const playback = page.structure.main.querySelector("#playback");
+    playback.remove();
   }
   function bleh_applications() {
     let session_types = page.structure.main.querySelectorAll(".api-sessions");
@@ -55707,19 +55814,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   // src/components/radio.js
   function bleh_radio() {
     let radios = page.structure.side.querySelectorAll(".stationlink");
-    radios.forEach((radio) => {
-      let type = radio.getAttribute("data-analytics-label");
-      radio.classList.add("radio-button");
+    radios.forEach((radio2) => {
+      let type = radio2.getAttribute("data-analytics-label");
+      radio2.classList.add("radio-button");
       let text3 = tl2(trans2[type]);
       if (type == "tag")
         text3 = page.name;
       else if (type == "event")
         text3 = tl2(trans2.artists);
-      render(radio, html`
+      render(radio2, html`
             <h3 class="sub-text">${tl2(trans2.radio)}</h3>
             <h4>${text3}</h4>
         `);
-      radio.removeAttribute("title");
+      radio2.removeAttribute("title");
     });
     if (page.type == "user") {
       let promo_v3 = page.structure.side.querySelector(".promo-v3");
@@ -62327,6 +62434,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "This setting should be turned off to ensure scrobbles are correctly stored for each artist.",
         de: "Diese Einstellung sollte deaktiviert werden, um sicherzustellen, dass Scrobbles f\xFCr jeden K\xFCnstler korrekt gespeichert werden.",
         sv: "Denna inst\xE4llning ska st\xE4ngas av f\xF6r att vara s\xE4ker p\xE5 att dina skrobblingar \xE4r r\xE4tt f\xF6r alla artister."
+      },
+      false: {
+        en: "Do not apply corrections (recommended)"
+      },
+      true: {
+        en: "Auto correct my scrobbles (legacy)"
+      }
+    },
+    preferred_affiliate: {
+      name: {
+        en: "Preferred playback source"
+      },
+      body: {
+        en: "Choose which service to use when interacting with playables across the site"
       }
     },
     timezone: {

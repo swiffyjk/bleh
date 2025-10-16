@@ -712,7 +712,7 @@ export function setting({
                                             :   ''
                                         }
                                         <div class="heading">
-                                            <h5>${typeof val.name === 'object' ? tl(val.name) : val.name}</h5>
+                                            <h5>${typeof val.name == 'object' ? tl(val.name) : val.name}</h5>
                                         </div>
                                     </div>
                                 `;

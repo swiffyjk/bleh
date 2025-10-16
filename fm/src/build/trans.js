@@ -5284,6 +5284,20 @@ export const trans = {
             en: 'This setting should be turned off to ensure scrobbles are correctly stored for each artist.',
             de: 'Diese Einstellung sollte deaktiviert werden, um sicherzustellen, dass Scrobbles für jeden Künstler korrekt gespeichert werden.',
             sv: 'Denna inställning ska stängas av för att vara säker på att dina skrobblingar är rätt för alla artister.'
+        },
+        false: {
+            en: 'Do not apply corrections (recommended)'
+        },
+        true: {
+            en: 'Auto correct my scrobbles (legacy)'
+        }
+    },
+    preferred_affiliate: {
+        name: {
+            en: 'Preferred playback source'
+        },
+        body: {
+            en: 'Choose which service to use when interacting with playables across the site'
         }
     },
     timezone: {

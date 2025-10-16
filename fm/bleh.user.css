@@ -190,7 +190,7 @@
         --trans: 0.1s;
         --trans-function: cubic-bezier(0.61, 0.36, 0.1, 0.93);
 
-        --button-sides: 10px;
+        --button-sides: 9px;
         --button-sides-icon: calc(var(--button-sides) - 2px);
         --button-verts: 6px;
         --button-height: 30px;
