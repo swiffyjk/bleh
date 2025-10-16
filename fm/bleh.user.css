@@ -912,6 +912,11 @@
             --solarium-bright: var(--card-blur) var(--bright);
         }
 
+        @supports (-webkit-touch-callout: none) {
+            --solarium: var(--card-blur);
+            --solarium-bright: var(--card-blur) var(--bright);
+        }
+
         &[data-bleh--theme_type="light"],
         [data-bleh--theme_type="light"] > & {
             --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
@@ -1668,9 +1673,6 @@
 
             padding-bottom: calc(var(--margin) + 1px) !important;
 
-            background: hsl(var(--b6), 85%) !important;
-            backdrop-filter: var(--solarium) !important;
-            -webkit-backdrop-filter: var(--solarium) !important;
             box-shadow: var(--menu-shadow) !important;
             border-radius: var(--card-radius) !important;
             border-top: 1px solid var(--card-border-base) !important;
@@ -1678,7 +1680,15 @@
             border-right: 1px solid var(--card-border-base) !important;
 
             &:before {
-                display: none;
+                background: hsl(var(--b6), 85%) !important;
+                backdrop-filter: var(--solarium) !important;
+                -webkit-backdrop-filter: var(--solarium) !important;
+
+                border-radius: var(--card-radius) !important;
+
+                bottom: calc(-1 * var(--margin));
+                height: unset;
+                transition: none;
             }
 
             .mobile-controls {
