@@ -56,18 +56,19 @@ export function append_style() {
 }
 
 function load_cached_style(cached_style) {
-    document.documentElement.appendChild(html.node`
+    const style = html.node`
         <style id="bleh--cached-style">${cached_style}</style>
-    `);
+    `;
+    document.documentElement.appendChild(style);
 
-    requestAnimationFrame(() => {
+    style.onload = () => {
         log('loaded cache', 'style');
         chart_reflow();
 
         // now, analyse if we should fetch a new one
         log('checking timeout', 'style');
         check_if_style_cache_is_valid();
-    });
+    };
 }
 
 function check_if_style_cache_is_valid() {
@@ -110,7 +111,7 @@ function fetch_new_style(
             `;
             document.documentElement.appendChild(style);
 
-            requestAnimationFrame(() => {
+            style.onload = () => {
                 const theme_version = getComputedStyle(document.body)
                     .getPropertyValue('--version-build')
                     .replaceAll("'", '')
@@ -142,7 +143,7 @@ function fetch_new_style(
                 chart_reflow();
 
                 if (reload_on_finish) invoke_reload();
-            });
+            };
 
             const expire = new Date();
             expire.setHours(expire.getHours() + 1);

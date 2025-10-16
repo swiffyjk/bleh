@@ -46595,15 +46595,16 @@
     }
   }
   function load_cached_style(cached_style) {
-    document.documentElement.appendChild(html.node`
+    const style = html.node`
         <style id="bleh--cached-style">${cached_style}</style>
-    `);
-    requestAnimationFrame(() => {
+    `;
+    document.documentElement.appendChild(style);
+    style.onload = () => {
       log("loaded cache", "style");
       chart_reflow();
       log("checking timeout", "style");
       check_if_style_cache_is_valid();
-    });
+    };
   }
   function check_if_style_cache_is_valid() {
     const cached_style_timeout = new Date(
@@ -46634,7 +46635,7 @@
                 <style>${text3}</style>
             `;
         document.documentElement.appendChild(style);
-        requestAnimationFrame(() => {
+        style.onload = () => {
           const theme_version2 = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
           if (!allow_incompatible && theme_version2 != version.build) {
             log(
@@ -46657,7 +46658,7 @@
           document.body.classList.add("bleh");
           chart_reflow();
           if (reload_on_finish) invoke_reload();
-        });
+        };
         const expire = /* @__PURE__ */ new Date();
         expire.setHours(expire.getHours() + 1);
         localStorage.setItem("bleh_cached_style", text3);
