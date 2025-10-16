@@ -52449,6 +52449,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const style_warning = html.node`
             <div class="style-warning" style="position: fixed; top: 0; left: 0; right: 0; padding: 20px; background: #fff; z-index: 1000000000; display: flex; align-items: center; gap: 30px">
                 <strong>${tl2(trans2.style_warning)}</strong>
+                <button class="btn primary" onclick=${() => {
+        save_setting("branch", "uwu");
+      }}>
+                    Reset branch to release (uwu)
+                </button>
                 <button class="btn-primary" onclick=${() => {
         save_setting("dev", false);
         window.location.reload();
