@@ -58246,25 +58246,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "F\xF6rskjutning kalkylerats fr\xE5n tidszon"
     },
     started: {
-      // e.g. season started 1 day ago
-      en: "Started",
-      de: "Gestartet",
-      pt: "Come\xE7ou",
-      sv: "Har b\xF6rjat"
+      // season start date
+      // start date: 1 day ago
+      en: "Start date"
     },
     next_in: {
-      // e.g. next season in 5 days
-      en: "Next in",
-      de: "N\xE4chste in",
-      pt: "Pr\xF3ximo em",
-      sv: "N\xE4sta om"
+      // season next date
+      // next season: in 3 days
+      en: "Next season"
     },
     ends_in: {
-      // e.g. season ends in 3 days
-      en: "Ends in",
-      de: "Endet in",
-      pt: "Termina em",
-      sv: "Slutar om"
+      // season end date
+      // end date: in 2 days
+      en: "End date"
     },
     text: {
       en: "Text",

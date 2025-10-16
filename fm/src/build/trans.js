@@ -1095,25 +1095,19 @@ export const trans = {
         sv: 'Förskjutning kalkylerats från tidszon'
     },
     started: {
-        // e.g. season started 1 day ago
-        en: 'Started',
-        de: 'Gestartet',
-        pt: 'Começou',
-        sv: 'Har börjat'
+        // season start date
+        // start date: 1 day ago
+        en: 'Start date'
     },
     next_in: {
-        // e.g. next season in 5 days
-        en: 'Next in',
-        de: 'Nächste in',
-        pt: 'Próximo em',
-        sv: 'Nästa om'
+        // season next date
+        // next season: in 3 days
+        en: 'Next season'
     },
     ends_in: {
-        // e.g. season ends in 3 days
-        en: 'Ends in',
-        de: 'Endet in',
-        pt: 'Termina em',
-        sv: 'Slutar om'
+        // season end date
+        // end date: in 2 days
+        en: 'End date'
     },
     text: {
         en: 'Text',
