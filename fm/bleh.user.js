@@ -52398,28 +52398,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             <span class="label user-status-subscriber auth-badge">${tl2(trans2.badges["user-status-subscriber"].name)}</span>
         `);
     }
-    let bleh_container = html.node`
-        <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "/seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-                ${stored_season.id == "none" ? tl2(trans2.bleh_settings) : DateTime.fromISO(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}
-            </a>
-        </li>
-    `;
-    if (stored_season.id == "none") {
-      tippy_esm_default(bleh_container, {
-        content: tl2(trans2.bleh_settings)
-      });
-    } else {
-      page.header.season_tooltip = tippy_esm_default(bleh_container, {
-        theme: "seasonal-swatch",
-        content: html.node`
-                <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl2(trans2.seasonal.listing[stored_season.id])}</span>
-                <span class="season-exclusive">${tl2(trans2.seasonal.notice)}</span>
-            `
-      });
-    }
-    links.appendChild(bleh_container);
-    page.header.season = bleh_container.querySelector("a");
     const more_button = html.node`
         <button class="masthead-nav-control chibi icon" data-type="more">
             ${tl2(trans2.more)}
@@ -52462,6 +52440,28 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     });
     links.appendChild(more_button);
+    let bleh_container = html.node`
+            <li class="masthead-nav-item">
+                <a class="masthead-nav-control chibi" href="${root}bleh${stored_season.id != "none" ? "/seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
+                    ${stored_season.id == "none" ? tl2(trans2.bleh_settings) : DateTime.fromISO(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toRelative(DateTime.fromISO(stored_season.now))}
+                </a>
+            </li>
+        `;
+    if (stored_season.id == "none") {
+      tippy_esm_default(bleh_container, {
+        content: tl2(trans2.bleh_settings)
+      });
+    } else {
+      page.header.season_tooltip = tippy_esm_default(bleh_container, {
+        theme: "seasonal-swatch",
+        content: html.node`
+                    <span class="season-colour-name colourful" data-season=${stored_season.id}>${tl2(trans2.seasonal.listing[stored_season.id])}</span>
+                    <span class="season-exclusive">${tl2(trans2.seasonal.notice)}</span>
+                `
+      });
+    }
+    links.appendChild(bleh_container);
+    page.header.season = bleh_container.querySelector("a");
     let notif_count = new_auth.querySelector(
       '[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge'
     );
