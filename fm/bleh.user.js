@@ -28750,7 +28750,7 @@
       "[international",
       // taylor swift
       "(int'l",
-      // think i escaped this character correctly? 
+      // think i escaped this character correctly?
       "- uk deluxe",
       "(uk deluxe",
       "[uk deluxe",
@@ -28894,7 +28894,7 @@
       "[reprise",
       "(director"
     ],
-    form: ["(clean", "[clean", "(explicit", "[explicit", "(spotify)"]
+    form: ["(clean", "[clean", "(explicit", "[explicit", "(spotify)", "\u{1F174}"]
   };
   function clean_title(title) {
     return name_includes(title)[0];

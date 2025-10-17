@@ -423,8 +423,8 @@ export let includes = {
         '(moonlit witch version',
         '- cabin in candlelight version',
         '(cabin in candelight version',
-        '- 90\'s trend remix',
-        '(90\'s trend remix',
+        "- 90's trend remix",
+        "(90's trend remix",
         '- triple j',
         '(triple j',
         '(unfinished original recordings of de-loused in the comatorium',
@@ -664,12 +664,12 @@ export let includes = {
         '- platinum',
         '(platinum',
         '[platinum',
-        'platinum edition',  // added edition to the end because 'platinum' can have some false positives
+        'platinum edition', // added edition to the end because 'platinum' can have some false positives
         'platinum version', // same as above
         '- international',
         '(international',
         '[international', // taylor swift
-        '(int\'l', // think i escaped this character correctly? 
+        "(int'l", // think i escaped this character correctly?
         '- uk deluxe',
         '(uk deluxe',
         '[uk deluxe',
@@ -807,7 +807,7 @@ export let includes = {
         '[reprise',
         '(director'
     ],
-    form: ['(clean', '[clean', '(explicit', '[explicit', '(spotify)']
+    form: ['(clean', '[clean', '(explicit', '[explicit', '(spotify)', '🅴']
 };
 
 // converts titles like 'something [explicit]' to 'something'
