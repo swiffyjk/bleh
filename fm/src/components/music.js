@@ -32,6 +32,7 @@ import {
     load_profile_cache_externally,
     open_starred_friend_window
 } from '../pages/profile.js';
+import { oracle_credits } from './oracle.js';
 
 unsafeWindow._other_listener = function (id) {
     other_listener(id);
@@ -539,7 +540,7 @@ export async function show_your_scrobbles() {
         ['album', 'track'].includes(page.type)
     ) {
         interact_container.appendChild(html.node`
-            <button class="btn side-action" data-type="credits">
+            <button class="btn side-action" data-type="credits" onclick=${() => oracle_credits()}>
                 ${tl(trans.credits)}
             </button>
         `);

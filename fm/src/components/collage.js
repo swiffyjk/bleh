@@ -602,7 +602,7 @@ export function collage({ host, sidebar } = {}) {
             default_size,
             Math.floor((default_size * base) / highest)
         );
-        const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
+        const grid_item_gap = settings.collage_grid_gap ? 6 : 0;
         const padding = settings.collage_grid_gap ? 15 : 0;
         const title_height = settings.collage_title ? 32 + 15 : 0;
         const cv_width =

@@ -1573,6 +1573,22 @@ function oracle_request(type = 'albums') {
     xhr.send();
 }
 
+export function oracle_credits() {
+    dialog({
+        id: 'oracle_credits',
+        title: tl(trans.credits),
+        body: html.node`
+            <div class="oracle-credits">
+                <h3>${correct_item_by_artist(page.name, page.sister)}</h3>
+                <div class="credit">
+                    <h4>${tl(trans.performed_by)}</h4>
+                    <span>${correct_artist(page.sister)}</span>
+                </div>
+            </div>
+        `
+    });
+}
+
 export function oracle_debug() {
     const debug = page.state.oracle_debug;
     log('debug', 'oracle', 'info', { debug });

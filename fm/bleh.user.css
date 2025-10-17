@@ -29102,4 +29102,26 @@
             flex-direction: row;
         }
     }
+
+    .oracle-credits {
+        display: flex;
+        flex-direction: column;
+        gap: var(--item-list-gap);
+
+        & > h3 {
+            font-size: 16px;
+            line-height: 20px;
+            color: hsl(var(--c1));
+        }
+
+        & > .credit {
+            & > h4 {
+                color: hsl(var(--c3)) !important;
+                font-weight: var(--font-weight) !important;
+            }
+            & > span {
+                cursor: default;
+            }
+        }
+    }
 }
