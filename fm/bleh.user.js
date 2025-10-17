@@ -49283,6 +49283,7 @@
       let bars2;
       let track_layout;
       let expand_tracks;
+      let track_album_name_location;
       render(
         page.structure.main,
         html`
@@ -49342,10 +49343,14 @@
           id: "track_layout",
           func: () => {
             expand_tracks.compat();
+            track_album_name_location.compat();
           }
         })}
                         ${expand_tracks = setting({
           id: "expand_tracks"
+        })}
+                        ${track_album_name_location = setting({
+          id: "track_album_name_location"
         })}
                     </div>
                 </section>
@@ -59935,6 +59940,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Place title and artist horizontally"
       }
     },
+    track_album_name_location: {
+      name: {
+        en: "Album name location"
+      },
+      body: {
+        en: "Choose which axis to display said album name on"
+      },
+      column: {
+        en: "Place below title and artist"
+      },
+      row: {
+        en: "Place to the side of title and artist"
+      }
+    },
     expand_tracks: {
       name: {
         en: "Show associated album for tracks"
@@ -63530,6 +63549,39 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         }
       }
     },
+    expand_tracks: {
+      default: "active",
+      type: "radio",
+      title: trans2.expand_tracks.name,
+      body: trans2.expand_tracks.body,
+      values: {
+        always: {
+          name: trans2.expand_tracks_always
+        },
+        active: {
+          name: trans2.expand_tracks_when_active
+        },
+        never: {
+          name: trans2.never
+        }
+      },
+      incompatible: { track_layout: "row" }
+    },
+    track_album_name_location: {
+      default: "column",
+      type: "radio",
+      title: trans2.track_album_name_location.name,
+      body: trans2.track_album_name_location.body,
+      values: {
+        column: {
+          name: trans2.track_album_name_location.column
+        },
+        row: {
+          name: trans2.track_album_name_location.row
+        }
+      },
+      incompatible: { track_layout: "row" }
+    },
     glacier_library_graphs: {
       default: true,
       title: trans2.glacier_graphs.name,
@@ -63939,24 +63991,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           name: "Last.fm"
         }
       }
-    },
-    expand_tracks: {
-      default: "active",
-      type: "radio",
-      title: trans2.expand_tracks.name,
-      body: trans2.expand_tracks.body,
-      values: {
-        always: {
-          name: trans2.expand_tracks_always
-        },
-        active: {
-          name: trans2.expand_tracks_when_active
-        },
-        never: {
-          name: trans2.never
-        }
-      },
-      incompatible: { track_layout: "row" }
     },
     rain: {
       default: false,

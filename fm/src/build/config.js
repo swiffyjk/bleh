@@ -733,6 +733,39 @@ export let settings_store = {
             }
         }
     },
+    expand_tracks: {
+        default: 'active',
+        type: 'radio',
+        title: trans.expand_tracks.name,
+        body: trans.expand_tracks.body,
+        values: {
+            always: {
+                name: trans.expand_tracks_always
+            },
+            active: {
+                name: trans.expand_tracks_when_active
+            },
+            never: {
+                name: trans.never
+            }
+        },
+        incompatible: { track_layout: 'row' }
+    },
+    track_album_name_location: {
+        default: 'column',
+        type: 'radio',
+        title: trans.track_album_name_location.name,
+        body: trans.track_album_name_location.body,
+        values: {
+            column: {
+                name: trans.track_album_name_location.column
+            },
+            row: {
+                name: trans.track_album_name_location.row
+            }
+        },
+        incompatible: { track_layout: 'row' }
+    },
     glacier_library_graphs: {
         default: true,
         title: trans.glacier_graphs.name,
@@ -1142,24 +1175,6 @@ export let settings_store = {
                 name: 'Last.fm'
             }
         }
-    },
-    expand_tracks: {
-        default: 'active',
-        type: 'radio',
-        title: trans.expand_tracks.name,
-        body: trans.expand_tracks.body,
-        values: {
-            always: {
-                name: trans.expand_tracks_always
-            },
-            active: {
-                name: trans.expand_tracks_when_active
-            },
-            never: {
-                name: trans.never
-            }
-        },
-        incompatible: { track_layout: 'row' }
     },
     rain: {
         default: false,

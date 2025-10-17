@@ -6309,7 +6309,8 @@
             display: none !important;
         }
 
-        &[data-show-album-text="true"][data-has-bar="false"] {
+        [data-bleh--track_album_name_location="column"]
+            &[data-show-album-text="true"][data-has-bar="false"] {
             & > .chartlist-image {
                 width: 56px;
                 height: 56px;
@@ -6334,6 +6335,31 @@
             & > .chartlist-album {
                 color: hsl(var(--c3));
                 font-size: calc(var(--font-size) - 1px);
+            }
+
+            [data-bleh--track_album_name_location="row"]
+                &:not([data-has-bar="true"]) {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto auto;
+                gap: 0 var(--item-list-gap);
+                align-items: center;
+
+                & > .chartlist-name {
+                    grid-column: 1 / 2;
+                    grid-row: 1 / 2;
+                }
+
+                & > .chartlist-artist {
+                    grid-column: 1 / 2;
+                    grid-row: 2 / 3;
+                }
+
+                & > .chartlist-album {
+                    grid-column: 2 / 3;
+                    grid-row: 1 / 3;
+                    align-self: center;
+                }
             }
 
             [data-bleh--track_layout="row"] &:not([data-has-bar="true"]) {
@@ -19186,7 +19212,7 @@
                     gap: 12px;
                     flex: 1;
 
-                    [data-bleh--stacked_chartlist_info="true"] & {
+                    [data-bleh--track_layout="column"] & {
                         display: inline-block;
 
                         .title {

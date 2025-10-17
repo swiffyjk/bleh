@@ -902,6 +902,7 @@ export async function render_setting_page(page_id) {
 
         let track_layout;
         let expand_tracks;
+        let track_album_name_location;
 
         render(
             page.structure.main,
@@ -962,10 +963,14 @@ export async function render_setting_page(page_id) {
                             id: 'track_layout',
                             func: () => {
                                 expand_tracks.compat();
+                                track_album_name_location.compat();
                             }
                         }))}
                         ${(expand_tracks = setting({
                             id: 'expand_tracks'
+                        }))}
+                        ${(track_album_name_location = setting({
+                            id: 'track_album_name_location'
                         }))}
                     </div>
                 </section>

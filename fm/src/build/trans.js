@@ -2569,6 +2569,20 @@ export const trans = {
             en: 'Place title and artist horizontally'
         }
     },
+    track_album_name_location: {
+        name: {
+            en: 'Album name location'
+        },
+        body: {
+            en: 'Choose which axis to display said album name on'
+        },
+        column: {
+            en: 'Place below title and artist'
+        },
+        row: {
+            en: 'Place to the side of title and artist'
+        }
+    },
     expand_tracks: {
         name: {
             en: 'Show associated album for tracks'
