@@ -6285,14 +6285,6 @@
         animation-delay: var(--delay, 0s) !important;
         animation-fill-mode: backwards !important;
 
-        &:not([data-has-menu="true"]):has(
-                ~ .chartlist-row[data-has-menu="true"]
-            ),
-        &[data-has-menu="true"] ~ .chartlist-row {
-            pointer-events: none !important;
-        }
-
-        &[data-has-menu="true"],
         &:hover {
             background-color: var(--bg-hov);
             transition: none !important;
@@ -6303,7 +6295,7 @@
             }
         }
 
-        &:not([data-has-menu="true"], :hover) {
+        &:not(:hover) {
             & > .more-button-wrapper {
                 opacity: 0;
             }

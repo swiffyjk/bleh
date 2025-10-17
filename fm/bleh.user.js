@@ -35320,8 +35320,7 @@
           if (track_timestamp_contents) {
             track_timestamp.setAttribute("title", "");
             tippy_esm_default(track_timestamp, {
-              content: track_timestamp_contents,
-              appendTo: document.body
+              content: track_timestamp_contents
             });
           }
         }
@@ -35684,8 +35683,7 @@
                   "bulk-edit"
                 );
                 tippy_esm_default(button, {
-                  content: tl2(trans2.bulk_edit),
-                  appendTo: document.body
+                  content: tl2(trans2.bulk_edit)
                 });
                 return button;
               }}
@@ -35724,8 +35722,7 @@
                                     `;
                 tippy_esm_default(button, {
                   content: tl2(trans2.explore_in_library),
-                  delay: [500, 0],
-                  appendTo: document.body
+                  delay: [500, 0]
                 });
                 return button;
               }}
@@ -35749,8 +35746,7 @@
                                     `;
                 tippy_esm_default(button, {
                   content: tl2(trans2.explore_in_library),
-                  delay: [500, 0],
-                  appendTo: document.body
+                  delay: [500, 0]
                 });
                 return button;
               }}
@@ -35773,8 +35769,7 @@
                                     `;
                 tippy_esm_default(button, {
                   content: tl2(trans2.explore_in_library),
-                  delay: [500, 0],
-                  appendTo: document.body
+                  delay: [500, 0]
                 });
                 return button;
               }}
@@ -35797,8 +35792,7 @@
                                     `;
                 tippy_esm_default(button, {
                   content: tl2(trans2.explore_in_library),
-                  delay: [500, 0],
-                  appendTo: document.body
+                  delay: [500, 0]
                 });
                 return button;
               }}
@@ -35903,21 +35897,12 @@
               hideOnClick: false,
               appendTo: document.body,
               onCreate(instance) {
-                instance.popper.addEventListener(
-                  "click",
-                  (event3) => {
-                    instance.hide();
-                  }
-                );
-              },
-              onShow(instance) {
-                track2.setAttribute("data-has-menu", true);
+                instance.popper.addEventListener("click", () => {
+                  instance.hide();
+                });
               },
               onClickOutside(instance) {
                 instance.hide();
-              },
-              onHide(instance) {
-                track2.setAttribute("data-has-menu", false);
               }
             });
             register_menu(track2, menu);

@@ -299,8 +299,7 @@ export function patch_titles(search = page.structure.main) {
                     track_timestamp.setAttribute('title', '');
 
                     tippy(track_timestamp, {
-                        content: track_timestamp_contents,
-                        appendTo: document.body
+                        content: track_timestamp_contents
                     });
                 }
             }
@@ -745,8 +744,7 @@ export function patch_titles(search = page.structure.main) {
                                         );
 
                                         tippy(button, {
-                                            content: tl(trans.bulk_edit),
-                                            appendTo: document.body
+                                            content: tl(trans.bulk_edit)
                                         });
 
                                         return button;
@@ -799,8 +797,7 @@ export function patch_titles(search = page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0],
-                                        appendTo: document.body
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -830,8 +827,7 @@ export function patch_titles(search = page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0],
-                                        appendTo: document.body
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -858,8 +854,7 @@ export function patch_titles(search = page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0],
-                                        appendTo: document.body
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -886,8 +881,7 @@ export function patch_titles(search = page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0],
-                                        appendTo: document.body
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -1012,31 +1006,13 @@ export function patch_titles(search = page.structure.main) {
                         appendTo: document.body,
 
                         onCreate(instance) {
-                            instance.popper.addEventListener(
-                                'click',
-                                (event) => {
-                                    instance.hide();
-                                }
-                            );
-                        },
-
-                        onShow(instance) {
-                            track.setAttribute('data-has-menu', true);
-
-                            /*let menu_items = track_legacy_menu.querySelectorAll('li > *');
-                            let content = instance.popper.querySelector('.tippy-content');
-
-                            menu_items.forEach((item) => {
-                                content.appendChild(item);
-                            });*/
+                            instance.popper.addEventListener('click', () => {
+                                instance.hide();
+                            });
                         },
 
                         onClickOutside(instance) {
                             instance.hide();
-                        },
-
-                        onHide(instance) {
-                            track.setAttribute('data-has-menu', false);
                         }
                     });
 
