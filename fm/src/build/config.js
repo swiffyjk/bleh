@@ -719,9 +719,19 @@ export let settings_store = {
         title: trans.show_guest_features.name,
         body: trans.show_guest_features.body
     },
-    stacked_chartlist_info: {
-        default: true,
-        title: trans.track_column_view
+    track_layout: {
+        default: 'column',
+        type: 'radio',
+        title: trans.track_layout.name,
+        body: trans.track_layout.body,
+        values: {
+            column: {
+                name: trans.track_layout.column
+            },
+            row: {
+                name: trans.track_layout.row
+            }
+        }
     },
     glacier_library_graphs: {
         default: true,
@@ -1149,7 +1159,7 @@ export let settings_store = {
                 name: trans.never
             }
         },
-        incompatible: { stacked_chartlist_info: false }
+        incompatible: { track_layout: 'row' }
     },
     rain: {
         default: false,

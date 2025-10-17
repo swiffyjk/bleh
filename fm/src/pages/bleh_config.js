@@ -900,8 +900,8 @@ export async function render_setting_page(page_id) {
 
         let bars;
 
-        let column_view;
-        let extend_height;
+        let track_layout;
+        let expand_tracks;
 
         render(
             page.structure.main,
@@ -958,17 +958,14 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     <div class="setting-group">
-                        ${(column_view = setting({
-                            id: 'stacked_chartlist_info',
-                            func: (val) => {
-                                extend_height.compat(val);
+                        ${(track_layout = setting({
+                            id: 'track_layout',
+                            func: () => {
+                                expand_tracks.compat();
                             }
                         }))}
-                        ${(extend_height = setting({
-                            id: 'expand_tracks',
-                            func: (val) => {
-                                column_view.compat(val);
-                            }
+                        ${(expand_tracks = setting({
+                            id: 'expand_tracks'
                         }))}
                     </div>
                 </section>

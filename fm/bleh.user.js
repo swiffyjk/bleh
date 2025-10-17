@@ -35218,12 +35218,16 @@
         let track_info = track2.querySelector(":scope > .track-info");
         if (!track_info) {
           track_info = html.node`
-                    <div class="track-info">
+                    <div class="track-info" data-has-bar=${tracklist.classList.contains("chartlist--with-bar")}>
                         ${track_title.parentElement}
                     </div>
                 `;
           track2.appendChild(track_info);
         }
+        track2.setAttribute(
+          "data-has-bar",
+          tracklist.classList.contains("chartlist--with-bar")
+        );
         let is_user = track2.querySelector(".chartlist-image .avatar");
         let is_artist = false;
         if (is_user) {
@@ -35328,7 +35332,7 @@
             track_artist
           );
         const album_link = track2.querySelector(".chartlist-image a");
-        const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never" && settings.stacked_chartlist_info;
+        const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never" && settings.track_layout == "column";
         track2.setAttribute("data-show-album-text", show_album_text);
         const image_wrap = track2.querySelector(".chartlist-image");
         let link;
@@ -35938,9 +35942,11 @@
             track_title.getAttribute("data-name")
           );
         }
-        let album_text = track2.querySelector(".chartlist-album");
+        let album_text = track2.querySelector(
+          ".chartlist-album.custom-album-text"
+        );
         if (image_wrap) {
-          if (!is_album && show_album_text && !has_bar && !settings.album_text && !album_text) {
+          if (!is_album && show_album_text && !has_bar && !album_text) {
             let alt = romanise(
               correct_item_by_artist(
                 image.getAttribute("alt"),
@@ -39409,7 +39415,6 @@
             title: tl2(trans2.reset_item_to_default)
           });
         };
-        if (func) func(value);
         let buttons = [];
         let reset_btn;
         const elem = html.node`
@@ -49276,8 +49281,8 @@
       }
       register_skip_to([]);
       let bars2;
-      let column_view;
-      let extend_height;
+      let track_layout;
+      let expand_tracks;
       render(
         page.structure.main,
         html`
@@ -49333,17 +49338,14 @@
                         </div>
                     </div>
                     <div class="setting-group">
-                        ${column_view = setting({
-          id: "stacked_chartlist_info",
-          func: (val) => {
-            extend_height.compat(val);
+                        ${track_layout = setting({
+          id: "track_layout",
+          func: () => {
+            expand_tracks.compat();
           }
         })}
-                        ${extend_height = setting({
-          id: "expand_tracks",
-          func: (val) => {
-            column_view.compat(val);
-          }
+                        ${expand_tracks = setting({
+          id: "expand_tracks"
         })}
                     </div>
                 </section>
@@ -59919,11 +59921,37 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         sv: "Annars placeras g\xE4startister fint bredvid huvudartisten"
       }
     },
-    track_column_view: {
-      en: "Use column view for tracklist information",
-      de: "Verwende die Spaltenansicht f\xFCr Titellisteninformationen",
-      pt: "Use a visualiza\xE7\xE3o em colunas para as informa\xE7\xF5es das faixas",
-      sv: "Anv\xE4nd kolumnvy f\xF6r l\xE5tlistsinformation"
+    track_layout: {
+      name: {
+        en: "Track layout"
+      },
+      body: {
+        en: "Choose which axis to display track information on"
+      },
+      column: {
+        en: "Place title and artist vertically"
+      },
+      row: {
+        en: "Place title and artist horizontally"
+      }
+    },
+    expand_tracks: {
+      name: {
+        en: "Show associated album for tracks"
+      },
+      body: {
+        en: "Places the track\u2019s associated album name if there\u2019s room"
+      }
+    },
+    expand_tracks_when_active: {
+      en: "Only when actively scrobbling",
+      de: "Nur w\xE4hrend des aktiven Scrobbelns",
+      sv: "Endast n\xE4r du skrobblar"
+    },
+    expand_tracks_always: {
+      en: "Always when possible",
+      de: "Immer, wenn m\xF6glich",
+      sv: "Alltid, n\xE4r det \xE4r m\xF6jligt"
     },
     show_remaster_tags: {
       en: "Show remaster tags",
@@ -62508,28 +62536,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         sv: "V\xE4lj vilken sorts branding f\xF6r att anv\xE4nda p\xE5 sidhuvudet"
       }
     },
-    expand_tracks: {
-      name: {
-        en: "Extend track height to show album title",
-        de: "Titelh\xF6he erweitern, um den Albumtitel anzuzeigen",
-        sv: "\xD6ka l\xE5tstorleken f\xF6r att visa albumtiteln"
-      },
-      body: {
-        en: "Increases the size of the track\u2019s cover art to make room for it\u2019s accompanying album",
-        de: "Erh\xF6ht die Gr\xF6\xDFe des Songcovers, um Platz f\xFCr das zugeh\xF6rige Album zu schaffen",
-        sv: "\xD6kar p\xE5 storleken p\xE5 l\xE5tens albumkonst f\xF6r att f\xE5 plats med albumtiteln"
-      }
-    },
-    expand_tracks_when_active: {
-      en: "Only when actively scrobbling",
-      de: "Nur w\xE4hrend des aktiven Scrobbelns",
-      sv: "Endast n\xE4r du skrobblar"
-    },
-    expand_tracks_always: {
-      en: "Always when possible",
-      de: "Immer, wenn m\xF6glich",
-      sv: "Alltid, n\xE4r det \xE4r m\xF6jligt"
-    },
     rain: {
       name: {
         en: "Enable rainfall",
@@ -63510,9 +63516,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       title: trans2.show_guest_features.name,
       body: trans2.show_guest_features.body
     },
-    stacked_chartlist_info: {
-      default: true,
-      title: trans2.track_column_view
+    track_layout: {
+      default: "column",
+      type: "radio",
+      title: trans2.track_layout.name,
+      body: trans2.track_layout.body,
+      values: {
+        column: {
+          name: trans2.track_layout.column
+        },
+        row: {
+          name: trans2.track_layout.row
+        }
+      }
     },
     glacier_library_graphs: {
       default: true,
@@ -63940,7 +63956,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           name: trans2.never
         }
       },
-      incompatible: { stacked_chartlist_info: false }
+      incompatible: { track_layout: "row" }
     },
     rain: {
       default: false,

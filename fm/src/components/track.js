@@ -160,12 +160,16 @@ export function patch_titles(search = page.structure.main) {
             let track_info = track.querySelector(':scope > .track-info');
             if (!track_info) {
                 track_info = html.node`
-                    <div class="track-info">
+                    <div class="track-info" data-has-bar=${tracklist.classList.contains('chartlist--with-bar')}>
                         ${track_title.parentElement}
                     </div>
                 `;
                 track.appendChild(track_info);
             }
+            track.setAttribute(
+                'data-has-bar',
+                tracklist.classList.contains('chartlist--with-bar')
+            );
 
             // for albums and tracks 'avatar' is replaced with 'cover-art'
             // we can use this to detect if the item is either a user or an artist
@@ -313,7 +317,7 @@ export function patch_titles(search = page.structure.main) {
             const show_album_text =
                 (is_active || settings.expand_tracks == 'always') &&
                 settings.expand_tracks != 'never' &&
-                settings.stacked_chartlist_info;
+                settings.track_layout == 'column';
             track.setAttribute('data-show-album-text', show_album_text);
 
             const image_wrap = track.querySelector('.chartlist-image');
@@ -1060,16 +1064,12 @@ export function patch_titles(search = page.structure.main) {
                 );
             }
 
-            let album_text = track.querySelector('.chartlist-album');
+            let album_text = track.querySelector(
+                '.chartlist-album.custom-album-text'
+            );
 
             if (image_wrap) {
-                if (
-                    !is_album &&
-                    show_album_text &&
-                    !has_bar &&
-                    !settings.album_text &&
-                    !album_text
-                ) {
+                if (!is_album && show_album_text && !has_bar && !album_text) {
                     let alt = romanise(
                         correct_item_by_artist(
                             image.getAttribute('alt'),

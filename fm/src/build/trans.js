@@ -2555,11 +2555,37 @@ export const trans = {
             sv: 'Annars placeras gästartister fint bredvid huvudartisten'
         }
     },
-    track_column_view: {
-        en: 'Use column view for tracklist information',
-        de: 'Verwende die Spaltenansicht für Titellisteninformationen',
-        pt: 'Use a visualização em colunas para as informações das faixas',
-        sv: 'Använd kolumnvy för låtlistsinformation'
+    track_layout: {
+        name: {
+            en: 'Track layout'
+        },
+        body: {
+            en: 'Choose which axis to display track information on'
+        },
+        column: {
+            en: 'Place title and artist vertically'
+        },
+        row: {
+            en: 'Place title and artist horizontally'
+        }
+    },
+    expand_tracks: {
+        name: {
+            en: 'Show associated album for tracks'
+        },
+        body: {
+            en: 'Places the track’s associated album name if there’s room'
+        }
+    },
+    expand_tracks_when_active: {
+        en: 'Only when actively scrobbling',
+        de: 'Nur während des aktiven Scrobbelns',
+        sv: 'Endast när du skrobblar'
+    },
+    expand_tracks_always: {
+        en: 'Always when possible',
+        de: 'Immer, wenn möglich',
+        sv: 'Alltid, när det är möjligt'
     },
     show_remaster_tags: {
         en: 'Show remaster tags',
@@ -5143,28 +5169,6 @@ export const trans = {
             de: 'Wähle aus, welches Branding für die Kopfzeile verwendet werden soll',
             sv: 'Välj vilken sorts branding för att använda på sidhuvudet'
         }
-    },
-    expand_tracks: {
-        name: {
-            en: 'Extend track height to show album title',
-            de: 'Titelhöhe erweitern, um den Albumtitel anzuzeigen',
-            sv: 'Öka låtstorleken för att visa albumtiteln'
-        },
-        body: {
-            en: 'Increases the size of the track’s cover art to make room for it’s accompanying album',
-            de: 'Erhöht die Größe des Songcovers, um Platz für das zugehörige Album zu schaffen',
-            sv: 'Ökar på storleken på låtens albumkonst för att få plats med albumtiteln'
-        }
-    },
-    expand_tracks_when_active: {
-        en: 'Only when actively scrobbling',
-        de: 'Nur während des aktiven Scrobbelns',
-        sv: 'Endast när du skrobblar'
-    },
-    expand_tracks_always: {
-        en: 'Always when possible',
-        de: 'Immer, wenn möglich',
-        sv: 'Alltid, när det är möjligt'
     },
     rain: {
         name: {
