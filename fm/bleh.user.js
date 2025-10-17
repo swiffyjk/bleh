@@ -35215,6 +35215,15 @@
           );
           track_title.removeAttribute("title");
         }
+        let track_info = track2.querySelector(":scope > .track-info");
+        if (!track_info) {
+          track_info = html.node`
+                    <div class="track-info">
+                        ${track_title.parentElement}
+                    </div>
+                `;
+          track2.appendChild(track_info);
+        }
         let is_user = track2.querySelector(".chartlist-image .avatar");
         let is_artist = false;
         if (is_user) {
@@ -35336,6 +35345,10 @@
             );
           }
         }
+        let song_artist_element = track2.querySelector(".chartlist-artist");
+        if (song_artist_element) {
+          track_info.appendChild(song_artist_element);
+        }
         if (settings.format_guest_features) {
           let formatted_title = name_includes(
             track_title.getAttribute("data-name"),
@@ -35357,11 +35370,10 @@
             )
           );
           render(track_title, smart_title(song_title, song_tags));
-          let song_artist_element = track2.querySelector(".chartlist-artist");
           if (!song_artist_element && !is_user) {
             song_artist_element = document.createElement("td");
             song_artist_element.classList.add("chartlist-artist");
-            track2.appendChild(song_artist_element);
+            track_info.appendChild(song_artist_element);
           }
           console.log(
             "artist matches",
@@ -35423,23 +35435,23 @@
                     `;
           }
         } else if (settings.corrections) {
-          let song_artist_element = track2.querySelector(
+          let song_artist_element2 = track2.querySelector(
             ".chartlist-artist a"
           );
-          if (song_artist_element) {
+          if (song_artist_element2) {
             let corrected_title = romanise(
               correct_item_by_artist(
                 track_title.textContent,
-                song_artist_element.textContent
+                song_artist_element2.textContent
               )
             );
             track_title.textContent = corrected_title;
             track_title.setAttribute("data-name", corrected_title);
             let corrected_artist = romanise(
-              correct_artist(song_artist_element.textContent)
+              correct_artist(song_artist_element2.textContent)
             );
-            song_artist_element.textContent = corrected_artist;
-            song_artist_element.setAttribute("title", corrected_artist);
+            song_artist_element2.textContent = corrected_artist;
+            song_artist_element2.setAttribute("title", corrected_artist);
           } else {
             let corrected_title = correct_item_by_artist(
               track_title.textContent,
@@ -35926,15 +35938,16 @@
             track_title.getAttribute("data-name")
           );
         }
+        let album_text = track2.querySelector(".chartlist-album");
         if (image_wrap) {
-          if (!is_album && show_album_text && !has_bar && !settings.album_text) {
+          if (!is_album && show_album_text && !has_bar && !settings.album_text && !album_text) {
             let alt = romanise(
               correct_item_by_artist(
                 image.getAttribute("alt"),
                 track_artist
               )
             );
-            track2.appendChild(html.node`
+            track_info.appendChild(html.node`
                         <td class="chartlist-album custom-album-text">
                             <a href="${link.getAttribute("href")}">${alt}</a>
                         </td>
@@ -49357,6 +49370,7 @@
           list: page.state.music_links
         })}
                         ${setting({ id: "default_avatar_action" })}
+                        ${setting({ id: "simulate_scroll" })}
                     </div>
                     <div class="inner-preview pad flex">
                         <section class="catalogue-tags">

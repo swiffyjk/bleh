@@ -157,6 +157,16 @@ export function patch_titles(search = page.structure.main) {
                 track_title.removeAttribute('title');
             }
 
+            let track_info = track.querySelector(':scope > .track-info');
+            if (!track_info) {
+                track_info = html.node`
+                    <div class="track-info">
+                        ${track_title.parentElement}
+                    </div>
+                `;
+                track.appendChild(track_info);
+            }
+
             // for albums and tracks 'avatar' is replaced with 'cover-art'
             // we can use this to detect if the item is either a user or an artist
             let is_user = track.querySelector('.chartlist-image .avatar');
@@ -323,6 +333,11 @@ export function patch_titles(search = page.structure.main) {
                 }
             }
 
+            let song_artist_element = track.querySelector('.chartlist-artist');
+            if (song_artist_element) {
+                track_info.appendChild(song_artist_element);
+            }
+
             if (settings.format_guest_features) {
                 let formatted_title = name_includes(
                     track_title.getAttribute('data-name'),
@@ -349,12 +364,10 @@ export function patch_titles(search = page.structure.main) {
                 // parse tags into text
                 render(track_title, smart_title(song_title, song_tags));
 
-                let song_artist_element =
-                    track.querySelector('.chartlist-artist');
                 if (!song_artist_element && !is_user) {
                     song_artist_element = document.createElement('td');
                     song_artist_element.classList.add('chartlist-artist');
-                    track.appendChild(song_artist_element);
+                    track_info.appendChild(song_artist_element);
                 }
 
                 // if artist matches OR artist is blank
@@ -1047,12 +1060,15 @@ export function patch_titles(search = page.structure.main) {
                 );
             }
 
+            let album_text = track.querySelector('.chartlist-album');
+
             if (image_wrap) {
                 if (
                     !is_album &&
                     show_album_text &&
                     !has_bar &&
-                    !settings.album_text
+                    !settings.album_text &&
+                    !album_text
                 ) {
                     let alt = romanise(
                         correct_item_by_artist(
@@ -1061,7 +1077,7 @@ export function patch_titles(search = page.structure.main) {
                         )
                     );
 
-                    track.appendChild(html.node`
+                    track_info.appendChild(html.node`
                         <td class="chartlist-album custom-album-text">
                             <a href="${link.getAttribute('href')}">${alt}</a>
                         </td>

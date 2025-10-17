@@ -1000,6 +1000,7 @@ export async function render_setting_page(page_id) {
                             list: page.state.music_links
                         })}
                         ${setting({ id: 'default_avatar_action' })}
+                        ${setting({ id: 'simulate_scroll' })}
                     </div>
                     <div class="inner-preview pad flex">
                         <section class="catalogue-tags">

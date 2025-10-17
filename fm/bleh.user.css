@@ -6264,6 +6264,7 @@
         transition-timing-function: var(--trans-function);
         margin: 0 -12px !important; /* calc(- 12 px - var(--chartlist-inner-gap) / 2) */
         display: flex !important;
+        gap: var(--item-list-gap);
         align-items: center;
 
         animation: var(
@@ -6306,6 +6307,18 @@
         & > .chartlist-play,
         & > .chartlist-more {
             display: none !important;
+        }
+
+        & > .track-info {
+            flex: 1;
+
+            & > .chartlist-name,
+            & > .chartlist-artist,
+            & > .chartlist-album {
+                margin: unset !important;
+                inset: unset !important;
+                position: relative !important;
+            }
         }
 
         position: relative;
@@ -6362,13 +6375,6 @@
     .lastfm-bulk-edit-chartlist-scrobbles {
         .chartlist-album:not(.custom-album-text) {
             display: none;
-        }
-    }
-
-    [data-bleh--stacked_chartlist_info="false"] {
-        .chartlist-name {
-            margin-top: unset !important;
-            margin-bottom: unset !important;
         }
     }
 
@@ -6435,16 +6441,13 @@
         padding-right: 12px;
     }
     .chartlist-image,
-    .chartlist-name,
     .chartlist-bar,
     .chartlist-loved,
     .chartlist-more,
     .chartlist-timestamp,
-    .chartlist-duration,
-    .chartlist-artist,
-    .chartlist-name {
-        margin-left: calc(var(--chartlist-inner-gap) / 2) !important;
-        margin-right: calc(var(--chartlist-inner-gap) / 2) !important;
+    .chartlist-duration {
+        margin-left: unset !important;
+        margin-right: unset !important;
     }
     .chartlist-bar {
         @media (max-width: 980px) {
@@ -6748,12 +6751,6 @@
     /*     INFO     */
     .obsession-candidate-heading,
     .chartlist-name {
-        --mask: linear-gradient(270deg, transparent 0%, black 3%);
-        --mask-repeat: no-repeat;
-        mask-image: var(--mask);
-        -webkit-mask-image: var(--mask);
-        mask-repeat: var(--mask-repeat);
-        -webkit-mask-repeat: var(--mask-repeat);
         font-weight: var(--font-weight-medium);
 
         @media (max-width: 980px) {
@@ -6856,17 +6853,6 @@
                 margin: unset !important;
             }
         }
-
-        .chartlist-row {
-            &.chartlist-row--with-artist {
-                .chartlist-name {
-                    width: 55%;
-                }
-                .chartlist-artist {
-                    width: 60%;
-                }
-            }
-        }
     }
     [data-bleh--show_remaster_tags="false"] {
         .title-container .feat,
@@ -6888,117 +6874,18 @@
         [data-bleh--stacked_chartlist_info="true"] &,
         &.chartlist--with-bar {
             &:not(.chartlist--with-bar) {
-                .chartlist-row.chartlist-row--with-artist {
-                    .chartlist-name {
-                        margin-bottom: 16px;
-                    }
-                    .chartlist-artist {
-                        position: absolute;
-                        left: calc(var(--chartlist-type) + 38px + 2px - 28px);
-                        margin-top: 16px;
-                        right: 300px;
-                    }
-                    .chartlist-album.custom-album-text {
-                        position: absolute;
-                        left: calc(var(--chartlist-type) + 38px + 2px - 28px);
-                        margin-top: 32px;
-                        margin-left: calc(
-                            var(--chartlist-inner-gap) / 2
-                        ) !important;
-                        margin-right: unset !important;
-                    }
-
-                    &:not(:has(.chartlist-timestamp)) {
-                        .chartlist-name {
-                            width: 30%;
-                        }
-                        .chartlist-artist {
-                            width: 80%;
-                        }
-                    }
-                }
-
                 &.chartlist--with-image {
                     .chartlist-row {
-                        .chartlist-artist {
-                            left: calc(
-                                var(--chartlist-type) + 84px - 2px - 28px
-                            );
-                        }
-                        .chartlist-album.custom-album-text {
-                            position: absolute;
-                            left: calc(
-                                var(--chartlist-type) + 84px - 2px - 28px
-                            );
-                        }
-
                         &[data-show-album-text="true"] {
                             /* 56px - 38px = 18px */
                             .chartlist-image {
                                 width: 56px;
                                 height: 56px;
                             }
-
-                            .chartlist-name {
-                                margin-bottom: 32px;
-                            }
-                            .chartlist-artist {
-                                left: calc(
-                                    var(--chartlist-type) + 18px + 84px - 2px -
-                                        28px
-                                );
-                                margin-top: unset;
-                            }
-                            .chartlist-album.custom-album-text {
-                                left: calc(
-                                    var(--chartlist-type) + 18px + 84px - 2px -
-                                        28px
-                                );
-                                margin-top: 32px;
-
-                                font-size: var(--font-size-sm);
-                                color: hsl(var(--c2), 60%);
-                            }
                         }
                     }
                 }
             }
-            &.chartlist--with-bar {
-                .chartlist-row {
-                    .chartlist-name {
-                        margin-bottom: 16px;
-                    }
-                    .chartlist-artist {
-                        position: absolute;
-                        left: calc(var(--chartlist-type) + 84px - 2px - 42px);
-                        margin-top: 16px;
-                        right: 300px;
-                        width: 50%;
-                    }
-                }
-            }
-        }
-    }
-
-    .chartlist:not(.chartlist--with-image)
-        .chartlist-row--with-artist
-        .chartlist-name {
-        margin-bottom: unset;
-        width: 30%;
-
-        @media (max-width: 980px) {
-            width: 90%;
-        }
-    }
-    .chartlist:not(.chartlist--with-image)
-        .chartlist-row--with-artist
-        .chartlist-artist {
-        margin-top: unset;
-        position: static;
-        width: 20%;
-
-        @media (max-width: 980px) {
-            width: 90%;
         }
     }
 
@@ -7090,26 +6977,12 @@
         --mask-size: var(--cover-size-32);
     }
 
-    .chartlist--with-album .chartlist-name,
-    .chartlist-row--with-artist .chartlist-name {
-        width: 70%;
-    }
-    .chartlist-row--with-artist .chartlist-artist {
-        width: 35%;
-        left: 30px;
-    }
     .chartlist-timestamp {
         width: 140px;
         /*order: 1;*/
     }
 
     /* move closer to artist field */
-    .chartlist--with-bar .chartlist-row--with-artist .chartlist-name,
-    .chartlist--with-multi-playlinks
-        .chartlist-row--with-artist
-        .chartlist-name {
-        margin-bottom: 16px;
-    }
 
     .chartlist {
         --side-left: 12px;
@@ -7118,34 +6991,6 @@
         &.chartlist--with-image {
             --image-offset: 44px;
         }
-    }
-    .chartlist--with-index--length-1 .chartlist-artist,
-    .chartlist--with-index--length-2 .chartlist-artist {
-        left: calc(var(--side-left) + 26px + var(--image-offset)) !important;
-        margin-top: 16px !important;
-    }
-    .chartlist--with-index--length-3 .chartlist-artist {
-        left: calc(var(--side-left) + 33px + var(--image-offset)) !important;
-        margin-top: 16px !important;
-    }
-    .chartlist--with-index--length-4 .chartlist-artist {
-        left: calc(var(--side-left) + 44px + var(--image-offset)) !important;
-        margin-top: 16px !important;
-    }
-
-    .chartlist--with-bar .chartlist-row--with-artist .chartlist-artist {
-        right: 300px;
-    }
-
-    /* playlist */
-    .chartlist--with-bar.chartlist--with-play.chartlist--with-image.chartlist--with-loved
-        .chartlist-row--with-artist
-        .chartlist-artist,
-    .chartlist--with-multi-playlinks.chartlist--with-play.chartlist--with-image.chartlist--with-loved
-        .chartlist-row--with-artist
-        .chartlist-artist {
-        left: calc(59px - 2px);
-        margin-top: 16px;
     }
 
     /*     LOVED - brought over from bleh     */
