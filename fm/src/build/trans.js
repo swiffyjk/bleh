@@ -5444,6 +5444,12 @@ export const trans = {
         body: {
             en: 'Default release branch is ‘uwu’, do not change unless you know what you’re doing'
         }
+    },
+    log_in: {
+        en: 'Log in'
+    },
+    sign_up: {
+        en: 'Sign up'
     }
 };
 

@@ -329,6 +329,21 @@ export function append_nav() {
                 }}
             `
         );
+
+        masthead.appendChild(html.node`
+            <div class="mobile-controls">
+                <a class="btn mobile-control" data-type="register" href="${root}join">
+                    ${tl(trans.sign_up)}
+                </a>
+                <a class="btn mobile-control" aria-checked=${page.type == 'settings' || page.type == 'bleh_settings'} data-menu-item="settings" href="${root}bleh">
+                    ${tl(trans.settings)}
+                </a>
+                <a class="btn mobile-control" data-type="login" href="${root}login">
+                    ${tl(trans.log_in)}
+                </a>
+            </div>
+        `);
+
         return;
     }
 

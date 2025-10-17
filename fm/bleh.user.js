@@ -52589,6 +52589,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         }}
             `
       );
+      masthead.appendChild(html.node`
+            <div class="mobile-controls">
+                <a class="btn mobile-control" data-type="register" href="${root}join">
+                    ${tl2(trans2.sign_up)}
+                </a>
+                <a class="btn mobile-control" aria-checked=${page.type == "settings" || page.type == "bleh_settings"} data-menu-item="settings" href="${root}bleh">
+                    ${tl2(trans2.settings)}
+                </a>
+                <a class="btn mobile-control" data-type="login" href="${root}login">
+                    ${tl2(trans2.log_in)}
+                </a>
+            </div>
+        `);
       return;
     }
     if (auth_link2.hasAttribute("data-bleh")) return;
@@ -62800,6 +62813,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       body: {
         en: "Default release branch is \u2018uwu\u2019, do not change unless you know what you\u2019re doing"
       }
+    },
+    log_in: {
+      en: "Log in"
+    },
+    sign_up: {
+      en: "Sign up"
     }
   };
   function tl2(key, replacements = {}) {
