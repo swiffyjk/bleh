@@ -312,10 +312,8 @@
         --toolbar-border: 1px solid hsl(var(--b4), 75%);
         --subtle-border: 1px solid hsl(var(--b4), 55%);
 
-        --card-blur-bg: hsl(var(--b5), 72%);
-        --card-blur-bg-alt: hsl(var(--b5), 35%);
-        --card-blur: blur(6px) saturate(var(--blur-saturate)) brightness(1)
-            contrast(1);
+        --card-blur-bg: hsl(var(--b5), var(--solarium-opacity, 72%));
+        --card-blur-bg-alt: hsl(var(--b5), var(--solarium-opacity, 35%));
 
         --nav-filter-shadow: drop-shadow(0 0 8px hsl(var(--b6)));
 
@@ -380,8 +378,8 @@
             --toolbar-border: 1px solid hsl(var(--b4), 45%);
             --subtle-border: 1px solid hsl(var(--b4), 35%);
 
-            --card-blur-bg: hsl(var(--b5), 70%);
-            --card-blur-bg-alt: hsl(var(--b5), 40%);
+            --card-blur-bg: hsl(var(--b5), var(--solarium-opacity, 70%));
+            --card-blur-bg-alt: hsl(var(--b5), var(--solarium-opacity, 40%));
         }
         .theme-preview[data-bleh--theme="light"],
         [data-bleh--theme="light"] &:not(.theme-preview) {
@@ -428,8 +426,8 @@
             --toolbar-border: 1px solid hsl(var(--b4), 85%);
             --subtle-border: 1px solid hsl(var(--b4), 65%);
 
-            --card-blur-bg: hsl(var(--b5), 52%);
-            --card-blur-bg-alt: hsl(var(--b5), 22%);
+            --card-blur-bg: hsl(var(--b5), var(--solarium-opacity, 52%));
+            --card-blur-bg-alt: hsl(var(--b5), var(--solarium-opacity, 22%));
 
             --menu-item-hov: hsla(var(--b4), 60%);
             --menu-item-atv: hsla(var(--b4), 80%);
@@ -906,6 +904,8 @@
 
         --solarium: var(--card-blur) url(#solarium);
         --solarium-bright: var(--card-blur) var(--bright) url(#solarium);
+        --card-blur: blur(6px) saturate(var(--blur-saturate)) brightness(1)
+            contrast(1);
 
         @supports (-moz-appearance: none) {
             --solarium: var(--card-blur);
@@ -915,6 +915,12 @@
         @supports (-webkit-touch-callout: none) {
             --solarium: var(--card-blur);
             --solarium-bright: var(--card-blur) var(--bright);
+        }
+
+        [data-bleh--solarium="false"] > & {
+            --solarium: none !important;
+            --solarium-bright: none !important;
+            --solarium-opacity: 1;
         }
 
         &[data-bleh--theme_type="light"],
@@ -1680,7 +1686,10 @@
             border-right: 1px solid var(--card-border-base) !important;
 
             &:before {
-                background: hsl(var(--b6), 85%) !important;
+                background: hsl(
+                    var(--b6),
+                    var(--solarium-opacity, 85%)
+                ) !important;
                 backdrop-filter: var(--solarium) !important;
                 -webkit-backdrop-filter: var(--solarium) !important;
 
@@ -1689,6 +1698,7 @@
                 bottom: calc(-1 * var(--margin));
                 height: unset;
                 transition: none;
+                z-index: 0;
             }
 
             .mobile-controls {
@@ -3023,12 +3033,6 @@
             --card-background: var(--card-blur-bg);
             backdrop-filter: var(--solarium);
             -webkit-backdrop-filter: var(--solarium);
-
-            [data-bleh--solarium="false"] & {
-                --card-background: hsl(var(--b5));
-                backdrop-filter: var(--card-filter, unset);
-                -webkit-backdrop-filter: var(--card-filter, unset);
-            }
         }
 
         &:not(.setup, .error, .sour) {
@@ -27822,7 +27826,7 @@
             }
 
             .check-circle {
-                background: hsl(var(--h3), 40%);
+                background: hsl(var(--h3), var(--solarium-opacity, 40%));
                 box-shadow: 0px 0px 9px 0px hsl(var(--l2-c), 60%) inset;
                 color: hsl(var(--b7));
                 outline: 6px solid hsl(var(--b5));
