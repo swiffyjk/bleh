@@ -912,7 +912,14 @@
             --solarium-bright: var(--card-blur) var(--bright);
         }
 
-        @supports (-webkit-touch-callout: none) {
+        @supports (-webkit-text-size-adjust: none) and
+            (font: -apple-system-body) {
+            --solarium: var(--card-blur);
+            --solarium-bright: var(--card-blur) var(--bright);
+        }
+
+        @supports (not (-webkit-text-size-adjust: none)) and
+            (font: -apple-system-body) {
             --solarium: var(--card-blur);
             --solarium-bright: var(--card-blur) var(--bright);
         }
