@@ -344,12 +344,18 @@ function main_flow() {
     dialog_extender();
 }
 
-function load_page() {
+function load_page(main_content = null) {
     if (page.state.activity_preview_timer)
         clearInterval(page.state.activity_preview_timer);
 
     page.state.settings_page = '';
     //hideAll({duration: 0});
+
+    if (main_content) {
+        auth.pro = !!main_content.querySelector(
+            ':scope > .masthead > .masthead-pro-wrap'
+        );
+    }
 
     page.structure.notifications.setAttribute('data-auth-open', 'false');
 
