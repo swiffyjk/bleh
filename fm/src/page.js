@@ -162,43 +162,6 @@ export function bleh() {
         },
         on_error: handle_error
     });
-    let head_observer = new MutationObserver((mutations) => {
-        if (document.head) {
-            head_observer.disconnect();
-        }
-    });
-
-    head_observer.observe(document.documentElement, {
-        childList: true
-    });
-
-    let pre_observer = new MutationObserver((mutations) => {
-        log('pre', 'load', 'info', { mutations });
-        if (document.body) {
-            log(`${JSON.stringify(document.body.classList)}`, 'load');
-            document.body.classList.add('bleh');
-        }
-
-        if (
-            document.body &&
-            document.body.querySelector('.adaptive-skin-container') &&
-            document.body.querySelector('.footer')
-        ) {
-            bleh_main();
-
-            pre_observer.disconnect();
-        } else if (
-            document.body &&
-            document.body.querySelector(':scope > .container')
-        ) {
-            // error 503
-            document.body.classList.add('bleh-loaded');
-        }
-    });
-
-    pre_observer.observe(document.documentElement, {
-        childList: true
-    });
 }
 
 function solarium() {
@@ -279,8 +242,6 @@ export function handle_error_500() {
 }
 
 function main_flow() {
-    let performance_start = performance.now();
-
     lookup_lang();
     patch_masthead(document.body);
 
@@ -384,12 +345,6 @@ function main_flow() {
     subscribe_to_events();
 
     dialog_extender();
-
-    let performance_end = performance.now();
-    log(
-        `finished in ${(performance_end - performance_start) / 1000} seconds`,
-        'loop'
-    );
 }
 
 function load_page() {

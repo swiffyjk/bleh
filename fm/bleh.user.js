@@ -56985,30 +56985,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       },
       on_error: handle_error
     });
-    let head_observer = new MutationObserver((mutations) => {
-      if (document.head) {
-        head_observer.disconnect();
-      }
-    });
-    head_observer.observe(document.documentElement, {
-      childList: true
-    });
-    let pre_observer = new MutationObserver((mutations) => {
-      log("pre", "load", "info", { mutations });
-      if (document.body) {
-        log(`${JSON.stringify(document.body.classList)}`, "load");
-        document.body.classList.add("bleh");
-      }
-      if (document.body && document.body.querySelector(".adaptive-skin-container") && document.body.querySelector(".footer")) {
-        bleh_main();
-        pre_observer.disconnect();
-      } else if (document.body && document.body.querySelector(":scope > .container")) {
-        document.body.classList.add("bleh-loaded");
-      }
-    });
-    pre_observer.observe(document.documentElement, {
-      childList: true
-    });
   }
   function solarium() {
     document.body.appendChild(html.node`
@@ -57082,7 +57058,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     log("halted as root is inaccessible", "load");
   }
   function main_flow() {
-    let performance_start = performance.now();
     lookup_lang();
     patch_masthead(document.body);
     if (page.state.error) return;
@@ -57132,11 +57107,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     shout_messages();
     subscribe_to_events();
     dialog_extender();
-    let performance_end = performance.now();
-    log(
-      `finished in ${(performance_end - performance_start) / 1e3} seconds`,
-      "loop"
-    );
   }
   function load_page() {
     if (page.state.activity_preview_timer)
