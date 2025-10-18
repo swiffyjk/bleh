@@ -49250,6 +49250,74 @@
           parsed_scrobble_as_rank.lit
         );
         return count_bar;
+      }, render_track_preview = function() {
+        render(
+          preview,
+          html`
+                    <table
+                        class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist chartlist--with-more"
+                    >
+                        <tbody>
+                            <tr
+                                class="chartlist-row chartlist-row--with-artist chartlist-row--now-scrobbling"
+                                data-has-bar="false"
+                                data-show-album-text=${settings.expand_tracks != "never" && settings.track_layout == "column"}
+                            >
+                                <td class="chartlist-image">
+                                    <a class="cover-art">
+                                        <img loading="lazy" />
+                                    </a>
+                                </td>
+                                <td class="chartlist-loved" />
+                                <td class="kate-placeholder" />
+                                <td class="track-info" data-has-bar="false">
+                                    <span class="chartlist-name">
+                                        <a>Track name</a>
+                                    </span>
+                                    <span class="chartlist-artist">
+                                        <a>Artist name</a>
+                                    </span>
+                                    ${settings.expand_tracks != "never" && settings.track_layout == "column" ? html.node`
+                                        <span
+                                            class="chartlist-album custom-album-text"
+                                        >
+                                            <a>Album name</a>
+                                        </span>
+                                    ` : ""}
+                                </td>
+                            </tr>
+                            <tr
+                                class="chartlist-row chartlist-row--with-artist"
+                                data-has-bar="false"
+                                data-show-album-text=${settings.expand_tracks == "always" && settings.expand_tracks != "never" && settings.track_layout == "column"}
+                            >
+                                <td class="chartlist-image">
+                                    <a class="cover-art">
+                                        <img loading="lazy" />
+                                    </a>
+                                </td>
+                                <td class="chartlist-loved" />
+                                <td class="kate-placeholder" />
+                                <td class="track-info" data-has-bar="false">
+                                    <span class="chartlist-name">
+                                        <a>Track name</a>
+                                    </span>
+                                    <span class="chartlist-artist">
+                                        <a>Artist name</a>
+                                    </span>
+                                    ${settings.expand_tracks == "always" && settings.expand_tracks != "never" && settings.track_layout == "column" ? html.node`
+                                        <span
+                                            class="chartlist-album custom-album-text"
+                                        >
+                                            <a>Album name</a>
+                                        </span>
+                                    ` : ""}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `
+        );
       };
       if (!page.state.quick_access_items) {
         setTimeout(() => {
@@ -49263,70 +49331,30 @@
       let track_layout;
       let expand_tracks;
       let track_album_name_location;
+      let preview;
       render(
         page.structure.main,
         html`
                 <section class="bleh--panel">
                     <h4>${tl2(trans2.tracklist)}</h4>
-                    <div class="inner-preview pad">
-                        <div class="tracks">
-                            <div class="track realtime">
-                                <div class="cover"></div>
-                                <div class="info">
-                                    <div class="title"></div>
-                                    <div class="artist"></div>
-                                    <div class="album"></div>
-                                </div>
-                                <div class="time"></div>
-                            </div>
-                            <div class="track">
-                                <div class="cover"></div>
-                                <div class="info">
-                                    <div class="title"></div>
-                                    <div class="artist"></div>
-                                    <div class="album"></div>
-                                </div>
-                                <div class="time"></div>
-                            </div>
-                            <div class="track">
-                                <div class="cover"></div>
-                                <div class="info">
-                                    <div class="title"></div>
-                                    <div class="artist"></div>
-                                    <div class="album"></div>
-                                </div>
-                                <div class="time"></div>
-                            </div>
-                            <div class="track">
-                                <div class="cover"></div>
-                                <div class="info">
-                                    <div class="title"></div>
-                                    <div class="artist"></div>
-                                    <div class="album"></div>
-                                </div>
-                                <div class="time"></div>
-                            </div>
-                            <div class="track">
-                                <div class="cover"></div>
-                                <div class="info">
-                                    <div class="title"></div>
-                                    <div class="artist"></div>
-                                    <div class="album"></div>
-                                </div>
-                                <div class="time"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <div
+                        class="inner-preview pad"
+                        ref=${(el) => preview = el}
+                    />
                     <div class="setting-group">
                         ${track_layout = setting({
           id: "track_layout",
           func: () => {
             expand_tracks.compat();
             track_album_name_location.compat();
+            render_track_preview();
           }
         })}
                         ${expand_tracks = setting({
-          id: "expand_tracks"
+          id: "expand_tracks",
+          func: () => {
+            render_track_preview();
+          }
         })}
                         ${track_album_name_location = setting({
           id: "track_album_name_location"
@@ -49472,6 +49500,7 @@
             ` : ""}
             `
       );
+      render_track_preview();
     } else if (page_id == "playback") {
       let total_artists = 0;
       let total_album_tracks = 0;
