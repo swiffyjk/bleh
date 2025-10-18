@@ -12,8 +12,6 @@ import {
     auth,
     auth_link,
     bleh_url,
-    last_page_subpage,
-    last_page_type,
     minis_url,
     mualani_url,
     page,
@@ -80,7 +78,6 @@ import { bleh_auth } from './pages/auth.js';
 import { bleh_labs } from './pages/labs.js';
 import { bleh_minis } from './pages/minis.js';
 import { mualani } from './pages/mualani.js';
-import { convert_gif_to_png } from './build/tools.js';
 import { load_status } from './components/status.js';
 import { load_dismissed } from './components/dismissed.js';
 import { oracle_data } from './components/oracle.js';

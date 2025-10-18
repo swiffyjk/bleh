@@ -68,14 +68,6 @@ export function setRoot(data) {
 // recent activity
 export let recent_activity_list = [];
 
-// page type
-export let last_page_type = {
-    state: undefined
-};
-export let last_page_subpage = {
-    state: undefined
-};
-
 /**
  * Represents the current page state, structure, and any elements
  *
