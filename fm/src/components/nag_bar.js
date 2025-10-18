@@ -6,6 +6,7 @@
 
 import { settings } from '../build/config';
 import { page } from '../build/page';
+import { tl, trans } from '../build/trans';
 import { notify } from './notify';
 
 export function nag_bar() {
