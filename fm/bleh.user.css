@@ -1396,8 +1396,8 @@
             pointer-events: none;
         }
 
-        .bleh-supports-loading
-            > &:not(.bleh-loaded, .labs-section, [style="zoom: 1;"]) {
+        .florence-supports-loading
+            > &:not(.florence-loaded, .labs-section, [style="zoom: 1;"]) {
             &:before {
                 background-color: hsl(var(--b6));
             }
