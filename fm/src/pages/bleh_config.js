@@ -907,6 +907,8 @@ export async function render_setting_page(page_id) {
         let preview;
 
         function render_track_preview() {
+            const avi = auth.avatar.replace('/avatar42s/', '/avatar170s/');
+
             render(
                 preview,
                 html`
@@ -923,10 +925,9 @@ export async function render_setting_page(page_id) {
                             >
                                 <td class="chartlist-image">
                                     <a class="cover-art">
-                                        <img loading="lazy" />
+                                        <img src=${avi} loading="lazy" />
                                     </a>
                                 </td>
-                                <td class="chartlist-loved" />
                                 <td class="kate-placeholder" />
                                 <td class="track-info" data-has-bar="false">
                                     <span class="chartlist-name">
@@ -959,10 +960,9 @@ export async function render_setting_page(page_id) {
                             >
                                 <td class="chartlist-image">
                                     <a class="cover-art">
-                                        <img loading="lazy" />
+                                        <img src=${avi} loading="lazy" />
                                     </a>
                                 </td>
-                                <td class="chartlist-loved" />
                                 <td class="kate-placeholder" />
                                 <td class="track-info" data-has-bar="false">
                                     <span class="chartlist-name">

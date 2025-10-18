@@ -49251,6 +49251,7 @@
         );
         return count_bar;
       }, render_track_preview = function() {
+        const avi = auth.avatar.replace("/avatar42s/", "/avatar170s/");
         render(
           preview,
           html`
@@ -49265,10 +49266,9 @@
                             >
                                 <td class="chartlist-image">
                                     <a class="cover-art">
-                                        <img loading="lazy" />
+                                        <img src=${avi} loading="lazy" />
                                     </a>
                                 </td>
-                                <td class="chartlist-loved" />
                                 <td class="kate-placeholder" />
                                 <td class="track-info" data-has-bar="false">
                                     <span class="chartlist-name">
@@ -49293,10 +49293,9 @@
                             >
                                 <td class="chartlist-image">
                                     <a class="cover-art">
-                                        <img loading="lazy" />
+                                        <img src=${avi} loading="lazy" />
                                     </a>
                                 </td>
-                                <td class="chartlist-loved" />
                                 <td class="kate-placeholder" />
                                 <td class="track-info" data-has-bar="false">
                                     <span class="chartlist-name">
