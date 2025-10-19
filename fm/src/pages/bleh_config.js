@@ -49,7 +49,7 @@ import { match } from '../components/dynamic_theming.js';
 import { manage_oracle_data, oracle_data } from '../components/oracle.js';
 import { render_activity } from '../activity.js';
 import { DateTime } from 'luxon';
-import { sponsor, sponsor_manage } from '../sponsor.js';
+import { sponsor, sponsor_manage, sponsors } from '../sponsor.js';
 import { version as florence_version } from '@tealmiku/florence';
 
 export function bleh_settings() {
@@ -326,16 +326,14 @@ export async function render_setting_page(page_id) {
                                 </div>
                                 <div class="info">
                                     <p>${tl(trans.profile_and_badges, { c: badge_count.toString() })}</p>
-                                    ${badge_count > 0
-                                    ? html.node`
-                                    <button class="see-more" onclick=${() => {
+                                    ${badge_count > 0 ? html.node`
+                                        <button class="see-more" onclick=${() => {
                                             dialog({
                                                 id: 'badges',
                                                 title: auth.name,
                                                 body: html.node`
-                                                <div class="generic-table-list badge-list">
-                                                    ${badges
-                                                        ? badges.map((badge) => {
+                                                    <div class="generic-table-list badge-list">
+                                                        ${badges ? badges.map(badge => {
                                                             let style;
                                                             let classname = '';
                                                             if (
@@ -350,82 +348,71 @@ export async function render_setting_page(page_id) {
                                                             }
 
                                                             return html.node`
+                                                                <div class="generic-table-list-entry badge-list-entry">
+                                                                    <div class="icon-container colourful ${classname}" style=${style}>
+                                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                                    </div>
+                                                                    <div class="name colourful ${classname}" style=${style}>
+                                                                        ${badge.name}
+                                                                    </div>
+                                                                    <div class="text">
+                                                                        ${badge.reason}
+                                                                    </div>
+                                                                </div>
+                                                            `;
+                                                        }) : ''}
+                                                        ${auth.pro ? html.node`
                                                             <div class="generic-table-list-entry badge-list-entry">
-                                                                <div class="icon-container colourful ${classname}" style=${style}>
+                                                                <div class="icon-container colourful user-status-subscriber">
                                                                     <div class="bleh-icon" style="--icon: var(--mask)" />
                                                                 </div>
-                                                                <div class="name colourful ${classname}" style=${style}>
-                                                                    ${badge.name}
+                                                                <div class="name colourful user-status-subscriber">
+                                                                    ${tl(trans.badges['user-status-subscriber'].name)}
                                                                 </div>
                                                                 <div class="text">
-                                                                    ${badge.reason}
+                                                                    ${tl(trans.badges['user-status-subscriber'].reason)}
                                                                 </div>
                                                             </div>
-                                                        `;
-                                                        })
-                                                        : ''
-                                                    }
-                                                    ${auth.pro
-                                                        ? html.node`
-                                                        <div class="generic-table-list-entry badge-list-entry">
-                                                            <div class="icon-container colourful user-status-subscriber">
-                                                                <div class="bleh-icon" style="--icon: var(--mask)" />
-                                                            </div>
-                                                            <div class="name colourful user-status-subscriber">
-                                                                ${tl(trans.badges['user-status-subscriber'].name)}
-                                                            </div>
-                                                            <div class="text">
-                                                                ${tl(trans.badges['user-status-subscriber'].reason)}
-                                                            </div>
-                                                        </div>
-                                                    `
-                                                        : ''
-                                                    }
-                                                </div>
-                                            `
+                                                        ` : ''}
+                                                    </div>
+                                                `
                                             });
                                         }}>${tl(trans.view)}</button>
-                                    `
-                                    : ''
-                                }
+                                    ` : ''}
                                 </div>
                             </div>
                         ` : ''}
                         ${auth.sponsor ? html.node`
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.you_are_a_sponsor)}</h5>
-                            <p>${tl(trans.sponsor_get_badge)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
-                                ${tl(trans.manage_sponsor)}
-                            </button>
-                        </div>
-                    </div>
-                    `
-                    : html.node`
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.news_sponsor_cta)}</h5>
-                            <p>${tl(trans.api.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
-                                ${tl(trans.sponsor)}
-                            </button>
-                        </div>
-                    </div>
-                    `}
+                            <div class="setting" data-type="action">
+                                <div class="heading">
+                                    <h5>${tl(trans.you_are_a_sponsor)}</h5>
+                                    <p>${tl(trans.sponsor_get_badge)}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
+                                        ${tl(trans.manage_sponsor)}
+                                    </button>
+                                </div>
+                            </div>
+                        ` : html.node`
+                            <div class="setting" data-type="action">
+                                <div class="heading">
+                                    <h5>${tl(trans.news_sponsor_cta)}</h5>
+                                    <p>${tl(trans.api.body)}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
+                                        ${tl(trans.sponsor)}
+                                    </button>
+                                </div>
+                            </div>
+                        `}
                         <div class="setting" data-type="info">
                             <div class="heading">
                                 <h5>${tl(trans.current_version)}</h5>
                             </div>
                             <div class="info">
-                                <button
-                                    class="see-more update-check sponsor-related"
-                                    onclick="_sponsor_check()"
-                                >
+                                <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true)}>
                                     ${tl(trans.update_check)}
                                 </button>
                                 <p>${sponsor_list.latest}</p>
@@ -433,109 +420,99 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                 </section>
-                ${!page.mobile
-                    ? html.node`
-            <section class="bleh--panel">
-                <h4>${tl(trans.branding)}</h4>
-                <div class="setting-group">
-                    ${setting({ id: 'branding_type' })}
-                </div>
-            </section>
-            `
-                    : ''}
-                ${auth.name
-                    ? html.node`
-            <section class="bleh--panel">
-                <h4>API</h4>
-                <div class="setting-group">
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.api.name)}</h5>
-                            <p>${tl(trans.api.body)}</p>
+                ${!page.mobile ? html.node`
+                    <section class="bleh--panel">
+                        <h4>${tl(trans.branding)}</h4>
+                        <div class="setting-group">
+                            ${setting({ id: 'branding_type' })}
                         </div>
-                        <div class="toggle-wrap">
-                            <a class="btn ${auth_key && auth_valid == 'true' ? '' : 'primary'} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
-                                ${tl(trans.connect)}
-                            </a>
+                    </section>
+                ` : ''}
+                ${auth.name ? html.node`
+                    <section class="bleh--panel">
+                        <h4>API</h4>
+                        <div class="setting-group">
+                            <div class="setting" data-type="action">
+                                <div class="heading">
+                                    <h5>${tl(trans.api.name)}</h5>
+                                    <p>${tl(trans.api.body)}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <a class="btn ${auth_key && auth_valid == 'true' ? '' : 'primary'} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                                        ${tl(trans.connect)}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="setting" data-type="info">
+                                <div class="heading">
+                                    <h5>${tl(trans.api_status)}</h5>
+                                </div>
+                                <div class="info">
+                                    ${auth_key && auth_valid == 'true'
+                                    ? html.node`
+                                    <p>${tl(trans.connected)}</p>
+                                    `
+                                    : html.node`
+                                    <p>${tl(trans.not_connected)}</p>
+                                    `
+                                }
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="setting" data-type="info">
-                        <div class="heading">
-                            <h5>${tl(trans.api_status)}</h5>
-                        </div>
-                        <div class="info">
-                            ${auth_key && auth_valid == 'true'
-                            ? html.node`
-                            <p>${tl(trans.connected)}</p>
-                            `
-                            : html.node`
-                            <p>${tl(trans.not_connected)}</p>
-                            `
-                        }
-                        </div>
-                    </div>
-                </div>
-            </section>
-            `
-                    : ''}
+                    </section>
+                ` : ''}
                 <section class="bleh--panel">
                     <h4>${tl(trans.language)}</h4>
                     <div class="setting-group">
                         <div class="languages">
-                            ${Object.entries(lang_info)
-                    .sort(([, a], [, b]) => b.percent - a.percent)
-                    .map(([key, language]) => {
-                        let date;
+                            ${Object.entries(lang_info).sort(([, a], [, b]) => b.percent - a.percent).map(([key, language]) => {
+                                let date;
 
-                        const row = html.node`
-                                        <div class="language-row${lang == key ? ' active' : ''}">
-                                            <div class="flag-container">
-                                                <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
-                                            </div>
-                                            <div class="name">
-                                                <h5>${language.name}</h5>
-                                                <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(', ') }) }}</p>
-                                            </div>
-                                            ${language.new
-                                ? html.node`
+                                const row = html.node`
+                                    <div class="language-row${lang == key ? ' active' : ''}">
+                                        <div class="flag-container">
+                                            <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
+                                        </div>
+                                        <div class="name">
+                                            <h5>${language.name}</h5>
+                                            <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(', ') }) }}</p>
+                                        </div>
+                                        ${language.new ? html.node`
                                             <div class="badges">
                                                 <div class="new-badge">${tl(trans.new)}</div>
                                             </div>
-                                            `
-                                : html.node`<div class="badges"></div>`
-                            }
-                                            ${language.percent
-                                ? () => {
-                                    const elem = html.node`
-                                                            <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
-                                                                ${language.percent}%
-                                                            </div>
-                                                        `;
+                                        ` : html.node`
+                                            <div class="badges"></div>
+                                        `}
+                                        ${language.percent ? () => {
+                                            const elem = html.node`
+                                                                    <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
+                                                                        ${language.percent}%
+                                                                    </div>
+                                                                `;
 
-                                    tippy(elem, {
-                                        content: `${tl(trans.amount_translated, { c: language.translated })}, ${tl(trans.missing_translated, { c: language.missing })}`
-                                    });
+                                            tippy(elem, {
+                                                content: `${tl(trans.amount_translated, { c: language.translated })}, ${tl(trans.missing_translated, { c: language.missing })}`
+                                            });
 
-                                    return elem;
-                                }
-                                : ''
-                            }
-                                            <div class="date">
-                                                <p ref=${(el) => (date = el)}>${language.last_updated != 'latest' ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
-                                            </div>
+                                            return elem;
+                                        } : ''}
+                                        <div class="date">
+                                            <p ref=${(el) => (date = el)}>${language.last_updated != 'latest' ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
                                         </div>
-                                    `;
+                                    </div>
+                                `;
 
-                        if (language.last_updated != 'latest') {
-                            tippy(date, {
-                                content: DateTime.fromISO(
-                                    language.last_updated
-                                ).toLocaleString(DateTime.DATE_MED)
-                            });
-                        }
+                                if (language.last_updated != 'latest') {
+                                    tippy(date, {
+                                        content: DateTime.fromISO(
+                                            language.last_updated
+                                        ).toLocaleString(DateTime.DATE_MED)
+                                    });
+                                }
 
-                        return row;
-                    })}
+                                return row;
+                            })}
                         </div>
                     </div>
                     <div class="setting-group">
@@ -545,12 +522,9 @@ export async function render_setting_page(page_id) {
                                 <p>${tl(trans.submit_language.body)}</p>
                             </div>
                             <div class="toggle-wrap">
-                                <a
-                                    class="see-more"
-                                    href="https://github.com/katelyynn/bleh/wiki"
-                                    target="_blank"
-                                    >${tl(trans.help_contribute)}</a
-                                >
+                                <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">
+                                    ${tl(trans.help_contribute)}
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -583,93 +557,88 @@ export async function render_setting_page(page_id) {
         function render_tip() {
             adaptive_tip.setAttribute('aria-hidden', !settings.theme_schedule);
 
-            render(
-                adaptive_tip,
-                html`
-                    ${tl(trans.adaptive_tip, {
+            render(adaptive_tip, html`
+                ${tl(trans.adaptive_tip, {
                     day: tl(trans.themes[settings.theme_day]),
                     night: tl(trans.themes[settings.theme_night])
-                })}<a
-                        onclick=${() => {
-                        dialog({
-                            id: 'auto_theme',
-                            title: tl(trans.themes.name),
-                            body: html.node`
+                })}
+                <a onclick=${() => {
+                    dialog({
+                        id: 'auto_theme',
+                        title: tl(trans.themes.name),
+                        body: html.node`
                             <div class="setting-group">
                                 ${(theme_day = setting({
-                                id: 'theme_day',
-                                list: [
-                                    {
-                                        value: 'light',
-                                        text: tl(trans.themes.light)
-                                    },
-                                    {
-                                        value: 'ink',
-                                        text: tl(trans.themes.ink)
-                                    },
-                                    {
-                                        value: 'dark',
-                                        text: tl(trans.themes.dark)
-                                    },
-                                    {
-                                        value: 'darker',
-                                        text: tl(trans.themes.darker)
-                                    },
-                                    {
-                                        value: 'oled',
-                                        text: tl(trans.themes.oled)
+                                    id: 'theme_day',
+                                    list: [
+                                        {
+                                            value: 'light',
+                                            text: tl(trans.themes.light)
+                                        },
+                                        {
+                                            value: 'ink',
+                                            text: tl(trans.themes.ink)
+                                        },
+                                        {
+                                            value: 'dark',
+                                            text: tl(trans.themes.dark)
+                                        },
+                                        {
+                                            value: 'darker',
+                                            text: tl(trans.themes.darker)
+                                        },
+                                        {
+                                            value: 'oled',
+                                            text: tl(trans.themes.oled)
+                                        }
+                                    ],
+                                    func: () => {
+                                        render_tip();
+                                        bubbles.re_render();
+                                        match();
                                     }
-                                ],
-                                func: () => {
-                                    render_tip();
-                                    bubbles.re_render();
-                                    match();
-                                }
-                            }))}
+                                }))}
                                 ${(theme_night = setting({
-                                id: 'theme_night',
-                                list: [
-                                    {
-                                        value: 'light',
-                                        text: tl(trans.themes.light)
-                                    },
-                                    {
-                                        value: 'ink',
-                                        text: tl(trans.themes.ink)
-                                    },
-                                    {
-                                        value: 'dark',
-                                        text: tl(trans.themes.dark)
-                                    },
-                                    {
-                                        value: 'darker',
-                                        text: tl(trans.themes.darker)
-                                    },
-                                    {
-                                        value: 'oled',
-                                        text: tl(trans.themes.oled)
+                                    id: 'theme_night',
+                                    list: [
+                                        {
+                                            value: 'light',
+                                            text: tl(trans.themes.light)
+                                        },
+                                        {
+                                            value: 'ink',
+                                            text: tl(trans.themes.ink)
+                                        },
+                                        {
+                                            value: 'dark',
+                                            text: tl(trans.themes.dark)
+                                        },
+                                        {
+                                            value: 'darker',
+                                            text: tl(trans.themes.darker)
+                                        },
+                                        {
+                                            value: 'oled',
+                                            text: tl(trans.themes.oled)
+                                        }
+                                    ],
+                                    func: () => {
+                                        render_tip();
+                                        bubbles.re_render();
+                                        match();
                                     }
-                                ],
-                                func: () => {
-                                    render_tip();
-                                    bubbles.re_render();
-                                    match();
-                                }
-                            }))}
+                                }))}
                             </div>
                             <p class="card-tip">${tl(trans.theme_schedule)}</p>
                         `
-                        });
-                    }}
-                        >${tl(trans.change_schedule)}</a
-                    >
-                `
-            );
+                    });
+                }}>
+                    ${tl(trans.change_schedule)}
+                </a>
+            `);
         }
 
-        render(
-            page.structure.main,
-            html`
+        render(page.structure.main, html`
                 <section class="bleh--panel">
                     <h4>${tl(trans.appearance)}</h4>
                     <div class="setting-group">
