@@ -11584,7 +11584,7 @@
 
     /*     WINDOW     */
     .bleh-modal {
-        background: hsl(var(--b5), 90%);
+        background: hsl(var(--b5), var(--solarium-opacity, 90%));
         border-radius: var(--item-big-radius);
         box-shadow: var(--override-full-shadow, var(--menu-shadow));
         border: 1px solid var(--card-border-base);
@@ -11594,12 +11594,6 @@
 
         backdrop-filter: var(--solarium);
         -webkit-backdrop-filter: var(--solarium);
-
-        [data-bleh--solarium="false"] & {
-            background: hsl(var(--b5));
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-        }
 
         display: flex;
         flex-direction: column;
@@ -11845,33 +11839,26 @@
             background-position: unset !important;
         }
 
-        &.date-range-picker-content,
         &.modal-body {
-            background: hsl(var(--b5)) !important;
+            background: hsl(var(--b5), var(--solarium-opacity, 90%)) !important;
             box-shadow: var(
                 --override-full-shadow,
                 var(--menu-shadow)
             ) !important;
             border-radius: var(--item-big-radius) !important;
+
+            backdrop-filter: var(--solarium);
+            -webkit-backdrop-filter: var(--solarium);
         }
     }
 
     .popup_background {
         opacity: 1 !important;
         background: transparent !important;
-        animation: fade_popup_reduced var(--trans) var(--trans-function);
-
-        transition-property:
-            background,
-            backdrop-filter,
-            -webkit-backdrop-filter;
-        transition-duration: var(--trans-short);
-        transition-timing-function: var(--trans-function);
+        animation: fade_popup_reduced var(--trans-short) var(--trans-function);
 
         &[style^="opacity: 0.8;"] {
-            background: hsl(var(--b6), 0.85) !important;
-            backdrop-filter: blur(2px) !important;
-            -webkit-backdrop-filter: blur(2px) !important;
+            background: var(--modal-bg) !important;
         }
 
         &.window-removing {
@@ -11919,13 +11906,10 @@
     }
 
     .modal-content {
-        animation: dropdown calc(var(--trans-short) + 0.22s)
-            var(--trans-function);
-        transform-origin: top;
-
-        [data-bleh--reduced_motion="true"] & {
-            animation: fade_popup_reduced var(--trans) var(--trans-function) !important;
-        }
+        animation: var(
+            --motion,
+            solarium 0.24s var(--trans-function)
+        ) !important;
     }
     .date-range-picker-content:before,
     .dropdown-menu-clickable::before,
