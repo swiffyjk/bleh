@@ -37736,27 +37736,27 @@
     });
     const changelog_list = window2.querySelector(".changelog-list");
     let index3 = 0;
-    for (let version3 in changelog) {
-      if (version3 == "updated" || version3 == "latest") continue;
+    for (let version4 in changelog) {
+      if (version4 == "updated" || version4 == "latest") continue;
       if (index3 > 10) continue;
       const version_item = html.node`
-            <div class="changelog-version-item" data-changelog-type="${changelog[version3].type}" data-changelog-latest="${index3 == 0 ? "true" : "false"}" data-changelog-version="${version3}">
+            <div class="changelog-version-item" data-changelog-type="${changelog[version4].type}" data-changelog-latest="${index3 == 0 ? "true" : "false"}" data-changelog-version="${version4}">
                 <div class="version-item-header">
                     <div class="sub-text">
                         <div class="breadcrumb">
                             <div class="breadcrumb-origin">
-                                ${version3}
+                                ${version4}
                             </div>
                             <div class="breadcrumb-name">
-                                ${tl2(trans.news.type[changelog[version3].type])}
+                                ${tl2(trans.news.type[changelog[version4].type])}
                             </div>
                         </div>
                     </div>
-                    <h3>${changelog[version3].name}</h3>
-                    ${version3 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version3].name}</h4>` : ""}
+                    <h3>${changelog[version4].name}</h3>
+                    ${version4 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version4].name}</h4>` : ""}
                 </div>
                 <div class="version-item-body markdown-body">
-                    ${markdown(changelog[version3].bio, {
+                    ${markdown(changelog[version4].bio, {
         allow_headers: true,
         starting_header: 5,
         in_dialog: true
@@ -37764,7 +37764,7 @@
                 </div>
             </div>
         `;
-      if (changelog[version3].type == "major")
+      if (changelog[version4].type == "major")
         version_item.setAttribute("id", "latest_major_release");
       changelog_list.appendChild(version_item);
       index3++;
@@ -48528,6 +48528,201 @@
     window.setTimeout(invoke_reload, 400);
   }
 
+  // node_modules/@tealmiku/florence/dist/florence.js
+  function log2(text3, system, type = "info", append = {}) {
+    let system_colour;
+    switch (system) {
+      case "load":
+        system_colour = "#8CB9D9";
+        break;
+      case "lotus":
+        system_colour = "#8CD9A6";
+        break;
+      case "season":
+        system_colour = "#65B6D8";
+        break;
+      case "page":
+        system_colour = "#E4B381";
+        break;
+      case "page structure":
+        system_colour = "#D88A69";
+        break;
+      case "style":
+        system_colour = "#C9C678";
+        break;
+      case "profile":
+        system_colour = "#D56854";
+        break;
+      case "settings":
+        system_colour = "#6D6977";
+        break;
+      case "sponsor":
+        system_colour = "#CE4E88";
+        break;
+      default:
+        system_colour = "#C8DD88";
+        break;
+    }
+    if (Object.keys(append).length > 0)
+      console[type](
+        `%c${system}%c ${text3}`,
+        `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`,
+        "color: unset",
+        append
+      );
+    else
+      console[type](
+        `%c${system}%c ${text3}`,
+        `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`,
+        "color: unset"
+      );
+  }
+  var version2 = "2025.1019";
+  var last_page_type = {
+    state: void 0
+  };
+  var last_page_subpage = {
+    state: void 0
+  };
+  function florence({
+    page: page2,
+    on_head_load,
+    on_body_load,
+    on_mutation,
+    on_page_change,
+    on_subpage_change,
+    on_error
+  }) {
+    log2("starting florence", "load", "info", {
+      page: page2,
+      on_head_load,
+      on_body_load,
+      on_mutation,
+      on_page_change,
+      on_subpage_change,
+      on_error
+    });
+    let head_observer = new MutationObserver(() => {
+      if (document.head) {
+        document.documentElement.classList.add("florence-supports-loading");
+        if (on_head_load) on_head_load();
+        head_observer.disconnect();
+      }
+    });
+    head_observer.observe(document.documentElement, {
+      childList: true
+    });
+    let pre_observer = new MutationObserver((mutations) => {
+      log2("pre", "load", "info", { mutations });
+      if (document.body) {
+        log2(`${JSON.stringify(document.body.classList)}`, "load");
+        document.body.classList.add("florence");
+      }
+      if (document.body && document.body.querySelector(".adaptive-skin-container") && document.body.querySelector(".footer")) {
+        main2();
+        pre_observer.disconnect();
+      } else if (document.body && document.body.querySelector(":scope > .container")) {
+        document.body.classList.add("florence-loaded");
+      }
+    });
+    pre_observer.observe(document.documentElement, {
+      childList: true
+    });
+    function main2() {
+      log2("main thread starting", "page", "log", {
+        document,
+        body: document.body
+      });
+      let performance_start = performance.now();
+      try {
+        if (on_body_load) on_body_load();
+        flow();
+        const observer = new MutationObserver((mutations) => {
+          if (!mutations[0]) return;
+          const nodes = [
+            ...mutations[0].addedNodes,
+            ...mutations[0].removedNodes
+          ];
+          if (nodes.length && nodes.every(
+            (n2) => n2.nodeType == 1 && (n2.hasAttribute("data-tippy-root") || (n2.id || "").startsWith("tippy-"))
+          )) {
+            log2("ignored", "mutation", "log", { mutations });
+            return;
+          }
+          log2("loop", "mutation", "log", { mutations });
+          flow();
+        });
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+        let performance_end = performance.now();
+        log2(
+          `finished in ${(performance_end - performance_start) / 1e3} seconds`,
+          "load"
+        );
+      } catch (e) {
+        log2(`florence ran into an error`, "load", "error", { e });
+        if (on_error) on_error(e);
+      }
+    }
+    function flow() {
+      let performance_start = performance.now();
+      assign_page();
+      if (page2.state.error) return;
+      if (on_mutation) on_mutation();
+      let performance_end = performance.now();
+      log2(
+        `finished in ${(performance_end - performance_start) / 1e3} seconds`,
+        "loop"
+      );
+    }
+    function assign_page() {
+      document.documentElement.classList.add("florence-supports-loading");
+      if (!page2.structure.wrapper)
+        page2.structure.wrapper = document.body.querySelector(".main-content");
+      let main_content = page2.structure.wrapper.querySelector(
+        ":scope > :last-child:not([data-florence])"
+      );
+      if (main_content) {
+        assign_page_type();
+        if (on_page_change) on_page_change(main_content);
+        main_content.setAttribute("data-florence", "true");
+      } else {
+        assign_page_subpage();
+      }
+      document.body.classList.add("florence-loaded");
+    }
+    function assign_page_type() {
+      let page_classes = document.body.classList;
+      page_classes.forEach((page_class, index3) => {
+        if (page_class.startsWith("namespace")) {
+          page2.initial = page_class.replace("namespace--", "");
+          let page_split = page2.initial.split("_");
+          page2.type = page_split[0];
+          if (page2.type == "music") {
+            page2.type = page_split[1];
+          }
+          if (page2.type != last_page_type.state) {
+            last_page_type.state = page2.type;
+            log2(page2.type, "page");
+          }
+          assign_page_subpage();
+          return;
+        }
+        if (index3 > 4) return;
+      });
+    }
+    function assign_page_subpage() {
+      page2.subpage = page2.initial.replace(page2.type, "").replace("_", "").replace("music_", "").replace("festival_", "event_");
+      if (last_page_subpage.state != page2.subpage) {
+        last_page_subpage.state = page2.subpage;
+        log2(`subpage of ${page2.subpage}`, "page");
+        if (on_subpage_change) on_subpage_change();
+      }
+    }
+  }
+
   // src/pages/bleh_config.js
   function bleh_settings() {
     page.name = auth.name;
@@ -48648,6 +48843,7 @@
             <div class="bleh--panel">
                 <p class="card-tip">
                     ${version.brand} ${version.build}.${version.sku}
+                    <i>(florence ${version2})</i>
                 </p>
             </div>
         `
@@ -56759,200 +56955,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
 
   // src/components/dismissed.js
   function load_dismissed() {
-  }
-
-  // node_modules/@tealmiku/florence/dist/florence.js
-  function log2(text3, system, type = "info", append = {}) {
-    let system_colour;
-    switch (system) {
-      case "load":
-        system_colour = "#8CB9D9";
-        break;
-      case "lotus":
-        system_colour = "#8CD9A6";
-        break;
-      case "season":
-        system_colour = "#65B6D8";
-        break;
-      case "page":
-        system_colour = "#E4B381";
-        break;
-      case "page structure":
-        system_colour = "#D88A69";
-        break;
-      case "style":
-        system_colour = "#C9C678";
-        break;
-      case "profile":
-        system_colour = "#D56854";
-        break;
-      case "settings":
-        system_colour = "#6D6977";
-        break;
-      case "sponsor":
-        system_colour = "#CE4E88";
-        break;
-      default:
-        system_colour = "#C8DD88";
-        break;
-    }
-    if (Object.keys(append).length > 0)
-      console[type](
-        `%c${system}%c ${text3}`,
-        `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`,
-        "color: unset",
-        append
-      );
-    else
-      console[type](
-        `%c${system}%c ${text3}`,
-        `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`,
-        "color: unset"
-      );
-  }
-  var last_page_type = {
-    state: void 0
-  };
-  var last_page_subpage = {
-    state: void 0
-  };
-  function florence({
-    page: page2,
-    on_head_load,
-    on_body_load,
-    on_mutation,
-    on_page_change,
-    on_subpage_change,
-    on_error
-  }) {
-    log2("starting florence", "load", "info", {
-      page: page2,
-      on_head_load,
-      on_body_load,
-      on_mutation,
-      on_page_change,
-      on_subpage_change,
-      on_error
-    });
-    let head_observer = new MutationObserver(() => {
-      if (document.head) {
-        document.documentElement.classList.add("florence-supports-loading");
-        if (on_head_load) on_head_load();
-        head_observer.disconnect();
-      }
-    });
-    head_observer.observe(document.documentElement, {
-      childList: true
-    });
-    let pre_observer = new MutationObserver((mutations) => {
-      log2("pre", "load", "info", { mutations });
-      if (document.body) {
-        log2(`${JSON.stringify(document.body.classList)}`, "load");
-        document.body.classList.add("florence");
-      }
-      if (document.body && document.body.querySelector(".adaptive-skin-container") && document.body.querySelector(".footer")) {
-        main2();
-        pre_observer.disconnect();
-      } else if (document.body && document.body.querySelector(":scope > .container")) {
-        document.body.classList.add("florence-loaded");
-      }
-    });
-    pre_observer.observe(document.documentElement, {
-      childList: true
-    });
-    function main2() {
-      log2("main thread starting", "page", "log", {
-        document,
-        body: document.body
-      });
-      let performance_start = performance.now();
-      try {
-        if (on_body_load) on_body_load();
-        flow();
-        const observer = new MutationObserver((mutations) => {
-          if (!mutations[0]) return;
-          const nodes = [
-            ...mutations[0].addedNodes,
-            ...mutations[0].removedNodes
-          ];
-          if (nodes.length && nodes.every(
-            (n2) => n2.nodeType == 1 && (n2.hasAttribute("data-tippy-root") || (n2.id || "").startsWith("tippy-"))
-          )) {
-            log2("ignored", "mutation", "log", { mutations });
-            return;
-          }
-          log2("loop", "mutation", "log", { mutations });
-          flow();
-        });
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true
-        });
-        let performance_end = performance.now();
-        log2(
-          `finished in ${(performance_end - performance_start) / 1e3} seconds`,
-          "load"
-        );
-      } catch (e) {
-        log2(`florence ran into an error`, "load", "error", { e });
-        if (on_error) on_error(e);
-      }
-    }
-    function flow() {
-      let performance_start = performance.now();
-      assign_page();
-      if (page2.state.error) return;
-      if (on_mutation) on_mutation();
-      let performance_end = performance.now();
-      log2(
-        `finished in ${(performance_end - performance_start) / 1e3} seconds`,
-        "loop"
-      );
-    }
-    function assign_page() {
-      document.documentElement.classList.add("florence-supports-loading");
-      if (!page2.structure.wrapper)
-        page2.structure.wrapper = document.body.querySelector(".main-content");
-      let main_content = page2.structure.wrapper.querySelector(
-        ":scope > :last-child:not([data-florence])"
-      );
-      if (main_content) {
-        assign_page_type();
-        if (on_page_change) on_page_change(main_content);
-        main_content.setAttribute("data-florence", "true");
-      } else {
-        assign_page_subpage();
-      }
-      document.body.classList.add("florence-loaded");
-    }
-    function assign_page_type() {
-      let page_classes = document.body.classList;
-      page_classes.forEach((page_class, index3) => {
-        if (page_class.startsWith("namespace")) {
-          page2.initial = page_class.replace("namespace--", "");
-          let page_split = page2.initial.split("_");
-          page2.type = page_split[0];
-          if (page2.type == "music") {
-            page2.type = page_split[1];
-          }
-          if (page2.type != last_page_type.state) {
-            last_page_type.state = page2.type;
-            log2(page2.type, "page");
-          }
-          assign_page_subpage();
-          return;
-        }
-        if (index3 > 4) return;
-      });
-    }
-    function assign_page_subpage() {
-      page2.subpage = page2.initial.replace(page2.type, "").replace("_", "").replace("music_", "").replace("festival_", "event_");
-      if (last_page_subpage.state != page2.subpage) {
-        last_page_subpage.state = page2.subpage;
-        log2(`subpage of ${page2.subpage}`, "page");
-        if (on_subpage_change) on_subpage_change();
-      }
-    }
   }
 
   // src/page.js
@@ -73158,7 +73160,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     return false;
   }
-  var version2 = "4.5.0";
+  var version3 = "4.5.0";
   var KNOWN_POSITIONS = [
     "top",
     "bottom",
@@ -73232,7 +73234,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     static instances = instances;
     static overrides = overrides;
     static registry = registry;
-    static version = version2;
+    static version = version3;
     static getChart = getChart;
     static register(...items) {
       registry.add(...items);

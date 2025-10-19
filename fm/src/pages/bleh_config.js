@@ -50,6 +50,7 @@ import { manage_oracle_data, oracle_data } from '../components/oracle.js';
 import { render_activity } from '../activity.js';
 import { DateTime } from 'luxon';
 import { sponsor, sponsor_manage } from '../sponsor.js';
+import { version as florence_version } from '@tealmiku/florence';
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -187,6 +188,7 @@ export function bleh_settings() {
             <div class="bleh--panel">
                 <p class="card-tip">
                     ${version.brand} ${version.build}.${version.sku}
+                    <i>(florence ${florence_version})</i>
                 </p>
             </div>
         `
