@@ -48804,12 +48804,12 @@
       html`
             <div class="cta first priority sponsor colourful">
                 ${auth.sponsor ? html.node`
-            <strong>${tl2(trans.you_are_a_sponsor)}</strong>
-            <a class="see-more" onclick="_sponsor_manage()">${tl2(trans.manage_sponsor)}</a>
-            ` : html.node`
-            <strong>${tl2(trans.news_sponsor_cta)}</strong>
-            <a class="see-more" onclick="_sponsor()">${tl2(trans.sponsor)}</a>
-            `}
+                        <strong>${tl2(trans.you_are_a_sponsor)}</strong>
+                        <a class="see-more" onclick=${() => sponsor_manage()}>${tl2(trans.manage_sponsor)}</a>
+                    ` : html.node`
+                        <strong>${tl2(trans.news_sponsor_cta)}</strong>
+                        <a class="see-more" onclick=${() => sponsor()}>${tl2(trans.sponsor)}</a>
+                    `}
             </div>
             <section class="side-actions">
                 <button
@@ -48829,17 +48829,17 @@
                 <button
                     class="btn side-action"
                     data-type="reset"
-                    onclick="_reset_settings()"
+                    onclick=${() => reset_settings()}
                 >
                     ${tl2(trans.reset)}
                 </button>
             </section>
             ${ff("skip_to_setting") ? html.node`
-        <div class="bleh--panel">
-            <h4>${tl2(trans.skip_to)}</h4>
-            <div class="skip-to-list"></div>
-        </div>
-        ` : ""}
+                    <div class="bleh--panel">
+                        <h4>${tl2(trans.skip_to)}</h4>
+                        <div class="skip-to-list"></div>
+                    </div>
+                ` : ""}
             <div class="bleh--panel">
                 <p class="card-tip">
                     ${version.brand} ${version.build}.${version.sku}
