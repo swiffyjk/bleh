@@ -210,6 +210,8 @@ export let includes = {
         '(solo acoustic',
         '- acoustic',
         '(acoustic',
+        ': self-serenade',
+        '- self-serenade',
         '- alt',
         '(alt',
         '[alt',
