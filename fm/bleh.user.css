@@ -2721,7 +2721,7 @@
                 position: relative;
 
                 [data-bleh--solarium="false"] & {
-                    background-color: hsl(var(--b5));
+                    background-color: hsl(var(-- b5));
                 }
 
                 &:after {

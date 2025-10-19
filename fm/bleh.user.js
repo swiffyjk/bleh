@@ -35174,31 +35174,21 @@
       const tracks = tracklist.querySelectorAll(
         ":is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)"
       );
-      let track_index = 0;
-      function batch() {
-        const batch_size = 20;
-        const end_index = Math.min(track_index + batch_size, tracks.length);
-        for (let i = track_index; i < end_index; i++) {
-          track(tracks[i], i);
-        }
-        track_index = end_index;
-        if (track_index < tracks.length) {
-          setTimeout(batch, 0);
-        }
-      }
-      batch();
-      function track(track2, index3) {
-        console.log("track", track2);
-        if (track2.getAttribute("data-track-type")) return;
-        if (track2.classList[0] == "chartlist-row--interlist-ad") {
-          track2.parentElement.removeChild(track2);
+      tracks.forEach((track, index3) => {
+        smart_track(track, index3);
+      });
+      function smart_track(track, index3) {
+        console.log("track", track);
+        if (track.getAttribute("data-track-type")) return;
+        if (track.classList[0] == "chartlist-row--interlist-ad") {
+          track.parentElement.removeChild(track);
           return;
         }
-        track2.style.setProperty("--delay", index3 * 0.04 + "s");
-        track2.appendChild(html.node`
+        track.style.setProperty("--delay", index3 * 0.04 + "s");
+        track.appendChild(html.node`
                 <div class="kate-placeholder" />
             `);
-        let track_title = track2.querySelector(
+        let track_title = track.querySelector(
           ".chartlist-name a:not(.offset-section-anchor)"
         );
         if (!track_title) return;
@@ -35209,20 +35199,20 @@
           );
           track_title.removeAttribute("title");
         }
-        let track_info = track2.querySelector(":scope > .track-info");
+        let track_info = track.querySelector(":scope > .track-info");
         if (!track_info) {
           track_info = html.node`
                     <div class="track-info" data-has-bar=${tracklist.classList.contains("chartlist--with-bar")}>
                         ${track_title.parentElement}
                     </div>
                 `;
-          track2.appendChild(track_info);
+          track.appendChild(track_info);
         }
-        track2.setAttribute(
+        track.setAttribute(
           "data-has-bar",
           tracklist.classList.contains("chartlist--with-bar")
         );
-        let is_user = track2.querySelector(".chartlist-image .avatar");
+        let is_user = track.querySelector(".chartlist-image .avatar");
         let is_artist = false;
         if (is_user) {
           let link2 = track_title.getAttribute("href");
@@ -35231,7 +35221,7 @@
             is_artist = true;
           }
         }
-        const track_type = track2.querySelector(":scope > .chartlist-type");
+        const track_type = track.querySelector(":scope > .chartlist-type");
         if (track_type && track_type.classList[1] == "chartlist-type--artist") {
           is_user = false;
           is_artist = true;
@@ -35242,23 +35232,23 @@
           "log"
         );
         if (is_user) {
-          track2.setAttribute("data-track-type", "user");
+          track.setAttribute("data-track-type", "user");
           if (settings.colourful_counts)
-            patch_artist_ranks_in_list_view(track2);
+            patch_artist_ranks_in_list_view(track);
           log("finished user stuff, returning", "tracks", "log");
           return;
         }
         if (is_artist) {
-          track2.classList.remove("chartlist-row--with-artist");
-          track2.setAttribute("data-track-type", "artist");
+          track.classList.remove("chartlist-row--with-artist");
+          track.setAttribute("data-track-type", "artist");
           if (settings.corrections)
             track_title.textContent = correct_artist(
               track_title.getAttribute("data-name")
             );
-          let bar2 = track2.querySelector(".chartlist-count-bar-slug");
+          let bar2 = track.querySelector(".chartlist-count-bar-slug");
           if (bar2) {
             if (settings.colourful_counts)
-              patch_artist_ranks_in_list_view(track2);
+              patch_artist_ranks_in_list_view(track);
             insights.artist.display = true;
             let value = parseInt(bar2.getAttribute("data-stat-value"));
             insights.artist.values.push(value);
@@ -35274,8 +35264,8 @@
           }
           return;
         }
-        let is_album = track2.hasAttribute("data-album-row");
-        if (is_album) track2.classList.add("bleh--is-album");
+        let is_album = track.hasAttribute("data-album-row");
+        if (is_album) track.classList.add("bleh--is-album");
         let track_artist = return_artist_from_track(
           track_title.getAttribute("href"),
           is_album
@@ -35284,8 +35274,8 @@
           `returned ${track_artist} from url ${track_title.getAttribute("href")}`,
           "track"
         );
-        if (!wide) track2.classList.add("chartlist-row--with-artist");
-        const bar = track2.querySelector(".chartlist-count-bar-slug");
+        if (!wide) track.classList.add("chartlist-row--with-artist");
+        const bar = track.querySelector(".chartlist-count-bar-slug");
         if (bar) {
           let value = parseInt(bar.getAttribute("data-stat-value"));
           if (is_album) {
@@ -35300,12 +35290,12 @@
               insights.track.highest.value = value;
           }
         }
-        const is_active = track2.classList.contains(
+        const is_active = track.classList.contains(
           "chartlist-row--now-scrobbling"
         );
-        const has_bar = track2.querySelector(":scope > .chartlist-bar");
-        let track_legacy_menu = track2.querySelector(".chartlist-more-menu");
-        let track_timestamp = track2.querySelector(
+        const has_bar = track.querySelector(":scope > .chartlist-bar");
+        let track_legacy_menu = track.querySelector(".chartlist-more-menu");
+        let track_timestamp = track.querySelector(
           ".chartlist-timestamp span"
         );
         let track_timestamp_contents;
@@ -35318,16 +35308,16 @@
             });
           }
         }
-        let album = track2.querySelector(".chartlist-album a");
+        let album = track.querySelector(".chartlist-album a");
         if (!is_album && album)
           album.textContent = correct_item_by_artist(
             album.textContent,
             track_artist
           );
-        const album_link = track2.querySelector(".chartlist-image a");
+        const album_link = track.querySelector(".chartlist-image a");
         const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never" && settings.track_layout == "column";
-        track2.setAttribute("data-show-album-text", show_album_text);
-        const image_wrap = track2.querySelector(".chartlist-image");
+        track.setAttribute("data-show-album-text", show_album_text);
+        const image_wrap = track.querySelector(".chartlist-image");
         let link;
         let image;
         if (image_wrap) {
@@ -35342,7 +35332,7 @@
             );
           }
         }
-        let song_artist_element = track2.querySelector(".chartlist-artist");
+        let song_artist_element = track.querySelector(".chartlist-artist");
         if (song_artist_element) {
           track_info.appendChild(song_artist_element);
         }
@@ -35391,7 +35381,7 @@
               smart_artists(formatted_title[2], formatted_title[3])
             );
           }
-          if (track2.getAttribute("data-disambig") == "explicit") {
+          if (track.getAttribute("data-disambig") == "explicit") {
             song_artist_element.insertBefore(
               html.node`
                         <span class="track-explicit">${tl2(trans.explicit)}</span>
@@ -35400,7 +35390,7 @@
             );
           }
           if (track_legacy_menu) {
-            track2.preview = html.node`
+            track.preview = html.node`
                         <div class="track-preview">
                             <div class="image">
                                 <div class="inner-image">
@@ -35432,7 +35422,7 @@
                     `;
           }
         } else if (settings.corrections) {
-          let song_artist_element2 = track2.querySelector(
+          let song_artist_element2 = track.querySelector(
             ".chartlist-artist a"
           );
           if (song_artist_element2) {
@@ -35460,7 +35450,7 @@
         }
         if (track_legacy_menu) {
           let menu;
-          let previous = track2.querySelector(
+          let previous = track.querySelector(
             ":scope > .more-button-wrapper"
           );
           if (previous) previous.style.display = "none";
@@ -35489,7 +35479,7 @@
           tippy_esm_default(more_button, {
             content: tl2(trans.more)
           });
-          track2.appendChild(html.node`
+          track.appendChild(html.node`
                     <td class="more-button-wrapper">
                         ${more_button}
                     </td>
@@ -35507,7 +35497,7 @@
               page.token = form.querySelector(
                 '[name="csrfmiddlewaretoken"]'
               ).value;
-              track2.setAttribute(
+              track.setAttribute(
                 "data-action",
                 form.getAttribute("action")
               );
@@ -35518,13 +35508,13 @@
                 let album_artist_name = form.querySelector(
                   '[name="album_artist_name"]'
                 );
-                track2.setAttribute(
+                track.setAttribute(
                   "data-artist-name",
                   correct_artist(
                     form.querySelector('[name="artist_name"]').value
                   )
                 );
-                track2.setAttribute(
+                track.setAttribute(
                   "data-track-name",
                   correct_item_by_artist(
                     form.querySelector('[name="track_name"]').value,
@@ -35532,7 +35522,7 @@
                   )
                 );
                 if (album_name2)
-                  track2.setAttribute(
+                  track.setAttribute(
                     "data-album-name",
                     correct_item_by_artist(
                       album_name2.value,
@@ -35542,16 +35532,16 @@
                     )
                   );
                 if (album_artist_name)
-                  track2.setAttribute(
+                  track.setAttribute(
                     "data-album-artist-name",
                     correct_artist(album_artist_name.value)
                   );
-                track2.setAttribute(
+                track.setAttribute(
                   "data-timestamp",
                   form.querySelector('[name="timestamp"]').value
                 );
               } else {
-                track2.setAttribute(
+                track.setAttribute(
                   "data-album-name",
                   correct_item_by_artist(
                     form.querySelector('[name="album_name"]').value,
@@ -35560,7 +35550,7 @@
                     ).value
                   )
                 );
-                track2.setAttribute(
+                track.setAttribute(
                   "data-album-artist-name",
                   correct_artist(
                     form.querySelector(
@@ -35568,7 +35558,7 @@
                     ).value
                   )
                 );
-                track2.setAttribute(
+                track.setAttribute(
                   "data-album-name-original",
                   correct_item_by_artist(
                     form.querySelector(
@@ -35579,7 +35569,7 @@
                     ).value
                   )
                 );
-                track2.setAttribute(
+                track.setAttribute(
                   "data-album-artist-name-original",
                   correct_artist(
                     form.querySelector(
@@ -35587,11 +35577,11 @@
                     ).value
                   )
                 );
-                track2.setAttribute(
+                track.setAttribute(
                   "data-album-image",
                   form.querySelector('[name="album_image"]').value
                 );
-                track2.setAttribute(
+                track.setAttribute(
                   "data-count",
                   form.querySelector('[name="count"]').value
                 );
@@ -35601,20 +35591,20 @@
               page.token = form.querySelector(
                 '[name="csrfmiddlewaretoken"]'
               ).value;
-              track2.setAttribute(
+              track.setAttribute(
                 "data-artist-name",
                 correct_artist(
                   form.querySelector('[name="artist_name"]').value
                 )
               );
-              track2.setAttribute(
+              track.setAttribute(
                 "data-track-name",
                 correct_item_by_artist(
                   form.querySelector('[name="track_name"]').value,
                   form.querySelector('[name="artist_name"]').value
                 )
               );
-              track2.setAttribute(
+              track.setAttribute(
                 "data-timestamp",
                 form.querySelector('[name="timestamp"]').value
               );
@@ -35628,20 +35618,20 @@
             menu = tippy_esm_default(more_button, {
               theme: "context-menu",
               content: html.node`
-                            ${track2.preview}
+                            ${track.preview}
                             ${can_edit ? html.node`
                             <div class="button-combo">
                                 ${() => {
                 if (is_album) {
                   return html.node`
-                                            <form style="margin: 0" method="POST" action=${track2.getAttribute("data-action")} data-edit-scrobble="">
+                                            <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
                                                 <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                                <input type="hidden" name="album_name" value=${track2.getAttribute("data-album-name")}>
-                                                <input type="hidden" name="album_artist_name" value=${track2.getAttribute("data-album-artist-name")}>
-                                                <input type="hidden" name="album_image" value=${track2.getAttribute("data-album-image")}>
-                                                <input type="hidden" name="album_name_original" value=${track2.getAttribute("data-album-name-original")}>
-                                                <input type="hidden" name="album_artist_name_original" value=${track2.getAttribute("data-album-artist-name-original")}>
-                                                <input type="hidden" name="count" value=${track2.getAttribute("data-count")}>
+                                                <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
+                                                <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
+                                                <input type="hidden" name="album_image" value=${track.getAttribute("data-album-image")}>
+                                                <input type="hidden" name="album_name_original" value=${track.getAttribute("data-album-name-original")}>
+                                                <input type="hidden" name="album_artist_name_original" value=${track.getAttribute("data-album-artist-name-original")}>
+                                                <input type="hidden" name="count" value=${track.getAttribute("data-count")}>
                                                 <button class="dropdown-menu-clickable-item" data-type="edit">
                                                     ${tl2(trans.edit)}
                                                 </button>
@@ -35649,13 +35639,13 @@
                                         `;
                 }
                 return html.node`
-                                        <form style="margin: 0" method="POST" action=${track2.getAttribute("data-action")} data-edit-scrobble="">
+                                        <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
                                             <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                            <input type="hidden" name="artist_name" value=${track2.getAttribute("data-artist-name")}>
-                                            <input type="hidden" name="track_name" value=${track2.getAttribute("data-track-name")}>
-                                            <input type="hidden" name="album_name" value=${track2.getAttribute("data-album-name")}>
-                                            <input type="hidden" name="album_artist_name" value=${track2.getAttribute("data-album-artist-name")}>
-                                            <input type="hidden" name="timestamp" value=${track2.getAttribute("data-timestamp")}>
+                                            <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
+                                            <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
+                                            <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
+                                            <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
+                                            <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
                                             <button class="dropdown-menu-clickable-item" data-type="edit">
                                                 ${tl2(trans.edit)}
                                             </button>
@@ -35686,7 +35676,7 @@
                             <div class="sep" />
                             ` : ""}
                             ${() => {
-                let container = track2.querySelector(".chartlist-play");
+                let container = track.querySelector(".chartlist-play");
                 if (!container) return;
                 let button = container.querySelector(
                   ".chartlist-play-button"
@@ -35695,7 +35685,7 @@
                 button.classList = "dropdown-menu-clickable-item";
                 button.textContent = tl2(trans.play);
                 button.setAttribute("data-type", "play");
-                track2.removeChild(container);
+                track.removeChild(container);
                 return button;
               }}
                             ${!is_album ? html.node`
@@ -35793,8 +35783,8 @@
                             </div>
                             ${() => {
                 if (!is_own_profile || is_album) return;
-                let name = track2.getAttribute("data-track-name");
-                let artist = track2.getAttribute("data-artist-name");
+                let name = track.getAttribute("data-track-name");
+                let artist = track.getAttribute("data-artist-name");
                 if (!name) {
                   name = track_title.getAttribute("data-name");
                   artist = track_artist;
@@ -35831,7 +35821,7 @@
                   let form_data = new FormData(form);
                   console.info(form_data);
                   try {
-                    track2.setAttribute(
+                    track.setAttribute(
                       "data-ajax-form-state",
                       "deleted"
                     );
@@ -35846,7 +35836,7 @@
                           "error",
                           { res }
                         );
-                        track2.removeAttribute(
+                        track.removeAttribute(
                           "data-ajax-form-state"
                         );
                         return;
@@ -35869,15 +35859,15 @@
                     });
                   } catch (e2) {
                     console.error(e2);
-                    track2.removeAttribute(
+                    track.removeAttribute(
                       "data-ajax-form-state"
                     );
                   }
                 }}>
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                        <input type="hidden" name="artist_name" value=${track2.getAttribute("data-artist-name")}>
-                                        <input type="hidden" name="track_name" value=${track2.getAttribute("data-track-name")}>
-                                        <input type="hidden" name="timestamp" value=${track2.getAttribute("data-timestamp")}>
+                                        <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
+                                        <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
+                                        <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
                                         ${button}
                                     </form>
                                 `;
@@ -35899,7 +35889,7 @@
                 instance.hide();
               }
             });
-            register_menu(track2, menu);
+            register_menu(track, menu);
           }, 100);
         }
         if (is_album) {
@@ -35921,7 +35911,7 @@
             track_title.getAttribute("data-name")
           );
         }
-        let album_text = track2.querySelector(
+        let album_text = track.querySelector(
           ".chartlist-album.custom-album-text"
         );
         if (image_wrap) {
@@ -35950,13 +35940,13 @@
               let hue2 = hsl.h;
               let sat = clamp_sat2(hsl.s / 100 * 3);
               let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
-              const to_colour = track2.querySelectorAll(
+              const to_colour = track.querySelectorAll(
                 ".chartlist-count-bar, .chartlist-loved"
               );
               if (is_active) {
-                track2.style.setProperty("--hue-over", hue2);
-                track2.style.setProperty("--sat-over", sat);
-                track2.style.setProperty("--lit-over", lit);
+                track.style.setProperty("--hue-over", hue2);
+                track.style.setProperty("--sat-over", sat);
+                track.style.setProperty("--lit-over", lit);
               } else {
                 to_colour.forEach((elem) => {
                   elem.classList.add("colourful");
@@ -48302,7 +48292,7 @@
 
   // src/style.js
   function append_style() {
-    document.documentElement.classList.add("bleh-supports-loading");
+    document.documentElement.classList.add("florence-supports-loading");
     for (var member in settings) delete settings[member];
     Object.assign(settings, JSON.parse(localStorage.getItem("bleh")));
     let cached_style = localStorage.getItem("bleh_cached_style") || "";
@@ -56846,7 +56836,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
     let head_observer = new MutationObserver(() => {
       if (document.head) {
-        document.head.classList.add("florence-supports-loading");
+        document.documentElement.classList.add("florence-supports-loading");
         if (on_head_load) on_head_load();
         head_observer.disconnect();
       }
@@ -56920,7 +56910,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       );
     }
     function assign_page() {
-      document.head.classList.add("florence-supports-loading");
+      document.documentElement.classList.add("florence-supports-loading");
       if (!page2.structure.wrapper)
         page2.structure.wrapper = document.body.querySelector(".main-content");
       let main_content = page2.structure.wrapper.querySelector(
