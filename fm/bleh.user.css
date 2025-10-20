@@ -18217,20 +18217,27 @@
     }
 
     input[type="range"] {
-        width: 100%;
+        width: unset;
         outline: none;
         appearance: none;
         background: none;
         cursor: pointer;
         border: none;
-        height: 32px;
+        height: 28px;
         border-radius: var(--item-small-radius);
         overflow: hidden;
+
+        position: absolute;
+        top: 0;
+        left: 12px;
+        bottom: 0;
+        right: calc(30px + var(--card-gap) - 7px);
     }
 
     .range {
         --nub-w: 12px;
         --nub-h: 16px;
+        position: relative;
 
         [data-bleh--solarium="true"] & {
             &:active {
@@ -18259,9 +18266,7 @@
             background: hsl(var(--b3));
             border-radius: var(--item-big-radius);
             box-shadow: var(--group-shadow);
-            width: calc(
-                100% - (30px + var(--card-gap))
-            ); /* 30px = value width */
+            width: calc(100% - (30px + var(--card-gap))); /* 30px = value width */
             height: 8px;
             position: absolute;
 
@@ -18897,6 +18902,15 @@
                 width: 30px;
                 text-align: right;
                 flex-shrink: 0;
+
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+
+                display: flex;
+                justify-content: end;
+                align-items: center;
             }
 
             .hint {
