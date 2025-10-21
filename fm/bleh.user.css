@@ -6680,9 +6680,11 @@
 
     .chartlist__placeholder-bar,
     .chartlist__placeholder-name {
-        background: hsl(var(--b4));
-        border-radius: var(--item-small-radius);
+        background: hsl(var(--b4), 50%);
+        border-radius: var(--item-med-radius);
+        height: 24px;
     }
+
     .chartlist__placeholder-loading {
         background-image: linear-gradient(
             270deg,
@@ -16610,10 +16612,10 @@
                 display: none;
             }
         }
+    }
 
-        &.oracle-hidden {
-            display: none !important;
-        }
+    .oracle-hidden {
+        display: none !important;
     }
 
     .oracle-releases {

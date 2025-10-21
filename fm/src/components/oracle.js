@@ -57,25 +57,42 @@ export function oracle_process() {
 
     let oracle_cache =
         JSON.parse(localStorage.getItem('bleh_oracle_cache')) || {};
+
+    const now = Date.now();
+
+    for (const artist in oracle_cache) {
+        for (const item in oracle_cache[artist]) {
+            const entry = oracle_cache[artist][item];
+
+            if (!entry.track?.expire || now > entry.track.expire) {
+                log('track cache expired', 'oracle', 'info', {
+                    artist,
+                    item,
+                    entry,
+                    expire: entry.track?.expire,
+                    now
+                });
+                delete oracle_cache[artist][item];
+            }
+        }
+
+        if (Object.keys(oracle_cache[artist]).length == 0) {
+            delete oracle_cache[artist];
+            log('deleted artist as empty', 'oracle', 'info', { artist });
+        }
+    }
+
+    set_storage('bleh_oracle_cache', JSON.stringify(oracle_cache));
+
+    log('cleaned cache', 'oracle', 'info', { oracle_cache });
+
     if (!oracle_cache[artist]) oracle_cache[artist] = {};
 
     let cache = oracle_cache[artist][item] || {
-        album: {},
         track: {}
     };
 
-    log('loaded cache', 'oracle', 'info', {
-        oracle_cache,
-        cache
-    });
-
-    if (!cache.album?.expire || Date.now() > cache.album.expire) {
-        log('album cache expired', 'oracle', 'info', {
-            expire: cache.album?.expire,
-            now: Date.now()
-        });
-        cache.album = {};
-    }
+    log('loaded cache', 'oracle', 'info', { oracle_cache, cache });
 
     if (!cache.track?.expire || Date.now() > cache.track.expire) {
         log('track cache expired', 'oracle', 'info', {
@@ -89,7 +106,7 @@ export function oracle_process() {
         if (bump) {
             const day = 24 * 60 * 60 * 1000;
 
-            cache[type].expire = Date.now() + day * 7;
+            cache[type].expire = Date.now() + day * 2;
             cache[type].date = Date.now();
         }
 
@@ -124,6 +141,8 @@ export function oracle_process() {
 
     const header = page.structure.container.querySelector('.redesigned-header');
     let releases_panel;
+    let tracklist_panel;
+    let label_panel;
     if (page.type == 'track' && page.subpage == 'overview') {
         releases_panel = html.node`
             <section class="oracle-releases">
@@ -157,13 +176,43 @@ export function oracle_process() {
             </section>
         `;
         info_panel.after(releases_panel);
+    } else if (page.type == 'album' && page.subpage == 'overview') {
+        tracklist_panel = html.node`
+            <section class="oracle-tracks">
+                <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
+                <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
+                    <tbody>
+                        ${Array.from({length: 14}, track_placeholder)}
+                    </tbody>
+                </table>
+            </section>
+        `;
+        info_panel.after(tracklist_panel);
+
+        label_panel = html.node`
+            <div class="card-tip copyright">
+                © <span>...</span>
+            </div>
+        `;
+        info_panel.appendChild(label_panel);
     }
 
-    const albums_and_lyrics_row = page.structure.main.querySelector(
-        '.album-and-lyrics-row'
-    );
-    if (albums_and_lyrics_row)
-        albums_and_lyrics_row.classList.add('oracle-hidden');
+    function track_placeholder() {
+        return html.node`
+            <tr class="chartlist-row chartlist__placeholder-row">
+                <td class="chartlist-image chartlist__placeholder-image" />
+                <td class="chartlist-name chartlist__placeholder-name">
+                    <div class="chartlist__placeholder-loading" />
+                </td>
+            </tr>
+        `;
+    }
+
+    const albums_and_lyrics_row = page.structure.main.querySelector('.album-and-lyrics-row');
+    if (albums_and_lyrics_row) albums_and_lyrics_row.classList.add('oracle-hidden');
+
+    const old_tracklist = page.structure.main.querySelector('#tracklist');
+    if (old_tracklist) old_tracklist.classList.add('oracle-hidden');
 
     function oracle_aliases(artist, desired) {
         log('alias request', 'oracle', 'log', {
@@ -663,24 +712,22 @@ export function oracle_process() {
                 return true;
             });
 
-            info_panel.appendChild(html.node`
-                <div class="card-tip copyright">
-                    ©
-                    ${labels.map((label, index) => {
-                        let label_elem;
-                        const elem = html.node`
-                            <span class="music-label" ref=${(el) => (label_elem = el)}>${label.label.name}</span>${index < labels.length - 1 ? ', ' : ''}
-                        `;
+            render(label_panel, html`
+                ©
+                ${labels.map((label, index) => {
+                    let label_elem;
+                    const elem = html.node`
+                        <span class="music-label" ref=${(el) => (label_elem = el)}>${label.label.name}</span>${index < labels.length - 1 ? ', ' : ''}
+                    `;
 
-                        if (label.label.disambiguation != '') {
-                            tippy(label_elem, {
-                                content: label.label.disambiguation
-                            });
-                        }
+                    if (label.label.disambiguation != '') {
+                        tippy(label_elem, {
+                            content: label.label.disambiguation
+                        });
+                    }
 
-                        return elem;
-                    })}
-                </div>
+                    return elem;
+                })}
             `);
         }
 
@@ -707,14 +754,10 @@ export function oracle_process() {
         const media = data.media;
         const discs = media.filter((item) => item.tracks != null);
 
-        const track_panel = html.node`
-            <section class="oracle-tracks">
-                <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
-                ${discs.map((disc) => render_tracklist(disc, discs.length, artist))}
-            </section>
-        `;
-
-        info_panel.after(track_panel);
+        render(tracklist_panel, html`
+            <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
+            ${discs.map((disc) => render_tracklist(disc, discs.length, artist))}
+        `);
 
         function render_tracklist(disc, length, retrieved_artist) {
             return html.node`

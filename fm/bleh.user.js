@@ -32313,22 +32313,33 @@
     let artist_template = `artist:"${page.sister}"`;
     const info_panel = page.structure.main.firstElementChild;
     let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
+    const now2 = Date.now();
+    for (const artist2 in oracle_cache) {
+      for (const item2 in oracle_cache[artist2]) {
+        const entry = oracle_cache[artist2][item2];
+        if (!entry.track?.expire || now2 > entry.track.expire) {
+          log("track cache expired", "oracle", "info", {
+            artist: artist2,
+            item: item2,
+            entry,
+            expire: entry.track?.expire,
+            now: now2
+          });
+          delete oracle_cache[artist2][item2];
+        }
+      }
+      if (Object.keys(oracle_cache[artist2]).length == 0) {
+        delete oracle_cache[artist2];
+        log("deleted artist as empty", "oracle", "info", { artist: artist2 });
+      }
+    }
+    set_storage("bleh_oracle_cache", JSON.stringify(oracle_cache));
+    log("cleaned cache", "oracle", "info", { oracle_cache });
     if (!oracle_cache[artist]) oracle_cache[artist] = {};
     let cache2 = oracle_cache[artist][item] || {
-      album: {},
       track: {}
     };
-    log("loaded cache", "oracle", "info", {
-      oracle_cache,
-      cache: cache2
-    });
-    if (!cache2.album?.expire || Date.now() > cache2.album.expire) {
-      log("album cache expired", "oracle", "info", {
-        expire: cache2.album?.expire,
-        now: Date.now()
-      });
-      cache2.album = {};
-    }
+    log("loaded cache", "oracle", "info", { oracle_cache, cache: cache2 });
     if (!cache2.track?.expire || Date.now() > cache2.track.expire) {
       log("track cache expired", "oracle", "info", {
         expire: cache2.track?.expire,
@@ -32339,7 +32350,7 @@
     function oracle_save_cache(type, bump = true) {
       if (bump) {
         const day = 24 * 60 * 60 * 1e3;
-        cache2[type].expire = Date.now() + day * 7;
+        cache2[type].expire = Date.now() + day * 2;
         cache2[type].date = Date.now();
       }
       oracle_cache[artist][item] = {
@@ -32370,6 +32381,8 @@
     );
     const header = page.structure.container.querySelector(".redesigned-header");
     let releases_panel;
+    let tracklist_panel;
+    let label_panel;
     if (page.type == "track" && page.subpage == "overview") {
       releases_panel = html.node`
             <section class="oracle-releases">
@@ -32403,12 +32416,39 @@
             </section>
         `;
       info_panel.after(releases_panel);
+    } else if (page.type == "album" && page.subpage == "overview") {
+      tracklist_panel = html.node`
+            <section class="oracle-tracks">
+                <h3 class="text-18">${tl2(trans.tracklist)}<span class="new-badge beta">${tl2(trans.beta)}</span></h3>
+                <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
+                    <tbody>
+                        ${Array.from({ length: 14 }, track_placeholder)}
+                    </tbody>
+                </table>
+            </section>
+        `;
+      info_panel.after(tracklist_panel);
+      label_panel = html.node`
+            <div class="card-tip copyright">
+                © <span>...</span>
+            </div>
+        `;
+      info_panel.appendChild(label_panel);
     }
-    const albums_and_lyrics_row = page.structure.main.querySelector(
-      ".album-and-lyrics-row"
-    );
-    if (albums_and_lyrics_row)
-      albums_and_lyrics_row.classList.add("oracle-hidden");
+    function track_placeholder() {
+      return html.node`
+            <tr class="chartlist-row chartlist__placeholder-row">
+                <td class="chartlist-image chartlist__placeholder-image" />
+                <td class="chartlist-name chartlist__placeholder-name">
+                    <div class="chartlist__placeholder-loading" />
+                </td>
+            </tr>
+        `;
+    }
+    const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
+    if (albums_and_lyrics_row) albums_and_lyrics_row.classList.add("oracle-hidden");
+    const old_tracklist = page.structure.main.querySelector("#tracklist");
+    if (old_tracklist) old_tracklist.classList.add("oracle-hidden");
     function oracle_aliases(artist2, desired) {
       log("alias request", "oracle", "log", {
         artist: artist2,
@@ -32770,14 +32810,13 @@
           seen.add(name);
           return true;
         });
-        info_panel.appendChild(html.node`
-                <div class="card-tip copyright">
-                    ©
-                    ${labels.map((label, index3) => {
+        render(label_panel, html`
+                ©
+                ${labels.map((label, index3) => {
           let label_elem;
           const elem = html.node`
-                            <span class="music-label" ref=${(el) => label_elem = el}>${label.label.name}</span>${index3 < labels.length - 1 ? ", " : ""}
-                        `;
+                        <span class="music-label" ref=${(el) => label_elem = el}>${label.label.name}</span>${index3 < labels.length - 1 ? ", " : ""}
+                    `;
           if (label.label.disambiguation != "") {
             tippy_esm_default(label_elem, {
               content: label.label.disambiguation
@@ -32785,7 +32824,6 @@
           }
           return elem;
         })}
-                </div>
             `);
       }
       if (page.subpage != "overview") return;
@@ -32801,13 +32839,10 @@
       log("entry", "oracle", "info", { oracle_entry });
       const media = data2.media;
       const discs = media.filter((item2) => item2.tracks != null);
-      const track_panel = html.node`
-            <section class="oracle-tracks">
-                <h3 class="text-18">${tl2(trans.tracklist)}<span class="new-badge beta">${tl2(trans.beta)}</span></h3>
-                ${discs.map((disc) => render_tracklist(disc, discs.length, artist2))}
-            </section>
-        `;
-      info_panel.after(track_panel);
+      render(tracklist_panel, html`
+            <h3 class="text-18">${tl2(trans.tracklist)}<span class="new-badge beta">${tl2(trans.beta)}</span></h3>
+            ${discs.map((disc) => render_tracklist(disc, discs.length, artist2))}
+        `);
       function render_tracklist(disc, length, retrieved_artist) {
         return html.node`
                 ${length > 1 ? html.node`
