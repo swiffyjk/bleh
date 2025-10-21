@@ -379,7 +379,7 @@ export function oracle_process() {
                 });
 
                 cache.album.fetch = data;
-                oracle_save_cache('album');
+                //oracle_save_cache('album');
 
                 return;
             }
@@ -631,7 +631,7 @@ export function oracle_process() {
                 page.state.oracle = data;
 
                 cache.album.fetch = data;
-                oracle_save_cache('album');
+                //oracle_save_cache('album');
 
                 oracle_album(data);
             },

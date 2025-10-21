@@ -13,6 +13,7 @@
     @import url("https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap");
     @import url("https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap");
     @import url("https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap");
+    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap');
 
     /* we need to make the vertical alignment better in this font */
     @font-face {
@@ -80,7 +81,7 @@
         --version-build: "2025.1016";
 
         --font:
-            var(--custom_font, ""), Overpass, Inter, Ubuntu Sans, Spline Sans,
+            var(--custom_font, ""), Bricolage Grotesque, Overpass, Inter, Ubuntu Sans, Spline Sans,
             Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC,
             Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont,
             sans-serif, Apple Color Emoji, var(--font_emoji_name, "");
@@ -26529,7 +26530,7 @@
         background: var(--card-specific-background) !important;
         border-radius: var(--card-radius);
         --card-specific-background: hsl(var(--f4), 15%);
-        padding: 12px !important;
+        padding: 10px 12px !important;
         box-shadow: unset !important;
         color: hsl(var(--c2)) !important;
         order: 10;
