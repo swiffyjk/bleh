@@ -94,14 +94,6 @@ export function oracle_process() {
 
     log('loaded cache', 'oracle', 'info', { oracle_cache, cache });
 
-    if (!cache.track?.expire || Date.now() > cache.track.expire) {
-        log('track cache expired', 'oracle', 'info', {
-            expire: cache.track?.expire,
-            now: Date.now()
-        });
-        cache.track = {};
-    }
-
     function oracle_save_cache(type, bump = true) {
         if (bump) {
             const day = 24 * 60 * 60 * 1000;

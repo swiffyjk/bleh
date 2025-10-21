@@ -32340,13 +32340,6 @@
       track: {}
     };
     log("loaded cache", "oracle", "info", { oracle_cache, cache: cache2 });
-    if (!cache2.track?.expire || Date.now() > cache2.track.expire) {
-      log("track cache expired", "oracle", "info", {
-        expire: cache2.track?.expire,
-        now: Date.now()
-      });
-      cache2.track = {};
-    }
     function oracle_save_cache(type, bump = true) {
       if (bump) {
         const day = 24 * 60 * 60 * 1e3;
