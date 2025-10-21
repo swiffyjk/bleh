@@ -419,7 +419,7 @@ export function oracle_process() {
                     release
                 });
 
-                cache.album.fetch = data;
+                //cache.album.fetch = data;
                 //oracle_save_cache('album');
 
                 return;
@@ -671,7 +671,7 @@ export function oracle_process() {
                 log('received connect album data', 'oracle', 'info', { data });
                 page.state.oracle = data;
 
-                cache.album.fetch = data;
+                //cache.album.fetch = data;
                 //oracle_save_cache('album');
 
                 oracle_album(data);

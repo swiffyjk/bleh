@@ -32614,7 +32614,6 @@
             data: data2,
             release
           });
-          cache2.album.fetch = data2;
           return;
         }
         page.state.oracle_debug.release_id = release.id;
@@ -32778,7 +32777,6 @@
           }
           log("received connect album data", "oracle", "info", { data: data3 });
           page.state.oracle = data3;
-          cache2.album.fetch = data3;
           oracle_album(data3);
         },
         onerror: function(err) {
