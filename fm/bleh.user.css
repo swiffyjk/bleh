@@ -2821,7 +2821,8 @@
                             background: var(--sidebar-bg);
 
                             &:before {
-                                display: none;
+                                --mask: none;
+                                background: hsl(var(--b6));
                             }
                         }
                     }
@@ -4217,13 +4218,19 @@
             content: "";
             position: absolute;
             inset: 0 0 -1px 0;
-            display: var(--solarium-display, block);
+            display: block;
             background: hsl(var(--b5), 80%);
             backdrop-filter: var(--solarium);
             -webkit-backdrop-filter: var(--solarium);
             border-top-left-radius: var(--card-radius);
             border-top-right-radius: var(--card-radius);
             z-index: -1;
+        }
+
+        [data-bleh--solarium="false"] & {
+            &:before {
+                background: color-mix(in hsl, hsl(var(--b6)), hsl(var(--b5)));
+            }
         }
     }
 
