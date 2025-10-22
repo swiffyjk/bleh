@@ -7132,7 +7132,6 @@
 
         .chartlist-count-bar-value {
             color: hsl(var(--b7));
-            font-size: 13px;
             font-weight: inherit;
             padding: 0 10px !important;
             margin: 0 -10px;
