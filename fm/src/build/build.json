@@ -339,6 +339,11 @@
             "default": false,
             "name": "Present album and track credits via oracle",
             "date": "2025-10-14"
+        },
+        "verified": {
+            "default": false,
+            "name": "Verified replaces sponsor badge",
+            "date": "2025-10-22"
         }
     }
 }

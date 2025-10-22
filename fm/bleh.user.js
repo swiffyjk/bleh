@@ -29477,17 +29477,17 @@
       const has_link = elem.href;
       const contents = html.node`
             ${is_image ? html.node`
-                        <button class="dropdown-menu-clickable-item" data-type="image" onclick=${() => {
+                <button class="dropdown-menu-clickable-item" data-type="image" onclick=${() => {
         open(elem.src, "_blank");
       }}>
-                            ${tl2(trans.view_image)}
-                        </button>
-                    ` : ""}
+                    ${tl2(trans.view_image)}
+                </button>
+            ` : ""}
             ${has_link ? html.node`
-                        <a class="dropdown-menu-clickable-item" data-type="link" href=${elem.href} target=${elem.target}>
-                            ${tl2(trans.open)}
-                        </a>
-                    ` : ""}
+                <a class="dropdown-menu-clickable-item" data-type="link" href=${elem.href} target=${elem.target}>
+                    ${tl2(trans.open)}
+                </a>
+            ` : ""}
         `;
       if (![...contents.childNodes].some(
         (node) => node.nodeType == Node.ELEMENT_NODE
@@ -64623,6 +64623,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         default: false,
         name: "Present album and track credits via oracle",
         date: "2025-10-14"
+      },
+      verified: {
+        default: false,
+        name: "Verified replaces sponsor badge",
+        date: "2025-10-22"
       }
     }
   };

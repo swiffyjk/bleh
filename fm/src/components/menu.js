@@ -67,26 +67,18 @@ export function page_menu() {
         const has_link = elem.href;
 
         const contents = html.node`
-            ${
-                is_image ?
-                    html.node`
-                        <button class="dropdown-menu-clickable-item" data-type="image" onclick=${() => {
-                            open(elem.src, '_blank');
-                        }}>
-                            ${tl(trans.view_image)}
-                        </button>
-                    `
-                :   ''
-            }
-            ${
-                has_link ?
-                    html.node`
-                        <a class="dropdown-menu-clickable-item" data-type="link" href=${elem.href} target=${elem.target}>
-                            ${tl(trans.open)}
-                        </a>
-                    `
-                :   ''
-            }
+            ${is_image ? html.node`
+                <button class="dropdown-menu-clickable-item" data-type="image" onclick=${() => {
+                    open(elem.src, '_blank');
+                }}>
+                    ${tl(trans.view_image)}
+                </button>
+            ` :   ''}
+            ${has_link ? html.node`
+                <a class="dropdown-menu-clickable-item" data-type="link" href=${elem.href} target=${elem.target}>
+                    ${tl(trans.open)}
+                </a>
+            ` :   ''}
         `;
 
         if (
