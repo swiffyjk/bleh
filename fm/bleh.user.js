@@ -33519,10 +33519,9 @@
   function oracle_credits() {
     dialog({
       id: "oracle_credits",
-      title: tl2(trans.credits),
+      title: { html: tl2(trans.credits_for_value, { v: `<i>${correct_item_by_artist(page.name, page.sister)}</i>` }) },
       body: html.node`
             <div class="oracle-credits">
-                <h3>${correct_item_by_artist(page.name, page.sister)}</h3>
                 <div class="credit">
                     <h4>${tl2(trans.performed_by)}</h4>
                     <span>${correct_artist(page.sister)}</span>
@@ -62948,6 +62947,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     credits: {
       en: "Credits"
+    },
+    credits_for_value: {
+      en: "Credits for {v}"
     },
     branch: {
       name: {

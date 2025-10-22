@@ -5452,6 +5452,9 @@ export const trans = {
     credits: {
         en: 'Credits'
     },
+    credits_for_value: {
+        en: 'Credits for {v}'
+    },
     branch: {
         name: {
             en: 'Choose branch'

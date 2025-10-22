@@ -248,9 +248,9 @@ export function oracle_process() {
             </div>
         `;
         info_panel.appendChild(label_panel);
-        
+
         function source_own_tracklist() {
-            
+
         }
     }
 
@@ -1655,10 +1655,9 @@ function oracle_request(type = 'albums') {
 export function oracle_credits() {
     dialog({
         id: 'oracle_credits',
-        title: tl(trans.credits),
+        title: {html: tl(trans.credits_for_value, {v: `<i>${correct_item_by_artist(page.name, page.sister)}</i>`})},
         body: html.node`
             <div class="oracle-credits">
-                <h3>${correct_item_by_artist(page.name, page.sister)}</h3>
                 <div class="credit">
                     <h4>${tl(trans.performed_by)}</h4>
                     <span>${correct_artist(page.sister)}</span>
