@@ -13,7 +13,7 @@
     @import url("https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap");
     @import url("https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap");
     @import url("https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap");
-    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
     /* we need to make the vertical alignment better in this font */
     @font-face {
@@ -81,7 +81,7 @@
         --version-build: "2025.1016";
 
         --font:
-            var(--custom_font, ""), Bricolage Grotesque, Overpass, Inter, Ubuntu Sans, Spline Sans,
+            var(--custom_font, ""), Funnel Sans, Overpass, Inter, Ubuntu Sans, Spline Sans,
             Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC,
             Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont,
             sans-serif, Apple Color Emoji, var(--font_emoji_name, "");
@@ -682,13 +682,13 @@
 
             --h3:
                 var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%),
-                calc(clamp(min(0.85), var(--lit), max(1.1)) * 82%);
+                calc(clamp(min(0.85), var(--lit), max(1.1)) * 84%);
             --h3-s: var(--hue), 50%, 70%;
             --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
-            --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 82%);
+            --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 84%);
             --h4:
                 var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%),
-                calc(clamp(min(0.7), var(--lit), max(1.1)) * 70%);
+                calc(clamp(min(0.7), var(--lit), max(1.1)) * 73%);
             --f4:
                 var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 55%),
                 calc(clamp(min(0.8), var(--lit), max(1.5)) * 72%);
@@ -712,7 +712,7 @@
 
             --primary-shadow:
                 inset 0 1px 0 0 hsl(var(--h4), 30%),
-                inset 0 -30px 10px -20px hsl(var(--h4), 40%);
+                inset 0 -30px 10px -20px hsl(var(--h2), 40%);
             --bar-shadow: inset 0 1px 0 0 hsl(var(--h4), 60%);
 
             --shout-vote-indicator: linear-gradient(
@@ -933,17 +933,12 @@
             --card-shadow: 0 1.5px 4px 0 hsla(var(--b7), 0.05);
 
             --card-border: inset 0 0 0 1px hsla(var(--b4), 0.7) !important;
-            --menu-shadow:
-                2px 2px 24px 0 hsla(var(--b7), 0.15),
-                3px 6px 48px 16px hsla(var(--b7), 0.03);
-            --overlay-shadow:
-                2px 2px 24px 0 hsla(var(--b7), 0.15),
-                3px 6px 48px 16px hsla(var(--b7), 0.03);
-            --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
+            --overlay-shadow: var(--menu-shadow);
+            --menu-shadow: 0 4px 40px hsla(var(--b7), 0.07);
             --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
             --subtle-shadow: 0 5px 12px 4px hsla(var(--b7), 0.08);
 
-            --interactable-outer: 0 2px 3px hsl(var(--b7), 10%);
+            --interactable-outer: 0 3px 2px hsl(var(--b7), 3%);
             --interactable-active-outer: transparent 0 0 0;
 
             color-scheme: light !important;
@@ -2497,7 +2492,7 @@
             height: fit-content;
 
             & > a,
-            & > button {
+            button {
                 --bg: transparent !important;
                 --bg-hov: transparent !important;
                 --bg-atv: transparent !important;
@@ -6817,13 +6812,10 @@
         }
 
         & > .feat {
-            font-size: var(--font-size-sm);
-            line-height: var(--line-height);
             width: fit-content;
             height: fit-content;
             margin: auto 0;
             color: hsla(var(--c2), 80%);
-            font-weight: var(--font-weight-medium);
 
             min-width: 0;
             overflow: hidden;
@@ -14773,6 +14765,8 @@
                     padding: 1px !important;
                     background-color: hsl(var(--b5)) !important;
                     border-radius: 50px !important;
+
+                    min-width: unset;
 
                     --margin-top: -9px;
                     --left: 1px;
@@ -22941,14 +22935,14 @@
                                 line-height: 31px;
                                 display: inline-flex;
                                 position: relative;
-                                bottom: 3px;
+                                bottom: 2px;
                             }
 
                             div {
                                 display: inline;
 
                                 &:not(:last-child) {
-                                    margin-right: var(--card-gap);
+                                    margin-right: 10px;
                                 }
                             }
                         }
@@ -25931,8 +25925,8 @@
             --bg: hsl(var(--k4), 20%);
             --bg-hov: hsl(var(--k4), 30%);
             --bg-atv: hsl(var(--k4), 40%);
-            --padding: 5px 9px 5px
-                calc(9px + var(--icon-size) + var(--icon-gap));
+            --padding: 5px 10px 5px
+                calc(10px + var(--icon-size) + 4px);
             --col: hsl(var(--l3-c));
             --mask-colour: color-mix(
                 in hsl,
@@ -25942,11 +25936,11 @@
             --shadow: none;
             --radius: var(--item-big-radius);
             flex: unset;
-            --left: 8px;
+            --left: 10px;
 
             position: relative;
 
-            --icon-size: 16px;
+            --icon-size: 14px;
 
             &:not(.resource-external-link--homepage) {
                 --sat-user: 1;
