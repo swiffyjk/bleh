@@ -611,7 +611,7 @@
         );
 
         .theme-preview[data-bleh--theme="oled"],
-        [data-bleh--theme="oled"] & {
+        [data-bleh--theme="oled"] &:not(.theme-preview) {
             --c1:
                 var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 30%), 100%;
             --c2:
@@ -655,6 +655,7 @@
         .theme-preview[data-bleh--theme="light"],
         [data-bleh--theme="light"]
             &:not(
+                .theme-preview,
                 .grid-items-item.grid-items-item-has-colour,
                 .grid-items-item-details > p > a
             ) {
@@ -722,7 +723,7 @@
         }
         .theme-preview[data-bleh--theme="ink"],
         [data-bleh--theme="ink"]
-            &:not(.grid-items-item.grid-items-item-has-colour) {
+            &:not(.theme-preview, .grid-items-item.grid-items-item-has-colour) {
             --c1: var(--hue), calc(var(--sat) * 60%), 14%;
             --c2: var(--hue), calc(var(--sat) * 40%), 20%;
             --c3: var(--hue), calc(var(--sat) * 10%), 40%;
