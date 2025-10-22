@@ -93,8 +93,10 @@ export function markdown(
 
                 try {
                     const safe = new URL(url);
-                    if (!['http:', 'https:'].includes(safe.protocol))
-                        return `<img alt="banner" loading="lazy">`;
+                    if (!['http:', 'https:'].includes(safe.protocol)) {
+                        cache.banner = '';
+                        return '';
+                    }
 
                     const escaped = safe.href.replace(/"/g, '&quot;');
 
@@ -267,6 +269,17 @@ export function markdown(
     if (!allow_headers) extensions.push(header_minify());
     extensions.push(mentions());
 
+    let profile_cache;
+
+    const will_cache = cache === true;
+    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', { cache });
+
+    if ((allow_banners || allow_hue) && will_cache) {
+        profile_cache =
+            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+        cache = profile_cache[name] || {};
+    }
+
     const converter = new showdown.Converter({
         extensions,
         emoji: true,
@@ -318,11 +331,6 @@ export function markdown(
 
     const body = html.node([parsed]);
     log('rendered', 'markdown', 'info', { body });
-
-    let profile_cache;
-
-    const will_cache = cache === true;
-    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', { cache });
 
     const link_strings = {
         'open.spotify.com': 'Spotify',
@@ -396,12 +404,6 @@ export function markdown(
             (sponsor_list && !sponsor_list.sponsors.includes(name))
         )
             allow_hue = false;
-    }
-
-    if ((allow_banners || allow_hue) && will_cache) {
-        profile_cache =
-            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-        cache = profile_cache[page.name] || {};
     }
 
     // add lazy-loading to images

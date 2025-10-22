@@ -47508,8 +47508,10 @@
           delete cache2.banner;
           try {
             const safe = new URL(url);
-            if (!["http:", "https:"].includes(safe.protocol))
-              return `<img alt="banner" loading="lazy">`;
+            if (!["http:", "https:"].includes(safe.protocol)) {
+              cache2.banner = "";
+              return "";
+            }
             const escaped = safe.href.replace(/"/g, "&quot;");
             cache2.banner = escaped;
           } catch {
@@ -47644,6 +47646,13 @@
     if (allow_socials) extensions.push(social_links());
     if (!allow_headers) extensions.push(header_minify());
     extensions.push(mentions());
+    let profile_cache;
+    const will_cache = cache2 === true;
+    log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache2 });
+    if ((allow_banners || allow_hue) && will_cache) {
+      profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+      cache2 = profile_cache[name] || {};
+    }
     const converter = new import_showdown.default.Converter({
       extensions,
       emoji: true,
@@ -47682,9 +47691,6 @@
     });
     const body = html.node([parsed2]);
     log("rendered", "markdown", "info", { body });
-    let profile_cache;
-    const will_cache = cache2 === true;
-    log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache2 });
     const link_strings = {
       "open.spotify.com": "Spotify",
       "spotify.com": "Spotify",
@@ -47745,10 +47751,6 @@
     if (allow_hue) {
       if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name))
         allow_hue = false;
-    }
-    if ((allow_banners || allow_hue) && will_cache) {
-      profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      cache2 = profile_cache[page.name] || {};
     }
     if (body.nodeName != "#text") {
       body.querySelectorAll("img").forEach((image) => {
