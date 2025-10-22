@@ -28802,14 +28802,6 @@
             opacity: 0.2;
         }
 
-        &:has(> [data-danger="true"]) {
-            opacity: 1 !important;
-
-            & > :not([data-danger="true"]) {
-                opacity: 0.4 !important;
-            }
-        }
-
         transition-property: opacity;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
