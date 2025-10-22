@@ -32173,7 +32173,7 @@
       if (source_album)
         album_avatar = source_album.querySelector(".source-album-art img");
       const should_expand = settings.default_avatar_action == "expand" && (album_avatar || artist_avatar);
-      page.state.avatar_side_override = should_expand ? "expand" : source_album.querySelector(".link-block-cover-link").getAttribute("href");
+      page.state.avatar_side_override = should_expand ? "expand" : source_album ? source_album.querySelector(".link-block-cover-link").getAttribute("href") : "";
       let redesigned_track_header = html.node`
             <section class="redesigned-header redesigned-track-header no-background">
                 <div class="avatar-side" ref=${(el) => page.state.avatar_side = el} />
