@@ -723,7 +723,11 @@
         }
         .theme-preview[data-bleh--theme="ink"],
         [data-bleh--theme="ink"]
-            &:not(.theme-preview, .grid-items-item.grid-items-item-has-colour) {
+            &:not(
+                .theme-preview,
+                .grid-items-item.grid-items-item-has-colour,
+                .grid-items-item-details > p > a
+            ) {
             --c1: var(--hue), calc(var(--sat) * 60%), 14%;
             --c2: var(--hue), calc(var(--sat) * 40%), 20%;
             --c3: var(--hue), calc(var(--sat) * 10%), 40%;
