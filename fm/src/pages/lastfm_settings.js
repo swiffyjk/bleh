@@ -524,6 +524,9 @@ function patch_settings_charts_panel(token) {
 }
 
 function patch_settings_profile_panel(token, update_picture) {
+    // some testing, probably not accurate
+    const bio_max_length = 485;
+
     update_picture.classList.add('bleh--panel');
 
     const upload_form = update_picture.querySelector('.avatar-upload-form');
@@ -650,7 +653,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                             cols="40"
                                             rows="10"
                                             class="textarea--s"
-                                            maxlength="500"
+                                            maxlength=${bio_max_length}
                                             id="id_about_me"
                                             oninput=${() => update_about()}
                                             ref=${(el) => (about = el)}
@@ -675,7 +678,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                             >
                                                 ${tl(
                                                     trans.value_characters_max,
-                                                    { v: '500' }
+                                                    { v: bio_max_length }
                                                 )}
                                             </div>
                                         </div>
@@ -749,14 +752,24 @@ function patch_settings_profile_panel(token, update_picture) {
     // about me
     update_about();
 
+    function len(text) {
+        return text.length;
+
+        // utf-8 or something i dont know
+        const normalised = text.replace(/\r\n/g, '\n');
+
+        return new TextEncoder().encode(normalised).length;
+    }
+
     function update_about() {
         log('re-rendering', 'about', 'log');
 
         const value = about.value;
+        const length = len(value);
         chars.textContent = tl(trans.value_characters_max, {
-            v: `${value.length}/500`
+            v: `${length}/${bio_max_length}`
         });
-        chars.setAttribute('data-exceeded', value.length >= 500);
+        chars.setAttribute('data-exceeded', length > bio_max_length);
 
         render(preview, markdown(value, markdown_settings));
 

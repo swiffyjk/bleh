@@ -42576,6 +42576,7 @@
     });
   }
   function patch_settings_profile_panel(token, update_picture) {
+    const bio_max_length = 485;
     update_picture.classList.add("bleh--panel");
     const upload_form = update_picture.querySelector(".avatar-upload-form");
     const avatar_url = update_picture.querySelector(".image-upload-preview img").getAttribute("src");
@@ -42693,7 +42694,7 @@
                                             cols="40"
                                             rows="10"
                                             class="textarea--s"
-                                            maxlength="500"
+                                            maxlength=${bio_max_length}
                                             id="id_about_me"
                                             oninput=${() => update_about()}
                                             ref=${(el) => about = el}
@@ -42717,7 +42718,7 @@
                                             >
                                                 ${tl2(
         trans.value_characters_max,
-        { v: "500" }
+        { v: bio_max_length }
       )}
                                             </div>
                                         </div>
@@ -42787,13 +42788,19 @@
       page.structure.main.querySelector("#update-profile")
     );
     update_about();
+    function len(text3) {
+      return text3.length;
+      const normalised = text3.replace(/\r\n/g, "\n");
+      return new TextEncoder().encode(normalised).length;
+    }
     function update_about() {
       log("re-rendering", "about", "log");
       const value = about.value;
+      const length = len(value);
       chars.textContent = tl2(trans.value_characters_max, {
-        v: `${value.length}/500`
+        v: `${length}/${bio_max_length}`
       });
-      chars.setAttribute("data-exceeded", value.length >= 500);
+      chars.setAttribute("data-exceeded", length > bio_max_length);
       render(preview, markdown(value, markdown_settings));
       let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
       let cache2 = profile_cache[auth.name];
