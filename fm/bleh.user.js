@@ -30599,12 +30599,15 @@
   function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
   }
-  function select(values, initial = "", name = "", func = null) {
+  function select(values, initial = "", name = "", func = null, blend = false) {
     let select2;
     let button;
-    if (values.length === 0) {
-      return html.node``;
-    }
+    if (!values || values.length == 0) return html.node`
+        <div class="alert alert-error no-margin">
+            ${tl2(trans.value_failed_to_load).replace("{v}", "Select")}
+            <br />Invalid values passed or length of zero
+        </div>
+    `;
     if (initial == "")
       initial = values.find((v) => "value" in v)?.value ?? initial;
     let container = html.node`
@@ -30617,7 +30620,7 @@
                     `;
     })}
             </select>
-            <button class="select-button" type="button" ref=${(el) => button = el} />
+            <button class="select-button ${blend ? "link-select blend-v2-btn" : ""}" type="button" ref=${(el) => button = el} />
         </div>
     `;
     let menu = tippy_esm_default(button, {
@@ -32414,7 +32417,7 @@
     } else if (page.type == "album" && page.subpage == "overview") {
       tracklist_panel = html.node`
             <section class="oracle-tracks">
-                <h3 class="text-18">${tl2(trans.tracklist)}<span class="new-badge beta">${tl2(trans.beta)}</span></h3>
+                ${oracle_tracklist_header}
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
                     <tbody>
                         ${Array.from({ length: 14 }, track_placeholder)}
@@ -32790,11 +32793,46 @@
         }
       });
     }
+    function oracle_tracklist_header() {
+      return html.node`
+            <div class="top-container">
+                <h2>${tl2(trans.tracklist)}<span class="new-badge beta">${tl2(trans.beta)}</span></h2>
+                <div class="accompany view-buttons blend blend-v2">
+                    ${select(page.state.tracklist_sources, settings.tracklist_source, "", null, true)}
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    ${() => {
+        const btn = html.node`
+                            <button class="left-icon blend-v2-btn" data-type="settings">
+                                ${tl2(trans.settings)}
+                            </button>
+                        `;
+        tippy_esm_default(btn, {
+          theme: "window",
+          content: html.node`
+                                <div class="dialog-settings">
+                                    <div class="setting-group blend">
+                                        ${setting({ id: "format_guest_features" })}
+                                        ${setting({ id: "show_guest_features" })}
+                                    </div>
+                                </div>
+                            `,
+          placement: "bottom",
+          interactive: true,
+          interactiveBorder: 10,
+          trigger: "click"
+        });
+        return btn;
+      }}
+                </div>
+            </div>
+        `;
+    }
     function oracle_album(data2) {
       if (data2.offset != null) {
         log("detected no results", "oracle");
         render(tracklist_panel, html`
-                <h3 class="text-18">${tl2(trans.tracklist)}<span class="new-badge beta">${tl2(trans.beta)}</span></h3>
+                ${oracle_tracklist_header}
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">
                         ${tl2(trans.nothing_matches_your_search)}
@@ -32842,7 +32880,7 @@
       const media = data2.media;
       const discs = media.filter((item2) => item2.tracks != null);
       render(tracklist_panel, html`
-            <h3 class="text-18">${tl2(trans.tracklist)}<span class="new-badge beta">${tl2(trans.beta)}</span></h3>
+            ${oracle_tracklist_header}
             ${discs.map((disc) => render_tracklist(disc, discs.length, artist2))}
         `);
       function render_tracklist(disc, length, retrieved_artist) {
@@ -35108,6 +35146,20 @@
         host: "instagram.com"
       }
     };
+    page.state.tracklist_sources = [
+      {
+        value: "oracle",
+        text: "oracle"
+      },
+      {
+        value: "own",
+        text: tl2(trans.own_plays)
+      },
+      {
+        value: "lastfm",
+        text: "Last.fm"
+      }
+    ];
   }
 
   // src/components/track.js
@@ -48803,7 +48855,7 @@
             `}
         </div>
         <section class="side-actions">
-            <button class="btn side-action" data-type="import" onclick=${() => import_settings20()}>
+            <button class="btn side-action" data-type="import" onclick=${() => import_settings21()}>
                 ${tl2(trans.import)}
             </button>
             <button class="btn side-action" data-type="export" onclick=${() => export_settings()}>
@@ -49670,218 +49722,65 @@
       let format_guest_features;
       let romanise_jp;
       let romanise_ko;
-      render(
-        page.structure.main,
-        html`
-                <section class="bleh--panel">
-                    <h4>${tl2(trans.music_corrections)}</h4>
-                    <div class="inner-preview pad">
-                        <div class="lotus-preview">
-                            <div class="before">
-                                <h1>mY aNtI-aIrCrAfT fRiEnD</h1>
-                                <h2>jUlIe</h2>
-                            </div>
-                            <div class="after">
-                                <h1>my anti-aircraft friend</h1>
-                                <h2>julie</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${corrections = setting({
-          id: "corrections",
-          func: () => {
-            romanise_jp.compat();
-            romanise_ko.compat();
-          }
-        })}
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version || !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl2(trans.corrections_loaded)}</h5>
-                            </div>
-                            <div class="info">
-                                <p>
-                                    ${tl2(trans.corrections_loaded_value).replace("{c1}", total_artists).replace("{c2}", total_album_tracks)}
-                                </p>
-                                <button
-                                    class="see-more"
-                                    onclick="_open_correction_modal()"
-                                >
-                                    ${tl2(trans.view_all)}
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version || !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl2(trans.current_version)}</h5>
-                            </div>
-                            <div class="info">
-                                <p>
-                                    ${artist_corrections.version == album_track_corrections.version ? artist_corrections.version : `${artist_corrections.version}, ${album_track_corrections.version}`}
-                                </p>
-                                <button
-                                    class="see-more update-check"
-                                    onclick="_lotus_check()"
-                                >
-                                    ${tl2(trans.update_check)}
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version || !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl2(trans.help_contribute)}</h5>
-                            </div>
-                            <div class="info">
-                                <a
-                                    class="see-more"
-                                    href="https://github.com/katelyynn/lotus/issues/new/choose"
-                                    target="_blank"
-                                >
-                                    ${tl2(trans.suggest_correction)}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "prefer_no_redirect" })}
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl2(trans.legacy_redirects.name)}</h5>
-                                <p>${tl2(trans.legacy_redirects.body)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <a
-                                    class="btn see-more"
-                                    href="${root}settings/website"
-                                    target="_blank"
-                                >
-                                    ${tl2(trans.change_now)}
-                                </a>
-                            </div>
-                        </div>
-                        ${setting({ id: "travis" })}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <h4>${tl2(trans.smart_music_titles)}</h4>
-                    <div class="inner-preview pad flex">
-                        <section
-                            class="redesigned-header mockup redesigned-track-header no-top-margin"
-                        >
-                            <div class="avatar-side">
-                                <img
-                                    src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg"
-                                />
-                            </div>
-                            <div class="info-side">
-                                <div class="sub-text">${tl2(trans.track)}</div>
-                                <div class="title-container">
-                                    <h1 class="bleh--name-with-features">
-                                        <div class="title">California Love</div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="ft."
-                                            data-bleh--tag-group="guests"
-                                        >
-                                            ft. Dr. Dre, Roger Troutman
-                                        </div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="- remix"
-                                            data-bleh--tag-group="mixes"
-                                        >
-                                            Remix
-                                        </div>
-                                    </h1>
-                                    <h1 class="bleh--name-without-features">
-                                        California Love (ft. Dr. Dre, Roger
-                                        Troutman) - Remix
-                                    </h1>
-                                </div>
-                                <h2>
-                                    <a class="header-new-crumb">2Pac</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Dr. Dre</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Roger Troutman</a
-                                    >
-                                </h2>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${format_guest_features = setting({
-          id: "format_guest_features",
-          func: () => {
-            romanise_jp.compat();
-            romanise_ko.compat();
-          }
-        })}
-                        ${setting({ id: "show_guest_features" })}
-                        ${setting({ id: "show_remaster_tags" })}
-                    </div>
-                    <div class="setting-group">
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>${tl2(trans.romanise_titles)}</h5>
-                            </div>
-                            <div class="primary-selections">
-                                ${romanise_jp = setting({
-          id: "romanise_jp",
-          standalone: true
-        })}
-                                ${romanise_ko = setting({
-          id: "romanise_ko",
-          standalone: true
-        })}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-tip">${tl2(trans.romanise_require)}</div>
-                    <div class="setting-group">
-                        ${setting({ id: "glacier_library_graphs" })}
-                    </div>
-                </section>
-                ${ff("oracle") ? html.node`
+      let tracklist_source;
+      render(page.structure.main, html`
             <section class="bleh--panel">
-                <h4>${tl2(trans.oracle_heading)}</h4>
+                <h4>${tl2(trans.music_corrections)}</h4>
+                <div class="inner-preview pad">
+                    <div class="lotus-preview">
+                        <div class="before">
+                            <h1>mY aNtI-aIrCrAfT fRiEnD</h1>
+                            <h2>jUlIe</h2>
+                        </div>
+                        <div class="after">
+                            <h1>my anti-aircraft friend</h1>
+                            <h2>julie</h2>
+                        </div>
+                    </div>
+                </div>
                 <div class="setting-group">
-                    ${setting({ id: "oracle_beta" })}
+                    ${corrections = setting({
+        id: "corrections",
+        func: () => {
+          romanise_jp.compat();
+          romanise_ko.compat();
+        }
+      })}
                     <div
                         class="setting"
                         data-type="info"
-                        disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
+                        disabled=${!artist_corrections.version || !album_track_corrections.version}
+                    >
+                        <div class="heading">
+                            <h5>${tl2(trans.corrections_loaded)}</h5>
+                        </div>
+                        <div class="info">
+                            <p>
+                                ${tl2(trans.corrections_loaded_value).replace("{c1}", total_artists).replace("{c2}", total_album_tracks)}
+                            </p>
+                            <button
+                                class="see-more"
+                                onclick="_open_correction_modal()"
+                            >
+                                ${tl2(trans.view_all)}
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!artist_corrections.version || !album_track_corrections.version}
                     >
                         <div class="heading">
                             <h5>${tl2(trans.current_version)}</h5>
                         </div>
                         <div class="info">
                             <p>
-                                ${oracle_artists.version}, ${oracle_albums.version}, ${oracle_tracks.version}
+                                ${artist_corrections.version == album_track_corrections.version ? artist_corrections.version : `${artist_corrections.version}, ${album_track_corrections.version}`}
                             </p>
                             <button
                                 class="see-more update-check"
-                                onclick=${() => oracle_data(true)}
+                                onclick="_lotus_check()"
                             >
                                 ${tl2(trans.update_check)}
                             </button>
@@ -49890,25 +49789,176 @@
                     <div
                         class="setting"
                         data-type="info"
-                        disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
+                        disabled=${!artist_corrections.version || !album_track_corrections.version}
                     >
                         <div class="heading">
-                            <h5>${tl2(trans.manage_data)}</h5>
+                            <h5>${tl2(trans.help_contribute)}</h5>
                         </div>
                         <div class="info">
-                            <button
+                            <a
                                 class="see-more"
-                                onclick=${() => manage_oracle_data()}
+                                href="https://github.com/katelyynn/lotus/issues/new/choose"
+                                target="_blank"
                             >
-                                ${tl2(trans.view_all)}
-                            </button>
+                                ${tl2(trans.suggest_correction)}
+                            </a>
                         </div>
                     </div>
                 </div>
+                <div class="setting-group">
+                    ${setting({ id: "prefer_no_redirect" })}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl2(trans.legacy_redirects.name)}</h5>
+                            <p>${tl2(trans.legacy_redirects.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a
+                                class="btn see-more"
+                                href="${root}settings/website"
+                                target="_blank"
+                            >
+                                ${tl2(trans.change_now)}
+                            </a>
+                        </div>
+                    </div>
+                    ${setting({ id: "travis" })}
+                </div>
             </section>
+            <section class="bleh--panel">
+                <h4>${tl2(trans.smart_music_titles)}</h4>
+                <div class="inner-preview pad flex">
+                    <section
+                        class="redesigned-header mockup redesigned-track-header no-top-margin"
+                    >
+                        <div class="avatar-side">
+                            <img
+                                src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg"
+                            />
+                        </div>
+                        <div class="info-side">
+                            <div class="sub-text">${tl2(trans.track)}</div>
+                            <div class="title-container">
+                                <h1 class="bleh--name-with-features">
+                                    <div class="title">California Love</div>
+                                    <div
+                                        class="feat"
+                                        data-bleh--tag-type="ft."
+                                        data-bleh--tag-group="guests"
+                                    >
+                                        ft. Dr. Dre, Roger Troutman
+                                    </div>
+                                    <div
+                                        class="feat"
+                                        data-bleh--tag-type="- remix"
+                                        data-bleh--tag-group="mixes"
+                                    >
+                                        Remix
+                                    </div>
+                                </h1>
+                                <h1 class="bleh--name-without-features">
+                                    California Love (ft. Dr. Dre, Roger
+                                    Troutman) - Remix
+                                </h1>
+                            </div>
+                            <h2>
+                                <a class="header-new-crumb">2Pac</a
+                                ><span class="bleh--name-with-features"
+                                    >,
+                                </span>
+                                <a
+                                    class="header-new-crumb bleh--name-with-features"
+                                    >Dr. Dre</a
+                                ><span class="bleh--name-with-features"
+                                    >,
+                                </span>
+                                <a
+                                    class="header-new-crumb bleh--name-with-features"
+                                    >Roger Troutman</a
+                                >
+                            </h2>
+                        </div>
+                    </section>
+                </div>
+                <div class="setting-group">
+                    ${format_guest_features = setting({
+        id: "format_guest_features",
+        func: () => {
+          romanise_jp.compat();
+          romanise_ko.compat();
+        }
+      })}
+                    ${setting({ id: "show_guest_features" })}
+                    ${setting({ id: "show_remaster_tags" })}
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl2(trans.romanise_titles)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${romanise_jp = setting({
+        id: "romanise_jp",
+        standalone: true
+      })}
+                            ${romanise_ko = setting({
+        id: "romanise_ko",
+        standalone: true
+      })}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-tip">${tl2(trans.romanise_require)}</div>
+                <div class="setting-group">
+                    ${setting({ id: "glacier_library_graphs" })}
+                </div>
+            </section>
+            ${ff("oracle") ? html.node`
+                <section class="bleh--panel">
+                    <h4>${tl2(trans.oracle_heading)}</h4>
+                    <div class="setting-group">
+                        ${setting({ id: "oracle_beta", func: () => {
+        tracklist_source.compat();
+      } })}
+                        ${tracklist_source = setting({ id: "tracklist_source", list: page.state.tracklist_sources })}
+                        <div
+                            class="setting"
+                            data-type="info"
+                            disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
+                        >
+                            <div class="heading">
+                                <h5>${tl2(trans.current_version)}</h5>
+                            </div>
+                            <div class="info">
+                                <p>
+                                    ${oracle_artists.version}, ${oracle_albums.version}, ${oracle_tracks.version}
+                                </p>
+                                <button
+                                    class="see-more update-check"
+                                    onclick=${() => oracle_data(true)}
+                                >
+                                    ${tl2(trans.update_check)}
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            class="setting"
+                            data-type="info"
+                            disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
+                        >
+                            <div class="heading">
+                                <h5>${tl2(trans.manage_data)}</h5>
+                            </div>
+                            <div class="info">
+                                <button class="see-more" onclick=${() => manage_oracle_data()}>
+                                    ${tl2(trans.view_all)}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             ` : ""}
-            `
-      );
+        `);
     } else if (page_id == "seasonal") {
       register_skip_to([]);
       render(
@@ -51046,7 +51096,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     }
   }
-  function import_settings20() {
+  function import_settings21() {
     let text3;
     const modal = dialog({
       id: "import_settings",
@@ -58576,6 +58626,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     no_releases_found: {
       en: "No releases found here"
     },
+    tracklist_source: {
+      name: {
+        en: "Preferred tracklist source"
+      },
+      body: {
+        en: "Choose which service to display for album tracklists"
+      }
+    },
     bookmarks: {
       en: "Bookmarks",
       de: "Lesezeichen",
@@ -60978,6 +61036,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Du hast keine Plays",
       pt: "Voc\xEA n\xE3o tem nenhuma reprodu\xE7\xE3o",
       sv: "Du har inga spelningar"
+    },
+    own_plays: {
+      // tracklist source menu option that enables the thing below
+      en: "Own plays"
     },
     sourced_from_own_plays: {
       // tracklist from your own album plays
@@ -64213,6 +64275,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       title: trans.branch.name,
       body: trans.branch.body,
       warn_if_empty: true
+    },
+    tracklist_source: {
+      default: "oracle",
+      type: "select",
+      title: trans.tracklist_source.name,
+      body: trans.tracklist_source.body,
+      new_release: true,
+      incompatible: { oracle_beta: false }
     }
   };
 

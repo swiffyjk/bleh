@@ -1142,6 +1142,14 @@ export const trans = {
     no_releases_found: {
         en: 'No releases found here'
     },
+    tracklist_source: {
+        name: {
+            en: 'Preferred tracklist source'
+        },
+        body: {
+            en: 'Choose which service to display for album tracklists'
+        }
+    },
     bookmarks: {
         en: 'Bookmarks',
         de: 'Lesezeichen',
@@ -3545,6 +3553,10 @@ export const trans = {
         de: 'Du hast keine Plays',
         pt: 'Você não tem nenhuma reprodução',
         sv: 'Du har inga spelningar'
+    },
+    own_plays: {
+        // tracklist source menu option that enables the thing below
+        en: 'Own plays'
     },
     sourced_from_own_plays: {
         // tracklist from your own album plays

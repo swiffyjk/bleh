@@ -1815,4 +1815,19 @@ export function prepare_music() {
             host: 'instagram.com'
         }
     };
+
+    page.state.tracklist_sources = [
+        {
+            value: 'oracle',
+            text: 'oracle'
+        },
+        {
+            value: 'own',
+            text: tl(trans.own_plays)
+        },
+        {
+            value: 'lastfm',
+            text: 'Last.fm'
+        }
+    ];
 }

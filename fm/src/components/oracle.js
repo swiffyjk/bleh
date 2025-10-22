@@ -35,6 +35,8 @@ import {
 } from './hoshino';
 import { create_avatar } from '../pages/track';
 import { DateTime } from 'luxon';
+import { select } from './select';
+import { setting } from './settings';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -173,7 +175,7 @@ export function oracle_process() {
     } else if (page.type == 'album' && page.subpage == 'overview') {
         tracklist_panel = html.node`
             <section class="oracle-tracks">
-                <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
+                ${oracle_tracklist_header}
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
                     <tbody>
                         ${Array.from({length: 14}, track_placeholder)}
@@ -689,12 +691,50 @@ export function oracle_process() {
         });
     }
 
+    function oracle_tracklist_header() {
+        return html.node`
+            <div class="top-container">
+                <h2>${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h2>
+                <div class="accompany view-buttons blend blend-v2">
+                    ${select(page.state.tracklist_sources, settings.tracklist_source, '', null, true)}
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    ${() => {
+                        const btn = html.node`
+                            <button class="left-icon blend-v2-btn" data-type="settings">
+                                ${tl(trans.settings)}
+                            </button>
+                        `;
+
+                        tippy(btn, {
+                            theme: 'window',
+                            content: html.node`
+                                <div class="dialog-settings">
+                                    <div class="setting-group blend">
+                                        ${setting({ id: 'format_guest_features' })}
+                                        ${setting({ id: 'show_guest_features' })}
+                                    </div>
+                                </div>
+                            `,
+                            placement: 'bottom',
+                            interactive: true,
+                            interactiveBorder: 10,
+                            trigger: 'click'
+                        });
+
+                        return btn;
+                    }}
+                </div>
+            </div>
+        `;
+    }
+
     function oracle_album(data) {
         if (data.offset != null) {
             log('detected no results', 'oracle');
 
             render(tracklist_panel, html`
-                <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
+                ${oracle_tracklist_header}
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">
                         ${tl(trans.nothing_matches_your_search)}
@@ -760,7 +800,7 @@ export function oracle_process() {
         const discs = media.filter((item) => item.tracks != null);
 
         render(tracklist_panel, html`
-            <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
+            ${oracle_tracklist_header}
             ${discs.map((disc) => render_tracklist(disc, discs.length, artist))}
         `);
 

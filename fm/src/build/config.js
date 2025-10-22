@@ -1326,5 +1326,13 @@ export let settings_store = {
         title: trans.branch.name,
         body: trans.branch.body,
         warn_if_empty: true
+    },
+    tracklist_source: {
+        default: 'oracle',
+        type: 'select',
+        title: trans.tracklist_source.name,
+        body: trans.tracklist_source.body,
+        new_release: true,
+        incompatible: { oracle_beta: false }
     }
 };

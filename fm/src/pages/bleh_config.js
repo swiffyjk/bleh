@@ -1105,230 +1105,73 @@ export async function render_setting_page(page_id) {
         let romanise_jp;
         let romanise_ko;
 
-        render(
-            page.structure.main,
-            html`
-                <section class="bleh--panel">
-                    <h4>${tl(trans.music_corrections)}</h4>
-                    <div class="inner-preview pad">
-                        <div class="lotus-preview">
-                            <div class="before">
-                                <h1>mY aNtI-aIrCrAfT fRiEnD</h1>
-                                <h2>jUlIe</h2>
-                            </div>
-                            <div class="after">
-                                <h1>my anti-aircraft friend</h1>
-                                <h2>julie</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${(corrections = setting({
-                id: 'corrections',
-                func: () => {
-                    romanise_jp.compat();
-                    romanise_ko.compat();
-                }
-            }))}
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version ||
-                !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl(trans.corrections_loaded)}</h5>
-                            </div>
-                            <div class="info">
-                                <p>
-                                    ${tl(trans.corrections_loaded_value)
-                    .replace('{c1}', total_artists)
-                    .replace('{c2}', total_album_tracks)}
-                                </p>
-                                <button
-                                    class="see-more"
-                                    onclick="_open_correction_modal()"
-                                >
-                                    ${tl(trans.view_all)}
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version ||
-                !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl(trans.current_version)}</h5>
-                            </div>
-                            <div class="info">
-                                <p>
-                                    ${artist_corrections.version ==
-                    album_track_corrections.version
-                    ? artist_corrections.version
-                    : `${artist_corrections.version}, ${album_track_corrections.version}`}
-                                </p>
-                                <button
-                                    class="see-more update-check"
-                                    onclick="_lotus_check()"
-                                >
-                                    ${tl(trans.update_check)}
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version ||
-                !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl(trans.help_contribute)}</h5>
-                            </div>
-                            <div class="info">
-                                <a
-                                    class="see-more"
-                                    href="https://github.com/katelyynn/lotus/issues/new/choose"
-                                    target="_blank"
-                                >
-                                    ${tl(trans.suggest_correction)}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'prefer_no_redirect' })}
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl(trans.legacy_redirects.name)}</h5>
-                                <p>${tl(trans.legacy_redirects.body)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <a
-                                    class="btn see-more"
-                                    href="${root}settings/website"
-                                    target="_blank"
-                                >
-                                    ${tl(trans.change_now)}
-                                </a>
-                            </div>
-                        </div>
-                        ${setting({ id: 'travis' })}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <h4>${tl(trans.smart_music_titles)}</h4>
-                    <div class="inner-preview pad flex">
-                        <section
-                            class="redesigned-header mockup redesigned-track-header no-top-margin"
-                        >
-                            <div class="avatar-side">
-                                <img
-                                    src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg"
-                                />
-                            </div>
-                            <div class="info-side">
-                                <div class="sub-text">${tl(trans.track)}</div>
-                                <div class="title-container">
-                                    <h1 class="bleh--name-with-features">
-                                        <div class="title">California Love</div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="ft."
-                                            data-bleh--tag-group="guests"
-                                        >
-                                            ft. Dr. Dre, Roger Troutman
-                                        </div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="- remix"
-                                            data-bleh--tag-group="mixes"
-                                        >
-                                            Remix
-                                        </div>
-                                    </h1>
-                                    <h1 class="bleh--name-without-features">
-                                        California Love (ft. Dr. Dre, Roger
-                                        Troutman) - Remix
-                                    </h1>
-                                </div>
-                                <h2>
-                                    <a class="header-new-crumb">2Pac</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Dr. Dre</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Roger Troutman</a
-                                    >
-                                </h2>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${(format_guest_features = setting({
-                    id: 'format_guest_features',
-                    func: () => {
-                        romanise_jp.compat();
-                        romanise_ko.compat();
-                    }
-                }))}
-                        ${setting({ id: 'show_guest_features' })}
-                        ${setting({ id: 'show_remaster_tags' })}
-                    </div>
-                    <div class="setting-group">
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>${tl(trans.romanise_titles)}</h5>
-                            </div>
-                            <div class="primary-selections">
-                                ${(romanise_jp = setting({
-                    id: 'romanise_jp',
-                    standalone: true
-                }))}
-                                ${(romanise_ko = setting({
-                    id: 'romanise_ko',
-                    standalone: true
-                }))}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-tip">${tl(trans.romanise_require)}</div>
-                    <div class="setting-group">
-                        ${setting({ id: 'glacier_library_graphs' })}
-                    </div>
-                </section>
-                ${ff('oracle')
-                    ? html.node`
+        let tracklist_source;
+
+        render(page.structure.main, html`
             <section class="bleh--panel">
-                <h4>${tl(trans.oracle_heading)}</h4>
+                <h4>${tl(trans.music_corrections)}</h4>
+                <div class="inner-preview pad">
+                    <div class="lotus-preview">
+                        <div class="before">
+                            <h1>mY aNtI-aIrCrAfT fRiEnD</h1>
+                            <h2>jUlIe</h2>
+                        </div>
+                        <div class="after">
+                            <h1>my anti-aircraft friend</h1>
+                            <h2>julie</h2>
+                        </div>
+                    </div>
+                </div>
                 <div class="setting-group">
-                    ${setting({ id: 'oracle_beta' })}
+                    ${(corrections = setting({
+            id: 'corrections',
+            func: () => {
+                romanise_jp.compat();
+                romanise_ko.compat();
+            }
+        }))}
                     <div
                         class="setting"
                         data-type="info"
-                        disabled=${!oracle_artists.version ||
-                        !oracle_albums.version ||
-                        !oracle_tracks.version
-                        }
+                        disabled=${!artist_corrections.version ||
+            !album_track_corrections.version}
+                    >
+                        <div class="heading">
+                            <h5>${tl(trans.corrections_loaded)}</h5>
+                        </div>
+                        <div class="info">
+                            <p>
+                                ${tl(trans.corrections_loaded_value)
+                .replace('{c1}', total_artists)
+                .replace('{c2}', total_album_tracks)}
+                            </p>
+                            <button
+                                class="see-more"
+                                onclick="_open_correction_modal()"
+                            >
+                                ${tl(trans.view_all)}
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!artist_corrections.version ||
+            !album_track_corrections.version}
                     >
                         <div class="heading">
                             <h5>${tl(trans.current_version)}</h5>
                         </div>
                         <div class="info">
                             <p>
-                                ${oracle_artists.version}, ${oracle_albums.version}, ${oracle_tracks.version}
+                                ${artist_corrections.version ==
+                album_track_corrections.version
+                ? artist_corrections.version
+                : `${artist_corrections.version}, ${album_track_corrections.version}`}
                             </p>
                             <button
                                 class="see-more update-check"
-                                onclick=${() => oracle_data(true)}
+                                onclick="_lotus_check()"
                             >
                                 ${tl(trans.update_check)}
                             </button>
@@ -1337,29 +1180,177 @@ export async function render_setting_page(page_id) {
                     <div
                         class="setting"
                         data-type="info"
-                        disabled=${!oracle_artists.version ||
-                        !oracle_albums.version ||
-                        !oracle_tracks.version
-                        }
+                        disabled=${!artist_corrections.version ||
+            !album_track_corrections.version}
                     >
                         <div class="heading">
-                            <h5>${tl(trans.manage_data)}</h5>
+                            <h5>${tl(trans.help_contribute)}</h5>
                         </div>
                         <div class="info">
-                            <button
+                            <a
                                 class="see-more"
-                                onclick=${() => manage_oracle_data()}
+                                href="https://github.com/katelyynn/lotus/issues/new/choose"
+                                target="_blank"
                             >
-                                ${tl(trans.view_all)}
-                            </button>
+                                ${tl(trans.suggest_correction)}
+                            </a>
                         </div>
                     </div>
                 </div>
+                <div class="setting-group">
+                    ${setting({ id: 'prefer_no_redirect' })}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.legacy_redirects.name)}</h5>
+                            <p>${tl(trans.legacy_redirects.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a
+                                class="btn see-more"
+                                href="${root}settings/website"
+                                target="_blank"
+                            >
+                                ${tl(trans.change_now)}
+                            </a>
+                        </div>
+                    </div>
+                    ${setting({ id: 'travis' })}
+                </div>
             </section>
-            `
-                    : ''}
-            `
-        );
+            <section class="bleh--panel">
+                <h4>${tl(trans.smart_music_titles)}</h4>
+                <div class="inner-preview pad flex">
+                    <section
+                        class="redesigned-header mockup redesigned-track-header no-top-margin"
+                    >
+                        <div class="avatar-side">
+                            <img
+                                src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg"
+                            />
+                        </div>
+                        <div class="info-side">
+                            <div class="sub-text">${tl(trans.track)}</div>
+                            <div class="title-container">
+                                <h1 class="bleh--name-with-features">
+                                    <div class="title">California Love</div>
+                                    <div
+                                        class="feat"
+                                        data-bleh--tag-type="ft."
+                                        data-bleh--tag-group="guests"
+                                    >
+                                        ft. Dr. Dre, Roger Troutman
+                                    </div>
+                                    <div
+                                        class="feat"
+                                        data-bleh--tag-type="- remix"
+                                        data-bleh--tag-group="mixes"
+                                    >
+                                        Remix
+                                    </div>
+                                </h1>
+                                <h1 class="bleh--name-without-features">
+                                    California Love (ft. Dr. Dre, Roger
+                                    Troutman) - Remix
+                                </h1>
+                            </div>
+                            <h2>
+                                <a class="header-new-crumb">2Pac</a
+                                ><span class="bleh--name-with-features"
+                                    >,
+                                </span>
+                                <a
+                                    class="header-new-crumb bleh--name-with-features"
+                                    >Dr. Dre</a
+                                ><span class="bleh--name-with-features"
+                                    >,
+                                </span>
+                                <a
+                                    class="header-new-crumb bleh--name-with-features"
+                                    >Roger Troutman</a
+                                >
+                            </h2>
+                        </div>
+                    </section>
+                </div>
+                <div class="setting-group">
+                    ${(format_guest_features = setting({
+                id: 'format_guest_features',
+                func: () => {
+                    romanise_jp.compat();
+                    romanise_ko.compat();
+                }
+            }))}
+                    ${setting({ id: 'show_guest_features' })}
+                    ${setting({ id: 'show_remaster_tags' })}
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.romanise_titles)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${(romanise_jp = setting({
+                id: 'romanise_jp',
+                standalone: true
+            }))}
+                            ${(romanise_ko = setting({
+                id: 'romanise_ko',
+                standalone: true
+            }))}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-tip">${tl(trans.romanise_require)}</div>
+                <div class="setting-group">
+                    ${setting({ id: 'glacier_library_graphs' })}
+                </div>
+            </section>
+            ${ff('oracle') ? html.node`
+                <section class="bleh--panel">
+                    <h4>${tl(trans.oracle_heading)}</h4>
+                    <div class="setting-group">
+                        ${setting({ id: 'oracle_beta', func: () => {
+                            tracklist_source.compat();
+                        } })}
+                        ${tracklist_source = setting({ id: 'tracklist_source', list: page.state.tracklist_sources })}
+                        <div
+                            class="setting"
+                            data-type="info"
+                            disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
+                        >
+                            <div class="heading">
+                                <h5>${tl(trans.current_version)}</h5>
+                            </div>
+                            <div class="info">
+                                <p>
+                                    ${oracle_artists.version}, ${oracle_albums.version}, ${oracle_tracks.version}
+                                </p>
+                                <button
+                                    class="see-more update-check"
+                                    onclick=${() => oracle_data(true)}
+                                >
+                                    ${tl(trans.update_check)}
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            class="setting"
+                            data-type="info"
+                            disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
+                        >
+                            <div class="heading">
+                                <h5>${tl(trans.manage_data)}</h5>
+                            </div>
+                            <div class="info">
+                                <button class="see-more" onclick=${() => manage_oracle_data()}>
+                                    ${tl(trans.view_all)}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            ` : ''}
+        `);
     } else if (page_id == 'seasonal') {
         register_skip_to([]);
 

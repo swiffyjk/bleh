@@ -15,13 +15,16 @@ export function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
 }
 
-export function select(values, initial = '', name = '', func = null) {
+export function select(values, initial = '', name = '', func = null, blend = false) {
     let select;
     let button;
 
-    if (values.length === 0) {
-        return html.node``;
-    }
+    if (!values || values.length == 0) return html.node`
+        <div class="alert alert-error no-margin">
+            ${tl(trans.value_failed_to_load).replace('{v}', 'Select')}
+            <br />Invalid values passed or length of zero
+        </div>
+    `;
 
     if (initial == '')
         initial = values.find((v) => 'value' in v)?.value ?? initial;
@@ -37,7 +40,7 @@ export function select(values, initial = '', name = '', func = null) {
                     `;
                 })}
             </select>
-            <button class="select-button" type="button" ref=${(el) => (button = el)} />
+            <button class="select-button ${blend ? 'link-select blend-v2-btn' : ''}" type="button" ref=${(el) => (button = el)} />
         </div>
     `;
 

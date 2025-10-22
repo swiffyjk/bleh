@@ -18487,13 +18487,6 @@
             max-height: 32px;
         }
 
-        & > .alert {
-            display: flex;
-            align-items: center;
-            min-height: 22px;
-            max-height: 32px;
-        }
-
         &[data-type="list"],
         &[data-type="options"] {
             gap: var(--item-list-gap);
