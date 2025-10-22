@@ -89,6 +89,8 @@ export function markdown(
             type: 'lang',
             regex: /\[banner=([^\]]+)\]/g,
             replace: (_, url) => {
+                delete cache.banner;
+
                 try {
                     const safe = new URL(url);
                     if (!['http:', 'https:'].includes(safe.protocol))
@@ -96,15 +98,12 @@ export function markdown(
 
                     const escaped = safe.href.replace(/"/g, '&quot;');
 
-                    const image = `<img src="${escaped}" alt="banner" loading="lazy">`;
-
-                    return DOMPurify.sanitize(image, {
-                        ALLOWED_TAGS: ['img'],
-                        ALLOWED_ATTR: ['src', 'alt', 'loading']
-                    });
+                    cache.banner = escaped;
                 } catch {
-                    return `<img alt="banner" loading="lazy">`;
+                    cache.banner = 'accent';
                 }
+
+                return '';
             }
         }
     ];
@@ -403,22 +402,6 @@ export function markdown(
         profile_cache =
             JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
         cache = profile_cache[page.name] || {};
-    }
-
-    if (allow_banners) {
-        const banner = body.querySelector('img[alt="banner"]');
-
-        if (banner) {
-            const src = banner.src;
-
-            if (src) {
-                cache.banner = src;
-            } else {
-                cache.banner = 'accent';
-            }
-        } else {
-            delete cache.banner;
-        }
     }
 
     // add lazy-loading to images

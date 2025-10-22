@@ -19508,14 +19508,6 @@
 
         img {
             max-width: 100%;
-
-            &[alt="banner"] {
-                display: none;
-
-                p:has(> .markdown-image > &) {
-                    display: none;
-                }
-            }
         }
 
         del {

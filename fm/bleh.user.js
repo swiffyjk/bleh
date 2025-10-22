@@ -47524,19 +47524,17 @@
         type: "lang",
         regex: /\[banner=([^\]]+)\]/g,
         replace: (_, url) => {
+          delete cache2.banner;
           try {
             const safe = new URL(url);
             if (!["http:", "https:"].includes(safe.protocol))
               return `<img alt="banner" loading="lazy">`;
             const escaped = safe.href.replace(/"/g, "&quot;");
-            const image = `<img src="${escaped}" alt="banner" loading="lazy">`;
-            return purify.sanitize(image, {
-              ALLOWED_TAGS: ["img"],
-              ALLOWED_ATTR: ["src", "alt", "loading"]
-            });
+            cache2.banner = escaped;
           } catch {
-            return `<img alt="banner" loading="lazy">`;
+            cache2.banner = "accent";
           }
+          return "";
         }
       }
     ];
@@ -47770,19 +47768,6 @@
     if ((allow_banners || allow_hue) && will_cache) {
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
       cache2 = profile_cache[page.name] || {};
-    }
-    if (allow_banners) {
-      const banner2 = body.querySelector('img[alt="banner"]');
-      if (banner2) {
-        const src = banner2.src;
-        if (src) {
-          cache2.banner = src;
-        } else {
-          cache2.banner = "accent";
-        }
-      } else {
-        delete cache2.banner;
-      }
     }
     if (body.nodeName != "#text") {
       body.querySelectorAll("img").forEach((image) => {
