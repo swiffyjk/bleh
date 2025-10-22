@@ -141,6 +141,7 @@ export function oracle_process() {
     let tracklist_panel;
     let tracklist_oracle;
     let tracklist_own;
+    let tracklist_own_loaded = false;
     let tracklist_lfm;
 
     let label_panel;
@@ -188,6 +189,8 @@ export function oracle_process() {
                         ${select(page.state.tracklist_sources, settings.tracklist_source, '', (val) => {
                             save_setting('tracklist_source', val);
                             tracklist_view_panel.setAttribute('data-view', val);
+
+                            if (!tracklist_own_loaded) source_own_tracklist();
                         }, true)}
                     </div>
                     <div class="view-buttons blend blend-v2">
@@ -226,7 +229,13 @@ export function oracle_process() {
                             </tbody>
                         </table>
                     </div>
-                    <div class="oracle-tracklist" ref=${el => tracklist_own = el} data-type="own" />
+                    <div class="oracle-tracklist" ref=${el => tracklist_own = el} data-type="own">
+                        <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
+                            <tbody>
+                                ${Array.from({length: 14}, track_placeholder)}
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="oracle-tracklist" ref=${el => tracklist_lfm = el} data-type="lfm" />
                 </div>
             </section>
@@ -239,6 +248,10 @@ export function oracle_process() {
             </div>
         `;
         info_panel.appendChild(label_panel);
+        
+        function source_own_tracklist() {
+            
+        }
     }
 
     function track_placeholder() {

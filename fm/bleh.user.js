@@ -32382,6 +32382,7 @@
     let tracklist_panel;
     let tracklist_oracle;
     let tracklist_own;
+    let tracklist_own_loaded = false;
     let tracklist_lfm;
     let label_panel;
     if (page.type == "track" && page.subpage == "overview") {
@@ -32418,6 +32419,8 @@
         `;
       info_panel.after(releases_panel);
     } else if (page.type == "album" && page.subpage == "overview") {
+      let source_own_tracklist = function() {
+      };
       let tracklist_view_panel;
       tracklist_panel = html.node`
             <section class="oracle-tracks">
@@ -32427,6 +32430,7 @@
                         ${select(page.state.tracklist_sources, settings.tracklist_source, "", (val) => {
         save_setting("tracklist_source", val);
         tracklist_view_panel.setAttribute("data-view", val);
+        if (!tracklist_own_loaded) source_own_tracklist();
       }, true)}
                     </div>
                     <div class="view-buttons blend blend-v2">
@@ -32463,7 +32467,13 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="oracle-tracklist" ref=${(el) => tracklist_own = el} data-type="own" />
+                    <div class="oracle-tracklist" ref=${(el) => tracklist_own = el} data-type="own">
+                        <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
+                            <tbody>
+                                ${Array.from({ length: 14 }, track_placeholder)}
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="oracle-tracklist" ref=${(el) => tracklist_lfm = el} data-type="lfm" />
                 </div>
             </section>
@@ -53969,7 +53979,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </button>
             </div>
         `);
-    } else {
+    } else if (!ff("oracle") || !settings.oracle_beta) {
       let top_overview = page.structure.main.querySelector(
         ".top-overview-panel"
       );
@@ -54001,20 +54011,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           album_url,
           `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`
         );
-        render(
-          tracklist,
-          html`
-                    ${top2}
-                    <div class="loading-data-container">
-                        <p class="loading-data-text failed">
-                            ${tl2(trans.failed_to_find_tracks)}
-                        </p>
-                        <a class="see-more" href="${album_as_track_url}"
-                            >${tl2(trans.open_album_as_track)}</a
-                        >
-                    </div>
-                `
-        );
+        render(tracklist, html`
+                ${top2}
+                <div class="loading-data-container">
+                    <p class="loading-data-text failed">
+                        ${tl2(trans.failed_to_find_tracks)}
+                    </p>
+                    <a class="see-more" href="${album_as_track_url}">
+                        ${tl2(trans.open_album_as_track)}
+                    </a>
+                </div>
+            `);
         return;
       }
       url = url.getAttribute("href");
@@ -54034,33 +54041,27 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             album_url,
             `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`
           );
-          render(
-            tracklist,
-            html`
-                            ${top2}
-                            <div class="loading-data-container">
-                                <p class="loading-data-text failed">
-                                    ${tl2(trans.failed_to_find_tracks)}
-                                </p>
-                                <a class="see-more" href=${album_as_track_url}
-                                    >${tl2(trans.open_album_as_track)}</a
-                                >
-                            </div>
-                        `
-          );
+          render(tracklist, html`
+                        ${top2}
+                        <div class="loading-data-container">
+                            <p class="loading-data-text failed">
+                                ${tl2(trans.failed_to_find_tracks)}
+                            </p>
+                            <a class="see-more" href=${album_as_track_url}>
+                                ${tl2(trans.open_album_as_track)}
+                            </a>
+                        </div>
+                    `);
           return;
         }
         inner_tracklist.classList.remove("chartlist--with-image");
-        render(
-          tracklist,
-          html`
-                        ${top2}
-                        <div class="alert alert-info">
-                            ${tl2(trans.sourced_from_own_plays)}
-                        </div>
-                        ${inner_tracklist}
-                    `
-        );
+        render(tracklist, html`
+                    ${top2}
+                    <div class="alert alert-info">
+                        ${tl2(trans.sourced_from_own_plays)}
+                    </div>
+                    ${inner_tracklist}
+                `);
       });
     }
     tippy_esm_default(settings_btn, {
