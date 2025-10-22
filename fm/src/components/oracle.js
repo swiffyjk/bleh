@@ -525,8 +525,9 @@ export function oracle_process() {
                 (artist) => artist.name == 'Various Artists'
             );
             const official = release.status == 'Official';
+            const fake = release.title?.toLowerCase().includes('(spotify)');
 
-            return !various && official;
+            return !various && official && !fake;
         });
 
         filtered.sort((a, b) => {

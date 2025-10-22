@@ -381,10 +381,7 @@ export function patch_titles(search = page.structure.main) {
                         'log'
                     );
                     // replaces with corrected artist if applicable
-                    render(
-                        song_artist_element,
-                        smart_artists(formatted_title[2], formatted_title[3])
-                    );
+                    render(song_artist_element, smart_artists(formatted_title[2], formatted_title[3]));
                 }
 
                 if (track.getAttribute('data-disambig') == 'explicit') {

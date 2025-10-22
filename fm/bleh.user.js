@@ -32681,7 +32681,8 @@
           (artist2) => artist2.name == "Various Artists"
         );
         const official = release.status == "Official";
-        return !various && official;
+        const fake = release.title?.toLowerCase().includes("(spotify)");
+        return !various && official && !fake;
       });
       filtered.sort((a, b) => {
         const parse_date = (release) => {
@@ -35376,10 +35377,7 @@
               "tracks",
               "log"
             );
-            render(
-              song_artist_element,
-              smart_artists(formatted_title[2], formatted_title[3])
-            );
+            render(song_artist_element, smart_artists(formatted_title[2], formatted_title[3]));
           }
           if (track.getAttribute("data-disambig") == "explicit") {
             song_artist_element.insertBefore(
@@ -51777,27 +51775,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections) {
       original_artist = correct_artist(artist_corrections[original_artist]);
     }
-    if (matches.length == 0) {
-      const result2 = [
-        formatted_title,
-        [],
-        original_artist,
-        [],
-        original_title_corrected
-      ];
-      log("finalised", "lotus", "log", { result: result2 });
-      return result2;
+    let cleaned_title = formatted_title;
+    let extras = [];
+    if (matches.length > 0) {
+      cleaned_title = formatted_title.slice(0, matches[0].idx).trim().replace(/[\(\[\{]+$/, "").trim();
+      extras = matches.map((match3, i) => {
+        const start2 = match3.idx;
+        const end2 = i + 1 < matches.length ? matches[i + 1].idx : formatted_title.length;
+        const tag_text = formatted_title.slice(start2, end2).replace(/^[\(\[\{\)\]\}\-\:\s]+|[\(\[\{\)\]\}\-\:\s]+$/g, "").trim();
+        return {
+          group: match3.group,
+          text: tag_text
+        };
+      });
     }
-    const cleaned_title = formatted_title.slice(0, matches[0].idx).trim().replace(/[\(\[\{]+$/, "").trim();
-    const extras = matches.map((match3, i) => {
-      const start2 = match3.idx;
-      const end2 = i + 1 < matches.length ? matches[i + 1].idx : formatted_title.length;
-      const tag_text = formatted_title.slice(start2, end2).replace(/^[\(\[\{\)\]\}\-\:\s]+|[\(\[\{\)\]\}\-\:\s]+$/g, "").trim();
-      return {
-        group: match3.group,
-        text: tag_text
-      };
-    });
     let song_guests = [];
     if (inherit_guests) {
       song_guests = inherit_guests.split(";").map((artist) => desanitise(artist, " "));
@@ -51836,14 +51827,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
   function smart_artists(song_artist, song_guests) {
     return html`
-        <a href="${root}music/${redirect()}${sanitise(song_artist)}"
-            >${romanise(song_artist)}</a
-        >
+        <a href="${root}music/${redirect()}${sanitise(song_artist)}">${romanise(song_artist)}</a>
         ${song_guests.map(
       (guest) => html.node`
-                ,<a href="${root}music/${redirect()}${sanitise(guest)}"
-                    >${romanise(guest)}</a
-                >
+                ,<a href="${root}music/${redirect()}${sanitise(guest)}">${romanise(guest)}</a>
             `
     )}
     `;
