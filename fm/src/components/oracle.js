@@ -815,14 +815,12 @@ export function oracle_process() {
 
                             for (let i = 1; i < artists.length; i++) {
                                 const artist = artists[i];
-                                const joinphrase = (
-                                    artists[i - 1].joinphrase || ''
-                                )
+                                const joinphrase = (artists[i - 1].joinphrase || '')
                                     .trim()
                                     .toLowerCase();
 
                                 if (!found_feature) {
-                                    if (['feat', 'with'].includes(joinphrase)) {
+                                    if (['feat', 'with'].some(phrase => joinphrase.includes(phrase))) {
                                         found_feature = true;
                                         first_joinphrase = joinphrase;
 
