@@ -29258,7 +29258,7 @@
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans.your_avatar)}">
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
-                <h1>${tl2(trans.support_future_development)}</h1>
+                <h1 class="colourful">${tl2(trans.support_future_development)}</h1>
                 <p>${html.node([
         tl2(trans.why_sponsor).replace(
           "katelyn",
@@ -52674,7 +52674,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div class="loader-bar">
                     <div class="loader-bar-fill" />
                 </div>
-                <div class="bleh-icon" />
             </div>
         `;
       document.body.appendChild(loader);

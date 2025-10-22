@@ -125,7 +125,7 @@ export function sponsor(replace = false) {
                     <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
-                <h1>${tl(trans.support_future_development)}</h1>
+                <h1 class="colourful">${tl(trans.support_future_development)}</h1>
                 <p>${html.node([
                     tl(trans.why_sponsor).replace(
                         'katelyn',

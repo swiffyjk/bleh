@@ -192,7 +192,6 @@ export function append_nav() {
                 <div class="loader-bar">
                     <div class="loader-bar-fill" />
                 </div>
-                <div class="bleh-icon" />
             </div>
         `;
         document.body.appendChild(loader);
