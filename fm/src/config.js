@@ -126,9 +126,8 @@ export function toggle_theme() {
     else if (current_theme == 'ink') current_theme = 'dark';
 
     // save value
+    save_setting('theme_schedule', false);
     save_setting('theme', current_theme);
-
-    chart_reflow();
 }
 
 // settings-page specific

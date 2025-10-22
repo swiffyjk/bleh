@@ -957,19 +957,10 @@ export function append_nav() {
                                                     if (
                                                         theme.id != 'adaptive'
                                                     ) {
-                                                        save_setting(
-                                                            'theme_schedule',
-                                                            false
-                                                        );
-                                                        save_setting(
-                                                            'theme',
-                                                            theme.id
-                                                        );
+                                                        save_setting('theme_schedule', false);
+                                                        save_setting('theme', theme.id);
                                                     } else {
-                                                        save_setting(
-                                                            'theme_schedule',
-                                                            true
-                                                        );
+                                                        save_setting('theme_schedule', true);
                                                         match();
                                                     }
 

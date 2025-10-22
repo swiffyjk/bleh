@@ -39931,8 +39931,8 @@
       current_theme = "light";
     else if (current_theme == "light") current_theme = "ink";
     else if (current_theme == "ink") current_theme = "dark";
+    save_setting("theme_schedule", false);
     save_setting("theme", current_theme);
-    chart_reflow();
   }
   function reset_all() {
     for (let item in settings_base) reset_item(item);
@@ -53297,19 +53297,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
               const btn = html.node`
                                                 <button class="dropdown-menu-clickable-item theme-item-in-menu" aria-selected=${!settings.theme_schedule ? settings.theme == theme.id : theme.id == "adaptive"} data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => {
                 if (theme.id != "adaptive") {
-                  save_setting(
-                    "theme_schedule",
-                    false
-                  );
-                  save_setting(
-                    "theme",
-                    theme.id
-                  );
+                  save_setting("theme_schedule", false);
+                  save_setting("theme", theme.id);
                 } else {
-                  save_setting(
-                    "theme_schedule",
-                    true
-                  );
+                  save_setting("theme_schedule", true);
                   match2();
                 }
                 buttons.forEach(
