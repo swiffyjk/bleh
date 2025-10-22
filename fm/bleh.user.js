@@ -30642,7 +30642,7 @@
         }
       }
     });
-    set_select(initial);
+    set_select(initial, false);
     container.set = (val) => {
       set_select(val);
     };
@@ -30650,7 +30650,7 @@
       return select2.value;
     };
     return container;
-    function set_select(selected) {
+    function set_select(selected, bubble = true) {
       values.some((value) => {
         if (value.value == selected) {
           render(button, html`${value.text}`);
@@ -30663,7 +30663,7 @@
           `data-bleh--inbuilt-id_${name}`,
           selected
         );
-      if (func) func(selected);
+      if (func && bubble) func(selected);
       menu.setContent(html.node`
         ${values.map((value) => {
         if (value.value == null) {
@@ -32380,6 +32380,9 @@
     const header = page.structure.container.querySelector(".redesigned-header");
     let releases_panel;
     let tracklist_panel;
+    let tracklist_oracle;
+    let tracklist_own;
+    let tracklist_lfm;
     let label_panel;
     if (page.type == "track" && page.subpage == "overview") {
       releases_panel = html.node`
@@ -32415,14 +32418,54 @@
         `;
       info_panel.after(releases_panel);
     } else if (page.type == "album" && page.subpage == "overview") {
+      let tracklist_view_panel;
       tracklist_panel = html.node`
             <section class="oracle-tracks">
-                ${oracle_tracklist_header}
-                <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
-                    <tbody>
-                        ${Array.from({ length: 14 }, track_placeholder)}
-                    </tbody>
-                </table>
+                <div class="top-container">
+                    <h2>${tl2(trans.tracklist)}<span class="new-badge beta">${tl2(trans.beta)}</span></h2>
+                    <div class="accompany view-buttons blend blend-v2">
+                        ${select(page.state.tracklist_sources, settings.tracklist_source, "", (val) => {
+        save_setting("tracklist_source", val);
+        tracklist_view_panel.setAttribute("data-view", val);
+      }, true)}
+                    </div>
+                    <div class="view-buttons blend blend-v2">
+                        ${() => {
+        const btn = html.node`
+                                <button class="left-icon blend-v2-btn" data-type="settings">
+                                    ${tl2(trans.settings)}
+                                </button>
+                            `;
+        tippy_esm_default(btn, {
+          theme: "window",
+          content: html.node`
+                                    <div class="dialog-settings">
+                                        <div class="setting-group blend">
+                                            ${setting({ id: "format_guest_features" })}
+                                            ${setting({ id: "show_guest_features" })}
+                                        </div>
+                                    </div>
+                                `,
+          placement: "bottom",
+          interactive: true,
+          interactiveBorder: 10,
+          trigger: "click"
+        });
+        return btn;
+      }}
+                    </div>
+                </div>
+                <div class="oracle-tracklist-view" data-view=${settings.tracklist_source} ref=${(el) => tracklist_view_panel = el}>
+                    <div class="oracle-tracklist" ref=${(el) => tracklist_oracle = el} data-type="oracle">
+                        <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
+                            <tbody>
+                                ${Array.from({ length: 14 }, track_placeholder)}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="oracle-tracklist" ref=${(el) => tracklist_own = el} data-type="own" />
+                    <div class="oracle-tracklist" ref=${(el) => tracklist_lfm = el} data-type="lfm" />
+                </div>
             </section>
         `;
       info_panel.after(tracklist_panel);
@@ -32446,7 +32489,14 @@
     const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
     if (albums_and_lyrics_row) albums_and_lyrics_row.classList.add("oracle-hidden");
     const old_tracklist = page.structure.main.querySelector("#tracklist");
-    if (old_tracklist) old_tracklist.classList.add("oracle-hidden");
+    if (old_tracklist) {
+      const buffer = old_tracklist.querySelector(".buffer-standard");
+      if (buffer) {
+        buffer.classList.remove("buffer-standard");
+        tracklist_lfm.appendChild(buffer);
+      }
+      old_tracklist.remove();
+    }
     function oracle_aliases(artist2, desired) {
       log("alias request", "oracle", "log", {
         artist: artist2,
@@ -32793,46 +32843,10 @@
         }
       });
     }
-    function oracle_tracklist_header() {
-      return html.node`
-            <div class="top-container">
-                <h2>${tl2(trans.tracklist)}<span class="new-badge beta">${tl2(trans.beta)}</span></h2>
-                <div class="accompany view-buttons blend blend-v2">
-                    ${select(page.state.tracklist_sources, settings.tracklist_source, "", null, true)}
-                </div>
-                <div class="view-buttons blend blend-v2">
-                    ${() => {
-        const btn = html.node`
-                            <button class="left-icon blend-v2-btn" data-type="settings">
-                                ${tl2(trans.settings)}
-                            </button>
-                        `;
-        tippy_esm_default(btn, {
-          theme: "window",
-          content: html.node`
-                                <div class="dialog-settings">
-                                    <div class="setting-group blend">
-                                        ${setting({ id: "format_guest_features" })}
-                                        ${setting({ id: "show_guest_features" })}
-                                    </div>
-                                </div>
-                            `,
-          placement: "bottom",
-          interactive: true,
-          interactiveBorder: 10,
-          trigger: "click"
-        });
-        return btn;
-      }}
-                </div>
-            </div>
-        `;
-    }
     function oracle_album(data2) {
       if (data2.offset != null) {
         log("detected no results", "oracle");
-        render(tracklist_panel, html`
-                ${oracle_tracklist_header}
+        render(tracklist_oracle, html`
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">
                         ${tl2(trans.nothing_matches_your_search)}
@@ -32879,8 +32893,7 @@
       log("entry", "oracle", "info", { oracle_entry });
       const media = data2.media;
       const discs = media.filter((item2) => item2.tracks != null);
-      render(tracklist_panel, html`
-            ${oracle_tracklist_header}
+      render(tracklist_oracle, html`
             ${discs.map((disc) => render_tracklist(disc, discs.length, artist2))}
         `);
       function render_tracklist(disc, length, retrieved_artist) {

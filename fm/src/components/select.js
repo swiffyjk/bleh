@@ -67,7 +67,7 @@ export function select(values, initial = '', name = '', func = null, blend = fal
         }
     });
 
-    set_select(initial);
+    set_select(initial, false);
 
     container.set = (val) => {
         set_select(val);
@@ -79,7 +79,7 @@ export function select(values, initial = '', name = '', func = null, blend = fal
 
     return container;
 
-    function set_select(selected) {
+    function set_select(selected, bubble = true) {
         values.some((value) => {
             if (value.value == selected) {
                 render(button, html`${value.text}`);
@@ -95,7 +95,7 @@ export function select(values, initial = '', name = '', func = null, blend = fal
                 selected
             );
 
-        if (func) func(selected);
+        if (func && bubble) func(selected);
 
         menu.setContent(html.node`
         ${values.map((value) => {
