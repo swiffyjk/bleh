@@ -40823,23 +40823,24 @@
   }
   function bleh_glacier_insights_generate(type, item) {
     if (item.highest.value == 0) return;
-    log(
-      `requesting insights generator for ${type}`,
-      "glacier library",
-      "info",
-      item
-    );
     let new_run = false;
-    let scrobble_insights_panel = page.structure.side.querySelector(
-      `.scrobble-insights-panel[data-type="${type}"]`
-    );
+    let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
     if (!scrobble_insights_panel) {
       scrobble_insights_panel = html.node`
             <section class="scrobble-insights-panel" data-type=${type} />
         `;
       new_run = true;
     }
-    render(scrobble_insights_panel, html` <h2>${tl2(trans[`${type}s`])}</h2> `);
+    log(
+      `requesting insights generator for ${type}`,
+      "glacier library",
+      "info",
+      { item, new_run }
+    );
+    render(scrobble_insights_panel, html``);
+    render(scrobble_insights_panel, html`
+        <h2>${tl2(trans[`${type}s`])}</h2>
+    `);
     let scrobble_canvas_container = document.createElement("div");
     scrobble_canvas_container.classList.add(
       "scrobble-insights-canvas-container"
