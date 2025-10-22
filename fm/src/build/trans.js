@@ -1139,6 +1139,9 @@ export const trans = {
         pt: 'Lançamentos',
         sv: 'Skivsläpp'
     },
+    no_releases_found: {
+        en: 'No releases found here'
+    },
     bookmarks: {
         en: 'Bookmarks',
         de: 'Lesezeichen',

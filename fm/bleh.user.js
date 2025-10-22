@@ -32306,7 +32306,7 @@
     if (ff("oracle_album_reordering") && page.type == "track") {
     }
     if (!ff("oracle_connect") || page.type == "artist") return;
-    let tries = 2;
+    let tries = 3;
     const item = page.name.toLowerCase();
     const artist = page.sister.toLowerCase();
     let artist_data;
@@ -32503,7 +32503,7 @@
           cache2[artist] = artist_data;
           if (Object.keys(cache2).length > 100) delete cache2[0];
           set_storage("oracle_artist_ids", JSON.stringify(cache2));
-          tries = 2;
+          tries = 3;
           oracle_connect();
         },
         onerror: function(err) {
@@ -32527,7 +32527,7 @@
       if (page.type == "album") {
         const local = oracle_albums[artist]?.[item] || oracle_cache[artist]?.[item]?.album;
         if (local?.fetch || local?.id) {
-          tries = 2;
+          tries = 3;
           if (local.id) {
             log(
               "skipping album search for id (oracle database)",
@@ -32607,7 +32607,7 @@
       if (page.type == "track") {
         oracle_track_releases_process(data2);
       } else if (page.type == "album") {
-        tries = 2;
+        tries = 3;
         const release = oracle_pick_release(data2);
         if (!release) {
           log("no data to use, ending", "oracle", "info", {
@@ -32623,7 +32623,7 @@
         });
         setTimeout(() => {
           oracle_album_fetch(release);
-        }, 400);
+        }, 500);
       }
     }
     function oracle_pick_recording(data2) {
@@ -32790,6 +32790,14 @@
     function oracle_album(data2) {
       if (data2.offset != null) {
         log("detected no results", "oracle");
+        render(tracklist_panel, html`
+                <h3 class="text-18">${tl2(trans.tracklist)}<span class="new-badge beta">${tl2(trans.beta)}</span></h3>
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">
+                        ${tl2(trans.nothing_matches_your_search)}
+                    </div>
+                </div>
+            `);
         return;
       }
       let labels = data2["label-info"];
@@ -32950,7 +32958,7 @@
                         </h3>
                         <div class="loading-data-container">
                             <div class="loading-data-text failed">
-                                No releases found
+                                ${tl2(trans.no_releases_found)}
                             </div>
                         </div>
                     `
@@ -33103,10 +33111,7 @@
                             >
                         </h3>
                         <div class="source-albums-container">
-                            <div
-                                class="source-albums"
-                                ref=${(el) => source_albums = el}
-                            >
+                            <div class="source-albums">
                                 ${releases.map((release, index3) => {
               if (index3 > 1) return html.node``;
               log("release", "oracle", "log", {
@@ -33222,34 +33227,6 @@
                     `
           );
           oracle_save_cache("track", false);
-          if (releases.length > 2 && allow_overflow) {
-            if (settings.simulate_scroll) {
-              source_albums.addEventListener("wheel", (e) => {
-                console.info("scroll", e, e.deltaY);
-                e.preventDefault();
-                if (e.deltaY > 0) {
-                  source_albums.scrollBy({
-                    top: 0,
-                    left: 400,
-                    behavior: "smooth"
-                  });
-                } else {
-                  source_albums.scrollBy({
-                    top: 0,
-                    left: -400,
-                    behavior: "smooth"
-                  });
-                }
-              });
-            } else {
-              source_albums.classList.add("no-scroll-simulation");
-            }
-          } else {
-            source_albums.addEventListener("wheel", (e) => {
-              e.preventDefault();
-              e.scrollTop = 0;
-            });
-          }
         }
         const artist_elem = header.querySelector("h2");
         if (recording.disambiguation == "explicit") {
@@ -33262,21 +33239,18 @@
         }
       } else {
         if (releases_panel) {
-          render(
-            releases_panel,
-            html`
-                        <h3 class="text-18">
-                            ${tl2(trans.releases)}<span class="new-badge beta"
-                                >${tl2(trans.beta)}</span
-                            >
-                        </h3>
-                        <div class="loading-data-container">
-                            <div class="loading-data-text failed">
-                                No releases found
-                            </div>
+          render(releases_panel, html`
+                    <h3 class="text-18">
+                        ${tl2(trans.releases)}<span class="new-badge beta"
+                            >${tl2(trans.beta)}</span
+                        >
+                    </h3>
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">
+                            ${tl2(trans.no_releases_found)}
                         </div>
-                    `
-          );
+                    </div>
+                `);
         }
       }
     }
@@ -58598,6 +58572,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Ver\xF6ffentlichungen",
       pt: "Lan\xE7amentos",
       sv: "Skivsl\xE4pp"
+    },
+    no_releases_found: {
+      en: "No releases found here"
     },
     bookmarks: {
       en: "Bookmarks",

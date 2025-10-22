@@ -46,7 +46,7 @@ export function oracle_process() {
 
     if (!ff('oracle_connect') || page.type == 'artist') return;
 
-    let tries = 2;
+    let tries = 3;
     const item = page.name.toLowerCase();
     const artist = page.sister.toLowerCase();
     let artist_data;
@@ -285,7 +285,7 @@ export function oracle_process() {
 
                 set_storage('oracle_artist_ids', JSON.stringify(cache));
 
-                tries = 2;
+                tries = 3;
                 oracle_connect();
             },
             onerror: function (err) {
@@ -318,7 +318,7 @@ export function oracle_process() {
                 oracle_cache[artist]?.[item]?.album;
 
             if (local?.fetch || local?.id) {
-                tries = 2;
+                tries = 3;
 
                 if (local.id) {
                     log(
@@ -409,7 +409,7 @@ export function oracle_process() {
         if (page.type == 'track') {
             oracle_track_releases_process(data);
         } else if (page.type == 'album') {
-            tries = 2;
+            tries = 3;
 
             const release = oracle_pick_release(data);
 
@@ -433,7 +433,7 @@ export function oracle_process() {
 
             setTimeout(() => {
                 oracle_album_fetch(release);
-            }, 400);
+            }, 500);
         }
     }
 
@@ -689,6 +689,16 @@ export function oracle_process() {
     function oracle_album(data) {
         if (data.offset != null) {
             log('detected no results', 'oracle');
+
+            render(tracklist_panel, html`
+                <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">
+                        ${tl(trans.nothing_matches_your_search)}
+                    </div>
+                </div>
+            `);
+
             return;
         }
 
@@ -913,7 +923,7 @@ export function oracle_process() {
                         </h3>
                         <div class="loading-data-container">
                             <div class="loading-data-text failed">
-                                No releases found
+                                ${tl(trans.no_releases_found)}
                             </div>
                         </div>
                     `
@@ -1139,10 +1149,7 @@ export function oracle_process() {
                             >
                         </h3>
                         <div class="source-albums-container">
-                            <div
-                                class="source-albums"
-                                ref=${(el) => (source_albums = el)}
-                            >
+                            <div class="source-albums">
                                 ${releases.map((release, index) => {
                                     if (index > 1) return html.node``;
 
@@ -1287,37 +1294,6 @@ export function oracle_process() {
                     `
                 );
                 oracle_save_cache('track', false);
-
-                if (releases.length > 2 && allow_overflow) {
-                    if (settings.simulate_scroll) {
-                        source_albums.addEventListener('wheel', (e) => {
-                            console.info('scroll', e, e.deltaY);
-                            e.preventDefault();
-
-                            if (e.deltaY > 0) {
-                                source_albums.scrollBy({
-                                    top: 0,
-                                    left: +400,
-                                    behavior: 'smooth'
-                                });
-                            } else {
-                                source_albums.scrollBy({
-                                    top: 0,
-                                    left: -400,
-                                    behavior: 'smooth'
-                                });
-                            }
-                        });
-                    } else {
-                        source_albums.classList.add('no-scroll-simulation');
-                    }
-                } else {
-                    source_albums.addEventListener('wheel', (e) => {
-                        e.preventDefault();
-
-                        e.scrollTop = 0;
-                    });
-                }
             }
 
             const artist_elem = header.querySelector('h2');
@@ -1331,21 +1307,18 @@ export function oracle_process() {
             }
         } else {
             if (releases_panel) {
-                render(
-                    releases_panel,
-                    html`
-                        <h3 class="text-18">
-                            ${tl(trans.releases)}<span class="new-badge beta"
-                                >${tl(trans.beta)}</span
-                            >
-                        </h3>
-                        <div class="loading-data-container">
-                            <div class="loading-data-text failed">
-                                No releases found
-                            </div>
+                render(releases_panel, html`
+                    <h3 class="text-18">
+                        ${tl(trans.releases)}<span class="new-badge beta"
+                            >${tl(trans.beta)}</span
+                        >
+                    </h3>
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">
+                            ${tl(trans.no_releases_found)}
                         </div>
-                    `
-                );
+                    </div>
+                `);
             }
         }
     }
