@@ -412,10 +412,12 @@ export async function render_setting_page(page_id) {
                                 <h5>${tl(trans.current_version)}</h5>
                             </div>
                             <div class="info">
-                                <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true)}>
+                                <p>${sponsor_list.latest}</p>
+                                <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true, () => {
+                                    render_setting_page('general');
+                                })}>
                                     ${tl(trans.update_check)}
                                 </button>
-                                <p>${sponsor_list.latest}</p>
                             </div>
                         </div>
                     </div>

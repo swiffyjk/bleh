@@ -60,6 +60,8 @@ export function oracle_process() {
 
     const now = Date.now();
 
+    const mb_delay = 1600;
+
     for (const artist in oracle_cache) {
         for (const item in oracle_cache[artist]) {
             const entry = oracle_cache[artist][item];
@@ -246,7 +248,7 @@ export function oracle_process() {
         if (tries < 1) return;
         tries--;
 
-        const url = `http://musicbrainz.org/ws/2/artist?query=${sanitise(artist, ' ')}`;
+        const url = `https://musicbrainz.org/ws/2/artist?query=${sanitise(artist, ' ')}`;
 
         log(
             `using url ${encodeURI(url)} with ${tries} tries available`,
@@ -293,7 +295,7 @@ export function oracle_process() {
 
                 setTimeout(() => {
                     oracle_get_artist();
-                }, 1000);
+                }, mb_delay);
             }
         });
     }
@@ -310,7 +312,7 @@ export function oracle_process() {
         if (page.type == 'track')
             url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND ${artist_template} AND status:Official`;
         else if (page.type == 'album')
-            url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND ${artist_template}`;
+            url = `https://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND ${artist_template}`;
 
         if (page.type == 'album') {
             const local =
@@ -400,7 +402,7 @@ export function oracle_process() {
 
                 setTimeout(() => {
                     oracle_connect();
-                }, 1000);
+                }, mb_delay);
             }
         });
     }
@@ -433,7 +435,7 @@ export function oracle_process() {
 
             setTimeout(() => {
                 oracle_album_fetch(release);
-            }, 500);
+            }, mb_delay);
         }
     }
 
@@ -627,7 +629,7 @@ export function oracle_process() {
         if (tries < 1) return;
         tries--;
 
-        const url = `http://musicbrainz.org/ws/2/release/${data.id}?inc=recordings+labels+artist-credits`;
+        const url = `https://musicbrainz.org/ws/2/release/${data.id}?inc=recordings+labels+artist-credits`;
 
         const local = oracle_cache[artist]?.[item];
         if (local && local.album?.fetch) {

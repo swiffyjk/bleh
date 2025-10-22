@@ -29177,14 +29177,14 @@
   }
 
   // src/sponsor.js
-  function sponsors(force = false) {
+  function sponsors(force = false, func = null) {
     if (!ff("sponsor")) return;
     let sponsor_data = localStorage.getItem("kat_sponsors");
     let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
     let current_time = /* @__PURE__ */ new Date();
     if (!sponsor_data) {
       log("not cached, fetching", "sponsor");
-      sponsor_request(true);
+      sponsor_request(true, func);
     } else {
       for (var member in sponsor_list) delete sponsor_list[member];
       Object.assign(sponsor_list, JSON.parse(sponsor_data));
@@ -29195,13 +29195,13 @@
         );
       }
       if (sponsor_expire < current_time && !force) {
-        sponsor_request();
+        sponsor_request(false, func);
       } else if (force) {
-        sponsor_request(true);
+        sponsor_request(true, func);
       }
     }
   }
-  function sponsor_request(notify2 = false) {
+  function sponsor_request(notify2 = false, func = null) {
     let button = document.body.querySelector('[onclick="_sponsor_check()"]');
     if (button) button.setAttribute("disabled", "");
     let xhr = new XMLHttpRequest();
@@ -29233,6 +29233,7 @@
               )
             });
           set_storage("kat_sponsors", this.response);
+          if (func) func();
         }
         api_expire.setHours(api_expire.getHours() + 4);
         log(`list cached until ${api_expire}`, "sponsor");
@@ -32314,6 +32315,7 @@
     const info_panel = page.structure.main.firstElementChild;
     let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
     const now2 = Date.now();
+    const mb_delay = 1600;
     for (const artist2 in oracle_cache) {
       for (const item2 in oracle_cache[artist2]) {
         const entry = oracle_cache[artist2][item2];
@@ -32472,7 +32474,7 @@
     function oracle_get_artist() {
       if (tries < 1) return;
       tries--;
-      const url = `http://musicbrainz.org/ws/2/artist?query=${sanitise(artist, " ")}`;
+      const url = `https://musicbrainz.org/ws/2/artist?query=${sanitise(artist, " ")}`;
       log(
         `using url ${encodeURI(url)} with ${tries} tries available`,
         "oracle"
@@ -32510,7 +32512,7 @@
           console.error("oracle", err);
           setTimeout(() => {
             oracle_get_artist();
-          }, 1e3);
+          }, mb_delay);
         }
       });
     }
@@ -32523,7 +32525,7 @@
       if (page.type == "track")
         url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND ${artist_template} AND status:Official`;
       else if (page.type == "album")
-        url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), " ")}" AND ${artist_template}`;
+        url = `https://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), " ")}" AND ${artist_template}`;
       if (page.type == "album") {
         const local = oracle_albums[artist]?.[item] || oracle_cache[artist]?.[item]?.album;
         if (local?.fetch || local?.id) {
@@ -32599,7 +32601,7 @@
           console.error("oracle", err);
           setTimeout(() => {
             oracle_connect();
-          }, 1e3);
+          }, mb_delay);
         }
       });
     }
@@ -32623,7 +32625,7 @@
         });
         setTimeout(() => {
           oracle_album_fetch(release);
-        }, 500);
+        }, mb_delay);
       }
     }
     function oracle_pick_recording(data2) {
@@ -32740,7 +32742,7 @@
     function oracle_album_fetch(data2) {
       if (tries < 1) return;
       tries--;
-      const url = `http://musicbrainz.org/ws/2/release/${data2.id}?inc=recordings+labels+artist-credits`;
+      const url = `https://musicbrainz.org/ws/2/release/${data2.id}?inc=recordings+labels+artist-credits`;
       const local = oracle_cache[artist]?.[item];
       if (local && local.album?.fetch) {
         log("skipping album fetch (local cache)", "oracle", "info", {
@@ -49031,10 +49033,12 @@
                                 <h5>${tl2(trans.current_version)}</h5>
                             </div>
                             <div class="info">
-                                <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true)}>
+                                <p>${sponsor_list.latest}</p>
+                                <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true, () => {
+          render_setting_page("general");
+        })}>
                                     ${tl2(trans.update_check)}
                                 </button>
-                                <p>${sponsor_list.latest}</p>
                             </div>
                         </div>
                     </div>
