@@ -668,10 +668,10 @@
 
             --h3:
                 var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%),
-                calc(clamp(min(0.85), var(--lit), max(1.1)) * 84%);
+                calc(clamp(min(0.85), var(--lit), max(1.1)) * 86%);
             --h3-s: var(--hue), 50%, 70%;
             --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
-            --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 84%);
+            --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 86%);
             --h4:
                 var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%),
                 calc(clamp(min(0.7), var(--lit), max(1.1)) * 73%);
