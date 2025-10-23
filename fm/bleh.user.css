@@ -4257,7 +4257,7 @@
     .navlist-more,
     .secondary-nav-item-link {
         /* left padding for icon, otherwise just 12px 16px */
-        --padding: 12px var(--button-sides) 12px
+        --padding: 14px var(--button-sides) 14px
             calc(var(--button-sides-icon) + var(--icon-size) + var(--icon-gap)) !important;
         --bg: transparent !important;
         --bg-hov: transparent !important;
