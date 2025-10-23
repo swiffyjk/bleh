@@ -38,7 +38,7 @@ export let lang_info = {
     sv: {
         name: 'Svenska',
         by: ['Lrexie'],
-        last_updated: '2025-09-30'
+        last_updated: '2025-10-23'
     }
 };
 
@@ -127,7 +127,8 @@ export const trans = {
         },
         'user-status-alum': {
             name: {
-                en: 'Alum'
+                en: 'Alum',
+                sv: 'Alumn'
             },
             reason: {
                 en: 'Former member of Last.fm',
@@ -206,19 +207,23 @@ export const trans = {
         plaster: {
             name: {
                 en: 'band-aid',
-                de: 'pflaster'
+                de: 'pflaster',
+                sv: 'plåster'
             },
             reason: {
                 en: 'the sillyness caught up to me',
-                de: 'der unfug hat mich eingeholt'
+                de: 'der unfug hat mich eingeholt',
+                sv: 'det roliga kom ikapp mig'
             }
         },
         'bubble-tea': {
             name: {
-                en: 'escoffier :3'
+                en: 'escoffier :3',
+                sv: 'escoffier :3'
             },
             reason: {
-                en: 'katelyn’s wife ~'
+                en: 'katelyn’s wife ~',
+                sv: 'katelyn’s fru ~'
             }
         }
     },
@@ -694,7 +699,8 @@ export const trans = {
         sv: 'Album'
     },
     albums_and_tracks: {
-        en: 'Albums and tracks'
+        en: 'Albums and tracks',
+        sv: 'Album och låtar'
     },
     album_artist: {
         en: 'Album Artist',
@@ -703,7 +709,8 @@ export const trans = {
     },
     single: {
         // release type
-        en: 'Single'
+        en: 'Single',
+        sv: 'Singel'
     },
     track: {
         en: 'Track',
@@ -914,7 +921,8 @@ export const trans = {
         sv: 'Musik'
     },
     smart_music_titles: {
-        en: 'Smart music titles'
+        en: 'Smart music titles',
+        sv: 'Smarta musiktitlar'
     },
     playback: {
         en: 'Playback',
@@ -1005,26 +1013,32 @@ export const trans = {
             }
         },
         notice: {
-            en: 'Open the live counter'
+            en: 'Open the live counter',
+            sv: 'Öppna live-nedräkningen'
         },
         live: {
-            en: 'Counter is updating live'
+            en: 'Counter is updating live',
+            sv: 'Nedräkningen uppdateras live'
         },
         presets: {
             // these are seasonal exclusive colour presets
             nonsense: {
                 // reference to https://open.spotify.com/track/7yogx3TwxGwSxO2QITsT2q
-                en: 'A Nonsense Christmas'
+                en: 'A Nonsense Christmas',
+                sv: 'A Nonsense Christmas'
             },
             fruitcake: {
                 // reference to https://open.spotify.com/album/7EisdwWcodpmHxgpGVE5Pg
-                en: 'fruitcake'
+                en: 'fruitcake',
+                sv: 'fruitcake'
             },
             mistletoe: {
-                en: 'Mistletoe'
+                en: 'Mistletoe',
+                sv: 'Mistel'
             },
             festival: {
-                en: 'Christmas Eve'
+                en: 'Christmas Eve',
+                sv: 'Julafton'
             }
         }
     },
@@ -1075,10 +1089,12 @@ export const trans = {
     },
     seasonal_overlays: {
         name: {
-            en: 'Display additional seasonal effects'
+            en: 'Display additional seasonal effects',
+            sv: 'Visa extra årstidseffekter'
         },
         body: {
-            en: 'During winter seasons this applies a coat of ice to panels, otherwise mainly gradients'
+            en: 'During winter seasons this applies a coat of ice to panels, otherwise mainly gradients',
+            sv: 'Under vintersäsongen läggs ett lager is på paneler, annars mest bildgradienter'
         }
     },
     seasonal_offset: {
@@ -1097,17 +1113,20 @@ export const trans = {
     started: {
         // season start date
         // start date: 1 day ago
-        en: 'Start date'
+        en: 'Start date',
+        sv: 'Startdatum'
     },
     next_in: {
         // season next date
         // next season: in 3 days
-        en: 'Next season'
+        en: 'Next season',
+        sv: 'Nästa årstid'
     },
     ends_in: {
         // season end date
         // end date: in 2 days
-        en: 'End date'
+        en: 'End date',
+        sv: 'Slutdatum'
     },
     text: {
         en: 'Text',
@@ -1207,9 +1226,11 @@ export const trans = {
         sv: 'Importera'
     },
     import_failed: {
-        en: 'Import failed',
+        en: 'Import failed',,
+        sv: 'Importering misslyckades',
         notice: {
-            en: 'The settings you attempted to import failed to parse, no changes were made.'
+            en: 'The settings you attempted to import failed to parse, no changes were made.',
+            sv: 'Inställningarna du försökte importera kunde inte läsas, inga ändringar har gjorts.'
         }
     },
     import_settings: {
@@ -1275,10 +1296,12 @@ export const trans = {
         sv: 'Nytt',
         type: {
             major: {
-                en: 'Major release'
+                en: 'Major release',
+                sv: 'Större utgåva'
             },
             minor: {
-                en: 'Minor release'
+                en: 'Minor release',
+                sv: 'Mindre utgåva'
             }
         }
     },
@@ -1378,10 +1401,12 @@ export const trans = {
     },
     noise: {
         name: {
-            en: 'Noise overlay opacity'
+            en: 'Noise overlay opacity',
+            sv: 'Brusöverläggsopacitet'
         },
         body: {
-            en: 'Apply a coat of subtle noise to add variation to solid backgrounds'
+            en: 'Apply a coat of subtle noise to add variation to solid backgrounds',
+            sv: 'Tillämpa ett brusöverlägg för lite variation på enfärgade bakgrunder'
         }
     },
     save: {
@@ -1578,10 +1603,12 @@ export const trans = {
         sv: 'Konst'
     },
     gallery_sum: {
-        en: 'This is the sum of votes for ordering'
+        en: 'This is the sum of votes for ordering',
+        sv: 'Det här är summan röster för bildordning'
     },
     view_saved: {
-        en: 'View all saved photos'
+        en: 'View all saved photos',
+        sv: 'Visa alla sparade foton'
     },
     dropzone: {
         en: 'Drag-and-drop an image or click here',
@@ -1899,7 +1926,8 @@ export const trans = {
         sv: 'Nuvarande version'
     },
     manage_data: {
-        en: 'Manage data'
+        en: 'Manage data',
+        sv: 'Hantera data'
     },
     labs: {
         // labs by last.fm
@@ -2044,10 +2072,12 @@ export const trans = {
     },
     default_avatar_action: {
         name: {
-            en: 'Default avatar action'
+            en: 'Default avatar action',
+            sv: 'Standard bildbetéende'
         },
         body: {
-            en: 'Which action should be performed when you click an avatar'
+            en: 'Which action should be performed when you click an avatar',
+            sv: 'Hur ska sidan beté sig när du trycker på en profilbild'
         }
     },
     share: {
@@ -2517,7 +2547,8 @@ export const trans = {
         sv: 'Öppna i ny flik'
     },
     view_image: {
-        en: 'View image'
+        en: 'View image',
+        sv: 'Visa bild'
     },
     event_cancelled: {
         // obviously remove the emoji or replace it as
@@ -3904,7 +3935,8 @@ export const trans = {
         sv: 'Sparade'
     },
     remove_save: {
-        en: 'Remove save'
+        en: 'Remove save',
+        sv: 'Ta bort bokmärkning'
     },
     no_images_saved: {
         en: 'No photos saved',
@@ -4655,7 +4687,8 @@ export const trans = {
     },
     banners: {
         en: 'Banners',
-        de: 'Banner'
+        de: 'Banner',
+        sv: 'Banner'
     },
     view_backgrounds_on: {
         en: 'View banners on',
@@ -4720,12 +4753,14 @@ export const trans = {
         banner: {
             // no profile banner present
             en: 'None',
-            de: 'Keins'
+            de: 'Keins',
+            sv: 'Ingen'
         },
         starred_friend: {
             // no starred friend selected
             en: 'None',
-            de: 'Kein:e'
+            de: 'Kein:e',
+            sv: 'Ingen'
         }
     },
     current_banner_value: {
@@ -4848,7 +4883,8 @@ export const trans = {
     },
     pixel: {
         name: {
-            en: 'Pixel'
+            en: 'Pixel',
+            sv: 'Pixel'
         },
         body: {
             en: 'Guess the album from it’s pixelated artwork and clues',
@@ -4859,7 +4895,8 @@ export const trans = {
     rainbow: {
         name: {
             en: 'Rainbow',
-            de: 'Regenbogen'
+            de: 'Regenbogen',
+            sv: 'Rainbow'
         },
         body: {
             en: 'Arrange your listening history into a swirl of colours',
@@ -4870,7 +4907,8 @@ export const trans = {
     receipt: {
         name: {
             en: 'Receipt',
-            de: 'Quittung'
+            de: 'Quittung',
+            sv: 'Kvitto'
         },
         body: {
             en: 'Print out your top tracks as a receipt',
@@ -4926,7 +4964,8 @@ export const trans = {
         en: 'Lyrics',
         name: {
             // the game
-            en: 'Lyrics'
+            en: 'Lyrics',
+            sv: 'Lyrics'
         },
         body: {
             en: 'Guess the song from a random lyric',
@@ -5130,7 +5169,8 @@ export const trans = {
         sv: 'Visa alternativet att ändra språk'
     },
     branding: {
-        en: 'Branding'
+        en: 'Branding',
+        sv: 'Branding'
     },
     branding_type: {
         name: {
@@ -5280,18 +5320,22 @@ export const trans = {
             sv: 'Denna inställning ska stängas av för att vara säker på att dina skrobblingar är rätt för alla artister.'
         },
         false: {
-            en: 'Do not apply corrections (recommended)'
+            en: 'Do not apply corrections (recommended)',
+            sv: 'Tillämpa inte korrigeringar (rekommenderat)'
         },
         true: {
-            en: 'Auto correct my scrobbles (legacy)'
+            en: 'Auto correct my scrobbles (legacy)',
+            sv: 'Autokorrigera mina skrobblingar (gammal)'
         }
     },
     preferred_affiliate: {
         name: {
-            en: 'Preferred playback source'
+            en: 'Preferred playback source',
+            sv: 'Föredragen uppspelningskälla'
         },
         body: {
-            en: 'Choose which service to use when interacting with playables across the site'
+            en: 'Choose which service to use when interacting with playables across the site',
+            sv: 'Välj vilken service att använda när du spelar upp låtar'
         }
     },
     timezone: {
@@ -5323,27 +5367,33 @@ export const trans = {
     },
     oracle_notice: {
         en: 'You are currently testing ‘oracle’, a redesigned album and track view',
-        de: 'Du testest gerade „oracle“, eine neu gestaltete Album- und Titelseite'
+        de: 'Du testest gerade „oracle“, eine neu gestaltete Album- und Titelseite',
+        sv: 'Du testar just no ‘oracle’, ett omdesignat sätt att visa album och låtsidor'
     },
     debug: {
-        en: 'Debug'
+        en: 'Debug',
+        sv: 'Debug'
     },
     send_feedback: {
         en: 'Send feedback',
-        de: 'Feedback senden'
+        de: 'Feedback senden',
+        sv: 'Skicka feedback'
     },
     oracle_heading: {
         en: 'Experimental',
-        de: 'Experimentell'
+        de: 'Experimentell',
+        sv: 'Experimentalt'
     },
     oracle_beta: {
         name: {
             en: 'Enable the experimental ‘oracle’ system',
-            de: 'Experimentelles „oracle“-System aktivieren'
+            de: 'Experimentelles „oracle“-System aktivieren',
+            sv: 'Aktivera det experimentella ‘oracle’-systemet'
         },
         body: {
             en: 'A redesigned album and track view sourcing data from MusicBrainz. May be released in the future or scrapped. Please send feedback from usage.',
-            de: 'Eine neu gestaltete Album- und Titelseite, die Daten von MusicBrainz bezieht. Kann in Zukunft veröffentlicht oder verworfen werden. Bitte sende Feedback basierend auf deiner Nutzung.'
+            de: 'Eine neu gestaltete Album- und Titelseite, die Daten von MusicBrainz bezieht. Kann in Zukunft veröffentlicht oder verworfen werden. Bitte sende Feedback basierend auf deiner Nutzung.',
+            sv: 'Omdesignade album och låtsidor med data från MusicBrainz. Kan släppas eller skräpas i framtiden. Skicka gärna feedback från användning'
         }
     },
     label: {
@@ -5353,7 +5403,8 @@ export const trans = {
     },
     explicit: {
         en: 'Explicit',
-        de: 'Anstößig'
+        de: 'Anstößig',
+        sv: 'Explicit'
     },
     control_center: {
         en: 'Control center',
@@ -5376,7 +5427,8 @@ export const trans = {
         sv: '한국어 (Koreanska)'
     },
     romanise_require: {
-        en: 'Romanisation requires either lotus corrections or smart song tags be enabled'
+        en: 'Romanisation requires either lotus corrections or smart song tags be enabled',
+        sv: 'Romanisation kräver antingen att lotus eller smarta låttaggar aktiveras'
     },
     disc_number: {
         en: 'Disc {n}',
@@ -5402,22 +5454,27 @@ export const trans = {
     },
     amount_translated: {
         // number of strings translated
-        en: '{c} translated'
+        en: '{c} translated',
+        sv: '{c} översatt'
     },
     missing_translated: {
         // number of strings missing
-        en: '{c} missing'
+        en: '{c} missing',
+        sv: '{c} saknas'
     },
     simulate_scroll: {
         name: {
-            en: 'Simulate horizontal scrolling'
+            en: 'Simulate horizontal scrolling',
+            sv: 'Simulera vågrät skrollning'
         },
         body: {
-            en: 'Only recommended for desktop devices'
+            en: 'Only recommended for desktop devices',
+            sv: 'Rekommenderas endast för desktop-enheter'
         }
     },
     credits: {
-        en: 'Credits'
+        en: 'Credits',
+        sv: 'Erkännanden'
     }
 };
 
