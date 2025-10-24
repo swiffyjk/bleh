@@ -515,7 +515,7 @@ export function oracle_process() {
         if (!data || !data.recordings) return null;
 
         const filtered = data.recordings.filter((recording) => {
-            if (!recording.releases || recording.releases.length === 0)
+            if (!recording.releases || recording.releases.length == 0)
                 return false;
 
             return recording.releases.some((release) => {
@@ -529,12 +529,12 @@ export function oracle_process() {
             });
         });
 
-        if (filtered.length === 0) return null;
+        if (filtered.length == 0) return null;
 
         // prefer explicit
         let best = filtered.find(
             (recording) =>
-                recording.disambiguation?.toLowerCase() === 'explicit'
+                recording.disambiguation?.toLowerCase() == 'explicit'
         );
         if (best) return best;
 
@@ -545,7 +545,7 @@ export function oracle_process() {
 
         // then clean
         best = filtered.find(
-            (recording) => recording.disambiguation?.toLowerCase() === 'clean'
+            (recording) => recording.disambiguation?.toLowerCase() == 'clean'
         );
         if (best) return best;
 
@@ -603,6 +603,22 @@ export function oracle_process() {
         });
 
         filtered.sort((a, b) => {
+            const rank = (type) => {
+                if (!type) return 4;
+
+                type = type.toLowerCase();
+
+                if (type == 'album') return 0;
+                if (type == 'ep') return 1;
+                if (type == 'single') return 3;
+                return 2;
+            };
+
+            const a_rank = rank(a['release-group']?.['primary-type']);
+            const b_rank = rank(b['release-group']?.['primary-type']);
+
+            if (a_rank != b_rank) return a_rank - b_rank;
+
             // parse dates
             const parse_date = (release) => {
                 if (!release.date) return null;
@@ -1127,8 +1143,8 @@ export function oracle_process() {
                 // find duplicates
                 const duplicates = self.filter(
                     (r) =>
-                        r.title == title &&
-                        r['artist-credit']?.[0]?.name == artist
+                        r.title.toLowerCase() == title.toLowerCase() &&
+                        r['artist-credit']?.[0]?.name?.toLowerCase() == artist.toLowerCase()
                 );
 
                 // if multiple, prefer digital media pressing

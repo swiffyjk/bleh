@@ -582,6 +582,9 @@ export const trans = {
         de: 'Scrobble',
         sv: 'Skrobbla'
     },
+    scrobble_value: {
+        en: 'Scrobble {v}'
+    },
     average: {
         // scrobble average
         en: 'Average',
@@ -5451,6 +5454,9 @@ export const trans = {
     },
     credits: {
         en: 'Credits'
+    },
+    view_credits: {
+        en: 'View credits'
     },
     credits_for_value: {
         en: 'Credits for {v}'

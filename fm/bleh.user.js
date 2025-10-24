@@ -32694,7 +32694,7 @@
     function oracle_pick_recording(data2) {
       if (!data2 || !data2.recordings) return null;
       const filtered = data2.recordings.filter((recording) => {
-        if (!recording.releases || recording.releases.length === 0)
+        if (!recording.releases || recording.releases.length == 0)
           return false;
         return recording.releases.some((release) => {
           const artists = release["artist-credit"] || [];
@@ -32705,15 +32705,15 @@
           return !various && official;
         });
       });
-      if (filtered.length === 0) return null;
+      if (filtered.length == 0) return null;
       let best = filtered.find(
-        (recording) => recording.disambiguation?.toLowerCase() === "explicit"
+        (recording) => recording.disambiguation?.toLowerCase() == "explicit"
       );
       if (best) return best;
       best = filtered.find((recording) => !recording.disambiguation);
       if (best) return best;
       best = filtered.find(
-        (recording) => recording.disambiguation?.toLowerCase() === "clean"
+        (recording) => recording.disambiguation?.toLowerCase() == "clean"
       );
       if (best) return best;
       best = filtered.find(
@@ -32748,6 +32748,17 @@
         return !various && official && !fake;
       });
       filtered.sort((a, b) => {
+        const rank = (type) => {
+          if (!type) return 4;
+          type = type.toLowerCase();
+          if (type == "album") return 0;
+          if (type == "ep") return 1;
+          if (type == "single") return 3;
+          return 2;
+        };
+        const a_rank = rank(a["release-group"]?.["primary-type"]);
+        const b_rank = rank(b["release-group"]?.["primary-type"]);
+        if (a_rank != b_rank) return a_rank - b_rank;
         const parse_date = (release) => {
           if (!release.date) return null;
           const date = new Date(release.date);
@@ -33111,7 +33122,7 @@
           const artist2 = release["artist-credit"]?.[0]?.name;
           const title = release.title;
           const duplicates = self3.filter(
-            (r) => r.title == title && r["artist-credit"]?.[0]?.name == artist2
+            (r) => r.title.toLowerCase() == title.toLowerCase() && r["artist-credit"]?.[0]?.name?.toLowerCase() == artist2.toLowerCase()
           );
           if (duplicates.length > 1) {
             const digital_with_date = duplicates.find(
@@ -34137,7 +34148,7 @@
         };
       const scrobble_btn = html.node`
             <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble(props)}>
-                ${tl2(trans.scrobble)}
+                ${tl2(trans.scrobble_value, { v: tl2(trans[`${page.type}_lower`]) })}
             </button>
         `;
       if (!can_api) {
@@ -34150,7 +34161,7 @@
     if (ff("credits") && ff("oracle") && settings.oracle_beta && ["album", "track"].includes(page.type)) {
       interact_container.appendChild(html.node`
             <button class="btn side-action" data-type="credits" onclick=${() => oracle_credits()}>
-                ${tl2(trans.credits)}
+                ${tl2(trans.view_credits)}
             </button>
         `);
     }
@@ -58079,6 +58090,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Scrobble",
       sv: "Skrobbla"
     },
+    scrobble_value: {
+      en: "Scrobble {v}"
+    },
     average: {
       // scrobble average
       en: "Average",
@@ -62947,6 +62961,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     credits: {
       en: "Credits"
+    },
+    view_credits: {
+      en: "View credits"
     },
     credits_for_value: {
       en: "Credits for {v}"

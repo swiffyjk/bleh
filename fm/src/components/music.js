@@ -520,7 +520,7 @@ export async function show_your_scrobbles() {
 
         const scrobble_btn = html.node`
             <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble(props)}>
-                ${tl(trans.scrobble)}
+                ${tl(trans.scrobble_value, {v: tl(trans[`${page.type}_lower`])})}
             </button>
         `;
 
@@ -541,7 +541,7 @@ export async function show_your_scrobbles() {
     ) {
         interact_container.appendChild(html.node`
             <button class="btn side-action" data-type="credits" onclick=${() => oracle_credits()}>
-                ${tl(trans.credits)}
+                ${tl(trans.view_credits)}
             </button>
         `);
     }
