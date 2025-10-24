@@ -294,7 +294,7 @@
             inset 0 1px 0 0 hsl(var(--b2), 0.3),
             inset 0 0 0 1px hsl(var(--b3), 0.35);
 
-        --sidebar-bg: hsl(var(--b6), 14%);
+        --sidebar-bg: color-mix(in hsl, hsl(var(--b6)) 22%, hsl(var(--b5)));
         --sidebar-border: color-mix(in hsl, hsl(var(--b5)), hsl(var(--b4)) 25%);
         --toolbar-bg: hsl(var(--b6), 30%);
         --toolbar-border: 1px solid hsl(var(--b4), 75%);
@@ -332,7 +332,7 @@
             --b3: 0, 0%, 11%;
 
             /* card border */
-            --b4: 0, 0%, 9%;
+            --b4: 0, 0%, 21%;
 
             /* card */
             --b5: 0, 0%, 0%;
@@ -342,8 +342,8 @@
             --b8: 0, 0%, 7%;
             --b7: 0, 0%, 0%;
 
-            --card-border-base: hsl(var(--b3), 0.6);
-            --card-border-base-highlight: hsl(var(--b2), 0.55);
+            --card-border-base: hsl(var(--b3), 0.95);
+            --card-border-base-highlight: hsl(var(--b2), 0.8);
 
             --input-shadow:
                 inset 0 -1px 0 0 hsl(var(--b3)),
@@ -353,10 +353,10 @@
                 inset 0 -1px 0 0 hsl(var(--b3)),
                 inset 0 1px 2px 1px hsl(var(--b3), 0.4);
             --group-shadow:
-                inset 0 1px 0 0 hsl(var(--b2), 0.35),
-                inset 0 0 0 1px hsl(var(--b3), 0.5);
+                inset 0 1px 0 0 hsl(var(--b2), 0.65),
+                inset 0 0 0 1px hsl(var(--b3), 0.9);
 
-            --sidebar-bg: hsl(var(--b4), 10%);
+            --sidebar-bg: color-mix(in hsl, hsl(var(--b4)) 22%, hsl(var(--b5)));
             --sidebar-border: color-mix(
                 in hsl,
                 hsl(var(--b5)),
@@ -404,7 +404,7 @@
                 inset 0 1px 0 0 hsl(var(--b4), 0.4),
                 inset 0 0 0 1px hsl(var(--b4), 0.4);
 
-            --sidebar-bg: hsl(var(--b6), 0%);
+            --sidebar-bg: color-mix(in hsl, hsl(var(--b6)) 56%, hsl(var(--b5)));
             --sidebar-border: color-mix(
                 in hsl,
                 hsl(var(--b5)),
@@ -2695,10 +2695,6 @@
 
                 position: relative;
 
-                [data-bleh--solarium="false"] & {
-                    background-color: hsl(var(-- b5));
-                }
-
                 &:after {
                     content: "";
                     position: absolute;
@@ -2830,7 +2826,7 @@
 
                             &:before {
                                 --mask: none;
-                                background: hsl(var(--b6));
+                                background: transparent;
                             }
                         }
                     }
@@ -4237,7 +4233,7 @@
 
         [data-bleh--solarium="false"] & {
             &:before {
-                background: color-mix(in hsl, hsl(var(--b6)), hsl(var(--b5)));
+                background: color-mix(in hsl, hsl(var(--b6)) 20%, hsl(var(--b5)));
             }
         }
     }
@@ -6235,7 +6231,7 @@
     .obsession-candidate,
     .chartlist-row {
         --bg: transparent;
-        --bg-hov: hsl(var(--b4), 20%);
+        --bg-hov: hsl(var(--b4), 30%);
         --shadow: none !important;
         color: hsl(var(--c2));
         background-color: var(--bg);
@@ -7167,7 +7163,7 @@
         }
 
         [data-ff--sweet="true"] & {
-            background: hsl(var(--chartlist-bar-bg, var(--b4), 50%)) !important;
+            background: hsl(var(--chartlist-bar-bg, var(--b4), 40%)) !important;
             box-shadow: var(--group-shadow), var(--interact-shadow) !important;
             text-decoration: none !important;
 
@@ -9244,8 +9240,8 @@
 
             [data-ff--menu_like_side_actions="true"] & {
                 --bg: transparent !important;
-                --bg-hov: hsla(var(--b4), 60%) !important;
-                --bg-atv: hsla(var(--b4), 80%) !important;
+                --bg-hov: hsla(var(--b4), 40%) !important;
+                --bg-atv: hsla(var(--b4), 60%) !important;
                 --shadow: none !important;
                 --shadow-hov: none !important;
                 --col: hsl(var(--c2)) !important;
@@ -11025,6 +11021,7 @@
     .user-sidebar-header {
         font-size: var(--font-size) !important;
         line-height: var(--line-height) !important;
+        font-weight: var(--font-weight-medium);
 
         /* last.fm has a default 150px */
         min-width: unset;
@@ -13147,7 +13144,7 @@
 
     .tippy-box,
     .tooltip-dark {
-        background: hsla(var(--b8), 80%);
+        background: hsla(var(--b8), var(--solarium-opacity, 80%));
         backdrop-filter: var(--solarium);
         -webkit-backdrop-filter: var(--solarium);
         border-radius: var(--item-big-radius);
@@ -13159,12 +13156,6 @@
         font-weight: var(--font-weight);
         line-height: var(--line-height);
         color: hsl(var(--c2));
-
-        [data-bleh--solarium="false"] & {
-            background: hsl(var(--b8));
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-        }
 
         text-align: center;
 
