@@ -885,6 +885,7 @@
         --view-buttons-atv: hsl(var(--b4), 60%);
 
         --menu-bg: var(--b6);
+        --menu-opacity: 92%;
 
         --shout-actions-opacity: 0.45;
 
@@ -9429,7 +9430,7 @@
     .tippy-box[data-theme="nav-window"],
     .tippy-box[data-theme="auth-menu-v2"] {
         padding: var(--item-list-gap) !important;
-        background: hsl(var(--menu-bg), 90%);
+        background: hsl(var(--menu-bg), var(--solarium-opacity, var(--menu-opacity)));
         border-radius: var(--card-radius) !important;
         box-shadow: var(
             --override-full-shadow,
@@ -9442,10 +9443,6 @@
         -webkit-backdrop-filter: var(--solarium);
 
         text-align: left;
-
-        [data-bleh--solarium="false"] & {
-            background: hsl(var(--menu-bg)) !important;
-        }
 
         &[data-theme="auth-menu-v2"] {
             width: 383px !important;
@@ -11674,7 +11671,7 @@
     .library-search-results,
     .events-filter-location-dropdown {
         margin: unset !important;
-        background: hsl(var(--menu-bg), 90%) !important;
+        background: hsl(var(--menu-bg), var(--solarium-opacity, var(--menu-opacity))) !important;
         border-radius: calc(var(--button-radius) + 4px) !important;
         box-shadow: var(
             --override-full-shadow,
@@ -11688,8 +11685,8 @@
         }
 
         &:not(.date-range-picker-content, .modal-body) {
-            backdrop-filter: blur(20px) saturate(160%);
-            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            backdrop-filter: var(--solarium);
+            -webkit-backdrop-filter: var(--solarium);
         }
 
         [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
@@ -13207,7 +13204,7 @@
         &[data-theme="language-menu"],
         &[data-theme="menu"] {
             padding: 4px !important;
-            background: hsl(var(--menu-bg), 85%) !important;
+            background: hsl(var(--menu-bg), var(--solarium-opacity, var(--menu-opacity))) !important;
             border-radius: calc(var(--button-radius) + 4px) !important;
             box-shadow: var(
                 --override-full-shadow,
@@ -13215,10 +13212,6 @@
             ) !important;
             border: 1px solid var(--card-border-base) !important;
             color: hsl(var(--c2));
-
-            [data-bleh--solarium="false"] & {
-                background: hsl(var(--menu-bg)) !important;
-            }
 
             /*[data-theme="window"] & {
                 box-shadow: var(--highlight-shadow), var(--menu-shadow) !important;
