@@ -32748,16 +32748,18 @@
         return !various && official && !fake;
       });
       filtered.sort((a, b) => {
-        const rank = (type) => {
-          if (!type) return 4;
-          type = type.toLowerCase();
-          if (type == "album") return 0;
-          if (type == "ep") return 1;
-          if (type == "single") return 3;
-          return 2;
+        const rank = (release) => {
+          const type = release["release-group"]?.["primary-type"]?.toLowerCase();
+          const digital = release.media?.[0]?.format == "Digital Media";
+          let rank2 = 4;
+          if (type == "album") rank2 = 0;
+          else if (type == "ep") rank2 = 1;
+          else if (type == "single") rank2 = 3;
+          else rank2 = 2;
+          return (digital ? 0 : 10) + rank2;
         };
-        const a_rank = rank(a["release-group"]?.["primary-type"]);
-        const b_rank = rank(b["release-group"]?.["primary-type"]);
+        const a_rank = rank(a);
+        const b_rank = rank(b);
         if (a_rank != b_rank) return a_rank - b_rank;
         const parse_date = (release) => {
           if (!release.date) return null;

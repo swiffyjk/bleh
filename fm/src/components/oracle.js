@@ -603,19 +603,22 @@ export function oracle_process() {
         });
 
         filtered.sort((a, b) => {
-            const rank = (type) => {
-                if (!type) return 4;
+            const rank = (release) => {
+                const type = release['release-group']?.['primary-type']?.toLowerCase();
+                const digital = release.media?.[0]?.format == 'Digital Media';
 
-                type = type.toLowerCase();
+                let rank = 4;
+                if (type == 'album') rank = 0;
+                else if (type == 'ep') rank = 1;
+                else if (type == 'single') rank = 3;
+                else rank = 2;
 
-                if (type == 'album') return 0;
-                if (type == 'ep') return 1;
-                if (type == 'single') return 3;
-                return 2;
+                // boost priority for digital media
+                return (digital ? 0 : 10) + rank;
             };
 
-            const a_rank = rank(a['release-group']?.['primary-type']);
-            const b_rank = rank(b['release-group']?.['primary-type']);
+            const a_rank = rank(a);
+            const b_rank = rank(b);
 
             if (a_rank != b_rank) return a_rank - b_rank;
 
