@@ -49497,71 +49497,62 @@
         return count_bar;
       }, render_track_preview = function() {
         const avi = auth.avatar.replace("/avatar42s/", "/avatar170s/");
-        render(
-          preview,
-          html`
-                    <table
-                        class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist chartlist--with-more"
-                    >
-                        <tbody>
-                            <tr
-                                class="chartlist-row chartlist-row--with-artist chartlist-row--now-scrobbling"
-                                data-has-bar="false"
-                                data-show-album-text=${settings.expand_tracks != "never" && settings.track_layout == "column"}
-                            >
-                                <td class="chartlist-image">
-                                    <a class="cover-art">
-                                        <img src=${avi} loading="lazy" />
-                                    </a>
-                                </td>
-                                <td class="kate-placeholder" />
-                                <td class="track-info" data-has-bar="false">
-                                    <span class="chartlist-name">
-                                        <a>Track name</a>
+        render(preview, html`
+                <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist chartlist--with-more">
+                    <tbody>
+                        <tr
+                            class="chartlist-row chartlist-row--with-artist chartlist-row--now-scrobbling"
+                            data-has-bar="false"
+                            data-show-album-text=${settings.expand_tracks != "never" && settings.track_layout == "column"}
+                        >
+                            <td class="chartlist-image">
+                                <a class="cover-art">
+                                    <img src=${avi} loading="lazy" />
+                                </a>
+                            </td>
+                            <td class="kate-placeholder" />
+                            <td class="track-info" data-has-bar="false">
+                                <span class="chartlist-name">
+                                    <a>Track name</a>
+                                </span>
+                                <span class="chartlist-artist">
+                                    <a>Artist name</a>
+                                </span>
+                                ${settings.expand_tracks != "never" && settings.track_layout == "column" ? html.node`
+                                    <span class="chartlist-album custom-album-text">
+                                        <a>Album name</a>
                                     </span>
-                                    <span class="chartlist-artist">
-                                        <a>Artist name</a>
+                                ` : ""}
+                            </td>
+                        </tr>
+                        <tr
+                            class="chartlist-row chartlist-row--with-artist"
+                            data-has-bar="false"
+                            data-show-album-text=${settings.expand_tracks == "always" && settings.expand_tracks != "never" && settings.track_layout == "column"}
+                        >
+                            <td class="chartlist-image">
+                                <a class="cover-art">
+                                    <img src=${avi} loading="lazy" />
+                                </a>
+                            </td>
+                            <td class="kate-placeholder" />
+                            <td class="track-info" data-has-bar="false">
+                                <span class="chartlist-name">
+                                    <a>Track name</a>
+                                </span>
+                                <span class="chartlist-artist">
+                                    <a>Artist name</a>
+                                </span>
+                                ${settings.expand_tracks == "always" && settings.expand_tracks != "never" && settings.track_layout == "column" ? html.node`
+                                    <span class="chartlist-album custom-album-text">
+                                        <a>Album name</a>
                                     </span>
-                                    ${settings.expand_tracks != "never" && settings.track_layout == "column" ? html.node`
-                                        <span
-                                            class="chartlist-album custom-album-text"
-                                        >
-                                            <a>Album name</a>
-                                        </span>
-                                    ` : ""}
-                                </td>
-                            </tr>
-                            <tr
-                                class="chartlist-row chartlist-row--with-artist"
-                                data-has-bar="false"
-                                data-show-album-text=${settings.expand_tracks == "always" && settings.expand_tracks != "never" && settings.track_layout == "column"}
-                            >
-                                <td class="chartlist-image">
-                                    <a class="cover-art">
-                                        <img src=${avi} loading="lazy" />
-                                    </a>
-                                </td>
-                                <td class="kate-placeholder" />
-                                <td class="track-info" data-has-bar="false">
-                                    <span class="chartlist-name">
-                                        <a>Track name</a>
-                                    </span>
-                                    <span class="chartlist-artist">
-                                        <a>Artist name</a>
-                                    </span>
-                                    ${settings.expand_tracks == "always" && settings.expand_tracks != "never" && settings.track_layout == "column" ? html.node`
-                                        <span
-                                            class="chartlist-album custom-album-text"
-                                        >
-                                            <a>Album name</a>
-                                        </span>
-                                    ` : ""}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `
-        );
+                                ` : ""}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            `);
       };
       if (!page.state.quick_access_items) {
         setTimeout(() => {
@@ -49576,90 +49567,85 @@
       let expand_tracks;
       let track_album_name_location;
       let preview;
-      render(
-        page.structure.main,
-        html`
-                <section class="bleh--panel">
-                    <h4>${tl2(trans.tracklist)}</h4>
-                    <div
-                        class="inner-preview pad"
-                        ref=${(el) => preview = el}
-                    />
-                    <div class="setting-group">
-                        ${track_layout = setting({
-          id: "track_layout",
-          func: () => {
-            expand_tracks.compat();
-            track_album_name_location.compat();
-            render_track_preview();
-          }
-        })}
-                        ${expand_tracks = setting({
-          id: "expand_tracks",
-          func: () => {
-            render_track_preview();
-          }
-        })}
-                        ${track_album_name_location = setting({
-          id: "track_album_name_location"
-        })}
+      render(page.structure.main, html`
+            <section class="bleh--panel">
+                <h4>${tl2(trans.tracklist)}</h4>
+                <div class="inner-preview pad" ref=${(el) => preview = el} />
+                <div class="setting-group">
+                    ${track_layout = setting({
+        id: "track_layout",
+        func: () => {
+          expand_tracks.compat();
+          track_album_name_location.compat();
+          render_track_preview();
+        }
+      })}
+                    ${expand_tracks = setting({
+        id: "expand_tracks",
+        func: () => {
+          render_track_preview();
+        }
+      })}
+                    ${track_album_name_location = setting({
+        id: "track_album_name_location"
+      })}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <div class="inner-preview pad">
+                    <div class="bars" ref=${(el) => bars2 = el}>
+                        ${() => {
+        let max2 = 3e4;
+        for (let value = 1e3; value <= max2; value += 1e3) {
+          bars2.appendChild(chartlist_bar2(value, max2));
+        }
+      }}
                     </div>
-                </section>
-                <section class="bleh--panel">
-                    <div class="inner-preview pad">
-                        <div class="bars" ref=${(el) => bars2 = el}>
-                            ${() => {
-          let max2 = 3e4;
-          for (let value = 1e3; value <= max2; value += 1e3) {
-            bars2.appendChild(chartlist_bar2(value, max2));
-          }
-        }}
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "colourful_counts" })}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <h4>${tl2(trans.overview)}</h4>
-                    <div class="setting-group">
-                        ${setting({
-          id: "music_links",
-          list: page.state.music_links
-        })}
-                        ${setting({ id: "default_avatar_action" })}
-                        ${setting({ id: "simulate_scroll" })}
-                    </div>
-                    <div class="inner-preview pad flex">
-                        <section class="catalogue-tags">
-                            <ul class="tags-list tags-list--global">
-                                <li class="tag">
-                                    <a href="/tag/pop">pop</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/country">country</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/singer-songwriter"
-                                        >singer-songwriter</a
-                                    >
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/female+vocalists"
-                                        >female vocalists</a
-                                    >
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/synthpop">synthpop</a>
-                                </li>
-                            </ul>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "gendered_tags" })}
-                    </div>
-                </section>
-                ${!page.mobile ? html.node`
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: "colourful_counts" })}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl2(trans.overview)}</h4>
+                <div class="setting-group">
+                    ${setting({
+        id: "music_links",
+        list: page.state.music_links
+      })}
+                    ${setting({ id: "default_avatar_action" })}
+                    ${setting({ id: "simulate_scroll" })}
+                </div>
+                <div class="inner-preview pad flex">
+                    <section class="catalogue-tags">
+                        <ul class="tags-list tags-list--global">
+                            <li class="tag">
+                                <a href="/tag/pop">pop</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/country">country</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/singer-songwriter"
+                                    >singer-songwriter</a
+                                >
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/female+vocalists"
+                                    >female vocalists</a
+                                >
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/synthpop">synthpop</a>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: "gendered_tags" })}
+                </div>
+            </section>
+            ${!page.mobile ? html.node`
             <section class="bleh--panel">
                 <h4>${tl2(trans.navigation_items.name)}</h4>
                 <div class="setting-group">
@@ -49668,49 +49654,49 @@
                 </div>
             </section>
             ` : ""}
-                <section class="bleh--panel">
-                    <h4>${tl2(trans.shouts)}</h4>
-                    <div class="inner-preview pad flex">
-                        <div
-                            class="shout js-shout js-link-block"
-                            data-kate-processed="true"
-                        >
-                            ${auth.name ? html.node`
-                        <h3 class="shout-user">
-                            <a>${auth.name}</a>
-                        </h3>
-                        <span class="avatar shout-user-avatar">
-                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans.your_avatar)}" loading="lazy">
-                        </span>
-                        ` : html.node`
-                        <h3 class="shout-user">
-                            <a>${tl2(trans.profile)}</a>
-                        </h3>
-                        <span class="avatar shout-user-avatar">
-                            <img class="missing-avatar" alt="${tl2(trans.your_avatar)}" loading="lazy">
-                        </span>
-                        `}
-                            <a class="shout-permalink shout-timestamp">
-                                <time
-                                    datetime="2024-06-05T02:33:39+01:00"
-                                    title="Wednesday 5 Jun 2024, 2:33am"
-                                >
-                                    5 Jun 2:33am
-                                </time>
-                            </a>
-                            <div class="shout-body if-markdown-on">
-                                ${markdown(tl2(trans.markdown_shouts.preview))}
-                            </div>
-                            <div class="shout-body if-markdown-off">
-                                <p>${tl2(trans.markdown_shouts.preview)}</p>
-                            </div>
+            <section class="bleh--panel">
+                <h4>${tl2(trans.shouts)}</h4>
+                <div class="inner-preview pad flex">
+                    <div
+                        class="shout js-shout js-link-block"
+                        data-kate-processed="true"
+                    >
+                        ${auth.name ? html.node`
+                    <h3 class="shout-user">
+                        <a>${auth.name}</a>
+                    </h3>
+                    <span class="avatar shout-user-avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans.your_avatar)}" loading="lazy">
+                    </span>
+                    ` : html.node`
+                    <h3 class="shout-user">
+                        <a>${tl2(trans.profile)}</a>
+                    </h3>
+                    <span class="avatar shout-user-avatar">
+                        <img class="missing-avatar" alt="${tl2(trans.your_avatar)}" loading="lazy">
+                    </span>
+                    `}
+                        <a class="shout-permalink shout-timestamp">
+                            <time
+                                datetime="2024-06-05T02:33:39+01:00"
+                                title="Wednesday 5 Jun 2024, 2:33am"
+                            >
+                                5 Jun 2:33am
+                            </time>
+                        </a>
+                        <div class="shout-body if-markdown-on">
+                            ${markdown(tl2(trans.markdown_shouts.preview))}
+                        </div>
+                        <div class="shout-body if-markdown-off">
+                            <p>${tl2(trans.markdown_shouts.preview)}</p>
                         </div>
                     </div>
-                    <div class="setting-group">
-                        ${setting({ id: "shout_markdown" })}
-                    </div>
-                </section>
-                ${!page.mobile ? html.node`
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: "shout_markdown" })}
+                </div>
+            </section>
+            ${!page.mobile ? html.node`
             <section class="bleh--panel">
                 <h4>${tl2(trans.quick_switcher)}</h4>
                 <div class="setting-group">
@@ -49721,10 +49707,10 @@
                         </div>
                         <div class="toggle-wrap">
                             <button class="btn see-more" onclick=${() => {
-          dialog({
-            id: "quick_switcher_keybinds",
-            title: tl2(trans.quick_switcher),
-            body: html.node`
+        dialog({
+          id: "quick_switcher_keybinds",
+          title: tl2(trans.quick_switcher),
+          body: html.node`
                                         <div class="setting-group">
                                             ${setting({ id: "rabbit_primary" })}
                                             ${setting({ id: "rabbit_search" })}
@@ -49733,8 +49719,8 @@
                                             ${setting({ id: "rabbit_bleh_settings" })}
                                         </div>
                                     `
-          });
-        }}>
+        });
+      }}>
                                 ${tl2(trans.change_now)}
                             </button>
                         </div>
@@ -49742,8 +49728,7 @@
                 </div>
             </section>
             ` : ""}
-            `
-      );
+        `);
       render_track_preview();
     } else if (page_id == "playback") {
       let total_artists = 0;
@@ -54707,31 +54692,27 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     );
     bleh_setup_start();
   }
-  unsafeWindow._setup = function() {
-    bleh_setup_start();
-  };
   function bleh_setup_start() {
     page.structure.setup.setAttribute("data-page", "start");
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      render(
-        page.structure.setup_content,
-        html` <p>${{ html: tl2(trans.welcome_to_bleh) }}</p> `
-      );
-      page.structure.setup_footer.innerHTML = `
+      render(page.structure.setup_content, html`
+            <p>${{ html: tl2(trans.welcome_to_bleh) }}</p>
+        `);
+      render(page.structure.setup_footer, html`
             <a class="see-more cancel" href="${root}user/${auth.name}">
                 ${tl2(trans.skip)}
             </a>
             <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_accessibility()">
+            <button class="btn primary continue" onclick=${() => setup_accessibility()}>
                 ${tl2(trans.next)}
             </button>
-        `;
+        `);
     }, page.state.trans);
     page.state.trans = 200;
   }
-  unsafeWindow._setup_themes = function() {
+  function setup_themes() {
     page.structure.setup.setAttribute("data-page", "themes");
     page.structure.setup.setAttribute("data-animating", "true");
     let adaptive_tip;
@@ -54866,21 +54847,21 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </div>
             `
       );
-      page.structure.setup_footer.innerHTML = `
-            <button class="see-more cancel" onclick="_setup_accessibility()">
+      render(page.structure.setup_footer, html`
+            <button class="see-more cancel" onclick=${() => setup_accessibility()}>
                 ${tl2(trans.back)}
             </button>
             <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_music()">
+            <button class="btn primary continue" onclick=${() => setup_music()}>
                 ${tl2(trans.next)}
             </button>
-        `;
+        `);
       render_tip();
       display_colour_presets();
       update_colour_swatches();
     }, page.state.trans);
-  };
-  unsafeWindow._setup_accessibility = function() {
+  }
+  function setup_accessibility() {
     page.structure.setup.setAttribute("data-page", "accessibility");
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
@@ -54897,103 +54878,197 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </div>
             `
       );
-      page.structure.setup_footer.innerHTML = `
-            <button class="see-more cancel" onclick="_setup()">
+      render(page.structure.setup_footer, html`
+            <button class="see-more cancel" onclick=${() => setup()}>
                 ${tl2(trans.back)}
             </button>
             <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_themes()">
+            <button class="btn primary continue" onclick=${() => setup_themes()}>
                 ${tl2(trans.next)}
             </button>
-        `;
-      refresh_all(page.structure.setup_content);
+        `);
     }, page.state.trans);
-  };
-  unsafeWindow._setup_music = function() {
+  }
+  function setup_music() {
     page.structure.setup.setAttribute("data-page", "music");
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      render(
-        page.structure.setup_content,
-        html`
-                <p>${tl2(trans.music_explain)}</p>
-                <div class="settings">
-                    <div class="inner-preview pad flex">
-                        <section
-                            class="redesigned-header mockup redesigned-track-header no-top-margin"
-                        >
-                            <div class="avatar-side">
-                                <img
-                                    src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg"
-                                />
-                            </div>
-                            <div class="info-side">
-                                <div class="sub-text">${tl2(trans.track)}</div>
-                                <div class="title-container">
-                                    <h1 class="bleh--name-with-features">
-                                        <div class="title">California Love</div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="ft."
-                                            data-bleh--tag-group="guests"
-                                        >
-                                            ft. Dr. Dre, Roger Troutman
-                                        </div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="- remix"
-                                            data-bleh--tag-group="mixes"
-                                        >
-                                            Remix
-                                        </div>
-                                    </h1>
-                                    <h1 class="bleh--name-without-features">
-                                        California Love (ft. Dr. Dre, Roger
-                                        Troutman) - Remix
-                                    </h1>
-                                </div>
-                                <h2>
-                                    <a class="header-new-crumb">2Pac</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Dr. Dre</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Roger Troutman</a
+      render(page.structure.setup_content, html`
+            <p>${tl2(trans.music_explain)}</p>
+            <div class="settings">
+                <div class="inner-preview pad flex">
+                    <section class="redesigned-header mockup redesigned-track-header no-top-margin">
+                        <div class="avatar-side">
+                            <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg">
+                        </div>
+                        <div class="info-side">
+                            <div class="sub-text">${tl2(trans.track)}</div>
+                            <div class="title-container">
+                                <h1 class="bleh--name-with-features">
+                                    <div class="title">California Love</div>
+                                    <div
+                                        class="feat"
+                                        data-bleh--tag-type="ft."
+                                        data-bleh--tag-group="guests"
                                     >
-                                </h2>
+                                        ft. Dr. Dre, Roger Troutman
+                                    </div>
+                                    <div
+                                        class="feat"
+                                        data-bleh--tag-type="- remix"
+                                        data-bleh--tag-group="mixes"
+                                    >
+                                        Remix
+                                    </div>
+                                </h1>
+                                <h1 class="bleh--name-without-features">
+                                    California Love (ft. Dr. Dre, Roger
+                                    Troutman) - Remix
+                                </h1>
                             </div>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: "corrections" })}
-                        ${setting({ id: "format_guest_features" })}
-                        ${setting({ id: "stacked_chartlist_info" })}
-                    </div>
+                            <h2>
+                                <a class="header-new-crumb">2Pac</a
+                                ><span class="bleh--name-with-features"
+                                    >,
+                                </span>
+                                <a
+                                    class="header-new-crumb bleh--name-with-features"
+                                    >Dr. Dre</a
+                                ><span class="bleh--name-with-features"
+                                    >,
+                                </span>
+                                <a
+                                    class="header-new-crumb bleh--name-with-features"
+                                    >Roger Troutman</a
+                                >
+                            </h2>
+                        </div>
+                    </section>
                 </div>
-            `
-      );
-      page.structure.setup_footer.innerHTML = `
-            <button class="see-more cancel" onclick="_setup_themes()">
+                <div class="setting-group">
+                    ${setting({ id: "corrections" })}
+                    ${setting({ id: "format_guest_features" })}
+                </div>
+            </div>
+        `);
+      render(page.structure.setup_footer, html`
+            <button class="see-more cancel" onclick=${() => setup_themes()}>
                 ${tl2(trans.back)}
             </button>
             <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_end()">
+            <button class="btn primary continue" onclick=${() => setup_layout()}>
                 ${tl2(trans.next)}
             </button>
-        `;
-      display_colour_presets();
-      refresh_all(page.structure.setup_content);
+        `);
     }, page.state.trans);
-  };
-  unsafeWindow._setup_end = function() {
+  }
+  function setup_layout() {
+    page.structure.setup.setAttribute("data-page", "music");
+    page.structure.setup.setAttribute("data-animating", "true");
+    setTimeout(function() {
+      page.structure.setup.setAttribute("data-animating", "false");
+      let track_layout;
+      let expand_tracks;
+      let track_album_name_location;
+      let preview;
+      function render_track_preview() {
+        const avi = auth.avatar.replace("/avatar42s/", "/avatar170s/");
+        render(preview, html`
+                <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist chartlist--with-more">
+                    <tbody>
+                        <tr
+                            class="chartlist-row chartlist-row--with-artist chartlist-row--now-scrobbling"
+                            data-has-bar="false"
+                            data-show-album-text=${settings.expand_tracks != "never" && settings.track_layout == "column"}
+                        >
+                            <td class="chartlist-image">
+                                <a class="cover-art">
+                                    <img src=${avi} loading="lazy" />
+                                </a>
+                            </td>
+                            <td class="kate-placeholder" />
+                            <td class="track-info" data-has-bar="false">
+                                <span class="chartlist-name">
+                                    <a>Track name</a>
+                                </span>
+                                <span class="chartlist-artist">
+                                    <a>Artist name</a>
+                                </span>
+                                ${settings.expand_tracks != "never" && settings.track_layout == "column" ? html.node`
+                                    <span class="chartlist-album custom-album-text">
+                                        <a>Album name</a>
+                                    </span>
+                                ` : ""}
+                            </td>
+                        </tr>
+                        <tr
+                            class="chartlist-row chartlist-row--with-artist"
+                            data-has-bar="false"
+                            data-show-album-text=${settings.expand_tracks == "always" && settings.expand_tracks != "never" && settings.track_layout == "column"}
+                        >
+                            <td class="chartlist-image">
+                                <a class="cover-art">
+                                    <img src=${avi} loading="lazy" />
+                                </a>
+                            </td>
+                            <td class="kate-placeholder" />
+                            <td class="track-info" data-has-bar="false">
+                                <span class="chartlist-name">
+                                    <a>Track name</a>
+                                </span>
+                                <span class="chartlist-artist">
+                                    <a>Artist name</a>
+                                </span>
+                                ${settings.expand_tracks == "always" && settings.expand_tracks != "never" && settings.track_layout == "column" ? html.node`
+                                    <span class="chartlist-album custom-album-text">
+                                        <a>Album name</a>
+                                    </span>
+                                ` : ""}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            `);
+      }
+      render(page.structure.setup_content, html`
+            <p>${tl2(trans.music_explain)}</p>
+            <div class="settings">
+                <div class="inner-preview pad" ref=${(el) => preview = el} />
+                <div class="setting-group">
+                    ${track_layout = setting({
+        id: "track_layout",
+        func: () => {
+          expand_tracks.compat();
+          track_album_name_location.compat();
+          render_track_preview();
+        }
+      })}
+                    ${expand_tracks = setting({
+        id: "expand_tracks",
+        func: () => {
+          render_track_preview();
+        }
+      })}
+                    ${track_album_name_location = setting({
+        id: "track_album_name_location"
+      })}
+                </div>
+            </div>
+        `);
+      render(page.structure.setup_footer, html`
+            <button class="see-more cancel" onclick=${() => setup_music()}>
+                ${tl2(trans.back)}
+            </button>
+            <div class="fill"></div>
+            <button class="btn primary continue" onclick=${() => setup_end()}>
+                ${tl2(trans.next)}
+            </button>
+        `);
+      render_track_preview();
+    }, page.state.trans);
+  }
+  function setup_end() {
     page.structure.setup.setAttribute("data-page", "end");
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
@@ -55041,28 +55116,28 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             `
       );
       if (auth.name) {
-        page.structure.setup_footer.innerHTML = `
-                <button class="see-more cancel" onclick="_setup_music()">
+        render(page.structure.setup_footer, html`
+                <button class="see-more cancel" onclick=${() => setup_layout()}>
                     ${tl2(trans.back)}
                 </button>
                 <div class="fill"></div>
                 <a class="btn primary continue" href="${root}user/${auth.name}">
                     ${tl2(trans.finish)}
                 </a>
-            `;
+            `);
       } else {
-        page.structure.setup_footer.innerHTML = `
-                <button class="see-more cancel" onclick="_setup_music()">
+        render(page.structure.setup_footer, html`
+                <button class="see-more cancel" onclick=${() => setup_layout()}>
                     ${tl2(trans.back)}
                 </button>
                 <div class="fill"></div>
                 <a class="btn primary continue" href="${root}dashboard">
                     ${tl2(trans.finish)}
                 </a>
-            `;
+            `);
       }
     }, page.state.trans);
-  };
+  }
   function notify_if_new_update() {
     let last_version_used = localStorage.getItem("bleh_last_version_used") || "";
     if (last_version_used == "") {
