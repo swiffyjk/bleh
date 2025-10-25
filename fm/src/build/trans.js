@@ -3152,13 +3152,16 @@ export const trans = {
             sv: 'Emoji-kompatibilitet'
         },
         body: {
-            // the trans flag is used to demonstrate the improper
-            // emoji font found in windows 10, whether people like it or not
-            en: 'Required to render emoji properly before Windows 11 🏳️‍⚧️',
-            de: 'Erforderlich, um Emojis vor Windows 11 richtig darzustellen 🏳️‍⚧️',
-            pt: 'Necessário para renderizar emojis corretamente antes do Windows 11 🏳️‍⚧️',
-            sv: 'Krävs för att visa emojis korrekt innan Windows 11 🏳️‍⚧️'
+            en: 'Required to render emoji properly before Windows 11',
+            de: 'Erforderlich, um Emojis vor Windows 11 richtig darzustellen',
+            pt: 'Necessário para renderizar emojis corretamente antes do Windows 11',
+            sv: 'Krävs för att visa emojis korrekt innan Windows 11'
         }
+    },
+    font_example: {
+        // the trans flag is used to demonstrate the improper
+        // emoji font found in windows 10, whether people like it or not
+        en: 'The quick brown fox jumps over the lazy dog 🏳️‍⚧️'
     },
     enter_font_names: {
         en: 'Enter installed font name(s), separated by commas',

@@ -717,6 +717,9 @@ export async function render_setting_page(page_id) {
                 </section>
                 <section class="bleh--panel">
                     <h4>${tl(trans.fonts)}</h4>
+                    <div class="inner-preview pad">
+                        <h1 class="font-preview">${tl(trans.font_example)}</h1>
+                    </div>
                     <div class="setting-group">
                         ${setting({ id: 'font' })}
                         ${setting({ id: 'font_weight' })}
