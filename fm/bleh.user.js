@@ -60672,6 +60672,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     font_example: {
       // the trans flag is used to demonstrate the improper
       // emoji font found in windows 10, whether people like it or not
+      //
+      // this text is common sample text used in english,
+      // if there's something more fitting for your language,
+      // then feel free to adjust it
       en: "The quick brown fox jumps over the lazy dog \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F"
     },
     enter_font_names: {

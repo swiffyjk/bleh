@@ -3161,6 +3161,10 @@ export const trans = {
     font_example: {
         // the trans flag is used to demonstrate the improper
         // emoji font found in windows 10, whether people like it or not
+        //
+        // this text is common sample text used in english,
+        // if there's something more fitting for your language,
+        // then feel free to adjust it
         en: 'The quick brown fox jumps over the lazy dog 🏳️‍⚧️'
     },
     enter_font_names: {
