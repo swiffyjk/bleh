@@ -43,7 +43,7 @@ export let lang_info = {
     ru: {
         name: 'Русский',
         by: ['crawqxx'],
-        last_updated: '2025-27-10'
+        last_updated: '2025-10-27'
     }
 };
 

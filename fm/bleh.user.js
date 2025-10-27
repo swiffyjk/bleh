@@ -57629,7 +57629,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     ru: {
       name: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
       by: ["crawqxx"],
-      last_updated: "2025-27-10"
+      last_updated: "2025-10-27"
     }
   };
   var trans = {
