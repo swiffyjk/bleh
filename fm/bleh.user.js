@@ -57625,6 +57625,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       name: "Svenska",
       by: ["Lrexie"],
       last_updated: "2025-09-30"
+    },
+    ru: {
+      name: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
+      by: ["crawqxx"],
+      last_updated: "2025-27-10"
     }
   };
   var trans = {
@@ -57638,19 +57643,22 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "{page} on {brand} {build}.{sku}",
         de: "{page} auf {brand} {build}.{sku}",
         pt: "{page} no {brand} {build}.{sku}",
-        sv: "{page} p\xE5 {brand} {build}.{sku}"
+        sv: "{page} p\xE5 {brand} {build}.{sku}",
+        ru: "{page} \u0432 {brand} {build}.{sku}"
       },
       name_type: {
         en: "{name} - {page} on {brand} {build}.{sku}",
         de: "{name} - {page} auf {brand} {build}.{sku}",
         pt: "{name} - {page} no {brand} {build}.{sku}",
-        sv: "{name} - {page} p\xE5 {brand} {build}.{sku}"
+        sv: "{name} - {page} p\xE5 {brand} {build}.{sku}",
+        ru: "{name} - {page} \u0432 {brand} {build}.{sku}"
       },
       name_sister_type: {
         en: "{name} by {sister} - {page} on {brand} {build}.{sku}",
         de: "{name} von {sister} - {page} auf {brand} {build}.{sku}",
         pt: "{name} por {sister} - {page} no {brand} {build}.{sku}",
-        sv: "{name} av {sister} - {page} p\xE5 {brand} {build}.{sku}"
+        sv: "{name} av {sister} - {page} p\xE5 {brand} {build}.{sku}",
+        ru: "{name} \u043E\u0442 {sister} - {page} \u0432 {brand} {build}.{sku}"
       }
     },
     badges: {
@@ -57659,13 +57667,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "No badges",
           de: "Keine Abzeichen",
           pt: "Sem emblemas",
-          sv: "Inga emblem"
+          sv: "Inga emblem",
+          ru: "\u041D\u0435\u0442\u0443 \u0437\u043D\u0430\u0447\u043A\u0430"
         },
         reason: {
           en: "Become a sponsor to get a badge!",
           de: "Werde Sponsor, um ein Abzeichen zu erhalten!",
           pt: "Se torne um apoiador para ganhar um emblema!",
-          sv: "Bli en sponsor f\xF6r att f\xE5 ett emblem!"
+          sv: "Bli en sponsor f\xF6r att f\xE5 ett emblem!",
+          ru: "\u0421\u0442\u0430\u043D\u044C \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u043E\u043C \u0434\u043B\u044F \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0437\u043D\u0430\u0447\u043A\u0430!"
         }
       },
       "user-status-subscriber": {
@@ -57673,13 +57683,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Last.fm Pro",
           de: "Last.fm Pro",
           pt: "Last.fm Pro",
-          sv: "Last.fm Pro"
+          sv: "Last.fm Pro",
+          ru: "Last.fm \u041F\u0440\u043E"
         },
         reason: {
           en: "Active Pro subscription",
           de: "Aktives Pro-Abonnement",
           pt: "Plano Pro ativo",
-          sv: "Aktiv Pro prenumeration"
+          sv: "Aktiv Pro prenumeration",
+          ru: "\u0410\u043A\u0442\u0438\u0432\u043D\u0430 \u041F\u0440\u043E \u043F\u043E\u0434\u043F\u0438\u0441\u043A\u0430"
         }
       },
       "user-status-staff": {
@@ -57687,13 +57699,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Staff",
           de: "Mitarbeiter",
           pt: "Equipe",
-          sv: "Personal"
+          sv: "Personal",
+          ru: "\u0410\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u044B"
         },
         reason: {
           en: "Official member of Last.fm",
           de: "Ofizielles Mitglied von Last.fm",
           pt: "Membro oficial da Last.fm",
-          sv: "Officiell medlem p\xE5 Last.fm"
+          sv: "Officiell medlem p\xE5 Last.fm",
+          ru: "\u041E\u0444\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A Last.fm"
         }
       },
       "user-status-mod": {
@@ -57701,23 +57715,27 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Mod",
           de: "Moderator",
           pt: "Moderador",
-          sv: "Moderator"
+          sv: "Moderator",
+          ru: "\u041C\u043E\u0434\u0435\u0440\u0430\u0442\u043E\u0440"
         },
         reason: {
           en: "Official member of Last.fm",
           de: "Ofizielles Mitglied von Last.fm",
           pt: "Membro oficial do Last.fm",
-          sv: "Officiell medlem p\xE5 Last.fm"
+          sv: "Officiell medlem p\xE5 Last.fm",
+          ru: "\u041E\u0444\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A Last.fm"
         }
       },
       "user-status-alum": {
         name: {
-          en: "Alum"
+          en: "Alum",
+          sv: "Alumn"
         },
         reason: {
           en: "Former member of Last.fm",
           de: "Ehemaliger Mitarbeiter von Last.fm",
-          sv: "F\xF6re-detta medlem p\xE5 Last.fm"
+          sv: "F\xF6re-detta medlem p\xE5 Last.fm",
+          ru: "\u0411\u044B\u0432\u0448\u0438\u0439 \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A Last.fm"
         }
       },
       "label--fade": {
@@ -57725,7 +57743,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "They follow you!",
           de: "Diese Person folgt dir!",
           pt: "Ele(a) te segue!",
-          sv: "Denna medlem f\xF6ljer dig!"
+          sv: "Denna medlem f\xF6ljer dig!",
+          ru: "\u041E\u043D\u0438 \u043D\u0430 \u0432\u0430\u0441 \u043F\u043E\u0434\u043F\u0438\u0441\u0430\u043D\u044B!"
         }
       },
       contributor: {
@@ -57733,13 +57752,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Contributor",
           de: "Mitwirkender",
           pt: "Contribuidor(a)",
-          sv: "Bidragsgivare"
+          sv: "Bidragsgivare",
+          ru: "\u0423\u0447\u0430\u0441\u0442\u043D\u0438\u043A"
         },
         reason: {
           en: "Has worked on bleh or bwaa",
           de: "Hat an bleh oder bwaa gearbeitet",
           pt: "Trabalhou no bleh ou bwaa",
-          sv: "Har arbetat p\xE5 bleh eller bwaa"
+          sv: "Har arbetat p\xE5 bleh eller bwaa",
+          ru: "\u041F\u043E\u043C\u043E\u0433\u0430\u043B \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u043A\u0435 bleh \u0438\u043B\u0438 bwaa"
         }
       },
       translation: {
@@ -57747,7 +57768,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Translations",
           de: "\xDCbersetzungen",
           pt: "Tradu\xE7\xF5es",
-          sv: "\xD6vers\xE4ttningar"
+          sv: "\xD6vers\xE4ttningar",
+          ru: "\u041F\u0435\u0440\u0435\u0432\u043E\u0434\u044B"
         }
       },
       cat: {
@@ -57755,7 +57777,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "it\u2019s a kitty!!",
           de: "ein K\xE4tzchen!!!",
           pt: "\xE9 um gatinho!!",
-          sv: "en kissekatt!!"
+          sv: "en kissekatt!!",
+          ru: "\u044D\u0442\u043E \u043A\u043E\u0442\u0438\u043A\u043A!!!"
         }
       },
       sponsor: {
@@ -57763,13 +57786,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Sponsor",
           de: "Sponsor",
           pt: "Apoiador",
-          sv: "Sponsor"
+          sv: "Sponsor",
+          ru: "\u0421\u043F\u043E\u043D\u0441\u043E\u0440"
         },
         reason: {
           en: "thank you from kate <3",
           de: "danke von kate <3",
           pt: "obrigad\xE3o da kate <3",
-          sv: "tack ifr\xE5n kate <3"
+          sv: "tack ifr\xE5n kate <3",
+          ru: "\u0441\u043F\u0430\u0441\u0438\u0431\u043E \u043E\u0442 \u043A\u0435\u0439\u0442 <3"
         }
       },
       cute: {
@@ -57777,7 +57802,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Reserved",
           de: "Exklusiv",
           pt: "Reservado",
-          sv: "Exklusiv"
+          sv: "Exklusiv",
+          ru: "\u0417\u0430\u0440\u0435\u0437\u0435\u0440\u0432\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439"
         }
       },
       reserved: {
@@ -57785,25 +57811,33 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Reserved",
           de: "Exklusiv",
           pt: "Reservado",
-          sv: "Exklusiv"
+          sv: "Exklusiv",
+          ru: "\u0417\u0430\u0440\u0435\u0437\u0435\u0440\u0432\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439"
         }
       },
       plaster: {
         name: {
           en: "band-aid",
-          de: "pflaster"
+          de: "pflaster",
+          sv: "pl\xE5ster",
+          ru: "\u043F\u043B\u0430\u0441\u0442\u044B\u0440\u044C"
         },
         reason: {
           en: "the sillyness caught up to me",
-          de: "der unfug hat mich eingeholt"
+          de: "der unfug hat mich eingeholt",
+          sv: "det roliga kom ikapp mig",
+          ru: "\u043C\u0438\u043B\u043E\u0442\u0430 \u043D\u0430 \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0430\u043B\u0430"
         }
       },
       "bubble-tea": {
         name: {
-          en: "escoffier :3"
+          en: "escoffier :3",
+          sv: "escoffier :3"
         },
         reason: {
-          en: "katelyn\u2019s wife ~"
+          en: "katelyn\u2019s wife ~",
+          sv: "katelyn\u2019s fru ~",
+          ru: "\u0436\u0435\u043D\u0430 \u043A\u0435\u0439\u0442\u043B\u0438\u043D ~"
         }
       }
     },
@@ -57811,335 +57845,393 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Requires higher bleh version",
       de: "Erfordert eine neuere bleh-Version",
       pt: "Requer a vers\xE3o mais recente do bleh",
-      sv: "Beh\xF6ver en nyare version av bleh"
+      sv: "Beh\xF6ver en nyare version av bleh",
+      ru: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F bleh"
     },
     home: {
       en: "Home",
       de: "Startseite",
       pt: "In\xEDcio",
-      sv: "Startsida"
+      sv: "Startsida",
+      ru: "\u0414\u043E\u043C"
     },
     library: {
       en: "Library",
       de: "Bibliothek",
       ja: "\u30E9\u30A4\u30D6\u30E9\u30EA",
       pt: "Biblioteca",
-      sv: "Bibliotek"
+      sv: "Bibliotek",
+      ru: "\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430"
     },
     playlists: {
       en: "Playlists",
       de: "Playlists",
-      sv: "Spellistor"
+      sv: "Spellistor",
+      ru: "\u041F\u043B\u0435\u0439\u043B\u0438\u0441\u0442\u044B"
     },
     shouts: {
       en: "Shouts",
       de: "Shouts",
       pt: "Mensagens",
       ja: "\u30B7\u30E3\u30A6\u30C8",
-      sv: "Hojtningar"
+      sv: "Hojtningar",
+      ru: "\u041E\u0442\u0437\u044B\u0432\u044B"
+      // i'm not really sure with this one, it's like either comments or shouts, but trnaslated directly as "shouts", but "comments" could be mroe cleare here -- craw
     },
     send_quickly_with: {
       // send a shout quickly with (keyboard shortcut)
       en: "Send quickly with {kbd}",
       de: "Schnell senden mit {kbd}",
       pt: "Enviar rapidamente com {kbd}",
-      sv: "Skicka snabbt med {kbd}"
+      sv: "Skicka snabbt med {kbd}",
+      ru: "\u0411\u044B\u0441\u0442\u0440\u0430\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0430 \u043F\u043E {kbd}"
     },
     cant_shout: {
       en: "You cannot leave shouts here",
       de: "Du kannst hier keine Shouts hinterlassen",
-      sv: "Du kan inte hojta h\xE4r"
+      sv: "Du kan inte hojta h\xE4r",
+      ru: "\u0412\u044B \u043D\u0435 \u043C\u043E\u0436\u0435\u0442\u0435 \u043E\u0441\u0442\u0430\u0432\u043B\u044F\u0442\u044C \u0442\u0443\u0442 \u043E\u0442\u0437\u044B\u0432\u044B"
     },
     failed_to_send: {
       en: "Failed to send",
       de: "Senden fehlgeschlagen",
       pt: "Falha ao enviar",
-      sv: "Gick inte att skicka"
+      sv: "Gick inte att skicka",
+      ru: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C"
     },
     sent: {
       en: "Sent",
       de: "Gesendet",
       pt: "Enviado",
-      sv: "Skickat"
+      sv: "Skickat",
+      ru: "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E"
     },
     single_shout: {
       en: "viewing a single shout",
       pt: "vendo uma mensagem",
-      sv: "visar en enda hojtning"
+      sv: "visar en enda hojtning",
+      ru: "\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0435\u0434\u0438\u043D\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0433\u043E \u043E\u0442\u0437\u044B\u0432\u0430"
     },
     about: {
       // about me panel
       en: "About",
       de: "\xDCber",
       pt: "Sobre",
-      sv: "Om"
+      sv: "Om",
+      ru: "\u041E \u0441\u0435\u0431\u0435"
     },
     about_me_preview: {
       // About Me
       en: "About (preview)",
       de: "\xDCber (Vorschau)",
       pt: "Sobre (preview)",
-      sv: "Om (f\xF6rhandsvisning)"
+      sv: "Om (f\xF6rhandsvisning)",
+      ru: "\u041E \u0441\u0435\u0431\u0435 (\u043F\u0440\u0435\u0432\u044C\u044E)"
     },
     no_about: {
       // username
       en: "{u} is keeping quiet",
       de: "{u} ist wohl etwas schweigsam",
       pt: "{u} est\xE1 bem quietinho",
-      sv: "{u} h\xE5ller sig tyst"
+      sv: "{u} h\xE5ller sig tyst",
+      ru: "{u} \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043B \u043E \u0441\u0435\u0431\u0435"
     },
     edit_wiki: {
       en: "Edit wiki",
       de: "Wiki bearbeiten",
       pt: "Editar wiki",
-      sv: "Redigera wiki"
+      sv: "Redigera wiki",
+      ru: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044E"
     },
     read_more: {
       en: "Read more",
       de: "Mehr anzeigen",
       pt: "Ler mais",
       ja: "\u3082\u3063\u3068\u8AAD\u3080",
-      sv: "L\xE4s mer"
+      sv: "L\xE4s mer",
+      ru: "\u0427\u0438\u0442\u0430\u0442\u044C \u0431\u043E\u043B\u0435\u0435"
     },
     refresh: {
       en: "Refresh",
       de: "Aktualisieren",
       pt: "Atualizar",
-      sv: "Ladda om"
+      sv: "Ladda om",
+      ru: "\u041F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C"
     },
     refreshed: {
       en: "Refreshed",
       de: "Aktualisiert",
       pt: "Atualizado",
-      sv: "Laddats om"
+      sv: "Laddats om",
+      ru: "\u041F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043E"
     },
     refresh_tracks: {
       en: "Refresh tracks",
       de: "Titel aktualisieren",
       pt: "Atualizar faixas",
-      sv: "Ladda om l\xE5tar"
+      sv: "Ladda om l\xE5tar",
+      ru: "\u041F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0442\u0440\u0435\u043A\u0438"
     },
     unavailable: {
       en: "Unavailable",
       de: "Nicht verf\xFCgbar",
       pt: "Indispon\xEDvel",
-      sv: "Otillg\xE4nglig"
+      sv: "Otillg\xE4nglig",
+      ru: "\u041D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E"
     },
     set_obsession: {
       en: "Obsess",
       de: "Obsessen",
       pt: "Obsess\xE3o",
-      sv: "Besatthet"
+      sv: "Besatthet",
+      ru: "\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C"
     },
     obsession_first: {
       en: "First to claim this obsession!",
       de: "Die erste Person, die sich diese Obsession f\xFCr sich beansprucht!",
       pt: "Primeiro a ter esta obsess\xE3o!",
-      sv: "Den f\xF6rsta personen att bli besatt av denna!"
+      sv: "Den f\xF6rsta personen att bli besatt av denna!",
+      ru: "\u041F\u0435\u0440\u0432\u044B\u0439 \u043A\u0442\u043E \u0438\u043C\u0435\u0435\u0442 \u044D\u0442\u0443 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C!"
     },
     compare: {
       en: "Compare",
       de: "Vergleichen",
       pt: "Comparar",
-      sv: "J\xE4mf\xF6r"
+      sv: "J\xE4mf\xF6r",
+      ru: "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C"
     },
     compare_plays: {
       en: "Compare plays",
       de: "Plays vergleichen",
       pt: "Comparar reprodu\xE7\xF5es",
-      sv: "J\xE4mf\xF6r spelningar"
+      sv: "J\xE4mf\xF6r spelningar",
+      ru: "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0441\u044B\u0433\u0440\u0430\u043D\u043D\u043E\u0435"
     },
     inverse_compare: {
       name: {
         en: "Inverse comparison method",
         de: "Umgekehrte Vergleichsmethode",
-        sv: "Invertera j\xE4mf\xF6relse"
+        sv: "Invertera j\xE4mf\xF6relse",
+        ru: "\u041E\u0431\u0440\u0430\u0442\u043D\u044B\u0439 \u043C\u0435\u0442\u043E\u0434 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044F"
       },
       body: {
         en: "Show items you do not share instead",
         de: "Zeige stattdessen Objekte, die ihr nicht teilt",
-        sv: "Visa ist\xE4llet objekt ni inte delar alls"
+        sv: "Visa ist\xE4llet objekt ni inte delar alls",
+        ru: "\u0412\u043C\u0435\u0441\u0442\u043E \u044D\u0442\u043E\u0433\u043E \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u043D\u0435\u0441\u043E\u0432\u043F\u0430\u0434\u0430\u044E\u0449\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B"
       }
     },
     one_page: {
       en: "1 page",
       de: "1 Seite",
       pt: "1 p\xE1gina",
-      sv: "1 sida"
+      sv: "1 sida",
+      ru: "1 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430"
     },
     count_pages: {
       en: "{c} pages",
       de: "{c} Seiten",
       pt: "{c} p\xE1ginas",
-      sv: "{c} sidor"
+      sv: "{c} sidor",
+      ru: "{c} \u0441\u0442\u0440\u0430\u043D\u0438\u0446"
+      // can't have the exact here due to russian have "3 страницы" and "5 страниц"
     },
     gathering_plays_for_user_pages: {
       en: "Gathering plays for {u} ({current_page}/{pages})",
       de: "Sammle Plays f\xFCr {u} ({current_page}/{pages})",
       pt: "Reunindo reprodu\xE7\xF5es para {u} ({current_page}/{pages})",
-      sv: "Samlar spelningar av {u} ({current_page}/{pages})"
+      sv: "Samlar spelningar av {u} ({current_page}/{pages})",
+      ru: "\u0421\u0431\u043E\u0440 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439 \u0434\u043B\u044F {u} (\u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 {current_page} \u0438\u0437 {pages})"
     },
     nothing_in_common: {
       en: "Nothing in common (\u0E51-\uFE4F-\u0E51)",
       de: "Nichts gemeinsam (\u0E51-\uFE4F-\u0E51)",
       pt: "Nada em comum (\u0E51-\uFE4F-\u0E51)",
-      sv: "Inget gemensamt (\u0E51-\uFE4F-\u0E51)"
+      sv: "Inget gemensamt (\u0E51-\uFE4F-\u0E51)",
+      ru: "\u041D\u0438\u0447\u0435\u0433\u043E \u043E\u0431\u0449\u0435\u0433\u043E (\u0E51-\uFE4F-\u0E51)"
     },
     others_featured: {
       // guest features on a song or album
       en: "Others featured",
       de: "Andere gefeatured",
       pt: "Outros em destaque",
-      sv: "G\xE4startister"
+      sv: "G\xE4startister",
+      ru: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0438"
     },
     your_scrobbles: {
       en: "Your scrobbles",
       de: "Deine Scrobbles",
       pt: "Seus scrobbles",
-      sv: "Dina skrobblingar"
+      sv: "Dina skrobblingar",
+      ru: "\u0412\u0430\u0448\u0438 \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u044B"
     },
     play: {
       // play a song
       en: "Play",
       de: "Abspielen",
-      sv: "Spela upp"
+      sv: "Spela upp",
+      ru: "\u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0441\u0442\u0438"
     },
     plays: {
       // your play count on a song or album or whatever
       en: "Plays",
       de: "Plays",
       pt: "Reprodu\xE7\xF5es",
-      sv: "Spelningar"
+      sv: "Spelningar",
+      ru: "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F"
     },
     try_again: {
       en: "Try again",
       de: "Erneut versuchen",
       pt: "Tentar novamente",
-      sv: "F\xF6rs\xF6k igen"
+      sv: "F\xF6rs\xF6k igen",
+      ru: "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C"
     },
     back: {
       en: "Back",
       de: "Zur\xFCck",
       pt: "Voltar",
-      sv: "Tillbaks"
+      sv: "Tillbaks",
+      ru: "\u041D\u0430\u0437\u0430\u0434"
     },
     settings: {
       en: "Settings",
       de: "Einstellungen",
       pt: "Configura\xE7\xF5es",
       ja: "\u8A2D\u5B9A",
-      sv: "Inst\xE4llningar"
+      sv: "Inst\xE4llningar",
+      ru: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438"
     },
     on_ignore_list: {
       en: "Ignored",
       de: "Ignoriert",
       pt: "Ignorados",
-      sv: "Ignorerad"
+      sv: "Ignorerad",
+      ru: "\u0418\u0433\u043D\u043E\u0440\u0438\u0440\u0443\u0435\u0442\u0441\u044F"
     },
     friends: {
       en: "Friends",
       de: "Freunde",
       pt: "Amigos",
-      sv: "V\xE4nner"
+      sv: "V\xE4nner",
+      ru: "\u0414\u0440\u0443\u0437\u044C\u044F"
     },
     friends_setting: {
       en: "Keep up to date on what your friends are listening to",
       de: "Bleibe auf dem Laufenden, was deine Freunde h\xF6ren",
-      sv: "H\xE5ll koll p\xE5 vad dina v\xE4nner lyssnar p\xE5"
+      sv: "H\xE5ll koll p\xE5 vad dina v\xE4nner lyssnar p\xE5",
+      ru: "\u0421\u043B\u0435\u0434\u0438\u0442\u0435 \u0437\u0430 \u0442\u0435\u043C, \u0447\u0442\u043E \u0441\u043B\u0443\u0448\u0430\u044E\u0442 \u0432\u0430\u0448\u0438 \u0434\u0440\u0443\u0437\u044C\u044F"
     },
     add_friends: {
       en: "Add friends",
       de: "Freunde hinzuf\xFCgen",
-      sv: "L\xE4gg till v\xE4nner"
+      sv: "L\xE4gg till v\xE4nner",
+      ru: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0434\u0440\u0443\u0437\u0435\u0439"
     },
     starred_friend: {
       name: {
         en: "Starred friend",
         de: "Markierter Freund",
-        sv: "Stj\xE4rnm\xE4rkt v\xE4n"
+        sv: "Stj\xE4rnm\xE4rkt v\xE4n",
+        ru: "\u0418\u0437\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u0434\u0440\u0443\u0433"
       },
       body: {
         en: "View their scrobbles alongside yours at all times",
         de: "Sehe deren Scrobbles jederzeit neben deinen an",
         pt: "Veja os scrobbles dele(a) junto aos seus o tempo todo",
-        sv: "Se deras skrobblingar bredvid dina hela tiden"
+        sv: "Se deras skrobblingar bredvid dina hela tiden",
+        ru: "\u041F\u043E\u0441\u0442\u043E\u044F\u043D\u043D\u043E \u043F\u0440\u043E\u0441\u043C\u0430\u0442\u0440\u0438\u0432\u0430\u0442\u044C \u0438\u0445 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F \u0440\u044F\u0434\u043E\u043C \u0441 \u0432\u0430\u0448\u0438\u043C\u0438"
       },
       notice: {
         en: "Not seeing the options you\u2019re after? Fill out your friends list in the settings.",
         de: "Siehst du nicht die Optionen, die du suchst? F\xFClle deine Freundesliste in den Einstellungen aus.",
-        sv: "Ser du inte inst\xE4llningar du letar efter? Fyll upp din v\xE4nlista i inst\xE4llningarna."
+        sv: "Ser du inte inst\xE4llningar du letar efter? Fyll upp din v\xE4nlista i inst\xE4llningarna.",
+        ru: "\u041D\u0435 \u0432\u0438\u0434\u0438\u0442\u0435 \u043D\u0443\u0436\u043D\u044B\u0445 \u043E\u043F\u0446\u0438\u0439? \u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0441\u0432\u043E\u0439 \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u0440\u0443\u0437\u0435\u0439 \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445."
       }
     },
     friend_difference: {
       en: "\u2018Friends\u2019 is a bleh-exclusive feature that allows you to keep up to date on your friend\u2019s listening history, it is local and does not influence your following list.",
       de: "\u201EFreunde\u201C ist eine exklusive bleh-Funktion, mit der du auf dem Laufenden bleiben kannst, was deine Freunde h\xF6ren. Freunde werden lokal verwaltet und beeinflussen nicht deine Follower-Liste.",
-      sv: "\u2019V\xE4nner\u2019 \xE4r en exklusiv del av bleh som till\xE5ter dig att h\xE5lla koll p\xE5 dina v\xE4nners lyssnarhistoria, det hanteras lokalt och r\xF6r inte din f\xF6ljarlista."
+      sv: "\u2019V\xE4nner\u2019 \xE4r en exklusiv del av bleh som till\xE5ter dig att h\xE5lla koll p\xE5 dina v\xE4nners lyssnarhistoria, det hanteras lokalt och r\xF6r inte din f\xF6ljarlista.",
+      ru: "\xAB\u0414\u0440\u0443\u0437\u044C\u044F\xBB \u2014 \u044D\u0442\u043E \u044D\u043A\u0441\u043A\u043B\u044E\u0437\u0438\u0432\u043D\u0430\u044F \u0444\u0443\u043D\u043A\u0446\u0438\u044F bleh, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u0435\u0442 \u0432\u0430\u043C \u0441\u043B\u0435\u0434\u0438\u0442\u044C \u0437\u0430 \u0438\u0441\u0442\u043E\u0440\u0438\u0435\u0439 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439 \u0432\u0430\u0448\u0438\u0445 \u0434\u0440\u0443\u0437\u0435\u0439. \u0421\u043F\u0438\u0441\u043E\u043A \u0443\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u043E \u0438 \u043D\u0435 \u0432\u043B\u0438\u044F\u0435\u0442 \u043D\u0430 \u0432\u0430\u0448 \u0441\u043F\u0438\u0441\u043E\u043A \u043F\u043E\u0434\u043F\u0438\u0441\u043E\u043A."
     },
     add_as_friend: {
       en: "Add as friend",
       de: "Als Freund hinzuf\xFCgen",
-      sv: "L\xE4gg till som v\xE4n"
+      sv: "L\xE4gg till som v\xE4n",
+      ru: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A\u0430\u043A \u0434\u0440\u0443\u0433\u0430"
     },
     remove_friend: {
       name: {
         en: "Remove friend",
         de: "Freund entfernen",
-        sv: "Ta bort v\xE4n"
+        sv: "Ta bort v\xE4n",
+        ru: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0434\u0440\u0443\u0433\u0430"
       },
       body: {
         en: "Are you sure you want to remove {u} as a friend, you will stay following them - it\u2018s only local.",
         de: "Bist du sicher, dass du {u} als Freund entfernen m\xF6chtest? Du folgst der Person weiterhin - die Freundesliste wird lokal verwaltet.",
-        sv: "\xC4r du s\xE4ker p\xE5 att du vill ta bort {u} som v\xE4n? Du f\xF6ljer dem fortfarande - v\xE4nlistan hanteras lokalt."
+        sv: "\xC4r du s\xE4ker p\xE5 att du vill ta bort {u} som v\xE4n? Du f\xF6ljer dem fortfarande - v\xE4nlistan hanteras lokalt.",
+        ru: "\u0412\u044B \u0443\u0432\u0435\u0440\u0435\u043D\u044B, \u0447\u0442\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C {u} \u0438\u0437 \u0434\u0440\u0443\u0437\u0435\u0439? \u0412\u044B \u043E\u0441\u0442\u0430\u043D\u0435\u0442\u0435\u0441\u044C \u043F\u043E\u0434\u043F\u0438\u0441\u0430\u043D\u044B \u043D\u0430 \u043D\u0435\u0433\u043E/\u043D\u0435\u0435 \u2014 \u044D\u0442\u043E \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u043F\u0438\u0441\u043E\u043A."
       }
     },
     added_as_friend: {
       en: "Added friend",
       de: "Freund hinzugef\xFCgt",
-      sv: "Lagt till som v\xE4n"
+      sv: "Lagt till som v\xE4n",
+      ru: "\u0414\u0440\u0443\u0433 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D"
     },
     removed_friend: {
       en: "Removed friend",
       de: "Freund entfernt",
-      sv: "Tagit bort v\xE4n"
+      sv: "Tagit bort v\xE4n",
+      ru: "\u0414\u0440\u0443\u0433 \u0443\u0434\u0430\u043B\u0435\u043D"
     },
     added_star: {
       en: "Added star status",
       de: "Markiert",
-      sv: "Stj\xE4rnm\xE4rkte"
+      sv: "Stj\xE4rnm\xE4rkte",
+      ru: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0435"
     },
     add_as_starred_friend: {
       en: "Star friend",
       de: "Freund markieren",
-      sv: "Stj\xE4rnm\xE4rk v\xE4n"
+      sv: "Stj\xE4rnm\xE4rk v\xE4n",
+      ru: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0434\u0440\u0443\u0433\u0430 \u0432 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0435"
     },
     removed_star: {
       en: "Removed star status",
       de: "Markierung entfernt",
-      sv: "Tog bort stj\xE4rnm\xE4rke"
+      sv: "Tog bort stj\xE4rnm\xE4rke",
+      ru: "\u0423\u0434\u0430\u043B\u0435\u043D \u0438\u0437 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E"
     },
     remove_as_star_friend: {
       en: "Remove star status",
       de: "Markierung entfernen",
-      sv: "Ta bort stj\xE4rnm\xE4rke"
+      sv: "Ta bort stj\xE4rnm\xE4rke",
+      ru: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0438\u0437 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E"
     },
     aka: {
       en: "aka.",
       de: "alias",
       pt: "vulgo",
-      sv: "ocks\xE5 k\xE4nd som"
+      sv: "ocks\xE5 k\xE4nd som",
+      ru: "\u043E\u043D \u0436\u0435"
     },
     account_pronouns: {
       en: "pronouns",
       de: "pronomen",
       pt: "pronomes",
-      sv: "pronomen"
+      sv: "pronomen",
+      ru: "\u043C\u0435\u0441\u0442\u043E\u0438\u043C\u0435\u043D\u0438\u044F"
     },
     account_created: {
       // dont translate to "scrobbling since", instead just "created"
       en: "created",
       de: "erstellt",
       pt: "criada",
-      sv: "skapades"
+      sv: "skapades",
+      ru: "\u0441\u043E\u0437\u0434\u0430\u043D"
     },
     account_scrobbling_since_replace: {
       // copy this from last.fm 1:1 (including the space at the end if there)
@@ -58147,25 +58239,29 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "scrobbelt seit ",
       pt: "em scrobble desde ",
       ja: "\u3088\u308Ascrobble",
-      sv: "skrobblar sedan "
+      sv: "skrobblar sedan ",
+      ru: "\u0441\u043A\u0440\u043E\u0431\u0431\u043B\u0438\u043D\u0433 \u0441 "
     },
     edit: {
       en: "Edit",
       de: "Bearbeiten",
       pt: "Editar",
-      sv: "Redigera"
+      sv: "Redigera",
+      ru: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
     },
     bulk_edit: {
       // as in the last.fm 'Bulk Edit' open-source extension
       en: "Bulk edit",
       de: "Mehrere bearbeiten",
       pt: "Edi\xE7\xE3o em massa",
-      sv: "Bulkredigera"
+      sv: "Bulkredigera",
+      ru: "\u041C\u0430\u0441\u0441\u043E\u0432\u043E\u0435 \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435"
     },
     scrobble: {
       en: "Scrobble",
       de: "Scrobble",
-      sv: "Skrobbla"
+      sv: "Skrobbla",
+      ru: "\u0421\u043A\u0440\u043E\u0431\u0431\u043B"
     },
     scrobble_value: {
       en: "Scrobble {v}"
@@ -58175,13 +58271,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Average",
       de: "Durchschnitt",
       pt: "M\xE9dia",
-      sv: "Genomsnitt"
+      sv: "Genomsnitt",
+      ru: "\u0421\u0440\u0435\u0434\u043D\u0435\u0435"
     },
     scrobbles: {
       en: "Scrobbles",
       de: "Scrobbles",
       ja: "Scrobble",
-      sv: "Skrobblingar"
+      sv: "Skrobblingar",
+      ru: "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F"
     },
     count_plays: {
       // e.g. 20 plays in a music grid
@@ -58190,13 +58288,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "{c} plays",
       de: "{c} Scrobbles",
       pt: "{c} scrobbles",
-      sv: "{c} skrobblingar"
+      sv: "{c} skrobblingar",
+      ru: "{c} \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439"
+      // problem with rus. language using different versions of same word for different number -- craw
     },
     count_scrobbles: {
       en: "{c} scrobbles",
       de: "{c} Scrobbles",
       pt: "{c} scrobbles",
-      sv: "{c} skrobblingar"
+      sv: "{c} skrobblingar",
+      ru: "{c} \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u043E\u0432"
+      // same here -- craw
     },
     listens: {
       // base on native last.fm ui
@@ -58204,335 +58306,398 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Scrobbles",
       pt: "scrobbles",
       sv: "skrobblingar",
+      ru: "\u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F",
       count: {
         en: "{c} listens",
         de: "{c} Scrobbles",
         pt: "{c} scrobbles",
-        sv: "{c} skrobblingar"
+        sv: "{c} skrobblingar",
+        ru: "{c} \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439"
+        // and here -- craw
       }
     },
     new_scrobble: {
       en: "New scrobble",
       de: "Neuer Scrobble",
       pt: "Novo scrobble",
-      sv: "Ny skrobbel"
+      sv: "Ny skrobbel",
+      ru: "\u041D\u043E\u0432\u044B\u0439 \u0441\u043A\u0440\u043E\u0431\u0431\u043B"
     },
     scrobble_failed: {
       en: "Scrobble could not be sent",
       de: "Scrobble konnte nicht gesendet werden",
-      sv: "Skrobblingen kunde inte skickas"
+      sv: "Skrobblingen kunde inte skickas",
+      ru: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u0441\u043A\u0440\u043E\u0431\u0431\u043B"
     },
     scrobble_error_codes: {
       // https://www.last.fm/api/show/track.scrobble
       1: {
         en: "Artist name was ignored",
         de: "K\xFCnstlername wurde ignoriert",
-        sv: "Artistnamnet var ignorerad"
+        sv: "Artistnamnet var ignorerad",
+        ru: "\u0418\u043C\u044F \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044F \u043F\u0440\u043E\u0438\u0433\u043D\u043E\u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043E"
       },
       2: {
         en: "Track name was ignored",
         de: "Titelname wurde ignoriert",
-        sv: "L\xE5ttiteln var ignorerad"
+        sv: "L\xE5ttiteln var ignorerad",
+        ru: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0440\u0435\u043A\u0430 \u043F\u0440\u043E\u0438\u0433\u043D\u043E\u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043E"
       },
       3: {
         en: "Timestamp is too old",
         de: "Zeitstempel ist zu alt",
-        sv: "Tidsst\xE4mpeln \xE4r f\xF6r gammal"
+        sv: "Tidsst\xE4mpeln \xE4r f\xF6r gammal",
+        ru: "\u0412\u0440\u0435\u043C\u0435\u043D\u043D\u0430\u044F \u043C\u0435\u0442\u043A\u0430 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u0441\u0442\u0430\u0440\u0430\u044F"
       },
       4: {
         en: "Timestamp is too new",
         de: "Zeitstempel ist zu neu",
-        sv: "Tidsst\xE4mpeln \xE4r f\xF6r ny"
+        sv: "Tidsst\xE4mpeln \xE4r f\xF6r ny",
+        ru: "\u0412\u0440\u0435\u043C\u0435\u043D\u043D\u0430\u044F \u043C\u0435\u0442\u043A\u0430 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u043D\u043E\u0432\u0430\u044F"
       },
       5: {
         en: "Daily scrobble limit exceeded",
-        sv: "Max dagliga skrobblingar har n\xE5tts"
+        sv: "Max dagliga skrobblingar har n\xE5tts",
+        ru: "\u041F\u0440\u0435\u0432\u044B\u0448\u0435\u043D \u0434\u043D\u0435\u0432\u043D\u043E\u0439 \u043B\u0438\u043C\u0438\u0442 \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u043E\u0432"
       }
     },
     artist: {
       en: "Artist",
       de: "K\xFCnstler",
       pt: "Artista",
-      sv: "Artist"
+      sv: "Artist",
+      ru: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C"
     },
     artists: {
       en: "Artists",
       de: "K\xFCnstler",
       pt: "Artistas",
       ja: "\u30A2\u30FC\u30C6\u30A3\u30B9\u30C8",
-      sv: "Artister"
+      sv: "Artister",
+      ru: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0438"
     },
     artists_tooltip: {
       en: "Multiple artists are grouped into this profile",
       de: "Mehrere K\xFCnstler sind auf diesem Profil gruppiert",
       pt: "M\xFAltiplos artistas est\xE3o agrupados neste perfil",
-      sv: "Flera artister delar denna profil"
+      sv: "Flera artister delar denna profil",
+      ru: "\u0412 \u044D\u0442\u043E\u043C \u043F\u0440\u043E\u0444\u0438\u043B\u0435 \u0441\u0433\u0440\u0443\u043F\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u044B \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u0439"
     },
     album: {
       en: "Album",
       de: "Album",
       pt: "\xC1lbum",
-      sv: "Album"
+      sv: "Album",
+      ru: "\u0410\u043B\u044C\u0431\u043E\u043C"
     },
     albums: {
       en: "Albums",
       de: "Alben",
       pt: "\xC1lbuns",
       ja: "\u30A2\u30EB\u30D0\u30E0",
-      sv: "Album"
+      sv: "Album",
+      ru: "\u0410\u043B\u044C\u0431\u043E\u043C\u044B"
     },
     albums_and_tracks: {
-      en: "Albums and tracks"
+      en: "Albums and tracks",
+      sv: "Album och l\xE5tar",
+      ru: "\u0410\u043B\u044C\u0431\u043E\u043C\u044B \u0438 \u0442\u0440\u0435\u043A\u0438"
     },
     album_artist: {
       en: "Album Artist",
       de: "Albumk\xFCnstler",
-      sv: "Albumartist"
+      sv: "Albumartist",
+      ru: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C \u0430\u043B\u044C\u0431\u043E\u043C\u0430"
     },
     single: {
       // release type
-      en: "Single"
+      en: "Single",
+      sv: "Singel",
+      ru: "\u0421\u0438\u043D\u0433\u043B"
     },
     track: {
       en: "Track",
       de: "Titel",
       pt: "Faixa",
-      sv: "L\xE5t"
+      sv: "L\xE5t",
+      ru: "\u0422\u0440\u0435\u043A"
     },
     tracks: {
       en: "Tracks",
       de: "Titel",
       pt: "Faixas",
       ja: "\u30C8\u30E9\u30C3\u30AF",
-      sv: "L\xE5tar"
+      sv: "L\xE5tar",
+      ru: "\u0422\u0440\u0435\u043A\u0438"
     },
     appearance: {
       en: "Appearance",
       de: "Erscheinungsbild",
       pt: "Apar\xEAncia",
-      sv: "Uts\xE9ende"
+      sv: "Uts\xE9ende",
+      ru: "\u0412\u043D\u0435\u0448\u043D\u0438\u0439 \u0432\u0438\u0434"
     },
     visual: {
       en: "Visual",
       de: "Design",
-      sv: "Visuellt"
+      sv: "Visuellt",
+      ru: "\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435"
     },
     theme: {
       en: "Theme",
       de: "Farbschema",
       pt: "Tema",
-      sv: "Tema"
+      sv: "Tema",
+      ru: "\u0422\u0435\u043C\u0430"
     },
     theme_day: {
       name: {
         en: "Day",
         de: "Tag",
-        sv: "Dag"
+        sv: "Dag",
+        ru: "\u0421\u0432\u0435\u0442\u043B\u0430\u044F"
       },
       body: {
         en: "When your system reports light theme",
         de: "Wenn dein System ein helles Farbschema hat",
-        sv: "N\xE4r ditt system rapporterar ett ljust tema"
+        sv: "N\xE4r ditt system rapporterar ett ljust tema",
+        ru: "\u041A\u043E\u0433\u0434\u0430 \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0441\u0432\u0435\u0442\u043B\u0430\u044F \u0442\u0435\u043C\u0430"
       }
     },
     theme_night: {
       name: {
         en: "Night",
         de: "Nacht",
-        sv: "Natt"
+        sv: "Natt",
+        ru: "\u041D\u043E\u0447\u043D\u0430\u044F"
       },
       body: {
         en: "When your system reports dark theme",
         de: "Wenn dein System ein dunkles Farbschema hat",
-        sv: "N\xE4r ditt system rapporterar ett m\xF6rk tema"
+        sv: "N\xE4r ditt system rapporterar ett m\xF6rk tema",
+        ru: "\u041A\u043E\u0433\u0434\u0430 \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0442\u0435\u043C\u043D\u0430\u044F \u0442\u0435\u043C\u0430"
       }
     },
     theme_schedule: {
       en: "Choose which theme preference to apply based on your system theme.",
       de: "W\xE4hle dein bevorzugtes Farbschema basierend auf deinem Systemdesign.",
-      sv: "V\xE4lj f\xF6redraget tema att till\xE4mpa utg\xE5ende fr\xE5n ditt systemtema."
+      sv: "V\xE4lj f\xF6redraget tema att till\xE4mpa utg\xE5ende fr\xE5n ditt systemtema.",
+      ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0435\u043C\u0443, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u0431\u0443\u0434\u0435\u0442 \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u0442\u044C\u0441\u044F \u0432 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043E\u0442 \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u043E\u0439 \u0442\u0435\u043C\u044B."
     },
     themes: {
       name: {
         en: "Themes",
         de: "Farbschema",
         pt: "Temas",
-        sv: "Teman"
+        sv: "Teman",
+        ru: "\u0422\u0435\u043C\u044B"
       },
       light: {
         en: "Light",
         de: "Hell",
         pt: "Claro",
-        sv: "Ljus"
+        sv: "Ljus",
+        ru: "\u0421\u0432\u0435\u0442\u043B\u0430\u044F"
       },
       ink: {
         en: "Ink",
         de: "Tinte",
         pt: "Tinta",
-        sv: "Bl\xE4ck"
+        sv: "Bl\xE4ck",
+        ru: "\u0427\u0435\u0440\u043D\u0438\u043B\u0430"
       },
       dark: {
         en: "Ash",
         de: "Asche",
         pt: "Cinza",
-        sv: "Aska"
+        sv: "Aska",
+        ru: "\u041F\u0435\u043F\u0435\u043B"
+        // straight translate of word "ash" -- craw
       },
       darker: {
         en: "Dark",
         de: "Dunkel",
         pt: "Escuro",
-        sv: "M\xF6rk"
+        sv: "M\xF6rk",
+        ru: "\u0422\u0435\u043C\u043D\u0430\u044F"
       },
       oled: {
         en: "Void",
         de: "Nacht",
         pt: "Vazio",
-        sv: "Tomhet"
+        sv: "Tomhet",
+        ru: "\u041F\u0443\u0441\u0442\u043E\u0442\u0430"
       }
     },
     colours: {
       en: "Colours",
       de: "Farben",
       pt: "Colorir",
-      sv: "F\xE4rger"
+      sv: "F\xE4rger",
+      ru: "\u0426\u0432\u0435\u0442\u0430"
     },
     adaptive: {
       en: "Adaptive",
       de: "Adaptiv",
-      sv: "Adaptiv"
+      sv: "Adaptiv",
+      ru: "\u0410\u0434\u0430\u043F\u0442\u0438\u0432\u043D\u044B\u0439"
     },
     adaptive_tip: {
       en: "Your theme preference will be either {day} or {night}, based on your system. ",
       de: "Dein bevorzugtes Farbschema wird entweder {day} oder {night} sein, basierend auf deinem System. ",
-      sv: "Ditt f\xF6redragna tema blir antigen {day} eller {night}, beroende p\xE5 ditt system. "
+      sv: "Ditt f\xF6redragna tema blir antigen {day} eller {night}, beroende p\xE5 ditt system. ",
+      ru: "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0442\u0435\u043C\u0430 \u0431\u0443\u0434\u0435\u0442 {day} \u0438\u043B\u0438 {night} \u0432 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043E\u0442 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043A \u0432\u0430\u0448\u0435\u0439 \u0441\u0438\u0441\u0442\u0435\u043C\u044B."
     },
     change_schedule: {
       en: "Change schedule",
       de: "Zeitplan \xE4ndern",
-      sv: "\xC4ndra schema"
+      sv: "\xC4ndra schema",
+      ru: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0440\u0430\u0441\u043F\u0438\u0441\u0430\u043D\u0438\u0435"
     },
     change_my_colour_when: {
       name: {
         en: "Use a context-based accent colour when",
         de: "Kontextbasierte Akzentfarbe verwenden, wenn",
-        sv: "Anv\xE4nd kontextbaserad accentf\xE4rg n\xE4r"
+        sv: "Anv\xE4nd kontextbaserad accentf\xE4rg n\xE4r",
+        ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u043A\u043E\u043D\u0442\u0435\u043A\u0441\u0442\u043D\u044B\u0439 \u0430\u043A\u0446\u0435\u043D\u0442\u043D\u044B\u0439 \u0446\u0432\u0435\u0442, \u043A\u043E\u0433\u0434\u0430"
       },
       body: {
         en: "Temporarily override your selected accent to match album art",
         de: "\xDCberschreibe vor\xFCbergehend deine ausgew\xE4hlte Akzentfarbe, damit sie zum Albumcover passt",
-        sv: "\xC4ndra tillf\xE4lligt din valda accentf\xE4rg f\xF6r att matcha albumkonsten"
+        sv: "\xC4ndra tillf\xE4lligt din valda accentf\xE4rg f\xF6r att matcha albumkonsten",
+        ru: "\u0412\u0440\u0435\u043C\u0435\u043D\u043D\u043E \u0437\u0430\u043C\u0435\u043D\u044F\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u0430\u043A\u0446\u0435\u043D\u0442\u043D\u044B\u0439 \u0446\u0432\u0435\u0442 \u043D\u0430 \u0446\u0432\u0435\u0442 \u043E\u0431\u043B\u043E\u0436\u043A\u0438 \u0430\u043B\u044C\u0431\u043E\u043C\u0430"
       }
     },
     hue_from_album: {
       // a sub-option for change_my_colour_when
       en: "Browsing album pages",
       de: "Albumseiten angesehen werden",
-      sv: "Du \xE4r p\xE5 albumsidor"
+      sv: "Du \xE4r p\xE5 albumsidor",
+      ru: "\u041F\u0440\u043E\u0441\u043C\u0430\u0442\u0440\u0438\u0432\u0430\u044E\u0442\u0441\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432"
     },
     colourful_active: {
       // a sub-option for change_my_colour_when
       en: "Actively scrobbling a track",
       de: "ein Titel aktiv gescrobbelt wird",
-      sv: "Aktivt skrobblar en l\xE5t"
+      sv: "Aktivt skrobblar en l\xE5t",
+      ru: "\u041F\u0440\u043E\u0438\u0441\u0445\u043E\u0434\u0438\u0442 \u0430\u043A\u0442\u0438\u0432\u043D\u044B\u0439 \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u0438\u043D\u0433 \u0442\u0440\u0435\u043A\u0430"
     },
     colourful_all: {
       // a sub-option for change_my_colour_when
       en: "Viewing any track",
       de: "ein beliebiger Titel angesehen wird",
-      sv: "Visar en l\xE5t"
+      sv: "Visar en l\xE5t",
+      ru: "\u041F\u0440\u043E\u0441\u043C\u0430\u0442\u0440\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043B\u044E\u0431\u043E\u0439 \u0442\u0440\u0435\u043A"
     },
     configure: {
       en: "Configure",
       de: "Konfigurieren",
       pt: "Configurar",
-      sv: "Konfigurera"
+      sv: "Konfigurera",
+      ru: "\u041D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C"
     },
     links: {
       en: "Links",
       de: "Links",
-      sv: "L\xE4nkar"
+      sv: "L\xE4nkar",
+      ru: "\u0421\u0441\u044B\u043B\u043A\u0438"
     },
     event: {
       en: "Event",
       de: "Event",
       pt: "Evento",
-      sv: "Evenemang"
+      sv: "Evenemang",
+      ru: "\u0421\u043E\u0431\u044B\u0442\u0438\u0435"
     },
     events: {
       en: "Events",
       de: "Events",
       pt: "Eventos",
       ja: "\u30A4\u30D9\u30F3\u30C8",
-      sv: "Evenemang"
+      sv: "Evenemang",
+      ru: "\u0421\u043E\u0431\u044B\u0442\u0438\u044F"
     },
     lineup: {
       en: "Line-up",
       de: "Line-up",
       pt: "Programa\xE7\xE3o",
-      sv: "Spelschema"
+      sv: "Spelschema",
+      ru: "\u0423\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u0438"
     },
     attendance: {
       en: "Attendance",
       de: "Teilnahme",
       pt: "Comparecimento",
-      sv: "N\xE4rvarande"
+      sv: "N\xE4rvarande",
+      ru: "\u041F\u043E\u0441\u0435\u0449\u0430\u0435\u043C\u043E\u0441\u0442\u044C"
     },
     top_badge: {
       en: "Top Badge",
       de: "Top-Abzeichen",
       pt: "Emblema superior",
-      sv: "Toppemblem"
+      sv: "Toppemblem",
+      ru: "\u0422\u043E\u043F \u0437\u043D\u0430\u0447\u043E\u043A"
     },
     general: {
       en: "General",
       de: "Allgemein",
       pt: "Geral",
-      sv: "Generellt"
+      sv: "Generellt",
+      ru: "\u041E\u0431\u0449\u0438\u0435"
     },
     interface: {
       en: "Interface",
       de: "Oberfl\xE4che",
-      sv: "Interface"
+      sv: "Interface",
+      ru: "\u0418\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441"
     },
     music: {
       en: "Music",
       de: "Musik",
       pt: "M\xFAsica",
       ja: "\u97F3\u697D",
-      sv: "Musik"
+      sv: "Musik",
+      ru: "\u041C\u0443\u0437\u044B\u043A\u0430"
     },
     smart_music_titles: {
-      en: "Smart music titles"
+      en: "Smart music titles",
+      sv: "Smarta musiktitlar",
+      ru: "\u0423\u043C\u043D\u044B\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0442\u0440\u0435\u043A\u043E\u0432"
     },
     playback: {
       en: "Playback",
       de: "Wiedergabe",
-      sv: "Uppspelning"
+      sv: "Uppspelning",
+      ru: "\u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0434\u0435\u043D\u0438\u0435"
     },
     profile: {
       en: "Profile",
       de: "Profil",
       pt: "Perfil",
       pl: "Profil",
-      sv: "Profil"
+      sv: "Profil",
+      ru: "\u041F\u0440\u043E\u0444\u0438\u043B\u044C"
     },
     view_profile: {
       en: "View profile",
       de: "Profil anzeigen",
       pt: "Ver perfil",
-      sv: "Visa profil"
+      sv: "Visa profil",
+      ru: "\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043F\u0440\u043E\u0444\u0438\u043B\u044C"
     },
     edit_profile: {
       en: "Edit profile",
       de: "Profil bearbeiten",
       pt: "Editar perfil",
-      sv: "Redigera profil"
+      sv: "Redigera profil",
+      ru: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0440\u043E\u0444\u0438\u043B\u044C"
     },
     current_season: {
       en: "Current season",
       de: "Aktuelle Saison",
       pt: "Esta\xE7\xE3o atual",
-      sv: "Nuvarande \xE5rstid"
+      sv: "Nuvarande \xE5rstid",
+      ru: "\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0441\u0435\u0437\u043E\u043D"
     },
     seasonal: {
       name: {
@@ -58540,79 +58705,100 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Seasonal",
         de: "Saisonal",
         pt: "Esta\xE7\xF5es",
-        sv: "\xC5rstider"
+        sv: "\xC5rstider",
+        ru: "\u0421\u0435\u0437\u043E\u043D\u044B"
       },
       listing: {
         none: {
           en: "None active",
           de: "Keine aktiv",
           pt: "Nenhuma ativa",
-          sv: "Ingen aktiv"
+          sv: "Ingen aktiv",
+          ru: "\u041D\u0435\u0442 \u0430\u043A\u0442\u0438\u0432\u043D\u044B\u0445"
         },
         easter: {
           en: "Easter",
           de: "Ostern",
           pt: "P\xE1scoa",
-          sv: "P\xE5sk"
+          sv: "P\xE5sk",
+          ru: "\u041F\u0430\u0441\u0445\u0430"
         },
         pride: {
           en: "Pride",
           de: "Pride",
           pt: "Orgulho",
-          sv: "Pride"
+          sv: "Pride",
+          ru: "\u041F\u0440\u0430\u0439\u0434\u0430"
         },
         halloween: {
           en: "Halloween",
           de: "Halloween",
           pt: "Dia das Bruxas",
-          sv: "Halloween"
+          sv: "Halloween",
+          ru: "\u0425\u044D\u043B\u043B\u043E\u0443\u0438\u043D"
         },
         pre_fall: {
           en: "Early autumn",
           de: "Fr\xFCher Herbst",
           pt: "Pr\xE9-outono",
-          sv: "Tidig h\xF6st"
+          sv: "Tidig h\xF6st",
+          ru: "\u0420\u0430\u043D\u043D\u044F\u044F \u043E\u0441\u0435\u043D\u044C"
         },
         fall: {
           en: "Autumn",
           de: "Herbst",
           pt: "Outono",
-          sv: "H\xF6st"
+          sv: "H\xF6st",
+          ru: "\u041E\u0441\u0435\u043D\u044C"
         },
         christmas: {
           en: "Christmas",
           de: "Weihnachten",
           pt: "Natal",
-          sv: "Jul"
+          sv: "Jul",
+          ru: "\u0420\u043E\u0436\u0434\u0435\u0441\u0442\u0432\u043E"
         },
         new_years: {
           en: "New Years",
           de: "Neujahr",
           pt: "Ano Novo",
-          sv: "Ny\xE5r"
+          sv: "Ny\xE5r",
+          ru: "\u041D\u043E\u0432\u044B\u0439 \u0433\u043E\u0434"
         }
       },
       notice: {
-        en: "Open the live counter"
+        en: "Open the live counter",
+        sv: "\xD6ppna live-nedr\xE4kningen",
+        ru: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0441\u0447\u0435\u0442\u0447\u0438\u043A \u0432 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u043C \u0432\u0440\u0435\u043C\u0435\u043D\u0438"
       },
       live: {
-        en: "Counter is updating live"
+        en: "Counter is updating live",
+        sv: "Nedr\xE4kningen uppdateras live",
+        ru: "\u0421\u0447\u0435\u0442\u0447\u0438\u043A \u043E\u0431\u043D\u043E\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0432 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u043C \u0432\u0440\u0435\u043C\u0435\u043D\u0438"
       },
       presets: {
         // these are seasonal exclusive colour presets
         nonsense: {
           // reference to https://open.spotify.com/track/7yogx3TwxGwSxO2QITsT2q
-          en: "A Nonsense Christmas"
+          en: "A Nonsense Christmas",
+          sv: "A Nonsense Christmas",
+          ru: "\u0411\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u043E\u0435 \u0420\u043E\u0436\u0434\u0435\u0441\u0442\u0432\u043E"
         },
         fruitcake: {
           // reference to https://open.spotify.com/album/7EisdwWcodpmHxgpGVE5Pg
-          en: "fruitcake"
+          en: "fruitcake",
+          sv: "fruitcake",
+          ru: "\u0444\u0440\u0443\u043A\u0442\u043E\u0432\u044B\u0439 \u043A\u0435\u043A\u0441"
         },
         mistletoe: {
-          en: "Mistletoe"
+          en: "Mistletoe",
+          sv: "Mistel",
+          ru: "\u041E\u043C\u0435\u043B\u0430"
         },
         festival: {
-          en: "Christmas Eve"
+          en: "Christmas Eve",
+          sv: "Julafton",
+          ru: "\u0421\u043E\u0447\u0435\u043B\u044C\u043D\u0438\u043A"
         }
       }
     },
@@ -58620,19 +58806,22 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "New Season!",
       de: "Neue Jahreszeit!",
       pt: "Nova Esta\xE7\xE3o!",
-      sv: "Ny \xE5rstid!"
+      sv: "Ny \xE5rstid!",
+      ru: "\u041D\u043E\u0432\u044B\u0439 \u0441\u0435\u0437\u043E\u043D!"
     },
     value_for_time: {
       // e.g. Halloween for 3 days
       en: "{v} for {time}",
       pt: "{v} para {time}",
-      sv: "{v} till {time}"
+      sv: "{v} till {time}",
+      ru: "{v} \u043D\u0430 {time}"
     },
     seasonal_timeline: {
       en: "Seasonal timeline",
       de: "Saisonaler Zeitstrahl",
       pt: "Linha do tempo sazonal",
-      sv: "Tidslinje f\xF6r \xE5rstider"
+      sv: "Tidslinje f\xF6r \xE5rstider",
+      ru: "\u0421\u0435\u0437\u043E\u043D\u043D\u0430\u044F \u0448\u043A\u0430\u043B\u0430 \u0432\u0440\u0435\u043C\u0435\u043D\u0438"
     },
     enable_seasons: {
       // translate to seasons if it reads better
@@ -58640,92 +58829,113 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Automatically adapt to seasonal events",
         de: "Automatisch an saisonale Events anpassen",
         pt: "Adaptar automaticamente a eventos sazonais",
-        sv: "Adaptera automatiskt f\xF6r \xE5rstider"
+        sv: "Adaptera automatiskt f\xF6r \xE5rstider",
+        ru: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0430\u0434\u0430\u043F\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u0441\u044F \u043A \u0441\u0435\u0437\u043E\u043D\u043D\u044B\u043C \u0441\u043E\u0431\u044B\u0442\u0438\u044F\u043C"
       },
       body: {
         en: "Adapts the default colour, iconset, and shows particles depending on the season",
         de: "Passt die Standardfarbe und das Iconset an und zeigt Partikel entsprechend der Jahreszeit an",
         pt: "Adapta a cor padr\xE3o, \xEDcones e exibe part\xEDculas dependendo da sazonalidade",
-        sv: "Adaptera f\xE4rg, ikoner, och visa partiklar beroende p\xE5 \xE5rstiden"
+        sv: "Adaptera f\xE4rg, ikoner, och visa partiklar beroende p\xE5 \xE5rstiden",
+        ru: "\u0410\u0434\u0430\u043F\u0442\u0438\u0440\u0443\u0435\u0442 \u0446\u0432\u0435\u0442 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E, \u043D\u0430\u0431\u043E\u0440 \u0437\u043D\u0430\u0447\u043A\u043E\u0432 \u0438 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u0442 \u0447\u0430\u0441\u0442\u0438\u0446\u044B \u0432 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043E\u0442 \u0441\u0435\u0437\u043E\u043D\u0430"
       }
     },
     seasonal_particles_fps: {
       name: {
         en: "Reduce quality of particles",
         de: "Partikelqualit\xE4t reduzieren",
-        sv: "S\xE4nk partiklarnas kvalitet"
+        sv: "S\xE4nk partiklarnas kvalitet",
+        ru: "\u0421\u043D\u0438\u0437\u0438\u0442\u044C \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0447\u0430\u0441\u0442\u0438\u0446"
       },
       body: {
         en: "Snow particles use a drop-shadow glow for aesthetics with the added processing cost",
         de: "Schneepartikel verwenden f\xFCr die \xC4sthetik einen Glanzeffekt \u2013 erfordert zus\xE4tzliche Rechenleistung",
-        sv: "Sn\xF6partiklarna anv\xE4nder en gl\xF6deffekt f\xF6r estetiska sj\xE4l, med lite extra datorbelastning"
+        sv: "Sn\xF6partiklarna anv\xE4nder en gl\xF6deffekt f\xF6r estetiska sj\xE4l, med lite extra datorbelastning",
+        ru: "\u0421\u043D\u0435\u0436\u043D\u044B\u0435 \u0447\u0430\u0441\u0442\u0438\u0446\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E\u0442 \u044D\u0444\u0444\u0435\u043A\u0442 \u0441\u0432\u0435\u0447\u0435\u043D\u0438\u044F \u0434\u043B\u044F \u044D\u0441\u0442\u0435\u0442\u0438\u043A\u0438 \u0446\u0435\u043D\u043E\u0439 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0445 \u0437\u0430\u0442\u0440\u0430\u0442 \u0440\u0435\u0441\u0443\u0440\u0441\u043E\u0432"
       }
     },
     seasonal_overlays: {
       name: {
-        en: "Display additional seasonal effects"
+        en: "Display additional seasonal effects",
+        sv: "Visa extra \xE5rstidseffekter",
+        ru: "\u041E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0442\u044C \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0441\u0435\u0437\u043E\u043D\u043D\u044B\u0435 \u044D\u0444\u0444\u0435\u043A\u0442\u044B"
       },
       body: {
-        en: "During winter seasons this applies a coat of ice to panels, otherwise mainly gradients"
+        en: "During winter seasons this applies a coat of ice to panels, otherwise mainly gradients",
+        sv: "Under vinters\xE4songen l\xE4ggs ett lager is p\xE5 paneler, annars mest bildgradienter",
+        ru: "\u0412 \u0437\u0438\u043C\u043D\u0438\u0435 \u0441\u0435\u0437\u043E\u043D\u044B \u044D\u0442\u043E \u0434\u043E\u0431\u0430\u0432\u043B\u044F\u0435\u0442 \u044D\u0444\u0444\u0435\u043A\u0442 \u043D\u0430\u043B\u0435\u0434\u0438 \u043D\u0430 \u043F\u0430\u043D\u0435\u043B\u0438, \u0432 \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F - \u0432 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u043C \u0433\u0440\u0430\u0434\u0438\u0435\u043D\u0442\u044B"
       }
     },
     seasonal_offset: {
       en: "Seasonal events are ran in your timezone, which we calculated as {offset}",
       de: "Saisonale Events werden in deiner Zeitzone ausgef\xFChrt, die wir als {offset} berechnet haben",
       pt: "Eventos sazonais s\xE3o realizados em seu fuso hor\xE1rio, que calculamos como {offset}",
-      sv: "\xC5rstidsevenemang h\xE5lls i din tidszon, som vi r\xE4knade ut vara {offset}"
+      sv: "\xC5rstidsevenemang h\xE5lls i din tidszon, som vi r\xE4knade ut vara {offset}",
+      ru: "\u0421\u0435\u0437\u043E\u043D\u043D\u044B\u0435 \u0441\u043E\u0431\u044B\u0442\u0438\u044F \u043F\u0440\u043E\u0432\u043E\u0434\u044F\u0442\u0441\u044F \u043F\u043E \u0432\u0430\u0448\u0435\u043C\u0443 \u0447\u0430\u0441\u043E\u0432\u043E\u043C\u0443 \u043F\u043E\u044F\u0441\u0443, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043C\u044B \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u043B\u0438 \u043A\u0430\u043A {offset}"
     },
     calculated_offset: {
       // timezone offset
       en: "Calculated offset based on timezone",
       de: "Berechnete Verschiebung basierend auf der Zeitzone",
       pt: "Offset calculado com base no fuso hor\xE1rio",
-      sv: "F\xF6rskjutning kalkylerats fr\xE5n tidszon"
+      sv: "F\xF6rskjutning kalkylerats fr\xE5n tidszon",
+      ru: "\u0420\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u043D\u043D\u043E\u0435 \u0441\u043C\u0435\u0449\u0435\u043D\u0438\u0435 \u043D\u0430 \u043E\u0441\u043D\u043E\u0432\u0435 \u0447\u0430\u0441\u043E\u0432\u043E\u0433\u043E \u043F\u043E\u044F\u0441\u0430"
     },
     started: {
       // season start date
       // start date: 1 day ago
-      en: "Start date"
+      en: "Start date",
+      sv: "Startdatum",
+      ru: "\u0414\u0430\u0442\u0430 \u043D\u0430\u0447\u0430\u043B\u0430"
     },
     next_in: {
       // season next date
       // next season: in 3 days
-      en: "Next season"
+      en: "Next season",
+      sv: "N\xE4sta \xE5rstid",
+      ru: "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0441\u0435\u0437\u043E\u043D"
     },
     ends_in: {
       // season end date
       // end date: in 2 days
-      en: "End date"
+      en: "End date",
+      sv: "Slutdatum",
+      ru: "\u0414\u0430\u0442\u0430 \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u044F"
     },
     text: {
       en: "Text",
       de: "Text",
       pt: "Texto",
-      sv: "Text"
+      sv: "Text",
+      ru: "\u0422\u0435\u043A\u0441\u0442"
     },
     accessibility: {
       en: "Accessibility",
       de: "Barrierefreiheit",
       pt: "Acessibilidade",
-      sv: "Tillg\xE4ngligthet"
+      sv: "Tillg\xE4ngligthet",
+      ru: "\u0414\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0441\u0442\u044C"
     },
     troubleshooting: {
       en: "Advanced",
       de: "Fortgeschritten",
       pt: "Avan\xE7ado",
-      sv: "Advancerat"
+      sv: "Advancerat",
+      ru: "\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E"
     },
     recommendations: {
       en: "Suggested",
       de: "Empfohlen",
       pt: "Sugest\xF5es",
-      sv: "F\xF6rslag"
+      sv: "F\xF6rslag",
+      ru: "\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u043E\u0432\u0430\u043D\u043D\u044B\u0435"
     },
     releases: {
       en: "Releases",
       de: "Ver\xF6ffentlichungen",
       pt: "Lan\xE7amentos",
-      sv: "Skivsl\xE4pp"
+      sv: "Skivsl\xE4pp",
+      ru: "\u0420\u0435\u043B\u0438\u0437\u044B"
     },
     no_releases_found: {
       en: "No releases found here"
@@ -58743,141 +58953,170 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Lesezeichen",
       pt: "Marcadores",
       ja: "\u30D6\u30C3\u30AF\u30DE\u30FC\u30AF",
-      sv: "Bokm\xE4rken"
+      sv: "Bokm\xE4rken",
+      ru: "\u0417\u0430\u043A\u043B\u0430\u0434\u043A\u0438"
     },
     charts: {
       en: "Charts",
       de: "Charts",
       pt: "Paradas",
       ja: "\u30C1\u30E3\u30FC\u30C8",
-      sv: "Topplistor"
+      sv: "Topplistor",
+      ru: "\u0427\u0430\u0440\u0442\u044B"
     },
     view_the_charts: {
-      en: "View the charts"
+      en: "View the charts",
+      ru: "\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0447\u0430\u0440\u0442\u044B"
     },
     welcome_back_user: {
       en: "Welcome back {user}!",
       de: "Willkommen z\xFCruck, {user}!",
       pt: "Bem-vindo(a) {user}!",
-      sv: "V\xE4lkommen tillbaka, {user}!"
+      sv: "V\xE4lkommen tillbaka, {user}!",
+      ru: "\u0421 \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435\u043C, {user}!"
     },
     // TODO(stel): is my capitalisation correct here at all lol ; yes cutie, well done <3
     good_morning_user: {
       en: "Good morning, {user}",
       de: "Guten Morgen, {user}",
       pt: "Bom dia, {user}",
-      sv: "God morgon, {user}"
+      sv: "God morgon, {user}",
+      ru: "\u0414\u043E\u0431\u0440\u043E\u0435 \u0443\u0442\u0440\u043E, {user}"
     },
     good_afternoon_user: {
       en: "Good afternoon, {user}",
       de: "Guten Nachmittag, {user}",
       pt: "Boa tarde, {user}",
-      sv: "God eftermiddag, {user}"
+      sv: "God eftermiddag, {user}",
+      ru: "\u0414\u043E\u0431\u0440\u044B\u0439 \u0434\u0435\u043D\u044C, {user}"
     },
     good_evening_user: {
       en: "Good evening, {user}",
       de: "Guten Abend, {user}",
       pt: "Boa noite, {user}",
-      sv: "God kv\xE4ll, {user}"
+      sv: "God kv\xE4ll, {user}",
+      ru: "\u0414\u043E\u0431\u0440\u044B\u0439 \u0432\u0435\u0447\u0435\u0440, {user}"
     },
     good_night_user: {
       en: "Goodnight, {user}",
       de: "Gute Nacht, {user}",
       pt: "Boa noite, {user}",
-      sv: "God natt, {user}"
+      sv: "God natt, {user}",
+      ru: "\u0421\u043F\u043E\u043A\u043E\u0439\u043D\u043E\u0439 \u043D\u043E\u0447\u0438, {user}"
     },
     bleh_settings: {
       en: "bleh Settings",
       de: "bleh-Einstellungen",
       pt: "Configura\xE7\xF5es do bleh",
-      sv: "bleh-inst\xE4llningar"
+      sv: "bleh-inst\xE4llningar",
+      ru: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 bleh"
     },
     bleh_setup: {
       en: "Setup",
       de: "Einrichtung",
       pt: "Instala\xE7\xE3o",
-      sv: "Installation"
+      sv: "Installation",
+      ru: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430"
     },
     import: {
       en: "Import",
       de: "Importieren",
       pt: "Importar",
       pl: "Importuj",
-      sv: "Importera"
+      sv: "Importera",
+      ru: "\u0418\u043C\u043F\u043E\u0440\u0442"
     },
     import_failed: {
       en: "Import failed",
+      sv: "Importering misslyckades",
+      ru: "\u0421\u0431\u043E\u0439 \u0438\u043C\u043F\u043E\u0440\u0442\u0430",
       notice: {
-        en: "The settings you attempted to import failed to parse, no changes were made."
+        en: "The settings you attempted to import failed to parse, no changes were made.",
+        sv: "Inst\xE4llningarna du f\xF6rs\xF6kte importera kunde inte l\xE4sas, inga \xE4ndringar har gjorts.",
+        ru: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0432\u044B \u043F\u044B\u0442\u0430\u043B\u0438\u0441\u044C \u0438\u043C\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C, \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C. \u0418\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043D\u0435 \u0431\u044B\u043B\u0438 \u0432\u043D\u0435\u0441\u0435\u043D\u044B."
       }
     },
     import_settings: {
       en: "Import settings",
       de: "Einstellungen importieren",
       pt: "Importar configura\xE7\xF5es",
-      sv: "Importera inst\xE4llningar"
+      sv: "Importera inst\xE4llningar",
+      ru: "\u0418\u043C\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438"
     },
     import_notice: {
       en: "This is a permanent action, beware of where you are copying from",
       de: "Dieser Vorgang ist unwiderruflich \u2013 sei vorsichtig, von wo du kopierst",
       pt: "Esta \xE9 uma a\xE7\xE3o permanente, cuidado com o lugar de onde voc\xEA est\xE1 copiando",
-      sv: "Det h\xE4r \xE4r permanent, oberoende av vart du kopierar ifr\xE5n"
+      sv: "Det h\xE4r \xE4r permanent, oberoende av vart du kopierar ifr\xE5n",
+      ru: "\u042D\u0442\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u043D\u0435\u043E\u0431\u0440\u0430\u0442\u0438\u043C\u043E, \u0431\u0443\u0434\u044C\u0442\u0435 \u0432\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u044C\u043D\u044B \u043A \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443 \u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F"
     },
     export: {
       en: "Export",
       de: "Exportieren",
       pt: "Exportar",
       pl: "Eksportuj",
-      sv: "Exportera"
+      sv: "Exportera",
+      ru: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442"
     },
     export_settings: {
       en: "Export settings",
       de: "Einstellungen exportieren",
       pt: "Exportar configura\xE7\xF5es",
-      sv: "Exportera inst\xE4llningar"
+      sv: "Exportera inst\xE4llningar",
+      ru: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438"
     },
     reset: {
       en: "Reset",
       de: "Zur\xFCcksetzen",
       pt: "Restaurar",
       pl: "Resetuj",
-      sv: "\xC5terst\xE4ll"
+      sv: "\xC5terst\xE4ll",
+      ru: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C"
     },
     reset_settings: {
       en: "Reset settings to default",
       de: "Standardeinstellungen wiederherstellen",
       pt: "Restaurar as configura\xE7\xF5es para o padr\xE3o",
-      sv: "\xC5terst\xE4ll alla inst\xE4llningar till det vanliga"
+      sv: "\xC5terst\xE4ll alla inst\xE4llningar till det vanliga",
+      ru: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0434\u043E \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0439 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E"
     },
     reset_notice: {
       en: "Your settings will be permanently reset, are you sure?",
       de: "Deine Einstellungen werden unwiderruflich zur\xFCckgesetzt, bist du sicher?",
       pt: "Sua configura\xE7\xE3o vai ser permanentemente restaurada ao padr\xE3o, voc\xEA tem certeza?",
-      sv: "\xC4r du s\xE4ker p\xE5 att du vill \xE5terst\xE4lla alla inst\xE4llningar? Det \xE4r permanent."
+      sv: "\xC4r du s\xE4ker p\xE5 att du vill \xE5terst\xE4lla alla inst\xE4llningar? Det \xE4r permanent.",
+      ru: "\u0412\u0430\u0448\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0431\u0443\u0434\u0443\u0442 \u0431\u0435\u0437\u0432\u043E\u0437\u0432\u0440\u0430\u0442\u043D\u043E \u0441\u0431\u0440\u043E\u0448\u0435\u043D\u044B, \u0432\u044B \u0443\u0432\u0435\u0440\u0435\u043D\u044B?"
     },
     reset_item_to_default: {
       en: "Reset item to default",
       de: "Element auf Standard zur\xFCcksetzen",
       pt: "Restaurar itens para o padr\xE3o",
-      sv: "\xC5terst\xE4ll till standard"
+      sv: "\xC5terst\xE4ll till standard",
+      ru: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u044D\u043B\u0435\u043C\u0435\u043D\u0442 \u0434\u043E \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E"
     },
     make_a_backup: {
       en: "Make a backup",
       de: "Backup erstellen",
       pt: "Fa\xE7a um backup",
-      sv: "Skapa en backup"
+      sv: "Skapa en backup",
+      ru: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u0443\u044E \u043A\u043E\u043F\u0438\u044E"
     },
     news: {
       en: "News",
       de: "Neuigkeiten",
       pt: "Not\xEDcias",
       sv: "Nytt",
+      ru: "\u041D\u043E\u0432\u043E\u0441\u0442\u0438",
       type: {
         major: {
-          en: "Major release"
+          en: "Major release",
+          sv: "St\xF6rre utg\xE5va",
+          ru: "\u041A\u0440\u0443\u043F\u043D\u044B\u0439 \u0440\u0435\u043B\u0438\u0437"
         },
         minor: {
-          en: "Minor release"
+          en: "Minor release",
+          sv: "Mindre utg\xE5va",
+          ru: "\u041C\u0435\u043B\u043A\u0438\u0439 \u0440\u0435\u043B\u0438\u0437"
         }
       }
     },
@@ -58885,102 +59124,121 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "News from {user}",
       de: "Neuigkeiten von {user}",
       pt: "Not\xEDcias da {user}",
-      sv: "Nytt fr\xE5n {user}"
+      sv: "Nytt fr\xE5n {user}",
+      ru: "\u041D\u043E\u0432\u043E\u0441\u0442\u0438 \u043E\u0442 {user}"
     },
     default: {
       en: "Default",
       de: "Standard",
       pt: "Padr\xE3o",
-      sv: "Standard"
+      sv: "Standard",
+      ru: "\u041F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E"
     },
     avatar: {
       en: "Avatar",
       de: "Profilbild",
-      sv: "Profilbild"
+      sv: "Profilbild",
+      ru: "\u0410\u0432\u0430\u0442\u0430\u0440"
     },
     customise: {
       en: "Customise",
       de: "Anpassen",
       pt: "Customizar",
-      sv: "Anpassa"
+      sv: "Anpassa",
+      ru: "\u041D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C"
     },
     convert: {
       en: "Convert",
       de: "Umwandeln",
       pt: "Converter",
-      sv: "Konvertera"
+      sv: "Konvertera",
+      ru: "\u041A\u043E\u043D\u0432\u0435\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
     },
     convert_from_hex: {
       en: "Convert colour",
       de: "Farbe umwandeln",
       pt: "Converter cor",
-      sv: "Konvertera f\xE4rg"
+      sv: "Konvertera f\xE4rg",
+      ru: "\u041A\u043E\u043D\u0432\u0435\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0446\u0432\u0435\u0442"
     },
     fonts: {
       en: "Fonts",
       de: "Schriftart",
       pt: "Fontes",
-      sv: "Typsnitt"
+      sv: "Typsnitt",
+      ru: "\u0428\u0440\u0438\u0444\u0442\u044B"
     },
     hue: {
       en: "Accent colour",
       de: "Akzentfarbe",
       pt: "Cor de destaque",
       pl: "Kolor akcentu (hue)",
-      sv: "Accentf\xE4rg"
+      sv: "Accentf\xE4rg",
+      ru: "\u041E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0446\u0432\u0435\u0442"
     },
     sat: {
       en: "Vibrancy",
       de: "S\xE4ttigung",
       pt: "Vivacidade",
       pl: "Nasycenie (saturation)",
-      sv: "F\xE4rgm\xE4ttnad"
+      sv: "F\xE4rgm\xE4ttnad",
+      ru: "\u041D\u0430\u0441\u044B\u0449\u0435\u043D\u043D\u043E\u0441\u0442\u044C"
     },
     lit: {
       en: "Lightness",
       de: "Helligkeit",
       pt: "Claridade",
       pl: "Jasno\u015B\u0107 (lightness)",
-      sv: "Ljushet"
+      sv: "Ljushet",
+      ru: "\u042F\u0440\u043A\u043E\u0441\u0442\u044C"
     },
     solarium: {
       name: {
         en: "Enable solarium glass effects",
         de: "Solarium-Glaseffekte aktivieren",
-        sv: "Aktivera solariumsglaseffekter"
+        sv: "Aktivera solariumsglaseffekter",
+        ru: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u044D\u0444\u0444\u0435\u043A\u0442 \u043C\u0430\u0442\u043E\u0432\u043E\u0433\u043E \u0441\u0442\u0435\u043A\u043B\u0430 Solarium"
       },
       body: {
         en: "Apply a see-through glassy material to many surfaces, which may degrade performance on some devices",
         de: "F\xFCgt vielen Oberfl\xE4chen ein durchsichtiges, glasartiges Material hinzu \u2013 kann die Leistung auf einigen Ger\xE4ten beeintr\xE4chtigen",
-        sv: "L\xE4g till ett genomskinligt glasliknande material till m\xE5nga ytor, som kan degradera prestanda p\xE5 vissa enheter"
+        sv: "L\xE4g till ett genomskinligt glasliknande material till m\xE5nga ytor, som kan degradera prestanda p\xE5 vissa enheter",
+        ru: "\u041F\u0440\u0438\u043C\u0435\u043D\u044F\u0435\u0442 \u043F\u043E\u043B\u0443\u043F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u044B\u0439 \u0441\u0442\u0435\u043A\u043B\u044F\u043D\u043D\u044B\u0439 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B \u043A\u043E \u043C\u043D\u043E\u0433\u0438\u043C \u043F\u043E\u0432\u0435\u0440\u0445\u043D\u043E\u0441\u0442\u044F\u043C, \u0447\u0442\u043E \u043C\u043E\u0436\u0435\u0442 \u0441\u043D\u0438\u0437\u0438\u0442\u044C \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u043D\u0430 \u043D\u0435\u043A\u043E\u0442\u043E\u0440\u044B\u0445 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0430\u0445"
       }
     },
     seasonal_warning: {
       en: "This season has a custom default accent colour!",
       de: "Diese Saison hat eine benutzerdefinierte Akzentfarbe",
       pt: "Esta esta\xE7\xE3o tem uma cor de destaque personalizada!",
-      sv: "Denna \xE5rstid har en anpassad f\xE4rg!"
+      sv: "Denna \xE5rstid har en anpassad f\xE4rg!",
+      ru: "\u042D\u0442\u043E\u0442 \u0441\u0435\u0437\u043E\u043D \u0438\u043C\u0435\u0435\u0442 \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0430\u043A\u0446\u0435\u043D\u0442\u043D\u044B\u0439 \u0446\u0432\u0435\u0442 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E!"
     },
     card_background_saturation: {
       name: {
         en: "Card background vibrancy",
         de: "S\xE4ttigung des Kartenhintergrunds",
         pt: "Vivacidade de fundo do cart\xE3o",
-        sv: "Bakgrundsf\xE4rg"
+        sv: "Bakgrundsf\xE4rg",
+        ru: "\u041D\u0430\u0441\u044B\u0449\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0444\u043E\u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438"
       },
       body: {
         en: "Bring some colour into your world (or reduce it)",
         de: "Bringe etwas Farbe in deine Welt (oder reduziere sie)",
         pt: "Traz algumas cores ao mundo (ou diminui elas)",
-        sv: "Skaffa lite f\xE4rg i din v\xE4rld (eller minska den)"
+        sv: "Skaffa lite f\xE4rg i din v\xE4rld (eller minska den)",
+        ru: "\u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u043A\u0440\u0430\u0441\u043E\u043A \u0432 \u0441\u0432\u043E\u0439 \u043C\u0438\u0440 (\u0438\u043B\u0438 \u0443\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u0435 \u0438\u0445)"
       }
     },
     noise: {
       name: {
-        en: "Noise overlay opacity"
+        en: "Noise overlay opacity",
+        sv: "Brus\xF6verl\xE4ggsopacitet",
+        ru: "\u041D\u0435\u043F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u0448\u0443\u043C\u0430"
       },
       body: {
-        en: "Apply a coat of subtle noise to add variation to solid backgrounds"
+        en: "Apply a coat of subtle noise to add variation to solid backgrounds",
+        sv: "Till\xE4mpa ett brus\xF6verl\xE4gg f\xF6r lite variation p\xE5 enf\xE4rgade bakgrunder",
+        ru: "\u041D\u0430\u043B\u043E\u0436\u0438\u0442\u044C \u0442\u043E\u043D\u043A\u0438\u0439 \u0441\u043B\u043E\u0439 \u0448\u0443\u043C\u0430, \u0447\u0442\u043E\u0431\u044B \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0440\u0430\u0437\u043D\u043E\u043E\u0431\u0440\u0430\u0437\u0438\u044F \u043E\u0434\u043D\u043E\u0442\u043E\u043D\u043D\u044B\u043C \u0444\u043E\u043D\u0430\u043C"
       }
     },
     save: {
@@ -58988,256 +59246,301 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Speichern",
       pt: "Salvar",
       pl: "Zapisz",
-      sv: "Spara"
+      sv: "Spara",
+      ru: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"
     },
     cancel: {
       en: "Cancel",
       de: "Abbrechen",
       pt: "Cancelar",
       pl: "Anuluj",
-      sv: "Avbryt"
+      sv: "Avbryt",
+      ru: "\u041E\u0442\u043C\u0435\u043D\u0430"
     },
     add: {
       en: "Add",
       de: "Hinzuf\xFCgen",
       pt: "Adicionar",
-      sv: "L\xE4gg till"
+      sv: "L\xE4gg till",
+      ru: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C"
     },
     remove: {
       en: "Remove",
       de: "Entfernen",
       pt: "Remover",
-      sv: "Radera"
+      sv: "Radera",
+      ru: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
     },
     clear: {
       en: "Clear",
       de: "L\xF6schen",
       pt: "Limpar",
       pl: "Wyczy\u015B\u0107",
-      sv: "Rensa"
+      sv: "Rensa",
+      ru: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C"
     },
     close: {
       en: "Close",
       de: "Schlie\xDFen",
       pt: "Fechar",
       pl: "Zamknij",
-      sv: "St\xE4ng"
+      sv: "St\xE4ng",
+      ru: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
     },
     go: {
       en: "Go",
       de: "Los",
       pt: "Ir",
-      sv: "G\xE5"
+      sv: "G\xE5",
+      ru: "\u041F\u0435\u0440\u0435\u0439\u0442\u0438"
     },
     skip: {
       en: "Skip",
       de: "\xDCberspringen",
       pt: "Pular",
-      sv: "Hoppa \xF6ver"
+      sv: "Hoppa \xF6ver",
+      ru: "\u041F\u0440\u043E\u043F\u0443\u0441\u0442\u0438\u0442\u044C"
     },
     send: {
       en: "Send",
       de: "Senden",
       pt: "Enviar",
-      sv: "Skicka"
+      sv: "Skicka",
+      ru: "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C"
     },
     done: {
       en: "Done",
       de: "Fertig",
       pt: "Feito",
       pl: "Gotowe",
-      sv: "F\xE4rdig"
+      sv: "F\xE4rdig",
+      ru: "\u0413\u043E\u0442\u043E\u0432\u043E"
     },
     finish: {
       en: "Finish",
       de: "Beenden",
       pt: "Terminar",
-      sv: "Klart"
+      sv: "Klart",
+      ru: "\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044C"
     },
     continue: {
       en: "Continue",
       de: "Fortsetzen",
       pt: "Continuar",
       pl: "Kontynuuj",
-      sv: "Forts\xE4tt"
+      sv: "Forts\xE4tt",
+      ru: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C"
     },
     click_for_more_options: {
       en: "Click for more options",
       de: "Klicke f\xFCr weitere Optionen",
-      sv: "Tryck f\xF6r mer alternativ"
+      sv: "Tryck f\xF6r mer alternativ",
+      ru: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u0431\u043E\u043B\u044C\u0448\u0435 \u043E\u043F\u0446\u0438\u0439"
     },
     right_click_for_more_options: {
       en: "Right-click for more options",
       de: "Rechtsklick f\xFCr weitere Optionen",
       pt: "Clique esquerdo para mais op\xE7\xF5es",
-      sv: "H\xF6gerklicka f\xF6r mer alternativ"
+      sv: "H\xF6gerklicka f\xF6r mer alternativ",
+      ru: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043F\u0440\u0430\u0432\u043E\u0439 \u043A\u043D\u043E\u043F\u043A\u043E\u0439 \u043C\u044B\u0448\u0438 \u0434\u043B\u044F \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0445 \u043E\u043F\u0446\u0438\u0439"
     },
     refresh_pending: {
       name: {
         en: "Refresh pending",
         de: "Aktualisierung anstehend",
         pt: "Atualizar pend\xEAncias",
-        sv: "F\xF6rv\xE4ntar omladdning"
+        sv: "F\xF6rv\xE4ntar omladdning",
+        ru: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435"
       },
       body: {
         en: "A setting you changed requires a page refresh",
         de: "Eine von dir ge\xE4nderte Einstellung erfordert eine Seitenaktualisierung, damit sie wirksam wird",
         pt: "Uma configura\xE7\xE3o que voc\xEA mudou exige uma atualiza\xE7\xE3o de p\xE1gina",
-        sv: "En inst\xE4llning du \xE4ndrade p\xE5 beh\xF6ver at sidan laddas om"
+        sv: "En inst\xE4llning du \xE4ndrade p\xE5 beh\xF6ver at sidan laddas om",
+        ru: "\u0418\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u0430\u044F \u0432\u0430\u043C\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B"
       }
     },
     new: {
       en: "New",
       de: "Neu",
       pt: "Nova",
-      sv: "Ny"
+      sv: "Ny",
+      ru: "\u041D\u043E\u0432\u043E\u0435"
     },
     beta: {
       en: "Beta",
       de: "Beta",
-      sv: "Beta"
+      sv: "Beta",
+      ru: "\u0411\u0435\u0442\u0430"
     },
     more: {
       en: "More",
       de: "Mehr",
       pt: "Mais",
-      sv: "Mer"
+      sv: "Mer",
+      ru: "\u0415\u0449\u0435"
     },
     inbox: {
       en: "Inbox",
       de: "Posteingang",
       pt: "Caixa de entrada",
-      sv: "Brevl\xE5da"
+      sv: "Brevl\xE5da",
+      ru: "\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0435"
     },
     notifications: {
       en: "Notifications",
       de: "Benachrichtigungen",
       pt: "Notifica\xE7\xF5es",
-      sv: "Notiser"
+      sv: "Notiser",
+      ru: "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F"
     },
     messages: {
       en: "Messages",
       de: "Nachrichten",
       pt: "Mensagens",
-      sv: "Meddelanden"
+      sv: "Meddelanden",
+      ru: "\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F"
     },
     preview: {
       en: "Preview",
       de: "Vorschau",
-      sv: "F\xF6rhandsvisning"
+      sv: "F\xF6rhandsvisning",
+      ru: "\u041F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440"
     },
     find_on: {
       // music services to find an artist/album/track on
       en: "Find on",
       de: "Hier zu finden",
       pt: "Encontre em",
-      sv: "S\xF6k upp p\xE5"
+      sv: "S\xF6k upp p\xE5",
+      ru: "\u041D\u0430\u0439\u0442\u0438 \u043D\u0430"
     },
     following: {
       en: "Following",
       de: "Gefolgt",
       pt: "Seguindo",
-      sv: "F\xF6ljer"
+      sv: "F\xF6ljer",
+      ru: "\u041F\u043E\u0434\u043F\u0438\u0441\u043A\u0438"
     },
     followers: {
       en: "Followers",
       de: "Follower:innen",
       pt: "Seguidores",
-      sv: "F\xF6ljare"
+      sv: "F\xF6ljare",
+      ru: "\u041F\u043E\u0434\u043F\u0438\u0441\u0447\u0438\u043A\u0438"
     },
     neighbours: {
       en: "Neighbours",
       de: "Nachbarn",
       pt: "Vizinhos",
-      sv: "Grannar"
+      sv: "Grannar",
+      ru: "\u0421\u043E\u0441\u0435\u0434\u0438"
     },
     website: {
       en: "Website",
       de: "Webseite",
-      sv: "Hemsida"
+      sv: "Hemsida",
+      ru: "\u0412\u0435\u0431\u0441\u0430\u0439\u0442"
     },
     overview: {
       en: "Overview",
       de: "\xDCbersicht",
       pt: "Vis\xE3o geral",
       ja: "\u30C0\u30A4\u30B8\u30A7\u30B9\u30C8",
-      sv: "\xD6versikt"
+      sv: "\xD6versikt",
+      ru: "\u041E\u0431\u0437\u043E\u0440"
     },
     photos: {
       en: "Photos",
       de: "Fotos",
       pt: "Fotos",
       ja: "\u5199\u771F",
-      sv: "Foton"
+      sv: "Foton",
+      ru: "\u0424\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438"
     },
     artwork: {
       en: "Artwork",
       de: "Cover",
       pt: "Arte de capa",
-      sv: "Konst"
+      sv: "Konst",
+      ru: "\u041E\u0431\u043B\u043E\u0436\u043A\u0430"
     },
     gallery_sum: {
-      en: "This is the sum of votes for ordering"
+      en: "This is the sum of votes for ordering",
+      sv: "Det h\xE4r \xE4r summan r\xF6ster f\xF6r bildordning",
+      ru: "\u042D\u0442\u043E \u0441\u0443\u043C\u043C\u0430 \u0433\u043E\u043B\u043E\u0441\u043E\u0432 \u0434\u043B\u044F \u0441\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0438"
     },
     view_saved: {
-      en: "View all saved photos"
+      en: "View all saved photos",
+      sv: "Visa alla sparade foton",
+      ru: "\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0441\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043D\u044B\u0435 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438"
     },
     dropzone: {
       en: "Drag-and-drop an image or click here",
       de: "Bild hierher ziehen oder hier klicken",
-      sv: "Dra och sl\xE4pp en bild eller klicka h\xE4r"
+      sv: "Dra och sl\xE4pp en bild eller klicka h\xE4r",
+      ru: "\u041F\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0438\u043B\u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0437\u0434\u0435\u0441\u044C"
     },
     similar_artists: {
       en: "Similar Artists",
       de: "\xC4hnliche K\xFCnstler:innen",
       pt: "Artistas similares",
-      sv: "Liknande artister"
+      sv: "Liknande artister",
+      ru: "\u041F\u043E\u0445\u043E\u0436\u0438\u0435 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0438"
     },
     artists_similar_to_name: {
       en: "Artists similar to {n}",
       de: "\xC4hnliche K\xFCnstler:innen wie {n}",
-      sv: "Liknande artister till {n}"
+      sv: "Liknande artister till {n}",
+      ru: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0438, \u043F\u043E\u0445\u043E\u0436\u0438\u0435 \u043D\u0430 {n}"
     },
     biography: {
       en: "Biography",
       de: "Biografie",
       pt: "Biografia",
       ja: "\u30D0\u30A4\u30AA\u30B0\u30E9\u30D5\u30A3\u30FC",
-      sv: "Biografi"
+      sv: "Biografi",
+      ru: "\u0411\u0438\u043E\u0433\u0440\u0430\u0444\u0438\u044F"
     },
     wiki: {
       en: "Wiki",
       de: "Wiki",
-      sv: "Wiki"
+      sv: "Wiki",
+      ru: "\u0418\u043D\u0444\u043E"
     },
     listeners: {
       en: "Listeners",
       de: "H\xF6rer:innen",
       pt: "Ouvintes",
-      sv: "Lyssnare"
+      sv: "Lyssnare",
+      ru: "\u0421\u043B\u0443\u0448\u0430\u0442\u0435\u043B\u0438"
     },
     listeners_you_know: {
       en: "Listeners You Know",
       de: "H\xF6rer:innen, die du kennst",
       pt: "Ouvintes que voc\xEA conhece",
-      sv: "Lyssnare du k\xE4nner"
+      sv: "Lyssnare du k\xE4nner",
+      ru: "\u0417\u043D\u0430\u043A\u043E\u043C\u044B\u0435 \u0441\u043B\u0443\u0448\u0430\u0442\u0435\u043B\u0438"
     },
     count_listeners: {
       en: "{c} listeners",
       de: "{c} H\xF6rer:innen",
       pt: "{c} ouvintes",
-      sv: "{c} lyssnare"
+      sv: "{c} lyssnare",
+      ru: "{c} \u0441\u043B\u0443\u0448\u0430\u0442\u0435\u043B\u0435\u0439"
     },
     tag: {
       en: "Tag",
       de: "Tag",
-      sv: "Tagg"
+      sv: "Tagg",
+      ru: "\u0422\u0435\u0433"
     },
     tags: {
       en: "Tags",
       de: "Tags",
       ja: "\u30BF\u30B0",
-      sv: "Taggar"
+      sv: "Taggar",
+      ru: "\u0422\u0435\u0433\u0438"
     },
     reports: {
       // last.fm listening reports
@@ -59245,7 +59548,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Berichte",
       ja: "\u30EC\u30DD\u30FC\u30C8",
       pt: "Relat\xF3rio",
-      sv: "Lyssningsrapport"
+      sv: "Lyssningsrapport",
+      ru: "\u041E\u0442\u0447\u0435\u0442\u044B"
     },
     artist_lower: {
       // used inside a sentence not on its own,
@@ -59253,7 +59557,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "artist",
       de: "K\xFCnstlers",
       pt: "artista",
-      sv: "artistnamnet"
+      sv: "artistnamnet",
+      ru: "\u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C"
     },
     album_lower: {
       // used inside a sentence not on its own,
@@ -59261,7 +59566,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "album",
       de: "Albums",
       pt: "\xE1lbum",
-      sv: "albumtiteln"
+      sv: "albumtiteln",
+      ru: "\u0430\u043B\u044C\u0431\u043E\u043C"
     },
     track_lower: {
       // used inside a sentence not on its own,
@@ -59269,7 +59575,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "track",
       de: "Titels",
       pt: "faixa",
-      sv: "l\xE5ten"
+      sv: "l\xE5ten",
+      ru: "\u0442\u0440\u0435\u043A"
     },
     lotus_cta: {
       // {t} is replaced by one of the 3 above
@@ -59281,95 +59588,111 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "This {t} is being re-capitalised, is it correct?",
         de: "Die Gro\xDF-/Kleinschreibung dieses {t} wird korrigiert, ist das korrekt?",
         pt: "{t} teve a capitaliza\xE7\xE3o ajustada, est\xE1 correto?",
-        sv: "Nuvarande {t} har \xE4ndrad kapitalisering, st\xE4mmer det h\xE4r?"
+        sv: "Nuvarande {t} har \xE4ndrad kapitalisering, st\xE4mmer det h\xE4r?",
+        ru: "\u0412 \u044D\u0442\u043E\u043C {t} \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0440\u0435\u0433\u0438\u0441\u0442\u0440, \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043B\u0438 \u043E\u043D \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u044B\u043C?"
       },
       false: {
         en: "Is this {t} capitalised correctly?",
         de: "Ist die Gro\xDF-/Kleinschreibung dieses {t} richtig?",
         pt: "Esse(a) {t} est\xE1 capitalizado(a) corretamente?",
-        sv: "St\xE4mmer kapitaliseringen p\xE5 {t}?"
+        sv: "St\xE4mmer kapitaliseringen p\xE5 {t}?",
+        ru: "\u041F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E \u043B\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D \u0440\u0435\u0433\u0438\u0441\u0442\u0440 \u044D\u0442\u043E\u0433\u043E {t}?"
       }
     },
     current: {
       en: "Current",
       de: "Aktuell",
-      sv: "Nuvarande"
+      sv: "Nuvarande",
+      ru: "\u0422\u0435\u043A\u0443\u0449\u0438\u0439"
     },
     current_tip: {
       en: "This is the original capitalisation present on Last.fm",
       de: "Dies ist die originale Gro\xDF-/Kleinschreibung auf Last.fm",
-      sv: "Det h\xE4r \xE4r den originella kapitaliseringen som finns p\xE5 Last.fm"
+      sv: "Det h\xE4r \xE4r den originella kapitaliseringen som finns p\xE5 Last.fm",
+      ru: "\u042D\u0442\u043E \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0433\u0438\u0441\u0442\u0440, \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u044B\u0439 \u043D\u0430 Last.fm"
     },
     correction: {
       en: "Correction",
       de: "Korrektur",
-      sv: "Korrigering"
+      sv: "Korrigering",
+      ru: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435"
     },
     correction_tip: {
       en: "This is the correct capitalisation, as decided by the artist",
       de: "Dies ist die korrekte Gro\xDF-/Kleinschreibung, wie sie vom K\xFCnstler festgelegt wurde",
-      sv: "Det h\xE4r \xE4r r\xE4tt kapitalisering, som best\xE4md av artisten"
+      sv: "Det h\xE4r \xE4r r\xE4tt kapitalisering, som best\xE4md av artisten",
+      ru: "\u042D\u0442\u043E \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0433\u0438\u0441\u0442\u0440, \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0439 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u043C"
     },
     sources: {
       en: "Sources",
       de: "Quellen",
-      sv: "K\xE4llor"
+      sv: "K\xE4llor",
+      ru: "\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438"
     },
     sources_tip: {
       en: "Provide reputable sources where this capitalisation is present, excluding sites like Wikipedia, RYM, AOTY, and MusicBrainz",
       de: "Gebe seri\xF6se Quellen an, auf denen diese Schreibweise zu finden ist, ausgenommen sind Seiten wie Wikipedia, RYM, AOTY und MusicBrainz",
-      sv: "Visa p\xE5litliga k\xE4llor d\xE4r man kan se att denna kapitalisering st\xE4mmer, f\xF6rutom sidor som Wikipedia, RYM, AOTY och MusicBrainz"
+      sv: "Visa p\xE5litliga k\xE4llor d\xE4r man kan se att denna kapitalisering st\xE4mmer, f\xF6rutom sidor som Wikipedia, RYM, AOTY och MusicBrainz",
+      ru: "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0430\u0432\u0442\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438, \u0433\u0434\u0435 \u043F\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u044D\u0442\u043E\u0442 \u0440\u0435\u0433\u0438\u0441\u0442\u0440, \u0438\u0441\u043A\u043B\u044E\u0447\u0430\u044F \u0442\u0430\u043A\u0438\u0435 \u0441\u0430\u0439\u0442\u044B, \u043A\u0430\u043A Wikipedia, RYM, AOTY \u0438 MusicBrainz"
     },
     suggest: {
       en: "Suggest",
       de: "Vorschlagen",
-      sv: "F\xF6resl\xE5"
+      sv: "F\xF6resl\xE5",
+      ru: "\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u044C"
     },
     please_match_the_format: {
       en: "Only capitalisation changes are allowed",
       de: "Nur \xC4nderungen der Gro\xDF-/Kleinschreibung sind erlaubt",
-      sv: "Endast \xE4ndringar p\xE5 kapitalisering \xE4r till\xE5tet"
+      sv: "Endast \xE4ndringar p\xE5 kapitalisering \xE4r till\xE5tet",
+      ru: "\u0414\u043E\u043F\u0443\u0441\u043A\u0430\u044E\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430"
     },
     suggest_correction: {
       // suggest a correction for the above system
       en: "Suggest a correction",
       de: "Korrektur vorschlagen",
       pt: "Sugira uma corre\xE7\xE3o",
-      sv: "F\xF6resl\xE5 en \xE4ndring"
+      sv: "F\xF6resl\xE5 en \xE4ndring",
+      ru: "\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u044C \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435"
     },
     recent_tracks: {
       en: "Recent Tracks",
       de: "K\xFCrzlich geh\xF6rt",
       pt: "Faixas recentes",
       ja: "\u6700\u8FD1\u306E\u30C8\u30E9\u30C3\u30AF",
-      sv: "Nyligen spelat"
+      sv: "Nyligen spelat",
+      ru: "\u041D\u0435\u0434\u0430\u0432\u043D\u0438\u0435 \u0442\u0440\u0435\u043A\u0438"
     },
     top_artists: {
       en: "Top Artists",
       de: "Top-K\xFCnstler:innen",
       pt: "Top Artistas",
       ja: "\u30C8\u30C3\u30D7\u30A2\u30FC\u30C6\u30A3\u30B9\u30C8",
-      sv: "Toppartister"
+      sv: "Toppartister",
+      ru: "\u041B\u0443\u0447\u0448\u0438\u0435 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0438"
     },
     top_albums: {
       en: "Top Albums",
       de: "Top-Alben",
       pt: "Top \xC1lbuns",
       ja: "\u4EBA\u6C17\u30A2\u30EB\u30D0\u30E0",
-      sv: "Toppalbum"
+      sv: "Toppalbum",
+      ru: "\u041B\u0443\u0447\u0448\u0438\u0435 \u0430\u043B\u044C\u0431\u043E\u043C\u044B"
     },
     top_tracks: {
       en: "Top Tracks",
       de: "Top-Songs",
       pt: "Top Faixas",
       ja: "\u4EBA\u6C17\u30C8\u30E9\u30C3\u30AF",
-      sv: "Toppl\xE5tar"
+      sv: "Toppl\xE5tar",
+      ru: "\u041B\u0443\u0447\u0448\u0438\u0435 \u0442\u0440\u0435\u043A\u0438"
     },
     top_track: {
       en: "Top Track",
       de: "Top-Song",
       pt: "Top Faixa",
-      sv: "Toppl\xE5t"
+      sv: "Toppl\xE5t",
+      ru: "\u041B\u0443\u0447\u0448\u0438\u0439 \u0442\u0440\u0435\u043A"
     },
     you_share_count_with: {
       // as in your musical taste % between you and someone else
@@ -59378,167 +59701,196 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Ihr seid {c} kompatibel",
       pt: "Voce \xE9 {c} compat\xEDvel",
       sv: "Du \xE4r {c} kompatibel",
+      ru: "\u0412\u0430\u0448\u0430 \u0441\u043E\u0432\u043C\u0435\u0441\u0442\u0438\u043C\u043E\u0441\u0442\u044C {c}",
       two: {
         en: "{artist1}, {artist2}",
         de: "{artist1}, {artist2}",
         pt: "{artist1}, {artist2}",
         sv: "{artist1}, {artist2}",
-        ja: "{artist1}\u3001{artist2}"
+        ja: "{artist1}\u3001{artist2}",
+        ru: "{artist1}, {artist2}"
       },
       three: {
         en: "{artist1}, {artist2}, {artist3}",
         de: "{artist1}, {artist2}, {artist3}",
         pt: "{artist1}, {artist2}, {artist3}",
         sv: "{artist1}, {artist2}, {artist3}",
-        ja: "{artist1}\u3001{artist2}\u3001{artist3}"
+        ja: "{artist1}\u3001{artist2}\u3001{artist3}",
+        ru: "{artist1}, {artist2}, {artist3}"
       }
     },
     taste_similarity: {
       en: "Taste similarity",
       de: "Musikgeschmack-\xC4hnlichkeit",
       pt: "Similaridade de gostos",
-      sv: "Smaklikhet"
+      sv: "Smaklikhet",
+      ru: "\u0421\u0445\u043E\u0436\u0435\u0441\u0442\u044C \u0432\u043A\u0443\u0441\u043E\u0432"
     },
     message: {
       // as in a direct message
       en: "Message",
       de: "Nachricht schreiben",
       pt: "Mensagem",
-      sv: "Meddela"
+      sv: "Meddela",
+      ru: "\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435"
     },
     join_discord: {
       en: "Join Discord",
       de: "Discord beitreten",
-      sv: "G\xE5 med i Discord"
+      sv: "G\xE5 med i Discord",
+      ru: "\u041F\u0440\u0438\u0441\u043E\u0435\u0434\u0438\u043D\u0438\u0442\u044C\u0441\u044F \u043A Discord"
     },
     sponsor_details: {
       en: "Sponsor and badge details",
       de: "Sponsoren- und Abzeichendetails",
-      sv: "Sponsor och emblemdetaljer"
+      sv: "Sponsor och emblemdetaljer",
+      ru: "\u0421\u0432\u0435\u0434\u0435\u043D\u0438\u044F \u043E \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u0435 \u0438 \u0437\u043D\u0430\u0447\u043A\u0435"
     },
     sponsor_data: {
       en: "Sponsor and badge data version {v}",
       de: "Sponsoren- und Abzeichendaten-Version {v}",
       pt: "Vers\xE3o da data de apoiador e emblemas",
-      sv: "Sponsor-och-emblemdata, version {v}"
+      sv: "Sponsor-och-emblemdata, version {v}",
+      ru: "\u0414\u0430\u043D\u043D\u044B\u0435 \u043E \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u0430\u0445 \u0438 \u0437\u043D\u0430\u0447\u043A\u0430\u0445, \u0432\u0435\u0440\u0441\u0438\u044F {v}"
     },
     sponsor: {
       en: "Become a sponsor",
       de: "Werde Sponsor",
       pt: "Torne-se um apoiador",
-      sv: "Bli en sponsor"
+      sv: "Bli en sponsor",
+      ru: "\u0421\u0442\u0430\u0442\u044C \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u043E\u043C"
     },
     message_sponsor: {
       // rewards meaning a badge for example
       en: "Receive sponsor rewards",
       de: "Sponsorenpr\xE4mien erhalten",
       pt: "Receba recompensas de apoiador",
-      sv: "F\xE5 sponsorpriser"
+      sv: "F\xE5 sponsorpriser",
+      ru: "\u041F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u0433\u0440\u0430\u0434\u044B \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u0430"
     },
     news_sponsor_cta: {
       en: "Want to support future development of bleh?",
       de: "M\xF6chtest du die zuk\xFCnftige Entwicklung von bleh unterst\xFCtzen?",
       pt: "Quer apoiar o desenvolvimento futuro do bleh?",
-      sv: "Vill du st\xF6dja blehs framtida utveckling?"
+      sv: "Vill du st\xF6dja blehs framtida utveckling?",
+      ru: "\u0425\u043E\u0442\u0438\u0442\u0435 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u0431\u0443\u0434\u0443\u0449\u0443\u044E \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u043A\u0443 bleh?"
     },
     support_future_development: {
       // in the context of sponsoring
       en: "Support future development",
       de: "Unterst\xFCtze die zuk\xFCnftige Entwicklung",
       pt: "Apoie o desenvolvimento futuro",
-      sv: "St\xF6d framtida utveckling"
+      sv: "St\xF6d framtida utveckling",
+      ru: "\u041F\u043E\u0434\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u0431\u0443\u0434\u0443\u0449\u0443\u044E \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u043A\u0443"
     },
     why_sponsor: {
       en: "Receive a profile badge and a big thank you from katelyn <3",
       de: "Erhalte ein Abzeichen auf deinem Profil und ein gro\xDFes Dankesch\xF6n von katelyn f\xFCr deine Unterst\xFCtzung <3",
       pt: "Receba um emblema no seu perfil e um obrigad\xE3o da katelyn por apoiar <3",
-      sv: "F\xE5 ett emblem p\xE5 din profil och ett stort tack fr\xE5n katelyn <3"
+      sv: "F\xE5 ett emblem p\xE5 din profil och ett stort tack fr\xE5n katelyn <3",
+      ru: "\u041F\u043E\u043B\u0443\u0447\u0438\u0442\u0435 \u0437\u043D\u0430\u0447\u043E\u043A \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u0438 \u0431\u043E\u043B\u044C\u0448\u0443\u044E \u0431\u043B\u0430\u0433\u043E\u0434\u0430\u0440\u043D\u043E\u0441\u0442\u044C \u043E\u0442 katelyn <3"
     },
     you_are_a_sponsor: {
       en: "You are a sponsor, thank you! :3",
       de: "Du bist ein Sponsor, danke sch\xF6n! :3",
       pt: "Voc\xEA \xE9 um apoiador, muito obrigado! :3",
-      sv: "Du \xE4r en sponsor, tack s\xE5 mycket! :3"
+      sv: "Du \xE4r en sponsor, tack s\xE5 mycket! :3",
+      ru: "\u0412\u044B \u044F\u0432\u043B\u044F\u0435\u0442\u0435\u0441\u044C \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u043E\u043C, \u0441\u043F\u0430\u0441\u0438\u0431\u043E! :3"
     },
     sponsor_get_badge: {
       en: "A monthly sponsorship grants you a custom badge of your choosing",
       de: "Mit einem monatlichen Sponsoring erh\xE4ltst du ein individuelles Abzeichen deiner Wahl",
       pt: "Um apoio mensal lhe d\xE1 um emblema personalizado de sua escolha",
-      sv: "Med ett m\xE5natligt sponsorskap f\xE5r du ett emblem du sj\xE4lv kan anpassa"
+      sv: "Med ett m\xE5natligt sponsorskap f\xE5r du ett emblem du sj\xE4lv kan anpassa",
+      ru: "\u0415\u0436\u0435\u043C\u0435\u0441\u044F\u0447\u043D\u043E\u0435 \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u0441\u0442\u0432\u043E \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u0442 \u0432\u0430\u043C \u043D\u0430 \u0432\u044B\u0431\u043E\u0440 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0437\u043D\u0430\u0447\u043E\u043A"
     },
     sponsor_no_badge: {
       en: "A custom badge is only available with a monthly sponsorship.",
       de: "Ein individuelles Abzeichen ist nur mit einem monatlichen Sponsoring erh\xE4ltlich",
       pt: "Um emblema personalizado s\xF3 est\xE1 dispon\xEDvel com um apoio mensal",
-      sv: "Ett eget anpassat emblem finns bara tillg\xE4ngligt med m\xE5natligt sponsorskap"
+      sv: "Ett eget anpassat emblem finns bara tillg\xE4ngligt med m\xE5natligt sponsorskap",
+      ru: "\u041F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0437\u043D\u0430\u0447\u043E\u043A \u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D \u0442\u043E\u043B\u044C\u043A\u043E \u043F\u0440\u0438 \u0435\u0436\u0435\u043C\u0435\u0441\u044F\u0447\u043D\u043E\u043C \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u0441\u0442\u0432\u0435."
     },
     manage_sponsor: {
       en: "Manage sponsorship",
       de: "Sponsoring verwalten",
       pt: "Gerenciar apoio",
-      sv: "Sponsorskapsinst\xE4llningar"
+      sv: "Sponsorskapsinst\xE4llningar",
+      ru: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u0441\u0442\u0432\u043E\u043C"
     },
     view: {
       en: "View",
       de: "Ansehen",
       pt: "Ver",
-      sv: "Visa"
+      sv: "Visa",
+      ru: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C"
     },
     profile_and_badges: {
       en: "Profile, {c} badges",
       de: "Profil, {c} Abzeichen",
       pt: "Perfil, {c} emblemas",
-      sv: "Profil, {c} emblem"
+      sv: "Profil, {c} emblem",
+      ru: "\u041F\u0440\u043E\u0444\u0438\u043B\u044C, {c} \u0437\u043D\u0430\u0447\u043A\u043E\u0432"
     },
     current_version: {
       en: "Current version",
       de: "Aktuelle Version",
       pt: "Vers\xE3o atual",
-      sv: "Nuvarande version"
+      sv: "Nuvarande version",
+      ru: "\u0422\u0435\u043A\u0443\u0449\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F"
     },
     manage_data: {
-      en: "Manage data"
+      en: "Manage data",
+      sv: "Hantera data",
+      ru: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u0430\u043D\u043D\u044B\u043C\u0438"
     },
     labs: {
       // labs by last.fm
       en: "Labs",
       de: "Labs",
-      sv: "Labs"
+      sv: "Labs",
+      ru: "\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F"
     },
     sponsor_info: {
       en: "This is a special bleh-managed profile to handle sponsors",
       de: "Dies ist ein bleh-verwaltetes Profil zur Verwaltung von Sponsoren",
       pt: "Este \xE9 um perfil especial gerenciado pelo bleh para lidar com apoiadores",
-      sv: "Detta \xE4r en speciell profil fr\xE5n bleh f\xF6r att hantera sponsorskap"
+      sv: "Detta \xE4r en speciell profil fr\xE5n bleh f\xF6r att hantera sponsorskap",
+      ru: "\u042D\u0442\u043E \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C, \u0443\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C\u044B\u0439 bleh \u0434\u043B\u044F \u0440\u0430\u0431\u043E\u0442\u044B \u0441\u043E \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u0430\u043C\u0438"
     },
     sponsors_only: {
       en: "Sponsors only",
       de: "Nur f\xFCr Sponsoren",
-      sv: "Endast sponsorer"
+      sv: "Endast sponsorer",
+      ru: "\u0422\u043E\u043B\u044C\u043A\u043E \u0434\u043B\u044F \u0441\u043F\u043E\u043D\u0441\u043E\u0440\u043E\u0432"
     },
     downloaded_value: {
       // filename
       en: "Downloaded {v}",
       de: "{v} wurde heruntergeladen",
-      sv: "Laddat ned {v}"
+      sv: "Laddat ned {v}",
+      ru: "\u0417\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043E {v}"
     },
     loading: {
       en: "Loading",
       de: "Wird geladen",
       pt: "Carregando",
-      sv: "Laddar"
+      sv: "Laddar",
+      ru: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430"
     },
     loading_count_days: {
       en: "Collecting the last {c} days",
       de: "Sammeln der letzten {c} Tage",
       pt: "Coletando os \xFAltimos {c} dias",
-      sv: "Samlar de senaste {c} dagarna"
+      sv: "Samlar de senaste {c} dagarna",
+      ru: "\u0421\u0431\u043E\u0440 \u0434\u0430\u043D\u043D\u044B\u0445 \u0437\u0430 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 {c} \u0434\u043D\u0435\u0439"
     },
     gathering_plays: {
       en: "Gathering plays",
       de: "Plays werden gesammelt",
       pt: "Coletando reprodu\xE7\xF5es",
-      sv: "Samlar spelningar"
+      sv: "Samlar spelningar",
+      ru: "\u0421\u0431\u043E\u0440 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439"
     },
     following_mutuals: {
       // this is appended after the following button text if mutuals
@@ -59546,13 +59898,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "(mutually)",
       de: "(gegenseitig)",
       pt: "(mutualmente)",
-      sv: "(varandra)"
+      sv: "(varandra)",
+      ru: "(\u0432\u0437\u0430\u0438\u043C\u043D\u043E)"
     },
     language: {
       en: "Language",
       de: "Sprache",
       pt: "Idioma",
-      sv: "Spr\xE5k"
+      sv: "Spr\xE5k",
+      ru: "\u042F\u0437\u044B\u043A"
     },
     symbol_presets: {
       // as in a selection of characters (symbols, text) that can
@@ -59560,7 +59914,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Symbol presets",
       de: "Symbolvoreinstellungen",
       pt: "Predefini\xE7\xF5es de s\xEDmbolos",
-      sv: "Symboler"
+      sv: "Symboler",
+      ru: "\u041D\u0430\u0431\u043E\u0440\u044B \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432"
     },
     fancy_syntax: {
       // hyperlink as in a link to a website or something,
@@ -59568,227 +59923,267 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Hyperlink guide",
       de: "Hyperlink-Leitfaden",
       pt: "Guia de hiperlink",
-      sv: "L\xE4nkguide"
+      sv: "L\xE4nkguide",
+      ru: "\u0420\u0443\u043A\u043E\u0432\u043E\u0434\u0441\u0442\u0432\u043E \u043F\u043E \u0433\u0438\u043F\u0435\u0440\u0441\u0441\u044B\u043B\u043A\u0430\u043C"
     },
     links_to: {
       // used in wiki editing, {this example} links to {link}
       en: "Links to {link}",
       de: "Verlinkt auf {link}",
       pt: "Links para {link}",
-      sv: "L\xE4nkas till {link}"
+      sv: "L\xE4nkas till {link}",
+      ru: "\u0421\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 {link}"
     },
     explore_in_library: {
       en: "Explore in library",
       de: "In der Bibliothek anzeigen",
       pt: "Explorar na biblioteca",
-      sv: "Utforska i bibliotek"
+      sv: "Utforska i bibliotek",
+      ru: "\u0418\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u044C \u0432 \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0435"
     },
     add_note: {
       // as in a profile note
       en: "Add note",
       de: "Notiz hinzuf\xFCgen",
       pt: "Adicionar nota",
-      sv: "L\xE4gg till anteckning"
+      sv: "L\xE4gg till anteckning",
+      ru: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0437\u0430\u043C\u0435\u0442\u043A\u0443"
     },
     radio: {
       en: "Radio",
       de: "Radio",
       pt: "R\xE1dio",
-      sv: "Radio"
+      sv: "Radio",
+      ru: "\u0420\u0430\u0434\u0438\u043E"
     },
     mix: {
       // as in a playlist mix of music
       en: "Mix",
       de: "Mix",
-      sv: "Mix"
+      sv: "Mix",
+      ru: "\u041C\u0438\u043A\u0441"
     },
     recommended: {
       // recommended music
       en: "Recommended",
       de: "Empfohlen",
       pt: "Recomenda\xE7\xF5es",
-      sv: "Rekommenderad"
+      sv: "Rekommenderad",
+      ru: "\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u043E\u0432\u0430\u043D\u043D\u043E\u0435"
     },
     listening: {
       // used as the card header for radios and listening reports
       en: "Listening",
       de: "H\xF6rbericht",
       pt: "Ouvindo",
-      sv: "Lyssning"
+      sv: "Lyssning",
+      ru: "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0435"
     },
     you: {
       en: "You",
       de: "Du",
       pt: "Voc\xEA",
-      sv: "Du"
+      sv: "Du",
+      ru: "\u0412\u044B"
     },
     open: {
       en: "Open",
       de: "\xD6ffnen",
       pt: "Abrir",
-      sv: "\xD6ppen"
+      sv: "\xD6ppen",
+      ru: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C"
     },
     expand: {
       en: "Expand",
       de: "Erweitern",
       pt: "Expandir",
-      sv: "Expandera"
+      sv: "Expandera",
+      ru: "\u0420\u0430\u0437\u0432\u0435\u0440\u043D\u0443\u0442\u044C"
     },
     expand_to_full_resolution: {
       en: "Expand to full resolution",
       de: "Auf volle Aufl\xF6sung erweitern",
       pt: "Expandir para resolu\xE7\xE3o total",
-      sv: "Expandera till full uppl\xF6sning"
+      sv: "Expandera till full uppl\xF6sning",
+      ru: "\u0420\u0430\u0437\u0432\u0435\u0440\u043D\u0443\u0442\u044C \u0434\u043E \u043F\u043E\u043B\u043D\u043E\u0433\u043E \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043D\u0438\u044F"
     },
     default_avatar_action: {
       name: {
-        en: "Default avatar action"
+        en: "Default avatar action",
+        sv: "Standard bildbet\xE9ende",
+        ru: "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E \u043F\u0440\u0438 \u043D\u0430\u0436\u0430\u0442\u0438\u0438 \u043D\u0430 \u0430\u0432\u0430\u0442\u0430\u0440"
       },
       body: {
-        en: "Which action should be performed when you click an avatar"
+        en: "Which action should be performed when you click an avatar",
+        sv: "Hur ska sidan bet\xE9 sig n\xE4r du trycker p\xE5 en profilbild",
+        ru: "\u041A\u0430\u043A\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E \u043F\u0440\u0438 \u043D\u0430\u0436\u0430\u0442\u0438\u0438 \u043D\u0430 \u0430\u0432\u0430\u0442\u0430\u0440"
       }
     },
     share: {
       en: "Share",
       de: "Teilen",
       pt: "Compartilhar",
-      sv: "Dela"
+      sv: "Dela",
+      ru: "\u041F\u043E\u0434\u0435\u043B\u0438\u0442\u044C\u0441\u044F"
     },
     copy: {
       en: "Copy",
       de: "Kopieren",
       pt: "Copiar",
-      sv: "Kopiera"
+      sv: "Kopiera",
+      ru: "\u041A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
     },
     copy_username: {
       en: "Copy username",
       de: "Benutzername kopieren",
-      sv: "Kopiera anv\xE4ndarnamn"
+      sv: "Kopiera anv\xE4ndarnamn",
+      ru: "\u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0438\u043C\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F"
     },
     copy_link: {
       en: "Copy link",
       de: "Link kopieren",
-      sv: "Kopiera l\xE4nk"
+      sv: "Kopiera l\xE4nk",
+      ru: "\u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0441\u044B\u043B\u043A\u0443"
     },
     copied_to_clipboard: {
       en: "Copied to clipboard",
       de: "In die Zwischenablage kopiert",
       pt: "Copiado para a \xE1rea de transfer\xEAncia",
-      sv: "Kopierats till urklipp"
+      sv: "Kopierats till urklipp",
+      ru: "\u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043E \u0432 \u0431\u0443\u0444\u0435\u0440 \u043E\u0431\u043C\u0435\u043D\u0430"
     },
     click_to_copy: {
       en: "Click to copy",
       de: "Klicken zum kopieren",
       pt: "Clique para copiar",
-      sv: "Klicka f\xF6r att kopiera"
+      sv: "Klicka f\xF6r att kopiera",
+      ru: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
     },
     wiki_standard_tracks: {
       en: "Track titles should be wrapped in quotation marks (\u201C \u201D)",
       de: "Songtitel sollten von Anf\xFChrungszeichen umgeben sein (\u201C \u201D)",
       pt: "Os t\xEDtulos das faixas devem ser colocados entre aspas (\u201C \u201D)",
-      sv: "L\xE5tnamn ska omges av citattecken (\u201C \u201D)"
+      sv: "L\xE5tnamn ska omges av citattecken (\u201C \u201D)",
+      ru: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0442\u0440\u0435\u043A\u043E\u0432 \u0434\u043E\u043B\u0436\u043D\u044B \u0431\u044B\u0442\u044C \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u044B \u0432 \u043A\u0430\u0432\u044B\u0447\u043A\u0438 (\u201C \u201D)"
     },
     wiki_standard_artists: {
       en: "Album and artist names are left without quotes",
       de: "Namen von Alben und K\xFCnstler:innen werden ohne Anf\xFChrungszeichen geschrieben",
       pt: "Os nomes dos \xE1lbuns e artistas n\xE3o devem ser colocados entre aspas.",
-      sv: "Album och artistnamn ska skrivas utan citattecken"
+      sv: "Album och artistnamn ska skrivas utan citattecken",
+      ru: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432 \u0438 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u0439 \u043F\u0438\u0448\u0443\u0442\u0441\u044F \u0431\u0435\u0437 \u043A\u0430\u0432\u044B\u0447\u0435\u043A"
     },
     wiki_standard_quotations: {
       en: "Use \u2018 \u2019 for quotations from the artist or elsewhere",
       de: "Verwende \u2018 \u2019 f\xFCr Zitate des K\xFCnstlers oder aus anderen Quellen",
       pt: "Use \u2018 \u2019 para cita\xE7\xF5es do artista ou de outras fontes.",
-      sv: "Anv\xE4nd \u2018 \u2019 f\xF6r citat fr\xE5n artisten eller fr\xE5n annanstans"
+      sv: "Anv\xE4nd \u2018 \u2019 f\xF6r citat fr\xE5n artisten eller fr\xE5n annanstans",
+      ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u2018 \u2019 \u0434\u043B\u044F \u0446\u0438\u0442\u0430\u0442 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044F \u0438\u043B\u0438 \u0438\u0437 \u0434\u0440\u0443\u0433\u0438\u0445 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u0432"
     },
     activity: {
       en: "Activity",
       de: "Aktivit\xE4t",
       pt: "Atividade",
       sv: "Aktivitet",
+      ru: "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C",
       listing: {
         shout: {
           en: "Shout",
           de: "Shout hinterlassen",
           pt: "Enviou mensagem",
-          sv: "Hojt"
+          sv: "Hojt",
+          ru: "\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435"
         },
         image_upload: {
           en: "Uploaded image",
           de: "Bild hochgeladen",
           pt: "Enviou imagem",
-          sv: "Laddat upp bild"
+          sv: "Laddat upp bild",
+          ru: "\u0417\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043E \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435"
         },
         image_star: {
           en: "Starred image",
           de: "Bild als Favorit markiert",
           pt: "Favoritou imagem",
-          sv: "Valt favoritbild"
+          sv: "Valt favoritbild",
+          ru: "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043E\u0442\u043C\u0435\u0447\u0435\u043D\u043E"
         },
         obsess: {
           en: "Obsessed",
           de: "Obsession festgelegt",
           pt: "Obcecou",
-          sv: "Besatthet"
+          sv: "Besatthet",
+          ru: "\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C"
         },
         unobsess: {
           en: "Removed obsession",
           de: "Obsession entfernt",
           pt: "Desobcecou",
-          sv: "Tagit bort besatthet"
+          sv: "Tagit bort besatthet",
+          ru: "\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C \u0443\u0434\u0430\u043B\u0435\u043D\u0430"
         },
         love: {
           en: "Loved",
           de: "Zu Favoriten hinzugef\xFCgt",
           pt: "Favoritou",
-          sv: "\xC4lskade l\xE5t"
+          sv: "\xC4lskade l\xE5t",
+          ru: "\u041F\u043E\u043D\u0440\u0430\u0432\u0438\u043B\u043E\u0441\u044C"
         },
         unlove: {
           en: "Removed love",
           de: "Favorit entfernt",
           pt: "Desfavoritou",
-          sv: "Tog bort som \xE4lskad"
+          sv: "Tog bort som \xE4lskad",
+          ru: "\u0423\u0434\u0430\u043B\u0435\u043D\u043E \u0438\u0437 \u043F\u043E\u043D\u0440\u0430\u0432\u0438\u0432\u0448\u0438\u0445\u0441\u044F"
         },
         install_bwaa: {
           en: "Installed bwaa",
           de: "bwaa wurde installiert",
           pt: "Instalou o bwaa",
-          sv: "Installerade bwaa"
+          sv: "Installerade bwaa",
+          ru: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D bwaa"
         },
         update_bwaa: {
           en: "Updated bwaa",
           de: "bwaa wurde aktualisiert",
           pt: "Atualizou o bwaa",
-          sv: "Uppdaterade bwaa"
+          sv: "Uppdaterade bwaa",
+          ru: "\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D bwaa"
         },
         install_bleh: {
           en: "Installed bleh",
           de: "bleh wurde installiert",
           pt: "Instalou o bleh",
-          sv: "Installerade bleh"
+          sv: "Installerade bleh",
+          ru: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D bleh"
         },
         update_bleh: {
           en: "Updated bleh",
           de: "bleh wurde aktualisiert",
           pt: "Atualizou o bleh",
-          sv: "Uppdaterade bleh"
+          sv: "Uppdaterade bleh",
+          ru: "\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D bleh"
         },
         bookmark: {
           en: "Bookmarked",
           de: "Lesezeichen hinzugef\xFCgt",
           pt: "Adicionou marca\xE7\xE3o",
-          sv: "Bokm\xE4rkte"
+          sv: "Bokm\xE4rkte",
+          ru: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043E \u0432 \u0437\u0430\u043A\u043B\u0430\u0434\u043A\u0438"
         },
         unbookmark: {
           en: "Removed bookmark",
           de: "Lesezeichen entfernt",
           pt: "Removeu marca\xE7\xE3o",
-          sv: "Tog bort bokm\xE4rke"
+          sv: "Tog bort bokm\xE4rke",
+          ru: "\u0417\u0430\u043A\u043B\u0430\u0434\u043A\u0430 \u0443\u0434\u0430\u043B\u0435\u043D\u0430"
         },
         wiki: {
           en: "Edited",
           de: "Bearbeitet",
           pt: "Editou",
-          sv: "Redigerade"
+          sv: "Redigerade",
+          ru: "\u041E\u0442\u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043E"
         }
       },
       types: {
@@ -59796,43 +60191,50 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Comments and replies from you across the site",
           de: "Kommentare und Antworten von dir auf der gesamten Site",
           pt: "Seus coment\xE1rios e respostas ao redor do site",
-          sv: "Kommentarer och svar fr\xE5n dig \xF6ver hela sidan"
+          sv: "Kommentarer och svar fr\xE5n dig \xF6ver hela sidan",
+          ru: "\u0412\u0430\u0448\u0438 \u043A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0438 \u0438 \u043E\u0442\u0432\u0435\u0442\u044B \u043D\u0430 \u0441\u0430\u0439\u0442\u0435"
         },
         image: {
           en: "Uploading images and starring for your layout",
           de: "Bilder hochladen und Sterne f\xFCr dein Layout vergeben",
           pt: "Imagens enviadas e favoritos do seu layout",
-          sv: "Uppladdning av bilder och v\xE4ljer favoritbilder"
+          sv: "Uppladdning av bilder och v\xE4ljer favoritbilder",
+          ru: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439 \u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0438\u0445 \u0432 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0435 \u0434\u043B\u044F \u0432\u0430\u0448\u0435\u0433\u043E \u043C\u0430\u043A\u0435\u0442\u0430"
         },
         obsess: {
           en: "Tracks you have on loop",
           de: "Titel, die du auf Dauerschleife hast",
           pt: "Faixas que voc\xEA tem em loop",
-          sv: "L\xE5tar du \xE4r besatt av"
+          sv: "L\xE5tar du \xE4r besatt av",
+          ru: "\u0422\u0440\u0435\u043A\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0432\u044B \u0441\u043B\u0443\u0448\u0430\u0435\u0442\u0435 \u043D\u0430 \u043F\u043E\u0432\u0442\u043E\u0440\u0435"
         },
         love: {
           en: "Tracks you love",
           de: "Deine Lieblingssongs",
           pt: "Faixas que voc\xEA ama",
-          sv: "L\xE5tar du \xE4lskar"
+          sv: "L\xE5tar du \xE4lskar",
+          ru: "\u0422\u0440\u0435\u043A\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0432\u0430\u043C \u043D\u0440\u0430\u0432\u044F\u0442\u0441\u044F"
         },
         bookmark: {
           en: "Music you want to check out",
           de: "Musik, die du auschecken solltest",
           pt: "M\xFAsica que voc\xEA quer conferir",
-          sv: "Musik du vill komma ih\xE5g till senare"
+          sv: "Musik du vill komma ih\xE5g till senare",
+          ru: "\u041C\u0443\u0437\u044B\u043A\u0430, \u043A\u043E\u0442\u043E\u0440\u0443\u044E \u0432\u044B \u0445\u043E\u0442\u0438\u0442\u0435 \u043F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C"
         },
         wiki: {
           en: "Editing of any wiki",
           de: "Bearbeiten jeglicher Wikis",
           pt: "Editando de qualquer wiki",
-          sv: "Wikiredigering"
+          sv: "Wikiredigering",
+          ru: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u043B\u044E\u0431\u043E\u0439 \u0432\u0438\u043A\u0438"
         },
         install: {
           en: "First installations and updating",
           de: "Erstinstallationen und Aktualisierungen",
           pt: "Primeiras instala\xE7\xF5es e atualiza\xE7\xF5es",
-          sv: "F\xF6rsta installationen och uppdateringar"
+          sv: "F\xF6rsta installationen och uppdateringar",
+          ru: "\u041F\u0435\u0440\u0432\u044B\u0435 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438 \u0438 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F"
         }
       }
     },
@@ -59840,109 +60242,126 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Keep track of your most recent activity locally on your profile",
       de: "Verfolge deine letzten Aktivit\xE4ten lokal auf deinem Profil",
       pt: "Acompanhe suas atividades mais recentes localmente em seu perfil",
-      sv: "H\xE5ll koll p\xE5 dina senaste aktiviteter lokalt p\xE5 din profil"
+      sv: "H\xE5ll koll p\xE5 dina senaste aktiviteter lokalt p\xE5 din profil",
+      ru: "\u041E\u0442\u0441\u043B\u0435\u0436\u0438\u0432\u0430\u0439\u0442\u0435 \u0441\u0432\u043E\u044E \u043D\u0435\u0434\u0430\u0432\u043D\u044E\u044E \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u043E \u0432 \u0441\u0432\u043E\u0435\u043C \u043F\u0440\u043E\u0444\u0438\u043B\u0435"
     },
     activity_tracking: {
       name: {
         en: "Track my activities",
         de: "Meine Aktivit\xE4ten tracken",
         pt: "Acompanhar minhas atividades",
-        sv: "Sp\xE5ra mina aktiviteter"
+        sv: "Sp\xE5ra mina aktiviteter",
+        ru: "\u041E\u0442\u0441\u043B\u0435\u0436\u0438\u0432\u0430\u0442\u044C \u043C\u043E\u044E \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C"
       },
       body: {
         en: "Activities will only be registered while enabled",
         de: "Aktivit\xE4ten werden nur getrackt, wenn du es aktivierst",
         pt: "As atividades s\xF3 ser\xE3o registradas enquanto estiverem habilitadas",
-        sv: "Aktiviteter l\xE4ggs bara till n\xE4r inst\xE4llningen \xE4r aktiverad"
+        sv: "Aktiviteter l\xE4ggs bara till n\xE4r inst\xE4llningen \xE4r aktiverad",
+        ru: "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C \u0431\u0443\u0434\u0435\u0442 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043F\u0440\u0438 \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0438"
       }
     },
     clear_history: {
       en: "Clear history",
       de: "Verlauf l\xF6schen",
       pt: "Limpar hist\xF3rico",
-      sv: "T\xF6m historia"
+      sv: "T\xF6m historia",
+      ru: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0438\u0441\u0442\u043E\u0440\u0438\u044E"
     },
     cleared_activity_history: {
       en: "Cleared your activity history",
       de: "Dein Aktivit\xE4tsverlauf wurde gel\xF6scht",
       pt: "Hist\xF3rico de atividades limpo",
-      sv: "T\xF6mde din aktivitetshistoria"
+      sv: "T\xF6mde din aktivitetshistoria",
+      ru: "\u0412\u0430\u0448\u0430 \u0438\u0441\u0442\u043E\u0440\u0438\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438 \u043E\u0447\u0438\u0449\u0435\u043D\u0430"
     },
     activity_settings: {
       en: "Activity settings",
       de: "Aktivit\xE4tseinstellungen",
       pt: "Configura\xE7\xF5es de atividade",
-      sv: "Redigera dina aktiviteter"
+      sv: "Redigera dina aktiviteter",
+      ru: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438"
     },
     installation: {
       en: "Installation",
       de: "Installation",
       pt: "Instala\xE7\xE3o",
-      sv: "Installation"
+      sv: "Installation",
+      ru: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430"
     },
     grid: {
       // as in the view mode
       en: "Grid",
       de: "Raster",
       pt: "Grade",
-      sv: "Bildruta"
+      sv: "Bildruta",
+      ru: "\u0421\u0435\u0442\u043A\u0430"
     },
     list: {
       // as in the view mode
       en: "List",
       de: "Liste",
       pt: "Linha",
-      sv: "Lista"
+      sv: "Lista",
+      ru: "\u0421\u043F\u0438\u0441\u043E\u043A"
     },
     line: {
       // as in the type of chart (a line graph)
       en: "Line",
       de: "Linien",
       pt: "Lista",
-      sv: "Linjediagram"
+      sv: "Linjediagram",
+      ru: "\u041B\u0438\u043D\u0435\u0439\u043D\u044B\u0439"
     },
     pie: {
       // as in the type of chart (a pie chart)
       en: "Pie",
       de: "Kreis",
       pt: "Pizza",
-      sv: "Cirkeldiagram"
+      sv: "Cirkeldiagram",
+      ru: "\u041A\u0440\u0443\u0433\u043E\u0432\u0430\u044F"
     },
     bar: {
       // as in the type of chart (a bar chart)
       en: "Bar",
       de: "Balken",
       pt: "Coluna",
-      sv: "Stapeldiagram"
+      sv: "Stapeldiagram",
+      ru: "\u0421\u0442\u043E\u043B\u0431\u0447\u0430\u0442\u0430\u044F"
     },
     horizontal: {
       en: "Horizontal",
       de: "Horizontal",
-      sv: "V\xE5gr\xE4tt"
+      sv: "V\xE5gr\xE4tt",
+      ru: "\u0413\u043E\u0440\u0438\u0437\u043E\u043D\u0442\u0430\u043B\u044C\u043D\u044B\u0439"
     },
     vertical: {
       en: "Vertical",
       de: "Vertikal",
-      sv: "Lodr\xE4tt"
+      sv: "Lodr\xE4tt",
+      ru: "\u0412\u0435\u0440\u0442\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u0439"
     },
     this_year: {
       en: "This year",
       de: "Dieses Jahr",
       pt: "Este ano",
-      sv: "Detta \xE5r"
+      sv: "Detta \xE5r",
+      ru: "\u042D\u0442\u043E\u0442 \u0433\u043E\u0434"
     },
     last_year: {
       en: "Last year",
       de: "Letztes Jahr",
       pt: "Ano passado",
-      sv: "F\xF6rra \xE5ret"
+      sv: "F\xF6rra \xE5ret",
+      ru: "\u041F\u0440\u043E\u0448\u043B\u044B\u0439 \u0433\u043E\u0434"
     },
     love: {
       // as in loving tracks as a concept
       en: "Love",
       de: "Als Lieblingssong markieren",
       pt: "Favoritas",
-      sv: "\xC4lska"
+      sv: "\xC4lska",
+      ru: "\u041F\u043E\u043D\u0440\u0430\u0432\u0438\u043B\u043E\u0441\u044C"
     },
     loved: {
       // as in loved tracks, this can be seen
@@ -59950,88 +60369,102 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Loved",
       de: "Lieblingssongs",
       pt: "Favoritadas",
-      sv: "\xC4lskade l\xE5tar"
+      sv: "\xC4lskade l\xE5tar",
+      ru: "\u041F\u043E\u043D\u0440\u0430\u0432\u0438\u0432\u0448\u0438\u0435\u0441\u044F"
     },
     velocity: {
       // as in the last.fm labs 'Velocity' tool
       en: "Velocity",
       de: "Dynamik",
       pt: "Velocidade",
-      sv: "Velocitet"
+      sv: "Velocitet",
+      ru: "\u0421\u043A\u043E\u0440\u043E\u0441\u0442\u044C"
     },
     logout: {
       en: "Logout",
       de: "Abmelden",
       pt: "Sair",
       ja: "\u30ED\u30B0\u30A2\u30A6\u30C8",
-      sv: "Logga ut"
+      sv: "Logga ut",
+      ru: "\u0412\u044B\u0439\u0442\u0438"
     },
     tracklist: {
       // please copy from native last.fm ui
       en: "Tracklist",
       de: "Titelliste",
       pt: "Lista de faixas",
-      sv: "Spellista"
+      sv: "Spellista",
+      ru: "\u0421\u043F\u0438\u0441\u043E\u043A \u0442\u0440\u0435\u043A\u043E\u0432"
     },
     tracklist_from_plays_info: {
       en: "Retrieved own plays as official tracklist is unavailable",
       de: "Eigene Plays abgerufen, da die offizielle Titelliste nicht verf\xFCgbar ist",
       pt: "Reprodu\xE7\xF5es pr\xF3prias recuperadas, pois a lista de faixas oficial n\xE3o est\xE1 dispon\xEDvel",
-      sv: "H\xE4mtade dina spelningar f\xF6r en officiell spellista finns inte tillg\xE4nglig"
+      sv: "H\xE4mtade dina spelningar f\xF6r en officiell spellista finns inte tillg\xE4nglig",
+      ru: "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u044B \u0432\u0430\u0448\u0438 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F, \u0442\u0430\u043A \u043A\u0430\u043A \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u043F\u0438\u0441\u043E\u043A \u0442\u0440\u0435\u043A\u043E\u0432 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D"
     },
     from_the_album: {
       en: "From {album}",
       de: "Auf {album}",
       pt: "Do {album}",
-      sv: "Fr\xE5n {album}"
+      sv: "Fr\xE5n {album}",
+      ru: "\u0421 {album}"
     },
     others_count: {
       // the amount of other users
       en: "{c} others",
       de: "{c} weitere",
       pt: "{c} outros",
-      sv: "{c} andra"
+      sv: "{c} andra",
+      ru: "{c} \u0434\u0440\u0443\u0433\u0438\u0445"
     },
     loading_album_plays: {
       en: "Collecting your album plays",
       de: "Sammeln deiner Albumwiedergaben",
       pt: "Coletando suas reprodu\xE7\xF5es de \xE1lbuns",
-      sv: "Samlar ihop dina albumspelningar"
+      sv: "Samlar ihop dina albumspelningar",
+      ru: "\u0421\u0431\u043E\u0440 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439 \u0432\u0430\u0448\u0438\u0445 \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432"
     },
     fail_album_plays: {
       en: "No plays could be found",
       de: "Es konnten keine Plays gefunden werden",
       pt: "Nenhuma reprodu\xE7\xE3o p\xF4de ser encontrada",
-      sv: "Kunde inte hitta p\xE5 albumspelningar"
+      sv: "Kunde inte hitta p\xE5 albumspelningar",
+      ru: "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B"
     },
     open_album_as_track: {
       en: "Open album title as track",
       de: "Albumtitel als Song \xF6ffnen",
       pt: "Abrir t\xEDtulo do \xE1lbum como faixa",
-      sv: "\xD6ppna albumtitel som egen l\xE5t"
+      sv: "\xD6ppna albumtitel som egen l\xE5t",
+      ru: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0430\u043B\u044C\u0431\u043E\u043C\u0430 \u043A\u0430\u043A \u0442\u0440\u0435\u043A"
     },
     ignored: {
       en: "Ignored",
       de: "Ignoriert",
       pt: "Ignorados",
-      sv: "Ignorerad"
+      sv: "Ignorerad",
+      ru: "\u0418\u0433\u043D\u043E\u0440\u0438\u0440\u0443\u0435\u043C\u044B\u0435"
     },
     count_total: {
       en: "{c} total",
       de: "{c} insgesamt",
-      sv: "{c} totalt"
+      sv: "{c} totalt",
+      ru: "{c} \u0432\u0441\u0435\u0433\u043E"
     },
     video_removed: {
       en: "Video removed by Last.fm",
       de: "Video von Last.fm entfernt",
       pt: "V\xEDdeo removido pela Last.fm",
-      sv: "Video borttagen av Last.fm"
+      sv: "Video borttagen av Last.fm",
+      ru: "\u0412\u0438\u0434\u0435\u043E \u0443\u0434\u0430\u043B\u0435\u043D\u043E Last.fm"
     },
     blocked_page: {
       en: "This page has been limited by Last.fm",
       de: "Diese Seite wurde von Last.fm eingeschr\xE4nkt",
       pt: "Esta p\xE1gina foi limitada pela Last.fm",
-      sv: "Denna sida har begr\xE4nsats av Last.fm"
+      sv: "Denna sida har begr\xE4nsats av Last.fm",
+      ru: "\u042D\u0442\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0430 Last.fm"
     },
     results_for: {
       // used as a header above the actual search e.g.
@@ -60040,32 +60473,37 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Results for",
       de: "Ergebnisse f\xFCr",
       pt: "Resultados para",
-      sv: "S\xF6kresultat f\xF6r"
+      sv: "S\xF6kresultat f\xF6r",
+      ru: "\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B \u0434\u043B\u044F"
     },
     create_new_event: {
       en: "Create new event",
       de: "Neues Event hinzuf\xFCgen",
       pt: "Criar novo evento",
-      sv: "Skapa ett nytt evenemang"
+      sv: "Skapa ett nytt evenemang",
+      ru: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043D\u043E\u0432\u043E\u0435 \u0441\u043E\u0431\u044B\u0442\u0438\u0435"
     },
     related_to: {
       // used for similar tags
       en: "Related to",
       de: "Verwandte Tags",
       pt: "Relacionado a",
-      sv: "F\xF6rknippad med"
+      sv: "F\xF6rknippad med",
+      ru: "\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0435 \u0441"
     },
     personal_tag: {
       en: "Personal tag",
       de: "Pers\xF6nliches Tag",
       pt: "Marcador pessoal",
-      sv: "Din tagg"
+      sv: "Din tagg",
+      ru: "\u041B\u0438\u0447\u043D\u044B\u0439 \u0442\u0435\u0433"
     },
     your_avatar: {
       en: "Your avatar",
       de: "Dein Profilbild",
       pt: "Sua foto",
-      sv: "Din profilbild"
+      sv: "Din profilbild",
+      ru: "\u0412\u0430\u0448 \u0430\u0432\u0430\u0442\u0430\u0440"
     },
     avatar_for_user: {
       // this is used to replace the text and extract the
@@ -60076,46 +60514,55 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Avatar for ",
       de: "Profilbild von ",
       pt: "Avatar de",
-      sv: "Avatar f\xF6r "
+      sv: "Avatar f\xF6r ",
+      ru: "\u0410\u0432\u0430\u0442\u0430\u0440 \u0434\u043B\u044F "
     },
     by: {
       en: "by",
       de: "von",
       pt: "por",
-      sv: "av"
+      sv: "av",
+      ru: "\u043E\u0442"
     },
     by_user: {
       en: "by {u}",
       de: "von {u}",
       pt: "por {u}",
-      sv: "av {u}"
+      sv: "av {u}",
+      ru: "\u043E\u0442 {u}"
     },
     by_artist: {
       // {name} by {artist} - hence the space in english
       en: " by {a}",
       de: " von {a}",
       pt: " por {a}",
-      sv: " av {a}"
+      sv: " av {a}",
+      ru: " \u043E\u0442 {a}"
     },
     value_by_user: {
       en: "{v} by {u}",
       de: "{v} von {u}",
-      pt: "{v} por {u}"
+      pt: "{v} por {u}",
+      ru: "{v} \u043E\u0442 {u}"
     },
     from_user: {
       en: "from {u}",
       de: "Von {u}",
       pt: "de {u}",
-      sv: "fr\xE5n {u}"
+      sv: "fr\xE5n {u}",
+      ru: "\u043E\u0442 {u}"
     },
     open_new_tab: {
       en: "Open in a new tab",
       de: "In neuem Tab \xF6ffnen",
       pt: "Abrir em nova aba",
-      sv: "\xD6ppna i ny flik"
+      sv: "\xD6ppna i ny flik",
+      ru: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432 \u043D\u043E\u0432\u043E\u0439 \u0432\u043A\u043B\u0430\u0434\u043A\u0435"
     },
     view_image: {
-      en: "View image"
+      en: "View image",
+      sv: "Visa bild",
+      ru: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435"
     },
     event_cancelled: {
       // obviously remove the emoji or replace it as
@@ -60123,20 +60570,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "This event has been cancelled (\u2565\uFE4F\u2565)",
       de: "Dieses Event wurde abgesagt (\u2565\uFE4F\u2565)",
       pt: "Este evento foi cancelado (\u2565\uFE4F\u2565)",
-      sv: "Detta evenemang har avbrutits (\u2565\uFE4F\u2565)"
+      sv: "Detta evenemang har avbrutits (\u2565\uFE4F\u2565)",
+      ru: "\u042D\u0442\u043E \u0441\u043E\u0431\u044B\u0442\u0438\u0435 \u0431\u044B\u043B\u043E \u043E\u0442\u043C\u0435\u043D\u0435\u043D\u043E (\u2565\uFE4F\u2565)"
     },
     format_guest_features: {
       name: {
         en: "Smart credited artists and song tags",
         de: "Intelligente K\xFCnstler- und Song-Tags",
         pt: "Tags inteligentes de artistas e m\xFAsicas",
-        sv: "Smartformat f\xF6r g\xE4startister och l\xE5ttaggar"
+        sv: "Smartformat f\xF6r g\xE4startister och l\xE5ttaggar",
+        ru: "\u0423\u043C\u043D\u043E\u0435 \u0444\u043E\u0440\u043C\u0430\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u0438\u0433\u043B\u0430\u0448\u0435\u043D\u043D\u044B\u0445 \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432 \u0438 \u0442\u0435\u0433\u043E\u0432 \u043F\u0435\u0441\u0435\u043D"
       },
       body: {
         en: "Analyses album and track titles into their guests, versions, remixes, etc.",
         de: "Analysiert Album- und Songtitel hinsichtlich ihrer Versionen, Remixe usw.",
         pt: "Analisa t\xEDtulos de \xE1lbuns e faixas e os separa em seus convidados, vers\xF5es, remixes etc.",
-        sv: "Analyserar album och l\xE5ttitlar till g\xE4startister, olika versioner, remixar osv."
+        sv: "Analyserar album och l\xE5ttitlar till g\xE4startister, olika versioner, remixar osv.",
+        ru: "\u0410\u043D\u0430\u043B\u0438\u0437\u0438\u0440\u0443\u0435\u0442 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432 \u0438 \u0442\u0440\u0435\u043A\u043E\u0432 \u043D\u0430 \u043F\u0440\u0435\u0434\u043C\u0435\u0442 \u043F\u0440\u0438\u0433\u043B\u0430\u0448\u0435\u043D\u043D\u044B\u0445 \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432, \u0432\u0435\u0440\u0441\u0438\u0439, \u0440\u0435\u043C\u0438\u043A\u0441\u043E\u0432 \u0438 \u0442.\u0434."
       }
     },
     show_guest_features: {
@@ -60144,13 +60594,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Duplicate credited artists in title",
         de: "Doppelte Nennung der K\xFCnstler:innen im Titel",
         pt: "Artistas creditados duplicados no t\xEDtulo",
-        sv: "Duplicera artistnamn i l\xE5ttitel"
+        sv: "Duplicera artistnamn i l\xE5ttitel",
+        ru: "\u0414\u0443\u0431\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0440\u0438\u0433\u043B\u0430\u0448\u0435\u043D\u043D\u044B\u0445 \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432 \u0432 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0438"
       },
       body: {
         en: "Otherwise guests are neatly placed next to the primary artist",
         de: "Ansonsten werden gefeaturete K\xFCnstler:innen neben dem/der Hauptk\xFCnstler:in platziert",
         pt: "Caso contr\xE1rio os convidados s\xE3o organizados de forma elegante ao lado do artista principal",
-        sv: "Annars placeras g\xE4startister fint bredvid huvudartisten"
+        sv: "Annars placeras g\xE4startister fint bredvid huvudartisten",
+        ru: "\u0412 \u043F\u0440\u043E\u0442\u0438\u0432\u043D\u043E\u043C \u0441\u043B\u0443\u0447\u0430\u0435 \u043F\u0440\u0438\u0433\u043B\u0430\u0448\u0435\u043D\u043D\u044B\u0435 \u0430\u0440\u0442\u0438\u0441\u0442\u044B \u0430\u043A\u043A\u0443\u0440\u0430\u0442\u043D\u043E \u0440\u0430\u0437\u043C\u0435\u0449\u0430\u044E\u0442\u0441\u044F \u0440\u044F\u0434\u043E\u043C \u0441 \u043E\u0441\u043D\u043E\u0432\u043D\u044B\u043C \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u043C"
       }
     },
     track_layout: {
@@ -60203,20 +60655,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Show remaster tags",
       de: "Remaster-Tags anzeigen",
       pt: "Mostrar as tags de remaster",
-      sv: "Visa remaster-taggar"
+      sv: "Visa remaster-taggar",
+      ru: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0442\u0435\u0433\u0438 \u0440\u0435\u043C\u0430\u0441\u0442\u0435\u0440\u0438\u043D\u0433\u0430"
     },
     recent_realtime: {
       name: {
         en: "Refresh tracks automatically",
         de: "Titel automatisch aktualisieren",
         pt: "Atualizar faixas automaticamente",
-        sv: "Automatiskt uppdatera l\xE5tar"
+        sv: "Automatiskt uppdatera l\xE5tar",
+        ru: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043E\u0431\u043D\u043E\u0432\u043B\u044F\u0442\u044C \u0442\u0440\u0435\u043A\u0438"
       },
       body: {
         en: "View your listening history in realtime",
         de: "Sehe deinen H\xF6rverlauf in Echtzeit an",
         pt: "Veja seu hist\xF3rico de scrobbles em tempo real",
-        sv: "Visa din lyssningshistorik i realtid"
+        sv: "Visa din lyssningshistorik i realtid",
+        ru: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F \u0432 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u043C \u0432\u0440\u0435\u043C\u0435\u043D\u0438"
       }
     },
     amount_to_display: {
@@ -60224,193 +60679,226 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Amount of tracks to display",
       de: "Anzahl der anzuzeigenden Titel",
       pt: "Quantidade a ser exibida",
-      sv: "M\xE4ngd att visa"
+      sv: "M\xE4ngd att visa",
+      ru: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u043C\u044B\u0445 \u0442\u0440\u0435\u043A\u043E\u0432"
     },
     recent_artwork: {
       en: "Accompany tracks with artwork",
       de: "Titel mit Albumcover anzeigen",
       pt: "Mostrar as faixas juntamente a capa",
-      sv: "Visa skivomslag vid l\xE5t"
+      sv: "Visa skivomslag vid l\xE5t",
+      ru: "\u0421\u043E\u043F\u0440\u043E\u0432\u043E\u0436\u0434\u0430\u0442\u044C \u0442\u0440\u0435\u043A\u0438 \u043E\u0431\u043B\u043E\u0436\u043A\u043E\u0439"
     },
     default_timeframe: {
       en: "Default timeframe",
       de: "Standardzeitraum",
       pt: "Per\xEDodo padr\xE3o",
       ja: "\u30C7\u30D5\u30A9\u30EB\u30C8\u671F\u9593",
-      sv: "Standardtidsram"
+      sv: "Standardtidsram",
+      ru: "\u041F\u0435\u0440\u0438\u043E\u0434 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E"
     },
     timeframe: {
       en: "Timeframe",
       de: "Zeitraum",
-      sv: "Tidsram"
+      sv: "Tidsram",
+      ru: "\u041F\u0435\u0440\u0438\u043E\u0434"
     },
     item_type: {
       en: "Item type",
       de: "Objekttyp",
-      sv: "Objekttyp"
+      sv: "Objekttyp",
+      ru: "\u0422\u0438\u043F \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430"
     },
     page_count: {
       en: "Page count",
       de: "Seitenanzahl",
-      sv: "M\xE4ngd sidor"
+      sv: "M\xE4ngd sidor",
+      ru: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u0442\u0440\u0430\u043D\u0438\u0446"
     },
     chart_style: {
       en: "Chart style",
       de: "Diagrammstil",
       pt: "Estilo da tabela",
       ja: "\u30C1\u30E3\u30FC\u30C8\u30B9\u30BF\u30A4\u30EB",
-      sv: "Liststil"
+      sv: "Liststil",
+      ru: "\u0421\u0442\u0438\u043B\u044C \u0433\u0440\u0430\u0444\u0438\u043A\u0430"
     },
     chart_size: {
       en: "Chart size",
       de: "Diagrammgr\xF6\xDFe",
       pt: "Tamanho da tabela",
-      sv: "Liststorlek"
+      sv: "Liststorlek",
+      ru: "\u0420\u0430\u0437\u043C\u0435\u0440 \u0433\u0440\u0430\u0444\u0438\u043A\u0430"
     },
     country: {
       en: "Country",
       de: "Land",
       pt: "Pa\xEDs",
-      sv: "Land"
+      sv: "Land",
+      ru: "\u0421\u0442\u0440\u0430\u043D\u0430"
     },
     subtitle: {
       en: "Subtitle",
       de: "Untertitel",
       pt: "Legenda",
-      sv: "Undertext"
+      sv: "Undertext",
+      ru: "\u041F\u043E\u0434\u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A"
     },
     pronoun_tip: {
       en: "Pronouns are specially supported if placed first",
       de: "Pronomen werden unterst\xFCtzt, wenn sie an erster Stelle stehen",
       pt: "Os pronomes s\xE3o especialmente apoiados se colocados primeiro",
-      sv: "Pronomen har speciellt st\xF6d om det placeras f\xF6rst"
+      sv: "Pronomen har speciellt st\xF6d om det placeras f\xF6rst",
+      ru: "\u041C\u0435\u0441\u0442\u043E\u0438\u043C\u0435\u043D\u0438\u044F \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044E\u0442\u0441\u044F, \u0435\u0441\u043B\u0438 \u043E\u043D\u0438 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u043F\u0435\u0440\u0432\u044B\u043C\u0438"
     },
     block_list: {
       en: "Block list",
       de: "Blockierliste",
       pt: "Lista de bloqueados",
-      sv: "Blocklista"
+      sv: "Blocklista",
+      ru: "\u0421\u043F\u0438\u0441\u043E\u043A \u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u043A\u0438"
     },
     when_blocked: {
       en: "What happens with blocked users?",
       de: "Was passiert mit blockierten Benutzern?",
       pt: "O que acontece com os usu\xE1rios bloqueados?",
-      sv: "Vad h\xE4nder med blockerade anv\xE4ndare?"
+      sv: "Vad h\xE4nder med blockerade anv\xE4ndare?",
+      ru: "\u0427\u0442\u043E \u043F\u0440\u043E\u0438\u0441\u0445\u043E\u0434\u0438\u0442 \u0441 \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u043C\u0438 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F\u043C\u0438?"
     },
     blocked_count: {
       en: "You have blocked {c} profiles",
       de: "Du hast {c} Benutzer blockiert",
       pt: "Voc\xEA bloqueou {c} perfis",
-      sv: "Du har blockerat {c} profiler"
+      sv: "Du har blockerat {c} profiler",
+      ru: "\u0412\u044B \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043B\u0438 {c} \u043F\u0440\u043E\u0444\u0438\u043B\u0435\u0439"
     },
     enter_username: {
       en: "Enter username",
       de: "Benutzername eingeben",
       pt: "Insira o nome de usu\xE1rio",
-      sv: "Skriv anv\xE4ndarnamn"
+      sv: "Skriv anv\xE4ndarnamn",
+      ru: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0438\u043C\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F"
     },
     block: {
       en: "Block",
       de: "Blockieren",
       pt: "Bloquear",
-      sv: "Blockera"
+      sv: "Blockera",
+      ru: "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
     },
     blocked: {
       en: "Blocked",
       de: "Blockiert",
       pt: "Bloqueado",
-      sv: "Blockerad"
+      sv: "Blockerad",
+      ru: "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E"
     },
     blocked_user_public: {
       en: "Can leave shouts but not viewable to you",
       de: "Kann Shouts hinterlassen, diese sind aber nicht f\xFCr dich sichtbar",
       pt: "Podem deixar mensagens, mas elas n\xE3o s\xE3o vis\xEDveis para voc\xEA",
-      sv: "Hojtningar p\xE5 allm\xE4na profiler syns inte f\xF6r dig"
+      sv: "Hojtningar p\xE5 allm\xE4na profiler syns inte f\xF6r dig",
+      ru: "\u041C\u043E\u0433\u0443\u0442 \u043E\u0441\u0442\u0430\u0432\u043B\u044F\u0442\u044C \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F, \u043D\u043E \u0432\u044B \u0438\u0445 \u043D\u0435 \u0443\u0432\u0438\u0434\u0438\u0442\u0435"
     },
     blocked_user_message: {
       en: "Cannot direct message you",
       de: "Kann dir keine Direktnachrichten senden.",
       pt: "N\xE3o podem lhe enviar mensagens diretas",
-      sv: "Kan inte skicka privat meddelande till dig"
+      sv: "Kan inte skicka privat meddelande till dig",
+      ru: "\u041D\u0435 \u043C\u043E\u0433\u0443\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0432\u0430\u043C \u043B\u0438\u0447\u043D\u044B\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F"
     },
     blocked_user_new_shouts: {
       en: "Cannot leave shouts or reply to you",
       de: "Kann keine Shouts hinterlassen oder dir antworten",
       pt: "N\xE3o podem deixar mensagens na sua caixa de mensagens ou lhe responder",
-      sv: "Kan inte l\xE4mna hojtningar p\xE5 din profil eller svara p\xE5 dina hojtningar"
+      sv: "Kan inte l\xE4mna hojtningar p\xE5 din profil eller svara p\xE5 dina hojtningar",
+      ru: "\u041D\u0435 \u043C\u043E\u0433\u0443\u0442 \u043E\u0441\u0442\u0430\u0432\u043B\u044F\u0442\u044C \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u043E\u0442\u0432\u0435\u0447\u0430\u0442\u044C \u0432\u0430\u043C"
     },
     blocked_user_old_shouts: {
       en: "You cannot delete pre-existing shouts on your profile",
       de: "Bereits vorhandene Shouts auf deinem Profil werden nicht gel\xF6scht",
       pt: "Voc\xEA n\xE3o pode deletar mensagens j\xE1 existentes em seu perfil",
-      sv: "Du kan inte ta bort deras tidigare hojtningar fr\xE5n din profil"
+      sv: "Du kan inte ta bort deras tidigare hojtningar fr\xE5n din profil",
+      ru: "\u0412\u044B \u043D\u0435 \u043C\u043E\u0436\u0435\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0440\u0430\u043D\u0435\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u043E\u0432\u0430\u0432\u0448\u0438\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u0432 \u0432\u0430\u0448\u0435\u043C \u043F\u0440\u043E\u0444\u0438\u043B\u0435"
     },
     blocked_user_view_profile: {
       en: "They can still view your profile",
       de: "Die Person kann weiterhin dein Profil ansehen",
       pt: "Eles ainda podem ver seu perfil",
-      sv: "Dem kan fortfarande se din profil"
+      sv: "Dem kan fortfarande se din profil",
+      ru: "\u041E\u043D\u0438 \u043F\u043E-\u043F\u0440\u0435\u0436\u043D\u0435\u043C\u0443 \u043C\u043E\u0433\u0443\u0442 \u043F\u0440\u043E\u0441\u043C\u0430\u0442\u0440\u0438\u0432\u0430\u0442\u044C \u0432\u0430\u0448 \u043F\u0440\u043E\u0444\u0438\u043B\u044C"
     },
     shared_with_others: {
       en: "Shared with others",
       de: "Mit anderen geteilt",
       pt: "Compartilhado com outros",
-      sv: "Delades med andra"
+      sv: "Delades med andra",
+      ru: "\u041F\u043E\u0434\u0435\u043B\u0438\u043B\u0438\u0441\u044C \u0441 \u0434\u0440\u0443\u0433\u0438\u043C\u0438"
     },
     others_from_profile: {
       en: "More from {user}",
       de: "Mehr von {user}",
       pt: "Mais de {user}",
-      sv: "Mer fr\xE5n {user}"
+      sv: "Mer fr\xE5n {user}",
+      ru: "\u0411\u043E\u043B\u044C\u0448\u0435 \u043E\u0442 {user}"
     },
     obsess: {
       en: "Obsess",
       de: "Als Obsession festlegen",
       pt: "Definir como obsess\xE3o",
-      sv: "St\xE4ll in som besatthet"
+      sv: "St\xE4ll in som besatthet",
+      ru: "\u0421\u0434\u0435\u043B\u0430\u0442\u044C \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0439"
     },
     obsession: {
       en: "Obsession",
       de: "Obsession",
       pt: "Obsess\xE3o",
-      sv: "Aktuell besatthet"
+      sv: "Aktuell besatthet",
+      ru: "\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u0430\u044F \u0438\u0434\u0435\u044F"
     },
     obsessions: {
       en: "Obsessions",
       de: "Obsessionen",
       pt: "Obsess\xF5es",
-      sv: "Besattheter"
+      sv: "Besattheter",
+      ru: "\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u044B\u0435 \u0438\u0434\u0435\u0438"
     },
     finding_your_tracks: {
       en: "Finding your tracks",
       de: "Deine Titel werden gesucht",
       pt: "Encontrando suas faixas",
-      sv: "Hittar p\xE5 dinna l\xE5tar"
+      sv: "Hittar p\xE5 dinna l\xE5tar",
+      ru: "\u041F\u043E\u0438\u0441\u043A \u0432\u0430\u0448\u0438\u0445 \u0442\u0440\u0435\u043A\u043E\u0432"
     },
     update_check: {
       en: "Check for updates",
       de: "Nach Updates suchen",
       pt: "Procurar atualiza\xE7\xF5es",
-      sv: "Kolla efter uppdateringar"
+      sv: "Kolla efter uppdateringar",
+      ru: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F"
     },
     redirected_from: {
-      en: "Redirected from"
+      en: "Redirected from",
+      ru: "\u041F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0441"
     },
     music_corrections: {
       en: "Music corrections",
       de: "Musik-Korrekturen",
       pt: "Corre\xE7\xF5es de m\xFAsica",
-      sv: "Musikredigeringar"
+      sv: "Musikredigeringar",
+      ru: "\u041C\u0443\u0437\u044B\u043A\u0430\u043B\u044C\u043D\u044B\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F"
     },
     corrections_loaded: {
       en: "Corrections loaded",
       de: "Korrekturen wurden geladen",
-      sv: "Dina redigeringar har laddat"
+      sv: "Dina redigeringar har laddat",
+      ru: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u044B"
     },
     corrections_loaded_value: {
       en: "{c1} artists, {c2} albums and tracks",
       de: "{c1} K\xFCnstler:innen, {c2} Alben und Titel",
-      sv: "{c1} artister, {c2} album och l\xE5tar"
+      sv: "{c1} artister, {c2} album och l\xE5tar",
+      ru: "{c1} \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u0439, {c2} \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432 \u0438 \u0442\u0440\u0435\u043A\u043E\u0432"
     },
     brand_version: {
       // used for the lotus header where:
@@ -60419,7 +60907,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "{brand} version",
       de: "{brand}-Version",
       pt: "{brand} vers\xE3o",
-      sv: "{brand} version"
+      sv: "{brand} version",
+      ru: "{brand} \u0432\u0435\u0440\u0441\u0438\u0438"
     },
     brand_version_number: {
       // used for the lotus header where:
@@ -60429,23 +60918,27 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "{brand} version {number}",
       de: "{brand}-Version {number}",
       pt: "{brand} vers\xE3o {number}",
-      sv: "{brand} version {number}"
+      sv: "{brand} version {number}",
+      ru: "{brand} \u0432\u0435\u0440\u0441\u0438\u0438 {number}"
     },
     lotus: {
       artist: {
         en: "Artist corrections",
         de: "K\xFCnstler:innen-Korrekturen",
-        sv: "Artistredigeringar"
+        sv: "Artistredigeringar",
+        ru: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432"
       },
       album_track: {
         en: "Album and track corrections",
         de: "Album- und Titel-Korrekturen",
-        sv: "Album och sp\xE5rredigeringar"
+        sv: "Album och sp\xE5rredigeringar",
+        ru: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432 \u0438 \u0442\u0440\u0435\u043A\u043E\u0432"
       },
       combined_artists: {
         en: "Combined artist profiles",
         de: "Kombinierte K\xFCnstler:innen-Profile",
-        sv: "Kombinerade artistprofiler"
+        sv: "Kombinerade artistprofiler",
+        ru: "\u041E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u043D\u044B\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u0438 \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432"
       }
     },
     correct_titles_with_lotus: {
@@ -60453,13 +60946,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Correct titles with lotus",
         de: "Titel korrigieren mit lotus",
         pt: "Corrigir t\xEDtulos com lotus",
-        sv: "Redigera titlar med lotus"
+        sv: "Redigera titlar med lotus",
+        ru: "\u0418\u0441\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0441 \u043F\u043E\u043C\u043E\u0449\u044C\u044E lotus"
       },
       body: {
         en: "Re-capitalise artists, albums, and tracks based on community contributions",
         de: "Korrigiert die Schreibweise von K\xFCnstler:innen, Alben und Titeln basierend auf Community-Beitr\xE4gen",
         pt: "Recapitalize artistas, \xE1lbuns e faixas com base nas contribui\xE7\xF5es da comunidade",
-        sv: "\xC4ndra kapitalisering p\xE5 artister, album, och l\xE5tar fr\xE5n gemenskapsbidrag"
+        sv: "\xC4ndra kapitalisering p\xE5 artister, album, och l\xE5tar fr\xE5n gemenskapsbidrag",
+        ru: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432, \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432 \u0438 \u0442\u0440\u0435\u043A\u043E\u0432 \u043D\u0430 \u043E\u0441\u043D\u043E\u0432\u0435 \u0432\u043A\u043B\u0430\u0434\u0430 \u0441\u043E\u043E\u0431\u0449\u0435\u0441\u0442\u0432\u0430"
       }
     },
     prefer_no_redirect: {
@@ -60467,57 +60962,66 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Avoid artist redirects when navigating",
         de: "Vermeide K\xFCnstler-Weiterleitungen beim Navigieren",
         pt: "Evitar redirecionamentos de artistas ao navegar",
-        sv: "Undvik artistomdirigeringar n\xE4r du surfar"
+        sv: "Undvik artistomdirigeringar n\xE4r du surfar",
+        ru: "\u0418\u0437\u0431\u0435\u0433\u0430\u0442\u044C \u043F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0439 \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432 \u043F\u0440\u0438 \u043D\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u0438"
       },
       body: {
         en: "Automatically adds +noredirect to artist links to avoid being sent to pages like Travi$ Scott",
         de: "F\xFCgt automatisch +noredirect zu K\xFCnstler-Links hinzu, um zu vermeiden, dass du zu Seiten wie \u201ETravi$ Scott\u201C weitergeleitet wirst",
         pt: "Adiciona automaticamente +noredirect em links de artistas para evitar ser redirecionado para p\xE1ginas como Travi$ Scott",
-        sv: "L\xE4gger automatiskt +noredirect p\xE5 artistl\xE4nkar f\xF6r att undvika att bli skickad till sidor som t.ex. Travi$ Scott"
+        sv: "L\xE4gger automatiskt +noredirect p\xE5 artistl\xE4nkar f\xF6r att undvika att bli skickad till sidor som t.ex. Travi$ Scott",
+        ru: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u044F\u0435\u0442 +noredirect \u043A \u0441\u0441\u044B\u043B\u043A\u0430\u043C \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432, \u0447\u0442\u043E\u0431\u044B \u0438\u0437\u0431\u0435\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u0442\u0438\u043F\u0430 Travi$ Scott"
       }
     },
     view_all: {
       en: "View all",
       de: "Alle ansehen",
       pt: "Ver tudo",
-      sv: "Visa alla"
+      sv: "Visa alla",
+      ru: "\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0441\u0435"
     },
     help_contribute: {
       en: "Help contribute",
       de: "Helfe mit",
       pt: "Ajude a contribuir",
-      sv: "Bidra"
+      sv: "Bidra",
+      ru: "\u041F\u043E\u043C\u043E\u0447\u044C \u0432\u043D\u0435\u0441\u0442\u0438 \u0432\u043A\u043B\u0430\u0434"
     },
     delete: {
       en: "Delete",
       de: "L\xF6schen",
       pt: "Deletar",
-      sv: "Ta bort"
+      sv: "Ta bort",
+      ru: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
     },
     deleted: {
       en: "Deleted",
       de: "Gel\xF6scht",
       pt: "Deletado",
-      sv: "Borttagen"
+      sv: "Borttagen",
+      ru: "\u0423\u0434\u0430\u043B\u0435\u043D\u043E"
     },
     search: {
       en: "Search",
       de: "Suchen",
       pt: "Pesquisar",
-      sv: "S\xF6k"
+      sv: "S\xF6k",
+      ru: "\u041F\u043E\u0438\u0441\u043A"
     },
     search_guest: {
       en: "Search guest appearances",
       de: "Suche nach Features",
       pt: "Pesquisar participa\xE7\xF5es especiais",
-      sv: "S\xF6k g\xE4startister"
+      sv: "S\xF6k g\xE4startister",
+      ru: "\u041F\u043E\u0438\u0441\u043A \u0433\u043E\u0441\u0442\u0435\u0432\u044B\u0445 \u0443\u0447\u0430\u0441\u0442\u0438\u0439"
     },
     anything_you_can_imagine: {
       // placeholder for your about me
       en: "Anything you can imagine...",
       de: "Alles, was du dir vorstellen kannst ...",
       pt: "Tudo que voc\xEA pode imaginar...",
-      sv: "Vad som helst du kan f\xF6rest\xE4lla dig..."
+      sv: "Vad som helst du kan f\xF6rest\xE4lla dig...",
+      ru: "\u0412\u0441\u0435, \u0447\u0442\u043E \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u0441\u0435\u0431\u0435 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u0438\u0442\u044C..."
     },
     supports_markdown: {
       // markdown: https://www.markdownguide.org/cheat-sheet/
@@ -60525,16 +61029,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Unterst\xFCtzt Markdown",
       pt: "Suporta o Markdown",
       sv: "St\xF6der Markdown",
+      ru: "\u041F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442 Markdown",
       header: {
         name: {
           en: "Header",
           de: "\xDCberschrift",
-          sv: "Rubrik"
+          sv: "Rubrik",
+          ru: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A"
         },
         string: {
           en: "# hi!!",
           de: "# hallo!!",
-          sv: "# hej!!"
+          sv: "# hej!!",
+          ru: "# \u043F\u0440\u0438\u0432\u0435\u0442!!"
         }
       },
       bold: {
@@ -60542,13 +61049,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Bold",
           de: "Fett",
           pt: "Negrito",
-          sv: "Fet text"
+          sv: "Fet text",
+          ru: "\u041F\u043E\u043B\u0443\u0436\u0438\u0440\u043D\u044B\u0439"
         },
         string: {
           en: "**bold**",
           de: "**Fett**",
           pt: "**negrito**",
-          sv: "**fet stil**"
+          sv: "**fet stil**",
+          ru: "**\u043F\u043E\u043B\u0443\u0436\u0438\u0440\u043D\u044B\u0439**"
         }
       },
       italics: {
@@ -60556,13 +61065,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Italics",
           de: "Kursiv",
           pt: "It\xE1lico",
-          sv: "Kursiv"
+          sv: "Kursiv",
+          ru: "\u041A\u0443\u0440\u0441\u0438\u0432"
         },
         string: {
           en: "*slanted*",
           de: "*Kursiv*",
           pt: "*inclinado*",
-          sv: "*kursiv*"
+          sv: "*kursiv*",
+          ru: "*\u043D\u0430\u043A\u043B\u043E\u043D\u043D\u044B\u0439*"
         }
       },
       bold_italics: {
@@ -60570,13 +61081,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           de: "Fett kursiv",
           en: "Bold italics",
           pt: "Negrito it\xE1lico",
-          sv: "Fet kursiv stil"
+          sv: "Fet kursiv stil",
+          ru: "\u041F\u043E\u043B\u0443\u0436\u0438\u0440\u043D\u044B\u0439 \u043A\u0443\u0440\u0441\u0438\u0432"
         },
         string: {
           en: "***slanted but bold***",
           de: "***Fett UND kursiv gleichzeitig!***",
           pt: "***inclinado, mas em negrito***",
-          sv: "***fet och kursiv samtidigt***"
+          sv: "***fet och kursiv samtidigt***",
+          ru: "***\u043D\u0430\u043A\u043B\u043E\u043D\u043D\u044B\u0439, \u043D\u043E \u043F\u043E\u043B\u0443\u0436\u0438\u0440\u043D\u044B\u0439***"
         }
       },
       underlined: {
@@ -60584,13 +61097,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           en: "Underlined",
           de: "Unterstrichen",
           pt: "Sublinhado",
-          sv: "Understrykt"
+          sv: "Understrykt",
+          ru: "\u041F\u043E\u0434\u0447\u0435\u0440\u043A\u043D\u0443\u0442\u044B\u0439"
         },
         string: {
           en: "__underlined__",
           de: "__Unterstrichen__",
           pt: "__sublinhado__",
-          sv: "__understrykt__"
+          sv: "__understrykt__",
+          ru: "__\u043F\u043E\u0434\u0447\u0435\u0440\u043A\u043D\u0443\u0442\u044B\u0439__"
         }
       }
     },
@@ -60599,63 +61114,73 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "{v} characters max",
       de: "Maximal {v} Zeichen",
       pt: "m\xE1ximo de {v} caracteres",
-      sv: "max {v} tecken"
+      sv: "max {v} tecken",
+      ru: "\u041C\u0430\u043A\u0441\u0438\u043C\u0443\u043C {v} \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432"
     },
     profile_shortcut: {
       name: {
         en: "Profile shortcut",
         de: "Profilverkn\xFCpfung",
         pt: "Atalho de perfil",
-        sv: "Profilgenv\xE4g"
+        sv: "Profilgenv\xE4g",
+        ru: "\u042F\u0440\u043B\u044B\u043A \u043F\u0440\u043E\u0444\u0438\u043B\u044F"
       },
       body: {
         en: "View their scrobbles alongside yours at all times",
         de: "Sehe deren Scrobbles jederzeit neben deinen an",
         pt: "Veja os scrobbles dele(a) junto aos seus o tempo todo",
-        sv: "Visa deras skrobblingar bredvid dina hela tiden"
+        sv: "Visa deras skrobblingar bredvid dina hela tiden",
+        ru: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0438\u0445 \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u043E\u0432 \u0440\u044F\u0434\u043E\u043C \u0441 \u0432\u0430\u0448\u0438\u043C\u0438 \u0432\u0441\u0435\u0433\u0434\u0430"
       },
       linked: {
         en: "Linked with {u}",
         de: "Verlinkt mit {u}",
         pt: "Ligado com {u}",
-        sv: "L\xE4nkad ihop med {u}"
+        sv: "L\xE4nkad ihop med {u}",
+        ru: "\u0421\u0432\u044F\u0437\u0430\u043D\u043E \u0441 {u}"
       },
       notice: {
         en: "You already have {u} as your shortcut, are you sure?",
         de: "Du hast bereits {u} als deinen Shortcut festgelegt, bist du sicher?",
         pt: "Voc\xEA j\xE1 tem {u} como seu atalho, voc\xEA tem certeza?",
-        sv: "Du har redan {u} som din genv\xE4g, \xE4r du s\xE4ker?"
+        sv: "Du har redan {u} som din genv\xE4g, \xE4r du s\xE4ker?",
+        ru: "\u0423 \u0432\u0430\u0441 \u0443\u0436\u0435 \u0435\u0441\u0442\u044C {u} \u0432 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 \u044F\u0440\u043B\u044B\u043A\u0430, \u0432\u044B \u0443\u0432\u0435\u0440\u0435\u043D\u044B?"
       }
     },
     failed_to_find_profile: {
       en: "Failed to find profile",
       de: "Profil konnte nicht gefunden werden",
       pt: "Falha ao achar perfil",
-      sv: "Kunde ej hitta profilen"
+      sv: "Kunde ej hitta profilen",
+      ru: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043D\u0430\u0439\u0442\u0438 \u043F\u0440\u043E\u0444\u0438\u043B\u044C"
     },
     replace: {
       en: "Replace",
       de: "Ersetzen",
       pt: "Substituir",
-      sv: "Ers\xE4tt"
+      sv: "Ers\xE4tt",
+      ru: "\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C"
     },
     view_others_library: {
       en: "View others library",
       de: "Bibliothek des anderen ansehen",
       pt: "Ver a biblioteca dos outros",
-      sv: "Visa andra personers bibliotek"
+      sv: "Visa andra personers bibliotek",
+      ru: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0438 \u0434\u0440\u0443\u0433\u0438\u0445"
     },
     avatar_radius: {
       name: {
         en: "Profile avatar shape",
         de: "Form des Profilbildes",
         pt: "Formato da imagem de perfil",
-        sv: "Profilbildsform"
+        sv: "Profilbildsform",
+        ru: "\u0424\u043E\u0440\u043C\u0430 \u0430\u0432\u0430\u0442\u0430\u0440\u0430 \u043F\u0440\u043E\u0444\u0438\u043B\u044F"
       },
       body: {
         en: "Applies to all profiles, only visible to you",
         de: "Gilt f\xFCr alle Profile, nur f\xFCr dich sichtbar",
-        sv: "Till\xE4mpas p\xE5 alla profiler, syns bara f\xF6r dig"
+        sv: "Till\xE4mpas p\xE5 alla profiler, syns bara f\xF6r dig",
+        ru: "\u041F\u0440\u0438\u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u043A\u043E \u0432\u0441\u0435\u043C \u043F\u0440\u043E\u0444\u0438\u043B\u044F\u043C, \u0432\u0438\u0434\u043D\u043E \u0442\u043E\u043B\u044C\u043A\u043E \u0432\u0430\u043C"
       }
     },
     notes: {
@@ -60663,27 +61188,31 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Notes",
       de: "Notizen",
       pt: "Notas",
-      sv: "Anteckningar"
+      sv: "Anteckningar",
+      ru: "\u0417\u0430\u043C\u0435\u0442\u043A\u0438"
     },
     no_notes: {
       // no profiles in your notes list
       en: "No profiles here... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)",
       de: "Keine Profile hier... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)",
       pt: "Sem perfis aqui... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)",
-      sv: "Inga profiler h\xE4r... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)"
+      sv: "Inga profiler h\xE4r... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)",
+      ru: "\u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u0435\u0439... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)"
     },
     font: {
       name: {
         en: "Font choice",
         de: "Schriftartauswahl",
         pt: "Escolha de fonte",
-        sv: "Typsnitts"
+        sv: "Typsnitts",
+        ru: "\u0412\u044B\u0431\u043E\u0440 \u0448\u0440\u0438\u0444\u0442\u0430"
       },
       body: {
         en: "Choose a custom selection of fonts that suit you",
         de: "Lege eine benutzerdefinierte Auswahl von Schriftarten fest, die zu dir passen",
         pt: "Selecione uma fonte customizada que te agrada",
-        sv: "V\xE4lj ett typsnitt som b\xE4st passar dig"
+        sv: "V\xE4lj ett typsnitt som b\xE4st passar dig",
+        ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u0438\u0439 \u043D\u0430\u0431\u043E\u0440 \u0448\u0440\u0438\u0444\u0442\u043E\u0432, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0432\u0430\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u0438\u0442"
       }
     },
     font_weight: {
@@ -60691,13 +61220,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Font weight",
         de: "Schriftst\xE4rke",
         pt: "Espessura da fonte",
-        sv: "Typsnittsvikt"
+        sv: "Typsnittsvikt",
+        ru: "\u0422\u043E\u043B\u0449\u0438\u043D\u0430 \u0448\u0440\u0438\u0444\u0442\u0430"
       },
       body: {
         en: "Used for regular text paragraphs",
         de: "Wird f\xFCr normale Textabs\xE4tze verwendet",
         pt: "Usado para par\xE1grafos regulares de texto",
-        sv: "Anv\xE4nds f\xF6r vanliga textstycke"
+        sv: "Anv\xE4nds f\xF6r vanliga textstycke",
+        ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0434\u043B\u044F \u043E\u0431\u044B\u0447\u043D\u044B\u0445 \u0442\u0435\u043A\u0441\u0442\u043E\u0432\u044B\u0445 \u0430\u0431\u0437\u0430\u0446\u0435\u0432"
       }
     },
     font_weight_medium: {
@@ -60705,13 +61236,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Medium font weight",
         de: "Mittlere Schriftst\xE4rke",
         pt: "Espessura m\xE9dia de fonte",
-        sv: "Mindre typsnittsvikt"
+        sv: "Mindre typsnittsvikt",
+        ru: "\u0421\u0440\u0435\u0434\u043D\u044F\u044F \u0442\u043E\u043B\u0449\u0438\u043D\u0430 \u0448\u0440\u0438\u0444\u0442\u0430"
       },
       body: {
         en: "Used for button text and small headers",
         de: "Wird f\xFCr Schaltfl\xE4chentext und kleine \xDCberschriften verwendet",
         pt: "Usada para texto de bot\xF5es e pequenos cabe\xE7alhos",
-        sv: "Anv\xE4nds f\xF6r knappar och sm\xE5a rubriker"
+        sv: "Anv\xE4nds f\xF6r knappar och sm\xE5a rubriker",
+        ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0434\u043B\u044F \u0442\u0435\u043A\u0441\u0442\u0430 \u043A\u043D\u043E\u043F\u043E\u043A \u0438 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0445 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u043E\u0432"
       }
     },
     font_weight_bold: {
@@ -60719,13 +61252,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Bold font weight",
         de: "Gro\xDFe Schriftst\xE4rke",
         pt: "Espessura da fonte em negrito",
-        sv: "Fet typsnittsvikt"
+        sv: "Fet typsnittsvikt",
+        ru: "\u0416\u0438\u0440\u043D\u0430\u044F \u0442\u043E\u043B\u0449\u0438\u043D\u0430 \u0448\u0440\u0438\u0444\u0442\u0430"
       },
       body: {
         en: "Used for large headers",
         de: "Wird f\xFCr gro\xDFe \xDCberschriften verwendet",
         pt: "Usado para cabe\xE7alhos grandes",
-        sv: "Anv\xE4nds f\xF6r stora rubriker"
+        sv: "Anv\xE4nds f\xF6r stora rubriker",
+        ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0434\u043B\u044F \u0431\u043E\u043B\u044C\u0448\u0438\u0445 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u043E\u0432"
       }
     },
     font_emoji: {
@@ -60733,13 +61268,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Emoji compatibility",
         de: "Emoji-Kompatibilit\xE4t",
         pt: "Compatibilidade de emojis",
-        sv: "Emoji-kompatibilitet"
+        sv: "Emoji-kompatibilitet",
+        ru: "\u0421\u043E\u0432\u043C\u0435\u0441\u0442\u0438\u043C\u043E\u0441\u0442\u044C \u0441 \u044D\u043C\u043E\u0434\u0437\u0438"
       },
       body: {
         en: "Required to render emoji properly before Windows 11",
         de: "Erforderlich, um Emojis vor Windows 11 richtig darzustellen",
         pt: "Necess\xE1rio para renderizar emojis corretamente antes do Windows 11",
-        sv: "Kr\xE4vs f\xF6r att visa emojis korrekt innan Windows 11"
+        sv: "Kr\xE4vs f\xF6r att visa emojis korrekt innan Windows 11",
+        ru: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u0434\u043B\u044F \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0433\u043E \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u044D\u043C\u043E\u0434\u0437\u0438 \u0434\u043E Windows 11"
       }
     },
     font_example: {
@@ -60755,38 +61292,44 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Enter installed font name(s), separated by commas",
       de: "Gebe die installierte Schriftart durch Kommas getrennt ein",
       pt: "Nomes das fontes instaladas, separados por v\xEDrgulas",
-      sv: "Skriv installerade typsnittsnamn, separerade av kommatecken"
+      sv: "Skriv installerade typsnittsnamn, separerade av kommatecken",
+      ru: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435(\u044F) \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u043E\u0433\u043E(\u044B\u0445) \u0448\u0440\u0438\u0444\u0442\u0430(\u043E\u0432), \u0440\u0430\u0437\u0434\u0435\u043B\u044F\u044F \u0437\u0430\u043F\u044F\u0442\u044B\u043C\u0438"
     },
     change_now: {
       en: "Change now",
       de: "Jetzt \xE4ndern",
       pt: "Mudar agora",
-      sv: "\xC4ndra nu"
+      sv: "\xC4ndra nu",
+      ru: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441"
     },
     profiles: {
       en: "Profiles",
       de: "Profile",
       pt: "Perfis",
-      sv: "Profiler"
+      sv: "Profiler",
+      ru: "\u041F\u0440\u043E\u0444\u0438\u043B\u0438"
     },
     redirections: {
       en: "Redirections",
       de: "Umleitungen",
       pt: "Redirecionamentos",
-      sv: "Omdirigeringar"
+      sv: "Omdirigeringar",
+      ru: "\u041F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F"
     },
     legacy_redirects: {
       name: {
         en: "Legacy scrobble redirection",
         de: "Legacy-Scrobble-Umleitung",
         pt: "Redirecionamento de scrobble legado",
-        sv: "Legacy skrobbelomdirigeringar"
+        sv: "Legacy skrobbelomdirigeringar",
+        ru: "\u0423\u0441\u0442\u0430\u0440\u0435\u0432\u0448\u0435\u0435 \u043F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u043E\u0432"
       },
       body: {
         en: "By default, scrobbles will be corrected to faulty replacements that are a decade out of date. Disabling does not fully fix the system but keeps artist names in your library intact.",
         de: "Standardm\xE4\xDFig \u201Ekorrigiert\u201C Last.fm einige deiner Scrobbles automatisch und f\xFChrt (meist) fehlerhafte Weiterleitungen aus. Durch die Deaktivierung dieser Funktion wird das System zwar nicht vollst\xE4ndig repariert, die K\xFCnstlernamen in deiner Bibliothek bleiben jedoch erhalten.",
         pt: 'Por padr\xE3o, a Last.fm ir\xE1 "corrigir automaticamente" alguns dos seus scrobbles para redirecionamentos (na maioria) defeituosos. Desativar essa op\xE7\xE3o n\xE3o corrige completamente o sistema, mas mant\xE9m os nomes dos artistas na sua biblioteca intactos.',
-        sv: "Vanligtvis omdirigeras skrobblar till felers\xE4ttningar som \xE4r \xF6ver tio \xE5r gamla. Att avaktivera det fixar inte problemet totalt men artistnamn i ditt egna bibliotek visar r\xE4tt profil."
+        sv: "Vanligtvis omdirigeras skrobblar till felers\xE4ttningar som \xE4r \xF6ver tio \xE5r gamla. Att avaktivera det fixar inte problemet totalt men artistnamn i ditt egna bibliotek visar r\xE4tt profil.",
+        ru: "\u041F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u044B \u0431\u0443\u0434\u0443\u0442 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u044B \u043D\u0430 \u043D\u0435\u0438\u0441\u043F\u0440\u0430\u0432\u043D\u044B\u0435 \u0437\u0430\u043C\u0435\u043D\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u0443\u0436\u0435 \u0434\u0435\u0441\u044F\u0442\u044C \u043B\u0435\u0442. \u041E\u0442\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043D\u0435 \u043F\u043E\u043B\u043D\u043E\u0441\u0442\u044C\u044E \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u0441\u0438\u0441\u0442\u0435\u043C\u0443, \u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442 \u0438\u043C\u0435\u043D\u0430 \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432 \u0432 \u0432\u0430\u0448\u0435\u0439 \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0435 \u043D\u0435\u0442\u0440\u043E\u043D\u0443\u0442\u044B\u043C\u0438."
       }
     },
     redirect_messages: {
@@ -60794,13 +61337,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Remove page redirection notifications",
         de: "Benachrichtigungen zur Seitenumleitung deaktivieren",
         pt: "Remover notifica\xE7\xF5es de redirecionamento de p\xE1gina",
-        sv: "Ta bort omdirigeringsnotifikationer"
+        sv: "Ta bort omdirigeringsnotifikationer",
+        ru: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F \u043E \u043F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0438 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B"
       },
       body: {
         en: "These notifications can let you undo redirections Last.fm forced upon you, but can also be annoying",
         de: "Mit diesen Benachrichtigungen kannst du die von Last.fm erzwungenen Weiterleitungen r\xFCckg\xE4ngig machen, sie k\xF6nnen aber auch l\xE4stig sein.",
         pt: "Essas notifica\xE7\xF5es podem permitir que voc\xEA desfa\xE7a redirecionamentos que a Last.fm imp\xF4s a voc\xEA, mas tamb\xE9m podem ser irritantes",
-        sv: "Dessa notiser l\xE5ter dig \xE5ngra omdirigeringar Last.fm tvingade p\xE5 dig, men dem kan ocks\xE5 vara st\xF6rande"
+        sv: "Dessa notiser l\xE5ter dig \xE5ngra omdirigeringar Last.fm tvingade p\xE5 dig, men dem kan ocks\xE5 vara st\xF6rande",
+        ru: "\u042D\u0442\u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F \u043C\u043E\u0433\u0443\u0442 \u043F\u043E\u0437\u0432\u043E\u043B\u0438\u0442\u044C \u0432\u0430\u043C \u043E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u043D\u0430\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0435 Last.fm, \u043D\u043E \u0442\u0430\u043A\u0436\u0435 \u043C\u043E\u0433\u0443\u0442 \u0431\u044B\u0442\u044C \u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0430\u044E\u0449\u0438\u043C\u0438"
       }
     },
     colourful_counts: {
@@ -60808,13 +61353,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Rank-based colours for artist charts",
         de: "Rangbasierte Farben f\xFCr K\xFCnstlerdiagramme",
         pt: "Cores baseadas em classifica\xE7\xE3o para paradas de artistas",
-        sv: "Rangbaserade f\xE4rger f\xF6r artistlistor"
+        sv: "Rangbaserade f\xE4rger f\xF6r artistlistor",
+        ru: "\u0426\u0432\u0435\u0442\u0430 \u043D\u0430 \u043E\u0441\u043D\u043E\u0432\u0435 \u0440\u0430\u043D\u0433\u0430 \u0434\u043B\u044F \u0447\u0430\u0440\u0442\u043E\u0432 \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432"
       },
       body: {
         en: "Assigns a colour based on an artist\u2019s all-time ranking in your library",
         de: "Weist eine Farbe basierend auf dem Allzeit-Ranking eines K\xFCnstlers in deiner Bibliothek zu",
         pt: "Define uma cor pela coloca\xE7\xE3o do artista no ranking geral da sua biblioteca.",
-        sv: "Till\xE4mpar en f\xE4rg baserad p\xE5 en artists alltidsranking i ditt bibliotek"
+        sv: "Till\xE4mpar en f\xE4rg baserad p\xE5 en artists alltidsranking i ditt bibliotek",
+        ru: "\u041D\u0430\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0446\u0432\u0435\u0442 \u0432 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043E\u0442 \u043E\u0431\u0449\u0435\u0433\u043E \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 \u0430\u0440\u0442\u0438\u0441\u0442\u0430 \u0432 \u0432\u0430\u0448\u0435\u0439 \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0435"
       }
     },
     glacier_graphs: {
@@ -60822,13 +61369,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Visualise scrobble graphs better",
         de: "Scrobble-Diagramme besser visualisieren",
         pt: "Visualize melhor os gr\xE1ficos de scrobble",
-        sv: "B\xE4ttre visualisera skrobbeldiagram"
+        sv: "B\xE4ttre visualisera skrobbeldiagram",
+        ru: "\u041B\u0443\u0447\u0448\u0435 \u0432\u0438\u0437\u0443\u0430\u043B\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0433\u0440\u0430\u0444\u0438\u043A\u0438 \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u043E\u0432"
       },
       body: {
         en: "Choose between a tiny delay for a wide range of graph options or legacy Last.fm graphs",
         de: "W\xE4hle zwischen einer kleinen Verz\xF6gerung f\xFCr eine breitere Palette von Diagrammoptionen oder den \xE4lteren Last.fm-Diagrammen",
         pt: "Escolha entre um pequeno atraso para ter mais op\xE7\xF5es de gr\xE1ficos ou usar os gr\xE1ficos cl\xE1ssicos da Last.fm",
-        sv: "V\xE4lj mellan en liten f\xF6rdr\xF6jning f\xF6r en stor m\xE4ngd olika diagramalternativ eller anv\xE4nd \xE4ldre Last.fm-diagram"
+        sv: "V\xE4lj mellan en liten f\xF6rdr\xF6jning f\xF6r en stor m\xE4ngd olika diagramalternativ eller anv\xE4nd \xE4ldre Last.fm-diagram",
+        ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043C\u0435\u0436\u0434\u0443 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u0437\u0430\u0434\u0435\u0440\u0436\u043A\u043E\u0439 \u0434\u043B\u044F \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u0441\u043F\u0435\u043A\u0442\u0440\u0430 \u043E\u043F\u0446\u0438\u0439 \u0433\u0440\u0430\u0444\u0438\u043A\u0430 \u0438\u043B\u0438 \u0443\u0441\u0442\u0430\u0440\u0435\u0432\u0448\u0438\u043C\u0438 \u0433\u0440\u0430\u0444\u0438\u043A\u0430\u043C\u0438 Last.fm"
       }
     },
     gendered_tags: {
@@ -60836,33 +61385,38 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Hide gender-based tags",
         de: "Geschlechtsspezifische Tags ausblenden",
         pt: "Esconder tags baseadas em g\xEAnero",
-        sv: "G\xF6m k\xF6nsbaserade taggar"
+        sv: "G\xF6m k\xF6nsbaserade taggar",
+        ru: "\u0421\u043A\u0440\u044B\u0442\u044C \u0442\u0435\u0433\u0438, \u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u043D\u0430 \u0433\u0435\u043D\u0434\u0435\u0440\u0435"
       },
       body: {
         en: "These tags are often redundant and can never apply to the full range they\u2019re intending",
         de: "Diese Tags sind oft \xFCberfl\xFCssig und k\xF6nnen nie auf die gesamte Bandbreite angewendet werden, die sie beabsichtigen",
         pt: "Essas tags costumam ser redundantes e nunca conseguem representar totalmente tudo o que se prop\xF5em",
-        sv: "Dessa taggar \xE4r ofta \xF6verfl\xF6diga och g\xE4ller inte alltid f\xF6r allt dem \xE4r t\xE4nkta att t\xE4cka"
+        sv: "Dessa taggar \xE4r ofta \xF6verfl\xF6diga och g\xE4ller inte alltid f\xF6r allt dem \xE4r t\xE4nkta att t\xE4cka",
+        ru: "\u042D\u0442\u0438 \u0442\u0435\u0433\u0438 \u0447\u0430\u0441\u0442\u043E \u0438\u0437\u0431\u044B\u0442\u043E\u0447\u043D\u044B \u0438 \u043D\u0435 \u043C\u043E\u0433\u0443\u0442 \u0431\u044B\u0442\u044C \u043F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u044B \u043A\u043E \u0432\u0441\u0435\u043C\u0443 \u0434\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u0443, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043E\u043D\u0438 \u043F\u043E\u0434\u0440\u0430\u0437\u0443\u043C\u0435\u0432\u0430\u044E\u0442"
       }
     },
     artwork_and_grids: {
       en: "Artwork and grids",
       de: "Albencover und Raster",
       pt: "Capas e grades",
-      sv: "Albumkonst och rutn\xE4t"
+      sv: "Albumkonst och rutn\xE4t",
+      ru: "\u041E\u0431\u043B\u043E\u0436\u043A\u0438 \u0438 \u0441\u0435\u0442\u043A\u0438"
     },
     gloss: {
       name: {
         en: "Apply gloss to album covers",
         de: "Glanz auf Albumcover anwenden",
         pt: "Aplique relevo nas capas dos \xE1lbuns",
-        sv: "L\xE4gg till ett sken p\xE5 albumkonst"
+        sv: "L\xE4gg till ett sken p\xE5 albumkonst",
+        ru: "\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C \u0433\u043B\u044F\u043D\u0435\u0446 \u043A \u043E\u0431\u043B\u043E\u0436\u043A\u0430\u043C \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432"
       },
       body: {
         en: "Add a layer of shine to album covers globally",
         de: "F\xFCgt allen Albumcovern einen Glanzeffekt hinzu",
         pt: "Adicione um toque de brilho em todas as capas de \xE1lbuns",
-        sv: "L\xE4gger till ett glansigt lager p\xE5 all albumkonst"
+        sv: "L\xE4gger till ett glansigt lager p\xE5 all albumkonst",
+        ru: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u043B\u043E\u0439 \u0431\u043B\u0435\u0441\u043A\u0430 \u043D\u0430 \u043E\u0431\u043B\u043E\u0436\u043A\u0438 \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432 \u043F\u043E \u0432\u0441\u0435\u043C\u0443 \u0441\u0430\u0439\u0442\u0443"
       }
     },
     grid_glow: {
@@ -60870,13 +61424,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Reflect colour below grid items",
         de: "Farbe unter Rasterobjekten reflektieren",
         pt: "Refletir a cor abaixo dos itens da grade",
-        sv: "Reflektera f\xE4rg under rutn\xE4tsobjekt"
+        sv: "Reflektera f\xE4rg under rutn\xE4tsobjekt",
+        ru: "\u041E\u0442\u0440\u0430\u0436\u0430\u0442\u044C \u0446\u0432\u0435\u0442 \u043F\u043E\u0434 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u043C\u0438 \u0441\u0435\u0442\u043A\u0438"
       },
       body: {
         en: "Applies a glow below grid items based on the primary colour",
         de: "F\xFCgt einen Glanzeffekt unter Rasterobjekten hinzu, der auf der Prim\xE4rfarbe basiert",
         pt: "Aplica um brilho abaixo dos itens da grade com base na cor prim\xE1ria",
-        sv: "L\xE4gger till f\xE4rg under rutn\xE4tsobjekt som \xE4r baserad p\xE5 den prim\xE4ra f\xE4rgen"
+        sv: "L\xE4gger till f\xE4rg under rutn\xE4tsobjekt som \xE4r baserad p\xE5 den prim\xE4ra f\xE4rgen",
+        ru: "\u041F\u0440\u0438\u043C\u0435\u043D\u044F\u0435\u0442 \u0441\u0432\u0435\u0447\u0435\u043D\u0438\u0435 \u043F\u043E\u0434 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u043C\u0438 \u0441\u0435\u0442\u043A\u0438 \u043D\u0430 \u043E\u0441\u043D\u043E\u0432\u0435 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430"
       }
     },
     skip_to: {
@@ -60884,194 +61440,226 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Skip to",
       de: "Springe zu",
       pt: "Ir at\xE9",
-      sv: "Hoppa till"
+      sv: "Hoppa till",
+      ru: "\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A"
     },
     information: {
       en: "Information",
       de: "Information",
       pt: "Informa\xE7\xE3o",
-      sv: "Information"
+      sv: "Information",
+      ru: "\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F"
     },
     username: {
       name: {
         en: "Username",
         de: "Benutzername",
         pt: "Nome de usu\xE1rio",
-        sv: "Anv\xE4ndarnamn"
+        sv: "Anv\xE4ndarnamn",
+        ru: "\u0418\u043C\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F"
       },
       body: {
         en: "To change your username hit the button to send an email. Having problems? {a}contact support{/a}.",
         de: "Um deinen Benutzernamen zu \xE4ndern, klicke auf die Schaltfl\xE4che \u201EE-Mail senden\u201C. Gibt es Probleme? {a}Kontaktiere den Support{/a}.",
         pt: "Para alterar seu nome de usu\xE1rio, clique no bot\xE3o para enviar um e-mail. Est\xE1 com problemas?",
-        sv: "F\xF6r att \xE4ndra ditt anv\xE4ndarnamn, tryck p\xE5 knappen f\xF6r att skicka mejl. Har du ett problem? {a}Kontakta support{/a}."
+        sv: "F\xF6r att \xE4ndra ditt anv\xE4ndarnamn, tryck p\xE5 knappen f\xF6r att skicka mejl. Har du ett problem? {a}Kontakta support{/a}.",
+        ru: "\u0427\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u043C\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F, \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 \u0434\u043B\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u043D\u043E\u0433\u043E \u043F\u0438\u0441\u044C\u043C\u0430. \u0412\u043E\u0437\u043D\u0438\u043A\u043B\u0438 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B? {a}\u0421\u0432\u044F\u0436\u0438\u0442\u0435\u0441\u044C \u0441\u043E \u0441\u043B\u0443\u0436\u0431\u043E\u0439 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0438{/a}."
       }
     },
     email: {
       en: "Email",
       de: "E-Mail",
       pt: "E-mail",
-      sv: "Mejladress"
+      sv: "Mejladress",
+      ru: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u043D\u0430\u044F \u043F\u043E\u0447\u0442\u0430"
     },
     password: {
       en: "Password",
       de: "Passwort",
       pt: "Senha",
-      sv: "L\xF6senord"
+      sv: "L\xF6senord",
+      ru: "\u041F\u0430\u0440\u043E\u043B\u044C"
     },
     new_password: {
       en: "New password",
       de: "Neues Passwort",
       pt: "Nova senha",
-      sv: "Nytt l\xF6senord"
+      sv: "Nytt l\xF6senord",
+      ru: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0430\u0440\u043E\u043B\u044C"
     },
     confirm_password: {
       en: "Confirm password",
       de: "Passwort best\xE4tigen",
       pt: "Confirmar senha",
-      sv: "Verifiera l\xF6senord"
+      sv: "Verifiera l\xF6senord",
+      ru: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u043F\u0430\u0440\u043E\u043B\u044C"
     },
     change: {
       en: "Change",
       de: "\xC4ndern",
       pt: "Mudar",
-      sv: "\xC4ndra"
+      sv: "\xC4ndra",
+      ru: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C"
     },
     marketing_emails: {
       name: {
         en: "Marketing emails",
         de: "Marketing-E-Mails",
         pt: "E-mails promocionais",
-        sv: "Marknadsf\xF6ringsmejl"
+        sv: "Marknadsf\xF6ringsmejl",
+        ru: "\u041C\u0430\u0440\u043A\u0435\u0442\u0438\u043D\u0433\u043E\u0432\u044B\u0435 \u0440\u0430\u0441\u0441\u044B\u043B\u043A\u0438"
       },
       body: {
         en: "Last.fm can optionally send promotional emails from time to time",
         de: "Last.fm kann optional gelegentlich Werbe-E-Mails senden",
         pt: "A Last.fm pode, opcionalmente, enviar e-mails promocionais de tempos em tempos.",
-        sv: "Last.fm kan valfritt skicka reklammejl d\xE5 och d\xE5"
+        sv: "Last.fm kan valfritt skicka reklammejl d\xE5 och d\xE5",
+        ru: "Last.fm \u043C\u043E\u0436\u0435\u0442 \u043F\u043E \u0436\u0435\u043B\u0430\u043D\u0438\u044E \u0432\u0440\u0435\u043C\u044F \u043E\u0442 \u0432\u0440\u0435\u043C\u0435\u043D\u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0440\u0435\u043A\u043B\u0430\u043C\u043D\u044B\u0435 \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u043D\u044B\u0435 \u043F\u0438\u0441\u044C\u043C\u0430"
       }
     },
     email_language: {
       en: "Email language",
       de: "E-Mail-Sprache",
       pt: "Idioma dos e-mails",
-      sv: "Mejlspr\xE5k"
+      sv: "Mejlspr\xE5k",
+      ru: "\u042F\u0437\u044B\u043A \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u043D\u044B\u0445 \u043F\u0438\u0441\u0435\u043C"
     },
     communication: {
       en: "Communication",
       de: "Kommunikation",
       pt: "Comunica\xE7\xE3o",
-      sv: "Kommunikation"
+      sv: "Kommunikation",
+      ru: "\u041A\u043E\u043C\u043C\u0443\u043D\u0438\u043A\u0430\u0446\u0438\u044F"
     },
     security: {
       en: "Security",
       de: "Sicherheit",
       pt: "Seguran\xE7a",
-      sv: "Sekretess"
+      sv: "Sekretess",
+      ru: "\u0411\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C"
     },
     logout_everywhere: {
       en: "Logout on all devices",
       de: "Auf allen Ger\xE4ten abmelden",
       pt: "Encerrar sess\xE3o em todos os dispositivos",
-      sv: "Logga ut fr\xE5n alla enheter"
+      sv: "Logga ut fr\xE5n alla enheter",
+      ru: "\u0412\u044B\u0439\u0442\u0438 \u0438\u0437 \u0432\u0441\u0435\u0445 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432"
     },
     delete_account: {
       name: {
         en: "Delete account",
         de: "Konto l\xF6schen",
         pt: "Deletar conta",
-        sv: "Ta bort konto"
+        sv: "Ta bort konto",
+        ru: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0430\u043A\u043A\u0430\u0443\u043D\u0442"
       },
       body: {
         en: "Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised, or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.",
         de: "Die L\xF6schung dauert 14 Tage. Nach Ablauf dieser Frist wird dein Konto entweder gel\xF6scht, anonymisiert, oder unbrauchbar gemacht und kann nicht wiederhergestellt werden. Nach der L\xF6schung ist dein Benutzername nicht mehr verf\xFCgbar.",
         pt: "A exclus\xE3o levar\xE1 14 dias para ser conclu\xEDda. Ap\xF3s esse per\xEDodo, sua conta ser\xE1 exclu\xEDda, anonimizada ou desativada, e n\xE3o poder\xE1 ser recuperada. Depois de exclu\xEDdo, seu nome de usu\xE1rio n\xE3o estar\xE1 mais dispon\xEDvel.",
-        sv: "Det tar 14 dagar att ta bort ditt konto. Efter denna tid blir dit konto antingen borttaget, anonymiserad, eller g\xF6rs oanv\xE4ndbar och kan inte f\xE5s tillbaka. N\xE4r det \xE4r borttaget kan ditt anv\xE4ndarnamn inte bli anv\xE4nt igen."
+        sv: "Det tar 14 dagar att ta bort ditt konto. Efter denna tid blir dit konto antingen borttaget, anonymiserad, eller g\xF6rs oanv\xE4ndbar och kan inte f\xE5s tillbaka. N\xE4r det \xE4r borttaget kan ditt anv\xE4ndarnamn inte bli anv\xE4nt igen.",
+        ru: "\u0423\u0434\u0430\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u0439\u043C\u0435\u0442 14 \u0434\u043D\u0435\u0439. \u041F\u043E \u0438\u0441\u0442\u0435\u0447\u0435\u043D\u0438\u0438 \u044D\u0442\u043E\u0433\u043E \u0432\u0440\u0435\u043C\u0435\u043D\u0438 \u0432\u0430\u0448\u0430 \u0443\u0447\u0435\u0442\u043D\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u0431\u0443\u0434\u0435\u0442 \u043B\u0438\u0431\u043E \u0443\u0434\u0430\u043B\u0435\u043D\u0430, \u043B\u0438\u0431\u043E \u0430\u043D\u043E\u043D\u0438\u043C\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u0430, \u043B\u0438\u0431\u043E \u0432\u044B\u0432\u0435\u0434\u0435\u043D\u0430 \u0438\u0437 \u044D\u043A\u0441\u043F\u043B\u0443\u0430\u0442\u0430\u0446\u0438\u0438 \u0438 \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0430. \u041F\u043E\u0441\u043B\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u044F \u0432\u0430\u0448\u0435 \u0438\u043C\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0431\u0443\u0434\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E."
       }
     },
     delete_account_permanently: {
       en: "Delete {u} permanently",
       de: "{u} dauerhaft l\xF6schen",
       pt: "Deletar {u} permanentemente",
-      sv: "Ta bort {u} permanent"
+      sv: "Ta bort {u} permanent",
+      ru: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C {u} \u043D\u0430\u0432\u0441\u0435\u0433\u0434\u0430"
     },
     other: {
       // "other" section in settings
       en: "Other",
       de: "Sonstiges",
       pt: "Outro",
-      sv: "Annat"
+      sv: "Annat",
+      ru: "\u0414\u0440\u0443\u0433\u043E\u0435"
     },
     applications: {
-      en: "Applications"
+      en: "Applications",
+      ru: "\u041F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F"
     },
     applications_intro: {
-      en: "Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below."
+      en: "Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below.",
+      ru: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0441\u0432\u043E\u0439 \u0430\u043A\u043A\u0430\u0443\u043D\u0442 \u043A \u0441\u0442\u043E\u0440\u043E\u043D\u043D\u0438\u043C \u0441\u0435\u0440\u0432\u0438\u0441\u0430\u043C \u0434\u043B\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u0438\u043D\u0433\u0430. \u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C, \u0447\u0442\u043E \u0432\u044B \u0434\u043E\u0432\u0435\u0440\u044F\u0435\u0442\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u043C \u043D\u0438\u0436\u0435 \u0441\u0435\u0440\u0432\u0438\u0441\u0430\u043C."
     },
     connect_app: {
       en: "Connect {name}",
       de: "Verbinde {name}",
       pt: "Conectar {name}",
-      sv: "Anslut {name}"
+      sv: "Anslut {name}",
+      ru: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C {name}"
     },
     connect: {
       en: "Connect",
       de: "Verbinden",
       pt: "Conectar",
-      sv: "Anslut"
+      sv: "Anslut",
+      ru: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C"
     },
     suggested: {
-      en: "Suggested"
+      en: "Suggested",
+      ru: "\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u0435"
     },
     connected: {
       en: "Connected",
       de: "Verbunden",
       pt: "Conectado",
-      sv: "Anslutit"
+      sv: "Anslutit",
+      ru: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u043E"
     },
     not_connected: {
       en: "Not connected",
       de: "Nicht verbunden",
       pt: "N\xE3o conectado",
-      sv: "Inte ansluten"
+      sv: "Inte ansluten",
+      ru: "\u041D\u0435 \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u043E"
     },
     api: {
       name: {
         en: "Unlock additional API features",
         de: "Schalte zus\xE4tzliche API-Funktionen frei",
         pt: "Desbloqueie recursos adicionais da API",
-        sv: "L\xE5s upp flera API-funktioner"
+        sv: "L\xE5s upp flera API-funktioner",
+        ru: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0438 API"
       },
       body: {
         en: "Link your account to allow API access such as scrobbling",
         de: "Verkn\xFCpfe dein Konto, um API-Zugriffe wie Scrobbling zu erm\xF6glichen",
         pt: "Conecte sua conta para permitir o acesso \xE0 API, como o scrobbling",
-        sv: "Koppla ditt konto f\xF6r att till\xE5ta API-\xE5tkomster, som att skrobbla"
+        sv: "Koppla ditt konto f\xF6r att till\xE5ta API-\xE5tkomster, som att skrobbla",
+        ru: "\u041F\u0440\u0438\u0432\u044F\u0436\u0438\u0442\u0435 \u0441\u0432\u043E\u0439 \u0430\u043A\u043A\u0430\u0443\u043D\u0442, \u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C \u0434\u043E\u0441\u0442\u0443\u043F \u043A API, \u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u0434\u043B\u044F \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u0438\u043D\u0433\u0430"
       }
     },
     api_status: {
       en: "API status",
       de: "API-Status",
       pt: "Status da API",
-      sv: "API-status"
+      sv: "API-status",
+      ru: "\u0421\u0442\u0430\u0442\u0443\u0441 API"
     },
     app_would_like_to_connect: {
       // app name is above
       en: "would like to use your account",
       de: "m\xF6chte sich mit deinem Konto verbinden",
       pt: "gostaria de usar sua conta",
-      sv: "vill anv\xE4nda ditt konto"
+      sv: "vill anv\xE4nda ditt konto",
+      ru: "\u0445\u043E\u0447\u0435\u0442 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0432\u0430\u0448 \u0430\u043A\u043A\u0430\u0443\u043D\u0442"
     },
     logged_in_as: {
       en: "Logged in as {user}",
       de: "Angemeldet als {user}",
       pt: "Conectado como {user}",
-      sv: "Loggat in som {user}"
+      sv: "Loggat in som {user}",
+      ru: "\u0412\u044B \u0432\u043E\u0448\u043B\u0438 \u043A\u0430\u043A {user}"
     },
     not_logged_in: {
       en: "Not logged in",
       de: "Nicht angemeldet",
       pt: "N\xE3o conectado",
-      sv: "Inte inloggad"
+      sv: "Inte inloggad",
+      ru: "\u041D\u0435 \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435"
     },
     ensure_you_trust: {
       // API applications
@@ -61079,20 +61667,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Make sure you trust this application",
       de: "Stelle sicher, dass du dieser Anwendung vertraust",
       pt: "Certifique-se de que voc\xEA confia neste aplicativo",
-      sv: "Var s\xE4ker p\xE5 att du litar denna applikation"
+      sv: "Var s\xE4ker p\xE5 att du litar denna applikation",
+      ru: "\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C, \u0447\u0442\u043E \u0432\u044B \u0434\u043E\u0432\u0435\u0440\u044F\u0435\u0442\u0435 \u044D\u0442\u043E\u043C\u0443 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044E"
     },
     has_been_connected: {
       // app name is above
       en: "has been connected",
       de: "wurde verbunden",
       pt: "foi conectado",
-      sv: "har anslutits"
+      sv: "har anslutits",
+      ru: "\u0431\u044B\u043B\u043E \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u043E"
     },
     you_can_now_close_this_tab: {
       en: "You can now close this tab",
       de: "Du kannst diesen Tab jetzt schlie\xDFen",
       pt: "Voc\xEA pode fechar esta aba agora",
-      sv: "Du kan nu st\xE4nga den h\xE4r fliken"
+      sv: "Du kan nu st\xE4nga den h\xE4r fliken",
+      ru: "\u0422\u0435\u043F\u0435\u0440\u044C \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u0437\u0430\u043A\u0440\u044B\u0442\u044C \u044D\u0442\u0443 \u0432\u043A\u043B\u0430\u0434\u043A\u0443"
     },
     manage_applications: {
       // API applications
@@ -61100,20 +61691,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Manage applications",
       de: "Anwendungen verwalten",
       pt: "Gerenciar aplica\xE7\xF5es",
-      sv: "Hantera applikationer"
+      sv: "Hantera applikationer",
+      ru: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F\u043C\u0438"
     },
     markdown_profiles: {
       name: {
         en: "Use fancy formatting on profiles",
         de: "Verwende sch\xF6nere Formatierungen f\xFCr Profile",
         pt: "Usar formata\xE7\xE3o estilosa nos perfis",
-        sv: "Anv\xE4nd snygg formatering p\xE5 profiler"
+        sv: "Anv\xE4nd snygg formatering p\xE5 profiler",
+        ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u043D\u043E\u0435 \u0444\u043E\u0440\u043C\u0430\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0432 \u043F\u0440\u043E\u0444\u0438\u043B\u044F\u0445"
       },
       body: {
         en: "Allows the use of line breaks, bold text, italics, and images in all \u201CAbout Me\u201D panels",
         de: "Erm\xF6glicht die Verwendung von Zeilenumbr\xFCchen, fettem Text, Kursivschrift und Bildern in allen \u201E\xDCber mich\u201C-Bereichen",
         pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todos os pain\xE9is \u201CSobre mim\u201D",
-        sv: "Till\xE5ter radbrytning, fet stil, kursiv stil, och bilder inom alla \u201COm mig\u201D-paneler"
+        sv: "Till\xE5ter radbrytning, fet stil, kursiv stil, och bilder inom alla \u201COm mig\u201D-paneler",
+        ru: "\u0420\u0430\u0437\u0440\u0435\u0448\u0430\u0435\u0442 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u043F\u0435\u0440\u0435\u043D\u043E\u0441\u043E\u0432 \u0441\u0442\u0440\u043E\u043A, \u0436\u0438\u0440\u043D\u043E\u0433\u043E \u0442\u0435\u043A\u0441\u0442\u0430, \u043A\u0443\u0440\u0441\u0438\u0432\u0430 \u0438 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439 \u0432\u043E \u0432\u0441\u0435\u0445 \u043F\u0430\u043D\u0435\u043B\u044F\u0445 \xAB\u041E\u0431\u043E \u043C\u043D\u0435\xBB"
       }
     },
     markdown_shouts: {
@@ -61121,32 +61715,37 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Use fancy formatting on shouts",
         de: "Verwende sch\xF6nere Formatierungen f\xFCr Shouts",
         pt: "Usar formata\xE7\xE3o estilosa nas caixas de mensagens",
-        sv: "Anv\xE4nd snygg formatering p\xE5 hojtningar"
+        sv: "Anv\xE4nd snygg formatering p\xE5 hojtningar",
+        ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u043D\u043E\u0435 \u0444\u043E\u0440\u043C\u0430\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0432 \u0448\u0430\u0443\u0442\u0430\u0445"
       },
       body: {
         en: "Allows the use of line breaks, bold text, italics, and images in all shouts",
         de: "Erm\xF6glicht die Verwendung von Zeilenumbr\xFCchen, fettem Text, Kursivschrift und Bildern in allen Shouts",
         pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todas as caixas de mensagens",
-        sv: "Till\xE5ter radbrytning, fet stil, kursiv stil, och bilder inom alla hojtningar"
+        sv: "Till\xE5ter radbrytning, fet stil, kursiv stil, och bilder inom alla hojtningar",
+        ru: "\u0420\u0430\u0437\u0440\u0435\u0448\u0430\u0435\u0442 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u043F\u0435\u0440\u0435\u043D\u043E\u0441\u043E\u0432 \u0441\u0442\u0440\u043E\u043A, \u0436\u0438\u0440\u043D\u043E\u0433\u043E \u0442\u0435\u043A\u0441\u0442\u0430, \u043A\u0443\u0440\u0441\u0438\u0432\u0430 \u0438 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439 \u0432\u043E \u0432\u0441\u0435\u0445 \u0448\u0430\u0443\u0442\u0430\u0445"
       },
       preview: {
         en: "hello! **hello!** *hello!*\n[here\u2019s a link](https://katelyn.moe) HAII @evangelicgirl",
         de: "hallo! **hallo!** *hallo!*\n[hier ist ein link](https://katelyn.moe) HALL\xD6CHEN @evangelicgirl",
         pt: "oi! **ol\xE1!** *opa!*\n[aqui est\xE1 um link](https://katelyn.moe) OIEE @evangelicgirl",
-        sv: "hej! **hej!** *hej!*\n[h\xE4r \xE4r en l\xE4nk](https://katelyn.moe) HEJJ @evangelicgirl"
+        sv: "hej! **hej!** *hej!*\n[h\xE4r \xE4r en l\xE4nk](https://katelyn.moe) HEJJ @evangelicgirl",
+        ru: "\u043F\u0440\u0438\u0432\u0435\u0442! **\u043F\u0440\u0438\u0432\u0435\u0442!** *\u043F\u0440\u0438\u0432\u0435\u0442!*\n[\u0432\u043E\u0442 \u0441\u0441\u044B\u043B\u043A\u0430](https://katelyn.moe) \u041F\u0420\u0418\u0412\u0415\u0422 @evangelicgirl"
       }
     },
     gathering_your_plays: {
       en: "Gathering your album plays",
       de: "Sammeln deiner Albumwiedergaben",
       pt: "Coletando suas reprodu\xE7\xF5es de \xE1lbuns",
-      sv: "Samlar dina albumspelningar"
+      sv: "Samlar dina albumspelningar",
+      ru: "\u0421\u043E\u0431\u0438\u0440\u0430\u0435\u043C \u0432\u0430\u0448\u0438 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432"
     },
     failed_to_find_tracks: {
       en: "You do not have any plays",
       de: "Du hast keine Plays",
       pt: "Voc\xEA n\xE3o tem nenhuma reprodu\xE7\xE3o",
-      sv: "Du har inga spelningar"
+      sv: "Du har inga spelningar",
+      ru: "\u0423 \u0432\u0430\u0441 \u043D\u0435\u0442 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439"
     },
     own_plays: {
       // tracklist source menu option that enables the thing below
@@ -61157,20 +61756,23 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Sourced from your own plays as an official tracklist is unavailable",
       de: "Diese Liste basiert auf deinen eigenen Plays, da keine offizielle Titelliste verf\xFCgbar ist",
       pt: "Baseado nas suas pr\xF3prias reprodu\xE7\xF5es, pois a tracklist oficial n\xE3o est\xE1 dispon\xEDvel",
-      sv: "H\xE4mtas fr\xE5n dina egna spelningar f\xF6r en officiell spellista finns inte"
+      sv: "H\xE4mtas fr\xE5n dina egna spelningar f\xF6r en officiell spellista finns inte",
+      ru: "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u043E \u0438\u0437 \u0432\u0430\u0448\u0438\u0445 \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0445 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439, \u0442\u0430\u043A \u043A\u0430\u043A \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0440\u0435\u043A\u043B\u0438\u0441\u0442 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D"
     },
     submit_language: {
       name: {
         en: "Are you fluent in a supported language?",
         de: "Sprichst du eine der unterst\xFCtzten Sprachen flie\xDFend?",
         pt: "Voc\xEA \xE9 fluente em algum dos idiomas suportados?",
-        sv: "Talar du ett spr\xE5k som st\xF6ds flytande?"
+        sv: "Talar du ett spr\xE5k som st\xF6ds flytande?",
+        ru: "\u0421\u0432\u043E\u0431\u043E\u0434\u043D\u043E \u043B\u0438 \u0432\u044B \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0435 \u043D\u0430 \u043E\u0434\u043D\u043E\u043C \u0438\u0437 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u044B\u0445 \u044F\u0437\u044B\u043A\u043E\u0432?"
       },
       body: {
         en: "Translations are powered by community contributions from wonderful people like you",
         de: "\xDCbersetzungen werden durch Beitr\xE4ge der Community von wunderbaren Menschen wie dir erm\xF6glicht",
         pt: "As tradu\xE7\xF5es s\xE3o feitas gra\xE7as \xE0s contribui\xE7\xF5es da comunidade de pessoas incr\xEDveis como voc\xEA",
-        sv: "\xD6vers\xE4ttningar drivs av bidrag fr\xE5n underbara folk som du"
+        sv: "\xD6vers\xE4ttningar drivs av bidrag fr\xE5n underbara folk som du",
+        ru: "\u041F\u0435\u0440\u0435\u0432\u043E\u0434\u044B \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0438\u0432\u0430\u044E\u0442\u0441\u044F \u0432\u043A\u043B\u0430\u0434\u043E\u043C \u0441\u043E\u043E\u0431\u0449\u0435\u0441\u0442\u0432\u0430 \u043E\u0442 \u0437\u0430\u043C\u0435\u0447\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0445 \u043B\u044E\u0434\u0435\u0439, \u0442\u0430\u043A\u0438\u0445 \u043A\u0430\u043A \u0432\u044B"
       }
     },
     welcome_to_bleh: {
@@ -61178,274 +61780,317 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Welcome to bleh, thank you for installing!<br>You can continue through this quick setup to get you started or skip right to your profile and figure it all out yourself <3",
       de: "Willkommen bei bleh, danke f\xFCr die Installation!<br>Du kannst diesen schnellen Einrichtungsassistenten durchlaufen, um loszulegen, oder direkt zu deinem Profil springen und alles selbst herausfinden <3",
       pt: "Bem-vindo ao bleh, obrigado por instalar!<br>Voc\xEA pode seguir este r\xE1pido guia de configura\xE7\xE3o para come\xE7ar, ou pular direto para seu perfil e descobrir tudo por conta pr\xF3pria <3",
-      sv: "V\xE4lkommen till bleh, tack f\xF6r att du har installerat!<br>Du kan forts\xE4tta genom den h\xE4r snabba setupen f\xF6r att starta eller hoppa rakt till din profil och klura ut det helt sj\xE4lv <3"
+      sv: "V\xE4lkommen till bleh, tack f\xF6r att du har installerat!<br>Du kan forts\xE4tta genom den h\xE4r snabba setupen f\xF6r att starta eller hoppa rakt till din profil och klura ut det helt sj\xE4lv <3",
+      ru: "\u0414\u043E\u0431\u0440\u043E \u043F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C \u0432 bleh, \u0441\u043F\u0430\u0441\u0438\u0431\u043E \u0437\u0430 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0443!<br>\u0412\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u043F\u0440\u043E\u0439\u0442\u0438 \u044D\u0442\u0443 \u0431\u044B\u0441\u0442\u0440\u0443\u044E \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0443, \u0447\u0442\u043E\u0431\u044B \u043D\u0430\u0447\u0430\u0442\u044C, \u0438\u043B\u0438 \u0441\u0440\u0430\u0437\u0443 \u043F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u0441\u0432\u043E\u0435\u043C\u0443 \u043F\u0440\u043E\u0444\u0438\u043B\u044E \u0438 \u0440\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C\u0441\u044F \u0432\u043E \u0432\u0441\u0435\u043C \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u043E <3"
     },
     next: {
       en: "Next",
       de: "Weiter",
       pt: "Pr\xF3ximo",
-      sv: "N\xE4sta"
+      sv: "N\xE4sta",
+      ru: "\u0414\u0430\u043B\u0435\u0435"
     },
     choose_a_theme: {
       en: "Choose a theme that suits you best!",
       de: "W\xE4hle ein Farbschema, das am besten zu dir passt!",
       pt: "Escolha o tema que mais combina com voc\xEA",
-      sv: "V\xE4lj ett tema som passar dig b\xE4st!"
+      sv: "V\xE4lj ett tema som passar dig b\xE4st!",
+      ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0435\u043C\u0443, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u043F\u043E\u0434\u0445\u043E\u0434\u0438\u0442 \u0432\u0430\u043C \u0431\u043E\u043B\u044C\u0448\u0435 \u0432\u0441\u0435\u0433\u043E!"
     },
     accessibility_explain: {
       en: "Before we continue, let\u2019s assess your accessibility settings.",
       de: "Lass uns kurz deine Barrierefreiheitseinstellungen \xFCberpr\xFCfen, bevor wir weitermachen.",
       pt: "Antes de continuarmos, vamos acessar suas configura\xE7\xF5es de acessibilidade",
-      sv: "Innan vi forts\xE4tter ska vi kontrollera dina tillg\xE4nglighetsinst\xE4llningar."
+      sv: "Innan vi forts\xE4tter ska vi kontrollera dina tillg\xE4nglighetsinst\xE4llningar.",
+      ru: "\u041F\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043C \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C, \u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u043E\u0446\u0435\u043D\u0438\u043C \u0432\u0430\u0448\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0441\u0442\u0438."
     },
     colours_explain: {
       en: "Choose a colour you like or make your own favourite.",
       de: "W\xE4hle eine Farbe, die dir gef\xE4llt, oder lege deine eigene Lieblingsfarbe fest.",
       pt: "Escolha uma cor que voc\xEA goste ou crie a sua favorita.",
-      sv: "V\xE4lj en f\xE4rg du tycker om eller g\xF6r din egna favorit."
+      sv: "V\xE4lj en f\xE4rg du tycker om eller g\xF6r din egna favorit.",
+      ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0432\u0430\u043C \u043D\u0440\u0430\u0432\u0438\u0442\u0441\u044F, \u0438\u043B\u0438 \u0441\u043E\u0437\u0434\u0430\u0439\u0442\u0435 \u0441\u0432\u043E\u0439 \u043B\u044E\u0431\u0438\u043C\u044B\u0439."
     },
     music_explain: {
       en: "We offer a variety of options to help you manage your music library.",
       de: "Wir bieten eine Vielzahl von Optionen, um dir bei der Verwaltung deiner Musikbibliothek zu helfen.",
       pt: "N\xF3s oferecemos uma variedade de op\xE7\xF5es para ajudar voc\xEA a gerenciar sua biblioteca musical.",
-      sv: "Vi har massa olika inst\xE4llningar f\xF6r att hj\xE4lpa till att ordna ditt musikbibliotek."
+      sv: "Vi har massa olika inst\xE4llningar f\xF6r att hj\xE4lpa till att ordna ditt musikbibliotek.",
+      ru: "\u041C\u044B \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u0435\u043C \u043C\u043D\u043E\u0436\u0435\u0441\u0442\u0432\u043E \u043E\u043F\u0446\u0438\u0439, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u043C\u043E\u0447\u044C \u0432\u0430\u043C \u0443\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0432\u0430\u0448\u0435\u0439 \u043C\u0443\u0437\u044B\u043A\u0430\u043B\u044C\u043D\u043E\u0439 \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u043E\u0439."
     },
     setup_end: {
       en: "That\u2019s all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!",
       de: "Das war\u2019s f\xFCrs Erste. Um deine bleh-Installation in Zukunft zu konfigurieren, gehe zu {a}den Einstellungen{/a} in deinem Men\xFC!",
       pt: "Por enquanto isso \xE9 tudo, para configurar sua instala\xE7\xE3o do bleh futuramente, v\xE1 at\xE9 {a}nas configura\xE7\xF5es{/a} no seu menu!",
-      sv: "Det var allt just nu, f\xF6r att konfigurera din bleh-installation i framtiden g\xE5 in p\xE5 {a}inst\xE4llningarna{/a} i menyn!"
+      sv: "Det var allt just nu, f\xF6r att konfigurera din bleh-installation i framtiden g\xE5 in p\xE5 {a}inst\xE4llningarna{/a} i menyn!",
+      ru: "\u041D\u0430 \u044D\u0442\u043E\u043C \u043F\u043E\u043A\u0430 \u0432\u0441\u0435, \u0447\u0442\u043E\u0431\u044B \u043D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C \u0432\u0430\u0448\u0443 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0443 bleh \u0432 \u0431\u0443\u0434\u0443\u0449\u0435\u043C, \u043F\u0435\u0440\u0435\u0439\u0434\u0438\u0442\u0435 \u0432 {a}\u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438{/a} \u0432 \u0432\u0430\u0448\u0435\u043C \u043C\u0435\u043D\u044E!"
     },
     seasonal_particles: {
       name: {
         en: "Show particles during select seasons",
         de: "Partikel w\xE4hrend ausgew\xE4hlter Jahreszeiten anzeigen",
         pt: "Mostrar particulas durante esta\xE7\xF5es selecionadas",
-        sv: "Visa partiklar under vissa \xE5rstider"
+        sv: "Visa partiklar under vissa \xE5rstider",
+        ru: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0447\u0430\u0441\u0442\u0438\u0446\u044B \u0432 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0435 \u0441\u0435\u0437\u043E\u043D\u044B"
       },
       body: {
         en: "During colder seasons, watch pretty snowflakes fall \u22C6\u207A\u208A\u2745\u3002",
         de: "W\xE4hrend der k\xE4lteren Jahreszeiten kannst du h\xFCbsche Schneeflocken fallen sehen \u22C6\u207A\u208A\u2745\u3002",
         pt: "Durante as sess\xF5es de inverno, veja flocos de neve bonitinhos caindo \u22C6\u207A\u208A\u2745\u3002",
-        sv: "Under kyligare \xE5rstider, se vackra sn\xF6flingorna glida sakta ner \u22C6\u207A\u208A\u2745\u3002"
+        sv: "Under kyligare \xE5rstider, se vackra sn\xF6flingorna glida sakta ner \u22C6\u207A\u208A\u2745\u3002",
+        ru: "\u0412 \u0445\u043E\u043B\u043E\u0434\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F \u0433\u043E\u0434\u0430 \u043D\u0430\u0431\u043B\u044E\u0434\u0430\u0439\u0442\u0435 \u0437\u0430 \u043F\u0430\u0434\u0430\u044E\u0449\u0438\u043C\u0438 \u043A\u0440\u0430\u0441\u0438\u0432\u044B\u043C\u0438 \u0441\u043D\u0435\u0436\u0438\u043D\u043A\u0430\u043C\u0438 \u22C6\u207A\u208A\u2745\u3002"
       }
     },
     all_particles: {
       en: "Show full particles",
       de: "Alle Partikel anzeigen",
       pt: "Mostrar todas as part\xEDculas",
-      sv: "Visa fulla partiklar"
+      sv: "Visa fulla partiklar",
+      ru: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0432\u0441\u0435 \u0447\u0430\u0441\u0442\u0438\u0446\u044B"
     },
     less_particles: {
       en: "Show less particles",
       de: "Weniger Partikel anzeigen",
       pt: "Mostrar menos part\xEDculas",
-      sv: "Visa mindre partiklar"
+      sv: "Visa mindre partiklar",
+      ru: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043C\u0435\u043D\u044C\u0448\u0435 \u0447\u0430\u0441\u0442\u0438\u0446"
     },
     no_particles: {
       en: "Disable particles",
       de: "Partikel deaktivieren",
       pt: "Desativar part\xEDculas",
-      sv: "St\xE4ng av partiklar"
+      sv: "St\xE4ng av partiklar",
+      ru: "\u041E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0447\u0430\u0441\u0442\u0438\u0446\u044B"
     },
     beware_notice: {
       en: "Beware! Only change these settings if you know what you\u2019re doing",
       de: "Vorsicht! \xC4ndere diese Einstellungen nur, wenn du wei\xDFt, was du tust",
       pt: "Cuidado! Apenas mude estas configura\xE7\xF5es se voc\xEA sabe o que voc\xEA est\xE1 fazendo",
-      sv: "Var f\xF6rsiktig! \xC4ndra bara dessa inst\xE4llningar om du vet vad du g\xF6r"
+      sv: "Var f\xF6rsiktig! \xC4ndra bara dessa inst\xE4llningar om du vet vad du g\xF6r",
+      ru: "\u041E\u0441\u0442\u043E\u0440\u043E\u0436\u043D\u043E! \u041C\u0435\u043D\u044F\u0439\u0442\u0435 \u044D\u0442\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0442\u043E\u043B\u044C\u043A\u043E \u0435\u0441\u043B\u0438 \u0432\u044B \u0437\u043D\u0430\u0435\u0442\u0435, \u0447\u0442\u043E \u0434\u0435\u043B\u0430\u0435\u0442\u0435"
     },
     force_refresh_style: {
       name: {
         en: "Force re-download styles",
         de: "Erneutes Herunterladen von Stylesheets erzwingen",
         pt: "For\xE7ar o re-download dos estilos",
-        sv: "Tvinga omladdning av stiler"
+        sv: "Tvinga omladdning av stiler",
+        ru: "\u041F\u0440\u0438\u043D\u0443\u0434\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u043F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0441\u0442\u0438\u043B\u0438"
       },
       body: {
         en: "Deletes your current cache of the bleh stylesheet and retrieves the latest",
         de: "L\xF6scht deinen aktuellen Cache des bleh-Stylesheets und l\xE4dt die neueste Version herunter",
         pt: "Exclui o cache atual da folha de estilo do bleh e recupera a vers\xE3o mais recente",
-        sv: "Tar bort din nuvarande cache av bleh-stil och h\xE4mtar hem den senaste"
+        sv: "Tar bort din nuvarande cache av bleh-stil och h\xE4mtar hem den senaste",
+        ru: "\u0423\u0434\u0430\u043B\u044F\u0435\u0442 \u0432\u0430\u0448 \u0442\u0435\u043A\u0443\u0449\u0438\u0439 \u043A\u044D\u0448 \u0442\u0430\u0431\u043B\u0438\u0446\u044B \u0441\u0442\u0438\u043B\u0435\u0439 bleh \u0438 \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u0442 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044E\u044E \u0432\u0435\u0440\u0441\u0438\u044E"
       }
     },
     intended_for_development: {
       name: {
         en: "This page is intended for development",
         de: "Diese Seite ist f\xFCr die Entwicklung gedacht",
-        sv: "Denna sida \xE4r avsedd f\xF6r utveckling"
+        sv: "Denna sida \xE4r avsedd f\xF6r utveckling",
+        ru: "\u042D\u0442\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u0430 \u0434\u043B\u044F \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u043A\u0438"
       },
       body: {
         en: "Be careful with options here (especially feature flags) as they can break your install.",
         de: "Sei vorsichtig mit diesen Einstellungen (besonders mit den Feature Flags), da sie deine Installation besch\xE4digen k\xF6nnen.",
         pt: "Tenha cuidado com as op\xE7\xF5es aqui (especialmente com os flags de recursos), pois elas podem causar problemas na sua instala\xE7\xE3o.",
-        sv: "Var f\xF6rsiktig med inst\xE4llningarna h\xE4r (speciellt funktionsflaggor) eftersom dom kan f\xF6rst\xF6ra din installation."
+        sv: "Var f\xF6rsiktig med inst\xE4llningarna h\xE4r (speciellt funktionsflaggor) eftersom dom kan f\xF6rst\xF6ra din installation.",
+        ru: "\u0411\u0443\u0434\u044C\u0442\u0435 \u043E\u0441\u0442\u043E\u0440\u043E\u0436\u043D\u044B \u0441 \u043E\u043F\u0446\u0438\u044F\u043C\u0438 \u0437\u0434\u0435\u0441\u044C (\u043E\u0441\u043E\u0431\u0435\u043D\u043D\u043E \u0441 \u0444\u043B\u0430\u0433\u0430\u043C\u0438 \u0444\u0443\u043D\u043A\u0446\u0438\u0439), \u0442\u0430\u043A \u043A\u0430\u043A \u043E\u043D\u0438 \u043C\u043E\u0433\u0443\u0442 \u043D\u0430\u0440\u0443\u0448\u0438\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u0443 \u0432\u0430\u0448\u0435\u0439 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438."
       }
     },
     flags: {
       // shorthand for below
       en: "Flags",
       de: "Flags",
-      sv: "Flaggor"
+      sv: "Flaggor",
+      ru: "\u0424\u043B\u0430\u0433\u0438"
     },
     manage_feature_flags: {
       // feature flags control features (like an option)
       en: "Manage feature flags",
       de: "Feature Flags verwalten",
       pt: "Gerenciar flags de recursos",
-      sv: "Hantera funktionsflaggor"
+      sv: "Hantera funktionsflaggor",
+      ru: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0444\u043B\u0430\u0433\u0430\u043C\u0438 \u0444\u0443\u043D\u043A\u0446\u0438\u0439"
     },
     development: {
       en: "Development",
       de: "Entwicklung",
       pt: "Desenvolvimento",
-      sv: "Utveckling"
+      sv: "Utveckling",
+      ru: "\u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u043A\u0430"
     },
     this_section_requires_password: {
       en: "This section requires a password to view",
       de: "Dieser Bereich ben\xF6tigt ein Passwort zum Ansehen",
       pt: "Esta se\xE7\xE3o requer uma senha para ser visualizada",
-      sv: "Denna avdelning beh\xF6ver ett l\xF6senord f\xF6r att se"
+      sv: "Denna avdelning beh\xF6ver ett l\xF6senord f\xF6r att se",
+      ru: "\u0414\u043B\u044F \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430 \u044D\u0442\u043E\u0433\u043E \u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u043F\u0430\u0440\u043E\u043B\u044C"
     },
     enter_password: {
       en: "Enter password",
       de: "Passwort eingeben",
       pt: "Digite a senha",
-      sv: "Skriv in l\xF6senord"
+      sv: "Skriv in l\xF6senord",
+      ru: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u0430\u0440\u043E\u043B\u044C"
     },
     unlocked: {
       en: "Unlocked",
       de: "Freigeschaltet",
       pt: "Desbloqueado",
-      sv: "Uppl\xE5st"
+      sv: "Uppl\xE5st",
+      ru: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E"
     },
     privacy: {
       en: "Privacy",
       de: "Datenschutz",
       pl: "Prywatno\u015B\u0107",
       pt: "Privacidade",
-      sv: "Sekretess"
+      sv: "Sekretess",
+      ru: "\u041A\u043E\u043D\u0444\u0438\u0434\u0435\u043D\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C"
     },
     recent_listening: {
       name: {
         en: "Hide your recent listening history",
         de: "Deine zuletzt geh\xF6rten Titel ausblenden",
         pt: "Ocultar seu hist\xF3rico de scrobbles recente",
-        sv: "G\xF6m senaste lyssnarinformationen"
+        sv: "G\xF6m senaste lyssnarinformationen",
+        ru: "\u0421\u043A\u0440\u044B\u0442\u044C \u0432\u0430\u0448\u0443 \u043D\u0435\u0434\u0430\u0432\u043D\u044E\u044E \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439"
       },
       body: {
         en: "Keeps your activity more private",
         de: "Gibt deiner Aktivit\xE4t mehr Privatsph\xE4re",
         pt: "Mant\xE9m sua atividade mais privada",
-        sv: "H\xE5ller din aktivitet mer privat"
+        sv: "H\xE5ller din aktivitet mer privat",
+        ru: "\u0414\u0435\u043B\u0430\u0435\u0442 \u0432\u0430\u0448\u0443 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C \u0431\u043E\u043B\u0435\u0435 \u043F\u0440\u0438\u0432\u0430\u0442\u043D\u043E\u0439"
       }
     },
     allow_messages_from: {
       en: "Allow messages from",
       de: "Erlaube Nachrichten von",
       pt: "Permitir mensagens de",
-      sv: "Till\xE5t meddelanden ifr\xE5n"
+      sv: "Till\xE5t meddelanden ifr\xE5n",
+      ru: "\u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u043E\u0442"
     },
     everyone: {
       en: "Everyone",
       de: "Jedem",
       pt: "Todo mundo",
-      sv: "Alla"
+      sv: "Alla",
+      ru: "\u0412\u0441\u0435"
     },
     following_and_neighbours: {
       en: "Following and neighbours",
       de: "Nachbarn und Leuten, denen du folgst",
       pt: "Seguindo e vizinhos",
-      sv: "F\xF6ljare och grannar"
+      sv: "F\xF6ljare och grannar",
+      ru: "\u041F\u043E\u0434\u043F\u0438\u0441\u043A\u0438 \u0438 \u0441\u043E\u0441\u0435\u0434\u0438"
     },
     close_shouts: {
       name: {
         en: "Close my shoutbox",
         de: "Meine Shoutbox schlie\xDFen",
         pt: "Fechar minha caixa de mensagens",
-        sv: "St\xE4ng min hojtl\xE5da"
+        sv: "St\xE4ng min hojtl\xE5da",
+        ru: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043C\u043E\u044E shoutbox"
       },
       body: {
         en: "Removes visibility from everyone (including you)",
         de: "Blendet deine Shoutbox f\xFCr alle Beutzer aus (einschlie\xDFlich dir)",
         pt: "Remove a visibilidade de todos (incluindo voc\xEA)",
-        sv: "Ta bort synlighet fr\xE5n alla (inkl. dig)"
+        sv: "Ta bort synlighet fr\xE5n alla (inkl. dig)",
+        ru: "\u0423\u0434\u0430\u043B\u044F\u0435\u0442 \u0432\u0438\u0434\u0438\u043C\u043E\u0441\u0442\u044C \u0434\u043B\u044F \u0432\u0441\u0435\u0445 (\u0432\u043A\u043B\u044E\u0447\u0430\u044F \u0432\u0430\u0441)"
       }
     },
     error: {
       en: "Error",
       de: "Fehler",
       pt: "Erro",
-      sv: "Error"
+      sv: "Error",
+      ru: "\u041E\u0448\u0438\u0431\u043A\u0430"
     },
     erm: {
       // used when a page is taken down
       en: "erm...",
       de: "\xE4hm...",
       pt: "puts...",
-      sv: "ehm..."
+      sv: "ehm...",
+      ru: "\u044D\u043C..."
     },
     shortcut: {
       en: "Shortcut",
       de: "Verkn\xFCpfung",
       pt: "Atalho",
-      sv: "Genomv\xE4g"
+      sv: "Genomv\xE4g",
+      ru: "\u042F\u0440\u043B\u044B\u043A"
     },
     last_count_days: {
       en: "Last {c} days",
       de: "Letzte {c} Tage",
       pt: "\xDAltimos {c} dias",
       ja: "\u904E\u53BB {c} \u65E5\u9593",
-      sv: "Senaste {c} dagarna"
+      sv: "Senaste {c} dagarna",
+      ru: "\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 {c} \u0434\u043D\u0435\u0439"
     },
     all_time: {
       en: "All time",
       de: "Insgesamt",
       pt: "Todo o per\xEDodo",
       ja: "\u3059\u3079\u3066\u306E\u671F\u9593",
-      sv: "All tid"
+      sv: "All tid",
+      ru: "\u0412\u0441\u0435 \u0432\u0440\u0435\u043C\u044F"
     },
     choose_a_timeframe_above: {
       en: "Choose a timeframe above",
       de: "W\xE4hle oben einen Zeitraum",
       pt: "Escolha um prazo acima",
-      sv: "V\xE4lj en tidsram ovan"
+      sv: "V\xE4lj en tidsram ovan",
+      ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0440\u0435\u043C\u0435\u043D\u043D\u043E\u0439 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B \u0432\u044B\u0448\u0435"
     },
     failed: {
       en: "Failed",
       de: "Fehlgeschlagen",
       pt: "Falhou",
-      sv: "Misslyckades"
+      sv: "Misslyckades",
+      ru: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C"
     },
     there_was_a_network_error: {
       en: "There was a network error",
       de: "Netzwerkfehler",
       pt: "Ocorreu um erro de rede",
-      sv: "Ett n\xE4tverksfel har intr\xE4ffat"
+      sv: "Ett n\xE4tverksfel har intr\xE4ffat",
+      ru: "\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u0441\u0435\u0442\u0438"
     },
     support: {
       en: "Support",
       de: "Support",
       pt: "Suporte",
-      sv: "Support"
+      sv: "Support",
+      ru: "\u041F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430"
     },
     no_plays_in_range: {
       // no plays in date range
       en: "No plays in this range",
       de: "Keine Plays in diesem Zeitraum",
-      sv: "Inga lyssningar under valda datumintervallet"
+      sv: "Inga lyssningar under valda datumintervallet",
+      ru: "\u041D\u0435\u0442 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439 \u0432 \u044D\u0442\u043E\u043C \u0434\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u0435"
     },
     accessible_name_colours: {
       name: {
         en: "Prefer accessible name colours",
         de: "Bevorzuge gut lesbare Namensfarben",
         pt: "Preferir nomes de cores acess\xEDveis",
-        sv: "F\xF6redra l\xE4ttl\xE4sta namnf\xE4rger"
+        sv: "F\xF6redra l\xE4ttl\xE4sta namnf\xE4rger",
+        ru: "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u0446\u0432\u0435\u0442\u0430 \u0438\u043C\u0435\u043D"
       },
       body: {
         en: "Replaces badge and link-coloured names with your theme\u2019s header colour",
         de: "Ersetzt Abzeichen- und Linkfarben mit der Kopfzeilenfarbe deines Farbschemas",
         pt: "Substitui os nomes coloridos dos emblemas e links pela cor do cabe\xE7alho do seu tema",
-        sv: "Ers\xE4tter emblem och l\xE4nkf\xE4rgade namn med ditt temas rubrikf\xE4rg"
+        sv: "Ers\xE4tter emblem och l\xE4nkf\xE4rgade namn med ditt temas rubrikf\xE4rg",
+        ru: "\u0417\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0446\u0432\u0435\u0442\u0430 \u0438\u043C\u0435\u043D \u0437\u043D\u0430\u0447\u043A\u043E\u0432 \u0438 \u0441\u0441\u044B\u043B\u043E\u043A \u0446\u0432\u0435\u0442\u043E\u043C \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0430 \u0432\u0430\u0448\u0435\u0439 \u0442\u0435\u043C\u044B"
       }
     },
     underline_links: {
@@ -61453,13 +62098,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Always underline links",
         de: "Links immer unterstreichen",
         pt: "Sempre sublinhe os links",
-        sv: "Ha alltid understrykta l\xE4nkar"
+        sv: "Ha alltid understrykta l\xE4nkar",
+        ru: "\u0412\u0441\u0435\u0433\u0434\u0430 \u043F\u043E\u0434\u0447\u0435\u0440\u043A\u0438\u0432\u0430\u0442\u044C \u0441\u0441\u044B\u043B\u043A\u0438"
       },
       body: {
         en: "Forces buttons, links, and other interactables to have an underline",
         de: "Erzwingt, dass Schaltfl\xE4chen, Links und andere interaktive Elemente unterstrichen sind",
         pt: "For\xE7a bot\xF5es, links e outros interativos a terem um sublinhado",
-        sv: "Tvingar knappar, l\xE4nkar och andra interaktiva objekt att ha understrykt text"
+        sv: "Tvingar knappar, l\xE4nkar och andra interaktiva objekt att ha understrykt text",
+        ru: "\u041F\u0440\u0438\u043D\u0443\u0436\u0434\u0430\u0435\u0442 \u043A\u043D\u043E\u043F\u043A\u0438, \u0441\u0441\u044B\u043B\u043A\u0438 \u0438 \u0434\u0440\u0443\u0433\u0438\u0435 \u0438\u043D\u0442\u0435\u0440\u0430\u043A\u0442\u0438\u0432\u043D\u044B\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u0438\u043C\u0435\u0442\u044C \u043F\u043E\u0434\u0447\u0435\u0440\u043A\u0438\u0432\u0430\u043D\u0438\u0435"
       }
     },
     theme_loading: {
@@ -61467,178 +62114,210 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         en: "Disable loading of styles",
         de: "Deaktiviere das Laden von Stylesheets",
         pt: "Desative o carregamento de estilos",
-        sv: "Avaktivera att ladda stilar"
+        sv: "Avaktivera att ladda stilar",
+        ru: "\u041E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443 \u0441\u0442\u0438\u043B\u0435\u0439"
       },
       body: {
         en: "Allows you to load the stylesheet yourself during development",
         de: "Erm\xF6glicht es dir, das Stylesheet w\xE4hrend der Entwicklung selbst zu laden",
         pt: "Permite que voc\xEA mesmo carregue a folha de estilo enquanto desenvolve",
-        sv: "L\xE5ter dig ladda stilschemat sj\xE4lv under utveckling"
+        sv: "L\xE5ter dig ladda stilschemat sj\xE4lv under utveckling",
+        ru: "\u041F\u043E\u0437\u0432\u043E\u043B\u044F\u0435\u0442 \u0432\u0430\u043C \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u043E \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0442\u044C \u0442\u0430\u0431\u043B\u0438\u0446\u0443 \u0441\u0442\u0438\u043B\u0435\u0439 \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u043A\u0438"
       }
     },
     upload: {
       en: "Upload",
       de: "Hochladen",
       pt: "Enviar",
-      sv: "Ladda upp"
+      sv: "Ladda upp",
+      ru: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C"
     },
     upload_image: {
       en: "Upload image",
       de: "Bild hochladen",
-      sv: "Ladda upp bild"
+      sv: "Ladda upp bild",
+      ru: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435"
     },
     image_details: {
       en: "Image details",
       de: "Bildinformationen",
-      sv: "Bildinformation"
+      sv: "Bildinformation",
+      ru: "\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F \u043E\u0431 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0438"
     },
     title: {
       en: "Title",
       de: "Titel",
-      sv: "Titel"
+      sv: "Titel",
+      ru: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435"
     },
     no_title: {
-      en: "No title"
+      en: "No title",
+      ru: "\u0411\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F"
     },
     description: {
       en: "Description",
       de: "Beschreibung",
-      sv: "Beskrivning"
+      sv: "Beskrivning",
+      ru: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435"
     },
     no_description: {
-      en: "No description"
+      en: "No description",
+      ru: "\u0411\u0435\u0437 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F"
     },
     change_avatar: {
       en: "Change avatar",
       de: "Profilbild \xE4ndern",
       pt: "Mudar foto de perfil",
-      sv: "\xC4ndra profilbild"
+      sv: "\xC4ndra profilbild",
+      ru: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u0430\u0432\u0430\u0442\u0430\u0440"
     },
     crop_avatar: {
       en: "Crop avatar",
       de: "Profilbild zuschneiden",
       pt: "Recortar avatar",
-      sv: "Besk\xE4r profilbild"
+      sv: "Besk\xE4r profilbild",
+      ru: "\u041E\u0431\u0440\u0435\u0437\u0430\u0442\u044C \u0430\u0432\u0430\u0442\u0430\u0440"
     },
     crop_notice: {
       en: "Use your scroll wheel to zoom in and out, click and drag to move the image.",
       de: "Verwende dein Mausrad, um rein- und rauszuzoomen. Klicke und ziehe, um das Bild zu verschieben.",
       pt: "Use a scroll do seu mouse para dar zoom in e zoom out, clicar e arrastar para mover a imagem.",
-      sv: "Anv\xE4nd ditt scrollhjul f\xF6r att zooma in och ut, klicka och dra f\xF6r att flytta p\xE5 bilden."
+      sv: "Anv\xE4nd ditt scrollhjul f\xF6r att zooma in och ut, klicka och dra f\xF6r att flytta p\xE5 bilden.",
+      ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u043A\u043E\u043B\u0435\u0441\u043E \u043F\u0440\u043E\u043A\u0440\u0443\u0442\u043A\u0438 \u0434\u043B\u044F \u043F\u0440\u0438\u0431\u043B\u0438\u0436\u0435\u043D\u0438\u044F \u0438 \u043E\u0442\u0434\u0430\u043B\u0435\u043D\u0438\u044F, \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0438 \u043F\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u043F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435."
     },
     edit_profile_note: {
       en: "Edit profile note",
       de: "Profilnotiz bearbeiten",
       pt: "Editar recado de perfil",
-      sv: "\xC4ndra profilanteckning"
+      sv: "\xC4ndra profilanteckning",
+      ru: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u043C\u0435\u0442\u043A\u0443 \u043F\u0440\u043E\u0444\u0438\u043B\u044F"
     },
     update_to_version: {
       en: "Update to {v}",
       de: "Auf {v} aktualisieren",
       pt: "Atualizar para {v}",
-      sv: "Uppdatera till {v}"
+      sv: "Uppdatera till {v}",
+      ru: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u0434\u043E {v}"
     },
     all: {
       // all photos
       en: "All",
       de: "Alle",
       pt: "Todos",
-      sv: "Visa alla"
+      sv: "Visa alla",
+      ru: "\u0412\u0441\u0435"
     },
     saved: {
       // saved/bookmarked photos
       en: "Saved",
       de: "Gespeichert",
       pt: "Salvo",
-      sv: "Sparade"
+      sv: "Sparade",
+      ru: "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043D\u044B\u0435"
     },
     remove_save: {
-      en: "Remove save"
+      en: "Remove save",
+      sv: "Ta bort bokm\xE4rkning",
+      ru: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0438\u0437 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043D\u043E\u0433\u043E"
     },
     no_images_saved: {
       en: "No photos saved",
       de: "Keine Bilder gespeichert",
       pt: "Nenhuma foto salva",
-      sv: "Inga foton sparade"
+      sv: "Inga foton sparade",
+      ru: "\u041D\u0435\u0442 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043D\u044B\u0445 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0439"
     },
     going: {
       // going as in attending an event
       en: "Going",
       de: "Zugesagt",
       pt: "Indo",
-      sv: "Ska g\xE5 p\xE5"
+      sv: "Ska g\xE5 p\xE5",
+      ru: "\u0418\u0434\u0443"
     },
     interested: {
       // interested in attending an event
       en: "Interested",
       de: "Interessiert",
       pt: "Interessado",
-      sv: "Intresserad"
+      sv: "Intresserad",
+      ru: "\u0418\u043D\u0442\u0435\u0440\u0435\u0441\u0443\u044E\u0441\u044C"
     },
     total: {
       // total of events attended or anything else
       en: "Total",
       de: "Gesamt",
-      sv: "Totalt"
+      sv: "Totalt",
+      ru: "\u0412\u0441\u0435\u0433\u043E"
     },
     value_failed_to_load: {
       en: "{v} failed to load",
       de: "{v} konnte nicht geladen werden",
       pt: "{v} falhou ao carregar",
-      sv: "{v} kunde inte laddas"
+      sv: "{v} kunde inte laddas",
+      ru: "{v} \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C"
     },
     profile_does_not_have_enough_scrobbles: {
       en: "Profile does not have enough scrobbles",
       de: "Profil hat nicht gen\xFCgend Scrobbles",
       pt: "O perfil n\xE3o tem scrobbles o suficiente",
-      sv: "Profilen har inte tillr\xE4ckligt med skrobblingar"
+      sv: "Profilen har inte tillr\xE4ckligt med skrobblingar",
+      ru: "\u0423 \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043D\u0435\u0434\u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u043E \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u043E\u0432"
     },
     requires_extension_value: {
       en: "Requires extension \u2018{v}\u2019",
       de: "Ben\xF6tigt die Erweiterung \u201E{v}\u201C",
       pt: "Requer extens\xE3o \u2018{v}\u2019",
-      sv: "Beh\xF6ver till\xE4gget \u2018{v}\u2019"
+      sv: "Beh\xF6ver till\xE4gget \u2018{v}\u2019",
+      ru: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0435 \xAB{v}\xBB"
     },
     incompatible_with_value: {
       en: "Incompatible with {v}",
       de: "Inkompatibel mit {v}",
       pt: "Incompat\xEDvel com {v}",
-      sv: "Inkompatibelt med {v}"
+      sv: "Inkompatibelt med {v}",
+      ru: "\u041D\u0435\u0441\u043E\u0432\u043C\u0435\u0441\u0442\u0438\u043C\u043E \u0441 {v}"
     },
     incompatible_alert: {
       en: "Incompatible with current settings",
       de: "Nicht mit den aktuellen Einstellungen kompatibel",
-      sv: "Inkompatibelt med nuvarande inst\xE4llningar"
+      sv: "Inkompatibelt med nuvarande inst\xE4llningar",
+      ru: "\u041D\u0435\u0441\u043E\u0432\u043C\u0435\u0441\u0442\u0438\u043C\u043E \u0441 \u0442\u0435\u043A\u0443\u0449\u0438\u043C\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u043C\u0438"
     },
     bulk_edit_extension: {
       en: "Last.fm Bulk Edit",
       de: "Last.fm-Massenbearbeitung",
       pt: "Edi\xE7\xE3o em massa do Last.fm",
-      sv: "Last.fm bulkredigering"
+      sv: "Last.fm bulkredigering",
+      ru: "\u041C\u0430\u0441\u0441\u043E\u0432\u043E\u0435 \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 Last.fm"
     },
     collage: {
       en: "Collage",
       de: "Collage",
       pt: "Colagem",
-      sv: "Collage"
+      sv: "Collage",
+      ru: "\u041A\u043E\u043B\u043B\u0430\u0436"
     },
     collage_redirect: {
       en: "Redirected to bleh\u2019s built-in Collage feature",
       de: "Weiterleitung zur integrierten Collagenfunktion von bleh",
       pt: "Redirecionando ao recurso integrado de Colagem do bleh",
-      sv: "Omredigerad till blehs egna collagefunktion"
+      sv: "Omredigerad till blehs egna collagefunktion",
+      ru: "\u041F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u043D\u0430 \u0432\u0441\u0442\u0440\u043E\u0435\u043D\u043D\u0443\u044E \u0444\u0443\u043D\u043A\u0446\u0438\u044E \u041A\u043E\u043B\u043B\u0430\u0436\u0430 bleh"
     },
     your_collage_is_ready: {
       en: "Your collage is ready!",
       de: "Deine Collage ist fertig!",
       pt: "Sua colagem est\xE1 pronta!",
-      sv: "Ditt collage \xE4r redo"
+      sv: "Ditt collage \xE4r redo",
+      ru: "\u0412\u0430\u0448 \u043A\u043E\u043B\u043B\u0430\u0436 \u0433\u043E\u0442\u043E\u0432!"
     },
     name_failed: {
       en: "{name} failed",
       de: "{name} fehlgeschlagen",
       pt: "{name} falhou",
-      sv: "{name} misslyckades"
+      sv: "{name} misslyckades",
+      ru: "{name} \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C"
     },
     select_component: {
       // the 'Select' component (like a dropdown menu)
@@ -61646,210 +62325,244 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Select component",
       de: "Auswahlkomponente",
       pt: "Selecionar componente",
-      sv: "V\xE4lj komponent"
+      sv: "V\xE4lj komponent",
+      ru: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u043A\u043E\u043C\u043F\u043E\u043D\u0435\u043D\u0442"
     },
     only_numbers_are_allowed: {
       en: "Only numbers are allowed here",
       de: "Nur Zahlen sind erlaubt",
       pt: "Apenas n\xFAmeros s\xE3o permitidos aqui",
-      sv: "Endast nummer \xE4r till\xE5tna h\xE4r"
+      sv: "Endast nummer \xE4r till\xE5tna h\xE4r",
+      ru: "\u0417\u0434\u0435\u0441\u044C \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043D\u044B \u0442\u043E\u043B\u044C\u043A\u043E \u0446\u0438\u0444\u0440\u044B"
     },
     keep_within_the_range: {
       // if the user wrote more text than the text box allows
       en: "Keep within the range",
       de: "Bleibe innerhalb des Zeichenlimits",
       pt: "Manter dentro do intervalo",
-      sv: "H\xE5ll dig inom gr\xE4nsen"
+      sv: "H\xE5ll dig inom gr\xE4nsen",
+      ru: "\u041E\u0441\u0442\u0430\u0432\u0430\u0439\u0442\u0435\u0441\u044C \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 \u0434\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u0430"
     },
     this_field_is_required: {
       // field as in a text box
       en: "This field is required",
       de: "Dieses Feld ist erforderlich",
       pt: "Este campo \xE9 obrigat\xF3rio",
-      sv: "F\xE4ltet kr\xE4vs"
+      sv: "F\xE4ltet kr\xE4vs",
+      ru: "\u042D\u0442\u043E \u043F\u043E\u043B\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E"
     },
     please_dont_clone_yourself: {
       en: "Please don\u2019t clone yourself",
       de: "Bitte klone dich nicht selbst",
       pt: "Por favor, n\xE3o se clone",
-      sv: "Sn\xE4lla, klona inte dig sj\xE4lv"
+      sv: "Sn\xE4lla, klona inte dig sj\xE4lv",
+      ru: "\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u043D\u0435 \u043A\u043B\u043E\u043D\u0438\u0440\u0443\u0439\u0442\u0435 \u0441\u0435\u0431\u044F"
     },
     generate: {
       en: "Generate",
       de: "Generieren",
       pt: "Gerar",
-      sv: "Generera"
+      sv: "Generera",
+      ru: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C"
     },
     your_settings_are_invalid: {
       en: "Your settings are invalid",
       de: "Deine Einstellungen sind ung\xFCltig",
       pt: "Suas configura\xE7\xF5es s\xE3o inv\xE1lidas",
-      sv: "Dina inst\xE4llningar \xE4r ogiltiga"
+      sv: "Dina inst\xE4llningar \xE4r ogiltiga",
+      ru: "\u0412\u0430\u0448\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043D\u0435\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u044B"
     },
     top_type: {
       en: "Top {type}",
       de: "Top-{type}",
-      sv: "Topp{type}"
+      sv: "Topp{type}",
+      ru: "\u0422\u043E\u043F-{type}"
     },
     download: {
       en: "Download",
       de: "Herunterladen",
       pt: "Baixar",
-      sv: "Ladda ned"
+      sv: "Ladda ned",
+      ru: "\u0421\u043A\u0430\u0447\u0430\u0442\u044C"
     },
     downloaded: {
       en: "Downloaded",
       de: "Heruntergeladen",
       pt: "Baixado",
-      sv: "Nedladdat"
+      sv: "Nedladdat",
+      ru: "\u0421\u043A\u0430\u0447\u0430\u043D\u043E"
     },
     are_you_sure: {
       en: "Are you sure?",
       de: "Bist du sicher?",
       pt: "Voc\xEA tem certeza?",
-      sv: "\xC4r du s\xE4ker"
+      sv: "\xC4r du s\xE4ker",
+      ru: "\u0412\u044B \u0443\u0432\u0435\u0440\u0435\u043D\u044B?"
     },
     this_will_require_loading_count_pages: {
       en: "This will require loading {c} pages",
       de: "Dies erfordert das Laden von {c} Seiten",
       pt: "Isso requer carregar {c} p\xE1ginas",
-      sv: "Det h\xE4r kr\xE4ver att {c} sidor laddas"
+      sv: "Det h\xE4r kr\xE4ver att {c} sidor laddas",
+      ru: "\u0414\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u043F\u043E\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C {c} \u0441\u0442\u0440\u0430\u043D\u0438\u0446"
     },
     chart_template_filename: {
       en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand} {date}",
       de: "{user} Collage ({timeframe}, Top-{type}, {size}) - {brand} {date}",
       pt: "{user} Colagem ({timeframe}, Top {type}, {size}) - {brand} {date}",
-      sv: "{user} Collage ({timeframe}, Topp{type}, {size}) - {brand} {date}"
+      sv: "{user} Collage ({timeframe}, Topp{type}, {size}) - {brand} {date}",
+      ru: "{user} \u041A\u043E\u043B\u043B\u0430\u0436 ({timeframe}, \u0422\u043E\u043F {type}, {size}) - {brand} {date}"
     },
     waiting_for_images: {
       en: "Waiting for images",
       pt: "Aguardando imagens",
-      sv: "V\xE4ntar p\xE5 bilder"
+      sv: "V\xE4ntar p\xE5 bilder",
+      ru: "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439"
     },
     collage_title: {
       name: {
         en: "Collage title",
         de: "Collagentitel",
         pt: "T\xEDtulo da colagem",
-        sv: "Collagetitel"
+        sv: "Collagetitel",
+        ru: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u043A\u043E\u043B\u043B\u0430\u0436\u0430"
       },
       body: {
         en: "Include a subtle header showing your username and settings you used",
         de: "F\xFCgt eine dezente Kopfzeile hinzu, die deinen Benutzernamen und die von dir gew\xE4hlten Einstellungen anzeigt",
         pt: "Inclua um cabe\xE7alho discreto mostrando seu nome de usu\xE1rio e as configura\xE7\xF5es que voc\xEA usou",
-        sv: "L\xE4gger till en liten rubrik som visar ditt anv\xE4ndarnamn och dina inst\xE4llningar"
+        sv: "L\xE4gger till en liten rubrik som visar ditt anv\xE4ndarnamn och dina inst\xE4llningar",
+        ru: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u0441 \u0432\u0430\u0448\u0438\u043C \u0438\u043C\u0435\u043D\u0435\u043C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F \u0438 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D\u043D\u044B\u043C\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u043C\u0438"
       }
     },
     collage_grid_text: {
       en: "Show names on grid items",
       de: "Namen auf Rasterobjekten anzeigen",
       pt: "Mostrar nomes nos itens da grade",
-      sv: "Visa namn p\xE5 collageobjekt"
+      sv: "Visa namn p\xE5 collageobjekt",
+      ru: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043D\u0430 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u0445 \u0441\u0435\u0442\u043A\u0438"
     },
     collage_grid_plays: {
       en: "Show plays on grid items",
       de: "Plays auf Rasterobjekten anzeigen",
       pt: "Mostrar reprodu\xE7\xF5es nos itens da grade",
-      sv: "Visa spelningar p\xE5 collageobjekt"
+      sv: "Visa spelningar p\xE5 collageobjekt",
+      ru: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F \u043D\u0430 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u0445 \u0441\u0435\u0442\u043A\u0438"
     },
     collage_grid_gap: {
       name: {
         en: "Leave a gap between grid items",
         de: "Abstand zwischen Rasterobjekten",
         pt: "Deixe um espa\xE7o entre os itens da grade",
-        sv: "L\xE4mna rum mellan collageobjekt"
+        sv: "L\xE4mna rum mellan collageobjekt",
+        ru: "\u041E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043F\u0440\u043E\u043C\u0435\u0436\u0443\u0442\u043E\u043A \u043C\u0435\u0436\u0434\u0443 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u043C\u0438 \u0441\u0435\u0442\u043A\u0438"
       },
       body: {
         en: "Includes outer and inner padding with round grid items",
         de: "F\xFCgt \xE4u\xDFere und innere Abst\xE4nde sowie abgerundete Rasterobjekte hinzu",
-        sv: "L\xE4gger till inre och yttre mellanrum med avrundade collageobjekt"
+        sv: "L\xE4gger till inre och yttre mellanrum med avrundade collageobjekt",
+        ru: "\u0412\u043A\u043B\u044E\u0447\u0430\u0435\u0442 \u0432\u043D\u0435\u0448\u043D\u0438\u0435 \u0438 \u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0438\u0435 \u043E\u0442\u0441\u0442\u0443\u043F\u044B \u0441 \u043A\u0440\u0443\u0433\u043B\u044B\u043C\u0438 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u043C\u0438 \u0441\u0435\u0442\u043A\u0438"
       }
     },
     collage_centered: {
       name: {
         en: "Center info on grid items",
         de: "Informationen auf Rasterobjekten zentrieren",
-        sv: "Centrera informationen p\xE5 collageobjekt"
+        sv: "Centrera informationen p\xE5 collageobjekt",
+        ru: "\u0426\u0435\u043D\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044E \u043D\u0430 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u0445 \u0441\u0435\u0442\u043A\u0438"
       },
       body: {
         en: "Similar to the look of other collage solutions",
         de: "\xC4hnlicher Stil wie andere Collagenl\xF6sungen",
-        sv: "Mer lik till hur andra collagegenererare g\xF6r det"
+        sv: "Mer lik till hur andra collagegenererare g\xF6r det",
+        ru: "\u041F\u043E\u0445\u043E\u0436\u0435 \u043D\u0430 \u0432\u043D\u0435\u0448\u043D\u0438\u0439 \u0432\u0438\u0434 \u0434\u0440\u0443\u0433\u0438\u0445 \u0440\u0435\u0448\u0435\u043D\u0438\u0439 \u0434\u043B\u044F \u043A\u043E\u043B\u043B\u0430\u0436\u0435\u0439"
       }
     },
     organising_plays: {
       en: "Organising plays",
       de: "Plays werden organisiert",
       pt: "Organizando reprodu\xE7\xF5es",
-      sv: "Organisera spelningar"
+      sv: "Organisera spelningar",
+      ru: "\u041E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044F \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439"
     },
     update_now: {
       en: "Update now",
       de: "Jetzt aktualisieren",
       pt: "Atualizar agora",
-      sv: "Uppdatera nu"
+      sv: "Uppdatera nu",
+      ru: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441"
     },
     ignore_for_now: {
       en: "Ignore for now",
       de: "Vorerst ignorieren",
       pt: "Ignore por agora",
-      sv: "Ignorera just nu"
+      sv: "Ignorera just nu",
+      ru: "\u0418\u0433\u043D\u043E\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u043E\u043A\u0430"
     },
     update_styles: {
       en: "Update styles",
       de: "Stylesheets aktualisieren",
       pt: "Atualizar estilos",
-      sv: "Uppdatera stiler"
+      sv: "Uppdatera stiler",
+      ru: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u0442\u0438\u043B\u0438"
     },
     downloading_styles: {
       en: "Downloading styles",
       de: "Lade Stylesheets herunter",
       pt: "Baixando estilos",
-      sv: "Laddar ner stiler"
+      sv: "Laddar ner stiler",
+      ru: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0441\u0442\u0438\u043B\u0435\u0439"
     },
     style_warning: {
       en: "You have style loading off! If you did this by accident, you can undo this",
       de: "Du hast das Laden von Stylesheets deaktiviert! Wenn du das aus Versehen gemacht hast, kannst du es r\xFCckg\xE4ngig machen",
       pt: "Voc\xEA desativou o carregamento de estilos! Se voc\xEA fez isso acidentalmente, pode desfazer essa a\xE7\xE3o",
-      sv: "Du har st\xE4ngt av att stiler laddas! Om du gjorde det av misstag s\xE5 kan du \xE5terst\xE4lla det"
+      sv: "Du har st\xE4ngt av att stiler laddas! Om du gjorde det av misstag s\xE5 kan du \xE5terst\xE4lla det",
+      ru: "\u0423 \u0432\u0430\u0441 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0441\u0442\u0438\u043B\u0435\u0439! \u0415\u0441\u043B\u0438 \u0432\u044B \u0441\u0434\u0435\u043B\u0430\u043B\u0438 \u044D\u0442\u043E \u0441\u043B\u0443\u0447\u0430\u0439\u043D\u043E, \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u043E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u044D\u0442\u043E"
     },
     re_enable_style_loading: {
       en: "Re-enable style loading",
       de: "Stylesheets neu laden und aktivieren",
       pt: "Reativar carregamento de estilos",
-      sv: "\xC5teraktivera att stiler laddas"
+      sv: "\xC5teraktivera att stiler laddas",
+      ru: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443 \u0441\u0442\u0438\u043B\u0435\u0439"
     },
     made_with_love: {
       // lowercase in design
       en: "made with {h} by {u} and {c}contributors{/c}",
       de: "mit {h} gemacht von {u} und {c}mitwirkenden{/c}",
       pt: "feito com {h} por {u} e {c}contribuidores{/c}",
-      sv: "skapad med {h} av {u} och {c}bidragsgivare{/c}"
+      sv: "skapad med {h} av {u} och {c}bidragsgivare{/c}",
+      ru: "\u0441\u0434\u0435\u043B\u0430\u043D\u043E \u0441 {h} \u043E\u0442 {u} \u0438 {c}\u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u043E\u0432{/c}"
     },
     love_lower: {
       // replaces the {h} in the above sentence
       en: "love",
       de: "liebe",
       pt: "amor",
-      sv: "k\xE4rlek"
+      sv: "k\xE4rlek",
+      ru: "\u043B\u044E\u0431\u043E\u0432\u044C\u044E"
     },
     translations: {
       // lowercase in design
       en: "{l} translation by {u}",
       de: "Deutsche \xDCbersetzung von {u}",
-      sv: "Svensk \xF6vers\xE4ttning av {u}"
+      sv: "Svensk \xF6vers\xE4ttning av {u}",
+      ru: "\u041F\u0435\u0440\u0435\u0432\u043E\u0434 {l} \u043E\u0442 {u}"
     },
     view_source: {
       en: "View source",
       de: "Quellcode ansehen",
       pt: "Ver c\xF3digo",
-      sv: "Visa k\xE4lla"
+      sv: "Visa k\xE4lla",
+      ru: "\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u043A\u043E\u0434"
     },
     report_issue: {
       en: "Report issue",
       de: "Problem melden",
       pt: "Relatar problema",
-      sv: "Rapportera problem"
+      sv: "Rapportera problem",
+      ru: "\u0421\u043E\u043E\u0431\u0449\u0438\u0442\u044C \u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0435"
     },
     opens_your_value_settings: {
       // DE: is this used both for profile settings and bleh settings in the quick switcher? ~Myrai
@@ -61857,7 +62570,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Open your {v} settings",
       de: "\xD6ffne deine {v}-Einstellungen",
       pt: "Abra suas op\xE7\xF5es de {v}",
-      sv: "\xD6ppna dina {v}-inst\xE4llningar"
+      sv: "\xD6ppna dina {v}-inst\xE4llningar",
+      ru: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432\u0430\u0448\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 {v}"
     },
     opens_your_value: {
       // DE: depending on the word in {v}, this might be "dein", "deine" or the inclusive "dein:e" ~Myrai
@@ -61865,7 +62579,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Open your {v}",
       de: "\xD6ffne dein {v}",
       pt: "Abra seu {v}",
-      sv: "\xD6pnna dina {v}"
+      sv: "\xD6pnna dina {v}",
+      ru: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432\u0430\u0448\u0438 {v}"
     },
     opens_the_value: {
       // DE: same here, depends on context ~Myrai
@@ -61873,811 +62588,965 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Open the {v}",
       de: "\xD6ffne die {v}",
       pt: "Abra o {v}",
-      sv: "\xD6ppna {v}"
+      sv: "\xD6ppna {v}",
+      ru: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C {v}"
     },
     theme_picker: {
       en: "Theme picker",
       de: "Farbschemenauswahl",
       pt: "Seletor de temas",
-      sv: "Temav\xE4ljare"
+      sv: "Temav\xE4ljare",
+      ru: "\u0412\u044B\u0431\u043E\u0440 \u0442\u0435\u043C\u044B"
     },
     changes_your_theme: {
       en: "Changes your theme",
       de: "\xC4ndert dein Farbschema",
       pt: "Mude seu tema",
-      sv: "\xC4ndrar ditt tema"
+      sv: "\xC4ndrar ditt tema",
+      ru: "\u0418\u0437\u043C\u0435\u043D\u044F\u0435\u0442 \u0432\u0430\u0448\u0443 \u0442\u0435\u043C\u0443"
     },
     on_this_page: {
       en: "On this page",
       de: "Auf dieser Seite",
       pt: "Nessa p\xE1gina",
-      sv: "P\xE5 denna sida"
+      sv: "P\xE5 denna sida",
+      ru: "\u041D\u0430 \u044D\u0442\u043E\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435"
     },
     use_current_page_as_context: {
       en: "Use current page as context",
       de: "Aktuelle Seite als Kontext verwenden",
       pt: "Usar a p\xE1gina atual como contexto",
-      sv: "Anv\xE4nd aktuella sidan som referens"
+      sv: "Anv\xE4nd aktuella sidan som referens",
+      ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0442\u0435\u043A\u0443\u0449\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443 \u043A\u0430\u043A \u043A\u043E\u043D\u0442\u0435\u043A\u0441\u0442"
     },
     opens_the_value_for_type: {
       en: "Open the {v} for {t}",
       de: "\xD6ffne das {v} f\xFCr {t}",
       pt: "Abra a {v} para {t}",
-      sv: "\xD6pnnar {v] f\xF6r {t}"
+      sv: "\xD6pnnar {v] f\xF6r {t}",
+      ru: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C {v} \u0434\u043B\u044F {t}"
     },
     quick_switcher: {
       en: "Rabbit hole",
       de: "Quick Switcher",
-      sv: "Genv\xE4gar"
+      sv: "Genv\xE4gar",
+      ru: "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u044C"
     },
     use_quick_switcher: {
       name: {
         en: "Enable the quick switcher",
         de: "Quick Switcher aktivieren",
-        sv: "Aktivera snabbv\xE4xlare"
+        sv: "Aktivera snabbv\xE4xlare",
+        ru: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0431\u044B\u0441\u0442\u0440\u044B\u0439 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u044C"
       },
       body: {
         en: "Make full use of your keyboard to navigate exactly where you want to be",
         de: "Nutze deine Tastatur, um genau dorthin zu navigieren, wo du hinm\xF6chtest",
-        sv: "G\xF6r full anv\xE4ndning av ditt tangentbord f\xF6r att navigera till precis vart du vill vara"
+        sv: "G\xF6r full anv\xE4ndning av ditt tangentbord f\xF6r att navigera till precis vart du vill vara",
+        ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u043A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u0443 \u0432 \u043F\u043E\u043B\u043D\u043E\u0439 \u043C\u0435\u0440\u0435, \u0447\u0442\u043E\u0431\u044B \u043F\u0435\u0440\u0435\u0439\u0442\u0438 \u0438\u043C\u0435\u043D\u043D\u043E \u0442\u0443\u0434\u0430, \u043A\u0443\u0434\u0430 \u0432\u0430\u043C \u043D\u0443\u0436\u043D\u043E"
       }
     },
     quick_switcher_keybinds: {
       en: "Change keybinds",
       de: "Tastenkombinationen \xE4ndern",
-      sv: "\xC4ndra tangentbordsgenv\xE4gar"
+      sv: "\xC4ndra tangentbordsgenv\xE4gar",
+      ru: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u043A\u043B\u0430\u0432\u0438\u0448"
     },
     switch_placeholder: {
       en: "Quick switch to a page or action",
       de: "Schnell zu einer Seite oder Aktion wechseln",
       pt: "Alternar rapidamente para uma p\xE1gina ou a\xE7\xE3o",
-      sv: "Hoppa snabbt till en sida eller annan \xE5tg\xE4rd"
+      sv: "Hoppa snabbt till en sida eller annan \xE5tg\xE4rd",
+      ru: "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043F\u0435\u0440\u0435\u0445\u043E\u0434 \u043A \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u0438\u043B\u0438 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044E"
     },
     rabbit_search: {
       en: "Enter {v} name",
       de: "Gebe den Namen des {v}s ein",
-      sv: "Skriv {v}namn"
+      sv: "Skriv {v}namn",
+      ru: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 {v}"
     },
     compares_your_taste: {
       en: "Compare your taste with {v}",
       de: "Vergleiche deinen Musikgeschmack mit {v}",
       pt: "Compare o seu gosto com {v}",
-      sv: "J\xE4mf\xF6r musiksmak med {v}"
+      sv: "J\xE4mf\xF6r musiksmak med {v}",
+      ru: "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0432\u0430\u0448 \u0432\u043A\u0443\u0441 \u0441 {v}"
     },
     select_an_option: {
       en: "Select an option",
       de: "W\xE4hle eine Option",
       pt: "Selecione uma op\xE7\xE3o",
-      sv: "V\xE4lj ett alternativ"
+      sv: "V\xE4lj ett alternativ",
+      ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442"
     },
     nothing_matches_your_search: {
       en: "Nothing matches your search",
       de: "Es wurde nichts zu deiner Suche gefunden",
       pt: "Nada corresponde \xE0 sua pesquisa",
-      sv: "Inga resultat matchar din s\xF6kning"
+      sv: "Inga resultat matchar din s\xF6kning",
+      ru: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E \u043F\u043E \u0432\u0430\u0448\u0435\u043C\u0443 \u0437\u0430\u043F\u0440\u043E\u0441\u0443"
     },
     create_a_collage: {
       en: "Create a collage of your choosing",
       de: "Erstelle eine Collage deiner Wahl",
       pt: "Crie uma colagem de sua escolha",
-      sv: "Skapa ett collage som du vill"
+      sv: "Skapa ett collage som du vill",
+      ru: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043A\u043E\u043B\u043B\u0430\u0436 \u043D\u0430 \u0432\u0430\u0448 \u0432\u044B\u0431\u043E\u0440"
     },
     search_for_music_or_user: {
       en: "Search for music or a user",
       de: "Suche nach Musik oder einem Benutzer",
       pt: "Pesquise por m\xFAsica ou usu\xE1rio",
-      sv: "S\xF6k musik eller en anv\xE4ndare"
+      sv: "S\xF6k musik eller en anv\xE4ndare",
+      ru: "\u0418\u0441\u043A\u0430\u0442\u044C \u043C\u0443\u0437\u044B\u043A\u0443 \u0438\u043B\u0438 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F"
     },
     search_for_value: {
       en: "Search for {v}",
       de: "Nach {v} suchen",
       pt: "Pesquise por {v}",
-      sv: "S\xF6k upp {v}"
+      sv: "S\xF6k upp {v}",
+      ru: "\u0418\u0441\u043A\u0430\u0442\u044C {v}"
     },
     choose_a_search_type: {
       en: "Choose a search type",
       de: "W\xE4hle einen Suchtyp",
       pt: "Escolha um tipo de pesquisa",
-      sv: "V\xE4lj s\xF6ktyp"
+      sv: "V\xE4lj s\xF6ktyp",
+      ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0438\u043F \u043F\u043E\u0438\u0441\u043A\u0430"
     },
     finish_search: {
       en: "Finish your search",
       de: "Beende deine Suche",
       pt: "Finalize sua pesquisa",
-      sv: "Finalisera s\xF6kning"
+      sv: "Finalisera s\xF6kning",
+      ru: "\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A"
     },
     view_count_more: {
       en: "View {c} more",
       de: "{c} weitere anzeigen",
-      sv: "Visa {v} fler"
+      sv: "Visa {v} fler",
+      ru: "\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0435\u0449\u0435 {c}"
     },
     saved_to_bookmarks: {
       en: "Saved to bookmarks",
       de: "Lesezeichen hinzugef\xFCgt",
       pt: "Salvo nos marcadores",
-      sv: "Sparad till dina bokm\xE4rken"
+      sv: "Sparad till dina bokm\xE4rken",
+      ru: "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u0432 \u0437\u0430\u043A\u043B\u0430\u0434\u043A\u0438"
     },
     bookmark_save_msg: {
       en: "Find your bookmarks in your Home or {link}",
       de: "Finde deine Lesezeichen auf deiner Startseite oder {link}",
       pt: "Encontre seus marcadores na sua p\xE1gina inicial ou em {link}",
-      sv: "Hitta dina bokm\xE4rken p\xE5 startsidan eller {link}"
+      sv: "Hitta dina bokm\xE4rken p\xE5 startsidan eller {link}",
+      ru: "\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u0432\u0430\u0448\u0438 \u0437\u0430\u043A\u043B\u0430\u0434\u043A\u0438 \u043D\u0430 \u0414\u043E\u043C\u0430\u0448\u043D\u0435\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u0438\u043B\u0438 {link}"
     },
     go_there_now_lower: {
       // in sentence above
       en: "go there now",
       de: "schaue sie dir direkt an",
       pt: "vai l\xE1 agora",
-      sv: "g\xE5 dit nu"
+      sv: "g\xE5 dit nu",
+      ru: "\u043F\u0435\u0440\u0435\u0439\u0442\u0438 \u0441\u0435\u0439\u0447\u0430\u0441"
     },
     always_remind_me: {
       en: "Always remind me",
       de: "Erinnere mich immer",
-      sv: "P\xE5minn mig alltid"
+      sv: "P\xE5minn mig alltid",
+      ru: "\u041D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u0442\u044C \u0432\u0441\u0435\u0433\u0434\u0430"
     },
     never: {
       en: "Never",
       de: "Nie",
-      sv: "Aldrig"
+      sv: "Aldrig",
+      ru: "\u041D\u0438\u043A\u043E\u0433\u0434\u0430"
     },
     edit_scrobble: {
       en: "Edit scrobble",
       de: "Scrobble bearbeiten",
       pt: "Editar scrobble",
-      sv: "Redigera skrobbel"
+      sv: "Redigera skrobbel",
+      ru: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u043A\u0440\u043E\u0431\u0431\u043B"
     },
     edit_scrobbles_in_bulk: {
       en: "Edit scrobbles in bulk",
       de: "Mehrere Scrobbles bearbeiten",
       pt: "Editar scrobbles em massa",
-      sv: "Massredigera skrobblingar"
+      sv: "Massredigera skrobblingar",
+      ru: "\u041C\u0430\u0441\u0441\u043E\u0432\u043E\u0435 \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u043E\u0432"
     },
     timeline: {
       en: "Timeline",
       de: "Zeitstrahl",
-      sv: "Tidslinje"
+      sv: "Tidslinje",
+      ru: "\u0425\u0440\u043E\u043D\u043E\u043B\u043E\u0433\u0438\u044F"
     },
     view_latest: {
       en: "View latest",
       de: "Neueste anzeigen",
-      sv: "Visa senaste"
+      sv: "Visa senaste",
+      ru: "\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435"
     },
     custom: {
       en: "Custom",
       de: "Benutzerdefiniert",
-      sv: "Anpassad"
+      sv: "Anpassad",
+      ru: "\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u0438\u0439"
     },
     star: {
       en: "Star",
       de: "Markieren",
-      sv: "Stj\xE4rna"
+      sv: "Stj\xE4rna",
+      ru: "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u0437\u0432\u0435\u0437\u0434\u043E\u0439"
     },
     starred: {
       en: "Starred",
       de: "Markiert",
-      sv: "Stj\xE4rnm\xE4rkt"
+      sv: "Stj\xE4rnm\xE4rkt",
+      ru: "\u041E\u0442\u043C\u0435\u0447\u0435\u043D\u043E \u0437\u0432\u0435\u0437\u0434\u043E\u0439"
     },
     report: {
       en: "Report",
       de: "Melden",
       pt: "Reportar",
-      sv: "Anm\xE4l"
+      sv: "Anm\xE4l",
+      ru: "\u041F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C\u0441\u044F"
     },
     auto: {
       // automatic theme
       en: "Auto",
       de: "Automatisch",
-      sv: "Automatiskt"
+      sv: "Automatiskt",
+      ru: "\u0410\u0432\u0442\u043E"
     },
     glass: {
       en: "Glass",
       de: "Glas",
-      sv: "Glas"
+      sv: "Glas",
+      ru: "\u0421\u0442\u0435\u043A\u043B\u043E"
     },
     high_contrast: {
       en: "Prefer high contrast",
       de: "Hohen Kontrast bevorzugen",
-      sv: "F\xF6redra h\xF6gkontrast"
+      sv: "F\xF6redra h\xF6gkontrast",
+      ru: "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0432\u044B\u0441\u043E\u043A\u0443\u044E \u043A\u043E\u043D\u0442\u0440\u0430\u0441\u0442\u043D\u043E\u0441\u0442\u044C"
     },
     external: {
       en: "External",
       de: "Extern",
-      sv: "Extern"
+      sv: "Extern",
+      ru: "\u0412\u043D\u0435\u0448\u043D\u0438\u0439"
     },
     watch: {
       en: "Watch",
       de: "Ansehen",
-      sv: "Se"
+      sv: "Se",
+      ru: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C"
     },
     watch_video: {
       en: "Watch video",
       de: "Video ansehen",
-      sv: "Se video"
+      sv: "Se video",
+      ru: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0438\u0434\u0435\u043E"
     },
     latest_album: {
       en: "Latest album",
       de: "Neuestes Album",
-      sv: "Senaste album"
+      sv: "Senaste album",
+      ru: "\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0439 \u0430\u043B\u044C\u0431\u043E\u043C"
     },
     popular_now: {
       en: "Popular now",
       de: "Zurzeit beliebt",
-      sv: "Popul\xE4r just nu"
+      sv: "Popul\xE4r just nu",
+      ru: "\u041F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E \u0441\u0435\u0439\u0447\u0430\u0441"
     },
     missing_album_info: {
       en: "This album is missing key details, maybe you can help out?",
-      de: "Diesem Album fehlen wichtige Details, vielleicht kannst du helfen?"
+      de: "Diesem Album fehlen wichtige Details, vielleicht kannst du helfen?",
+      ru: "\u0412 \u044D\u0442\u043E\u043C \u0430\u043B\u044C\u0431\u043E\u043C\u0435 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u043A\u043B\u044E\u0447\u0435\u0432\u044B\u0435 \u0434\u0435\u0442\u0430\u043B\u0438, \u043C\u043E\u0436\u0435\u0442, \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u043F\u043E\u043C\u043E\u0447\u044C?"
     },
     updates: {
       // links to the bleh updater
       en: "Updates",
       de: "Updates",
       pt: "Atualiza\xE7\xF5es",
-      sv: "Uppdateringar"
+      sv: "Uppdateringar",
+      ru: "\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F"
     },
     updated: {
       en: "Updated",
       de: "Aktualisiert",
       pt: "Atualizado",
       sv: "Uppdaterats",
+      ru: "\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u043E",
       notification: {
-        en: "Updated to version {v}"
+        en: "Updated to version {v}",
+        ru: "\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u043E \u0434\u043E \u0432\u0435\u0440\u0441\u0438\u0438 {v}"
       }
     },
     you_are_up_to_date: {
       en: "You\u2019re up to date",
       de: "Du bist auf dem neuesten Stand",
       pt: "Voc\xEA est\xE1 atualizado",
-      sv: "Du \xE4r p\xE5 den senaste versionen"
+      sv: "Du \xE4r p\xE5 den senaste versionen",
+      ru: "\u0423 \u0432\u0430\u0441 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044F\u044F \u0432\u0435\u0440\u0441\u0438\u044F"
     },
     update_available_to_install: {
       en: "Update available to install",
       de: "Ein Update ist bereit zur Installation",
       pt: "Atualiza\xE7\xE3o dispon\xEDvel para instalar",
-      sv: "Ny uppdatering finns tillg\xE4nglig"
+      sv: "Ny uppdatering finns tillg\xE4nglig",
+      ru: "\u0414\u043E\u0441\u0442\u0443\u043F\u043D\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438"
     },
     install_now: {
       // install update
       en: "Install now",
       de: "Jetzt installieren",
       pt: "Instale agora",
-      sv: "Installera nu"
+      sv: "Installera nu",
+      ru: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441"
     },
     check_for_updates: {
       en: "Check for updates",
       de: "Nach Updates suchen",
       pt: "Verificar atualiza\xE7\xF5es",
-      sv: "Checka efter nya uppdateringar"
+      sv: "Checka efter nya uppdateringar",
+      ru: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F"
     },
     check: {
       en: "Check",
       de: "Pr\xFCfen",
       pt: "Verificar",
-      sv: "Checka"
+      sv: "Checka",
+      ru: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C"
     },
     last_checked_date: {
       en: "Last checked {d}",
       de: "Zuletzt gepr\xFCft {d}",
       pt: "\xDAltima verifica\xE7\xE3o {d}",
-      sv: "Sist kollat {d}"
+      sv: "Sist kollat {d}",
+      ru: "\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u044F\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 {d}"
     },
     never_checked: {
       en: "Never checked",
       de: "Noch nicht gepr\xFCft",
       pt: "Nunca verificado",
-      sv: "Aldrig checkat"
+      sv: "Aldrig checkat",
+      ru: "\u041D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u043B\u043E\u0441\u044C"
     },
     get_updates_fast: {
       name: {
         en: "Get the latest updates as soon as they\u2019re available",
         de: "Erhalte die neuesten Updates, sobald sie verf\xFCgbar sind",
         pt: "Receba as \xFAltimas atualiza\xE7\xF5es assim que estiverem dispon\xEDveis",
-        sv: "Skaffa senaste uppdateringarna direkt n\xE4r det finns tillg\xE4ngligt"
+        sv: "Skaffa senaste uppdateringarna direkt n\xE4r det finns tillg\xE4ngligt",
+        ru: "\u041F\u043E\u043B\u0443\u0447\u0430\u0439\u0442\u0435 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F, \u043A\u0430\u043A \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D\u0438 \u0441\u0442\u0430\u043D\u0443\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B"
       },
       body: {
         en: "Be among the first to get the latest fixes and improvements as they roll out",
         de: "Sei unter den Ersten, die die neuesten Fehlerbehebungen und Verbesserungen erhalten, sobald sie verf\xFCgbar sind",
         pt: "Seja um dos primeiros a receber as \xFAltimas corre\xE7\xF5es e melhorias assim que forem lan\xE7adas",
-        sv: "Bli bland dem f\xF6rsta som f\xE5r de senaste fixarna och optimeringarna s\xE5 snart som dom kommit"
+        sv: "Bli bland dem f\xF6rsta som f\xE5r de senaste fixarna och optimeringarna s\xE5 snart som dom kommit",
+        ru: "\u0411\u0443\u0434\u044C\u0442\u0435 \u0432 \u0447\u0438\u0441\u043B\u0435 \u043F\u0435\u0440\u0432\u044B\u0445, \u043A\u0442\u043E \u043F\u043E\u043B\u0443\u0447\u0438\u0442 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 \u0443\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u044F \u043F\u043E \u043C\u0435\u0440\u0435 \u0438\u0445 \u0432\u044B\u043F\u0443\u0441\u043A\u0430"
       }
     },
     pause_updates: {
       en: "Pause updates",
       de: "Updates pausieren",
       pt: "Pausar atualiza\xE7\xF5es",
-      sv: "Pausa uppdateringar"
+      sv: "Pausa uppdateringar",
+      ru: "\u041F\u0440\u0438\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F"
     },
     pause_updates_for: {
       en: "Pause for 1 day",
       de: "F\xFCr einen Tag pausieren",
       pt: "Pausar por 1 dia",
-      sv: "Pausa i 1 dag"
+      sv: "Pausa i 1 dag",
+      ru: "\u041F\u0440\u0438\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u043D\u0430 1 \u0434\u0435\u043D\u044C"
     },
     resume_updates: {
       en: "Resume updates",
       de: "Updates fortsetzen",
       pt: "Resumir atualiza\xE7\xF5es",
-      sv: "\xC5teruppta uppdateringar"
+      sv: "\xC5teruppta uppdateringar",
+      ru: "\u0412\u043E\u0437\u043E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F"
     },
     updates_paused: {
       en: "Updates paused",
       de: "Updates pausiert",
       pt: "Atualiza\xE7\xF5es pausadas",
-      sv: "Uppdateringar har pausats"
+      sv: "Uppdateringar har pausats",
+      ru: "\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u0440\u0438\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u044B"
     },
     paused_until_date: {
       en: "Updates continue {d}",
       de: "Updates werden {d} fortgesetzt",
       pt: "Atualiza\xE7\xF5es continuam {d}",
-      sv: "Uppdateringar forts\xE4tter {d}"
+      sv: "Uppdateringar forts\xE4tter {d}",
+      ru: "\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0432\u043E\u0437\u043E\u0431\u043D\u043E\u0432\u044F\u0442\u0441\u044F {d}"
     },
     missing_updates: {
       en: "Missing updates",
       de: "Fehlende Updates",
       pt: "Atualiza\xE7\xF5es em falta",
-      sv: "Saknar uppdateringar"
+      sv: "Saknar uppdateringar",
+      ru: "\u041F\u0440\u043E\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F"
     },
     you_are_running_version: {
       en: "You are running version {v}",
       de: "Du verwendest Version {v}",
       pt: "Voc\xEA est\xE1 usando a vers\xE3o {v}",
-      sv: "Du \xE4r p\xE5 version {v}"
+      sv: "Du \xE4r p\xE5 version {v}",
+      ru: "\u0412\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044E {v}"
     },
     you_are_installing_version: {
       en: "You are installing version {v}",
       de: "Du installierst Version {v}",
       pt: "Voc\xEA est\xE1 instalando a vers\xE3o {v}",
-      sv: "Du har installerat version {v}"
+      sv: "Du har installerat version {v}",
+      ru: "\u0412\u044B \u0443\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u0435\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044E {v}"
     },
     checked_for_updates: {
       en: "Checked for updates",
       de: "Updates wurden gesucht",
       pt: "Verificou por atualiza\xE7\xF5es",
-      sv: "Kolla efter uppdateringar"
+      sv: "Kolla efter uppdateringar",
+      ru: "\u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043E \u043D\u0430 \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0439"
     },
     select_all: {
       en: "Select all",
       de: "Alle ausw\xE4hlen",
-      sv: "Markera alla"
+      sv: "Markera alla",
+      ru: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0432\u0441\u0435"
     },
     deselect_all: {
       en: "De-select all",
       de: "Alle abw\xE4hlen",
-      sv: "Avmarkera alla"
+      sv: "Avmarkera alla",
+      ru: "\u0421\u043D\u044F\u0442\u044C \u0432\u044B\u0431\u043E\u0440 \u0441\u043E \u0432\u0441\u0435\u0445"
     },
     use_current_time: {
       en: "Use current time",
       de: "Aktuelle Zeit verwenden",
-      sv: "Anv\xE4nd nuvarande tid"
+      sv: "Anv\xE4nd nuvarande tid",
+      ru: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0442\u0435\u043A\u0443\u0449\u0435\u0435 \u0432\u0440\u0435\u043C\u044F"
     },
     time: {
       en: "Time",
       de: "Zeit",
-      sv: "Tid"
+      sv: "Tid",
+      ru: "\u0412\u0440\u0435\u043C\u044F"
     },
     missing_fields: {
       en: "Missing required fields",
       de: "Fehlende erforderliche Felder",
-      sv: "Saknar n\xF6dv\xE4ndiga f\xE4lt"
+      sv: "Saknar n\xF6dv\xE4ndiga f\xE4lt",
+      ru: "\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u043F\u043E\u043B\u044F"
     },
     requires_api_in_settings: {
       en: "Requires API access in Settings",
       de: "Erfordert API-Zugang in den Einstellungen",
-      sv: "Beh\xF6ver API-\xE5tkomst i inst\xE4llningar"
+      sv: "Beh\xF6ver API-\xE5tkomst i inst\xE4llningar",
+      ru: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u0434\u043E\u0441\u0442\u0443\u043F \u043A API \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445"
     },
     no_token_provided: {
       en: "No token provided",
       de: "Kein Token angegeben",
-      sv: "Ingen token har angivits"
+      sv: "Ingen token har angivits",
+      ru: "\u0422\u043E\u043A\u0435\u043D \u043D\u0435 \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D"
     },
     example: {
       en: "e.g. {v}",
       de: "z.B. {v}",
       pt: "ex.: {v}",
-      sv: "t.ex. {v}"
+      sv: "t.ex. {v}",
+      ru: "\u043D\u0430\u043F\u0440. {v}"
     },
     item_is_unavailable_on_platform: {
       en: "{i} is unavailable on {p}",
       de: "{i} ist auf {p} nicht verf\xFCgbar",
       pt: "{i} est\xE1 ind\xEDsponivel no {p}",
-      sv: "{i} \xE4r inte tillg\xE4nglig p\xE5 {p}"
+      sv: "{i} \xE4r inte tillg\xE4nglig p\xE5 {p}",
+      ru: "{i} \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D \u043D\u0430 {p}"
     },
     platforms: {
       other: {
         en: "Unknown",
         de: "Unbekannt",
         pt: "Desconhecido",
-        sv: "Ok\xE4nd"
+        sv: "Ok\xE4nd",
+        ru: "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E"
       }
     },
     reduced_motion: {
       name: {
         en: "Reduce motion in animations",
         de: "Bewegung von Animationen reduzieren",
-        sv: "Minska animationr\xF6relse"
+        sv: "Minska animationr\xF6relse",
+        ru: "\u0423\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C \u0434\u0432\u0438\u0436\u0435\u043D\u0438\u0435 \u0432 \u0430\u043D\u0438\u043C\u0430\u0446\u0438\u044F\u0445"
       },
       body: {
         en: "Decreases the intensity of animations, hover effects, and other moving parts",
         de: "Verringert die Intensit\xE4t von Animationen, Hover-Effekten und anderen beweglichen Komponenten",
-        sv: "Minskar intensiteten av animationer, effekter vid hovring, och andra r\xF6rande delar"
+        sv: "Minskar intensiteten av animationer, effekter vid hovring, och andra r\xF6rande delar",
+        ru: "\u0423\u043C\u0435\u043D\u044C\u0448\u0430\u0435\u0442 \u0438\u043D\u0442\u0435\u043D\u0441\u0438\u0432\u043D\u043E\u0441\u0442\u044C \u0430\u043D\u0438\u043C\u0430\u0446\u0438\u0439, \u044D\u0444\u0444\u0435\u043A\u0442\u043E\u0432 \u043F\u0440\u0438 \u043D\u0430\u0432\u0435\u0434\u0435\u043D\u0438\u0438 \u0438 \u0434\u0440\u0443\u0433\u0438\u0445 \u0434\u0432\u0438\u0436\u0443\u0449\u0438\u0445\u0441\u044F \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432"
       }
     },
     banners: {
       en: "Banners",
-      de: "Banner"
+      de: "Banner",
+      sv: "Banner",
+      ru: "\u0411\u0430\u043D\u043D\u0435\u0440\u044B"
     },
     view_backgrounds_on: {
       en: "View banners on",
       de: "Banner anzeigen auf",
-      sv: "Visa banners p\xE5"
+      sv: "Visa banners p\xE5",
+      ru: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0431\u0430\u043D\u043D\u0435\u0440\u044B \u043D\u0430"
     },
     own_profile: {
       en: "Own profile",
       de: "Meinem Profil",
-      sv: "Din egen profil"
+      sv: "Din egen profil",
+      ru: "\u0421\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u043C \u043F\u0440\u043E\u0444\u0438\u043B\u0435"
     },
     other_profiles: {
       en: "Other profiles",
       de: "Anderen Profilen",
-      sv: "Andra profiler"
+      sv: "Andra profiler",
+      ru: "\u0414\u0440\u0443\u0433\u0438\u0445 \u043F\u0440\u043E\u0444\u0438\u043B\u044F\u0445"
     },
     profile_avi_background: {
       name: {
         en: "Prefer avatar image for profiles without a banner",
         de: "Bevorzuge Profilbild f\xFCr Profile ohne Banner",
-        sv: "F\xF6redra profilbild f\xF6r profiler utan en banner"
+        sv: "F\xF6redra profilbild f\xF6r profiler utan en banner",
+        ru: "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0430\u0432\u0430\u0442\u0430\u0440\u0430 \u0434\u043B\u044F \u043F\u0440\u043E\u0444\u0438\u043B\u0435\u0439 \u0431\u0435\u0437 \u0431\u0430\u043D\u043D\u0435\u0440\u0430"
       },
       body: {
         en: "All artist-based banner images will be replaced by the user\u2019s avatar",
         de: "Alle k\xFCnstlerbasierten Bannerbilder werden durch das Profilbild des Benutzers ersetzt",
-        sv: "Alla artistbaserade bannerbilder blir ers\xE4tt av anv\xE4ndarens profilbild"
+        sv: "Alla artistbaserade bannerbilder blir ers\xE4tt av anv\xE4ndarens profilbild",
+        ru: "\u0412\u0441\u0435 \u0431\u0430\u043D\u043D\u0435\u0440\u044B \u043D\u0430 \u043E\u0441\u043D\u043E\u0432\u0435 \u0430\u0440\u0442\u0438\u0441\u0442\u043E\u0432 \u0431\u0443\u0434\u0443\u0442 \u0437\u0430\u043C\u0435\u043D\u0435\u043D\u044B \u0430\u0432\u0430\u0442\u0430\u0440\u043E\u043C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F"
       }
     },
     profile_banner: {
       name: {
         en: "Profile banner",
         de: "Profilbanner",
-        sv: "Profilbanner"
+        sv: "Profilbanner",
+        ru: "\u0411\u0430\u043D\u043D\u0435\u0440 \u043F\u0440\u043E\u0444\u0438\u043B\u044F"
       },
       body: {
         en: "Add your own custom banner image to your profile with [banner=url] in your bio",
         de: "F\xFCge deinem Profil ein eigenes Bannerbild hinzu, indem du deiner Biografie [banner=url] hinzuf\xFCgst",
-        sv: "L\xE4g till en egen banner till din profil genom att s\xE4tta [banner=url] i din biografi"
+        sv: "L\xE4g till en egen banner till din profil genom att s\xE4tta [banner=url] i din biografi",
+        ru: "\u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0431\u0430\u043D\u043D\u0435\u0440\u0430 \u0432 \u0441\u0432\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0441 \u043F\u043E\u043C\u043E\u0449\u044C\u044E [banner=url] \u0432 \u0432\u0430\u0448\u0435\u0439 \u0431\u0438\u043E\u0433\u0440\u0430\u0444\u0438\u0438"
       }
     },
     profile_accent: {
       name: {
         en: "Profile accent",
         de: "Profilakzent",
-        sv: "Profilaccent"
+        sv: "Profilaccent",
+        ru: "\u0410\u043A\u0446\u0435\u043D\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u044F"
       },
       body: {
         en: "Add flair to your profile visible to all users regardless of personal accent",
         de: "F\xFCge deinem Profil einen Akzent hinzu, der f\xFCr alle Benutzer sichtbar ist, unabh\xE4ngig von deren pers\xF6nlichem Akzent",
-        sv: "L\xE4gg till flair p\xE5 din profil som syns f\xF6r alla anv\xE4ndare oberoende p\xE5 egen accentf\xE4rg"
+        sv: "L\xE4gg till flair p\xE5 din profil som syns f\xF6r alla anv\xE4ndare oberoende p\xE5 egen accentf\xE4rg",
+        ru: "\u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0438\u0437\u044E\u043C\u0438\u043D\u043A\u0443 \u0432 \u0441\u0432\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C, \u0432\u0438\u0434\u0438\u043C\u0443\u044E \u0432\u0441\u0435\u043C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F\u043C \u043D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E \u043E\u0442 \u0438\u0445 \u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0430\u043A\u0446\u0435\u043D\u0442\u0430"
       },
       reminder: {
         en: "Changed your accent, don\u2019t forget to save!",
         de: "Du hast deinen Akzent ge\xE4ndert, vergiss\u2019 nicht zu speichern!",
-        sv: "\xC4ndrade din accentf\xE4rg, gl\xF6m inte att spara!"
+        sv: "\xC4ndrade din accentf\xE4rg, gl\xF6m inte att spara!",
+        ru: "\u0412\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0438 \u0430\u043A\u0446\u0435\u043D\u0442, \u043D\u0435 \u0437\u0430\u0431\u0443\u0434\u044C\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C!"
       }
     },
     none: {
       en: "None",
       de: "Keins",
       sv: "Ingen",
+      ru: "\u041D\u0435\u0442",
       banner: {
         // no profile banner present
         en: "None",
-        de: "Keins"
+        de: "Keins",
+        sv: "Ingen",
+        ru: "\u041D\u0435\u0442"
       },
       starred_friend: {
         // no starred friend selected
         en: "None",
-        de: "Kein:e"
+        de: "Kein:e",
+        sv: "Ingen",
+        ru: "\u041D\u0435\u0442"
       }
     },
     current_banner_value: {
       // uses none.banner from above
       en: "Current banner: {v}",
       de: "Aktuelles Banner: {v}",
-      sv: "Nuvarande banner: {v}"
+      sv: "Nuvarande banner: {v}",
+      ru: "\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0431\u0430\u043D\u043D\u0435\u0440: {v}"
     },
     show_your_progress: {
       name: {
         en: "Show your plays compared to last week",
         de: "Zeige deine Plays im Vergleich zur letzten Woche",
-        sv: "Visa dina spelningar j\xE4mf\xF6rt med f\xF6rra veckan"
+        sv: "Visa dina spelningar j\xE4mf\xF6rt med f\xF6rra veckan",
+        ru: "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0432\u0430\u0448\u0438 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F \u043F\u043E \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E \u0441 \u043F\u0440\u043E\u0448\u043B\u043E\u0439 \u043D\u0435\u0434\u0435\u043B\u0435\u0439"
       },
       body: {
         en: "Compares your current progress to last week\u2019s average, requires Last.fm Pro",
         de: "Vergleicht deinen aktuellen Fortschritt mit dem Durchschnitt der letzten Woche, erfordert Last.fm Pro",
-        sv: "J\xE4mf\xF6r denna veckans spelningar med f\xF6rra veckan, kr\xE4ver Last.fm Pro"
+        sv: "J\xE4mf\xF6r denna veckans spelningar med f\xF6rra veckan, kr\xE4ver Last.fm Pro",
+        ru: "\u0421\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442 \u0432\u0430\u0448 \u0442\u0435\u043A\u0443\u0449\u0438\u0439 \u043F\u0440\u043E\u0433\u0440\u0435\u0441\u0441 \u0441\u043E \u0441\u0440\u0435\u0434\u043D\u0438\u043C \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u0435\u043C \u043F\u0440\u043E\u0448\u043B\u043E\u0439 \u043D\u0435\u0434\u0435\u043B\u0438, \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F Last.fm Pro"
       }
     },
     manual: {
       en: "Manual",
       de: "Manuell",
-      sv: "Manuellt"
+      sv: "Manuellt",
+      ru: "\u0412\u0440\u0443\u0447\u043D\u0443\u044E"
     },
     enter_a_manual_date: {
       en: "Enter a date in the format YYYY-MM-DD",
       de: "Gebe ein Datum im Format JJJJ-MM-TT ein",
-      sv: "Skriv in ett datum med formatet YYYY-MM-DD"
+      sv: "Skriv in ett datum med formatet YYYY-MM-DD",
+      ru: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0430\u0442\u0443 \u0432 \u0444\u043E\u0440\u043C\u0430\u0442\u0435 \u0413\u0413\u0413\u0413-\u041C\u041C-\u0414\u0414"
     },
     minimum_value: {
       en: "Minimum: {v}",
       de: "Minimum: {v}",
-      sv: "Minst: {v}"
+      sv: "Minst: {v}",
+      ru: "\u041C\u0438\u043D\u0438\u043C\u0443\u043C: {v}"
     },
     maximum_value: {
       en: "Maximum: {v}",
       de: "Maximum: {v}",
-      sv: "Max: {v}"
+      sv: "Max: {v}",
+      ru: "\u041C\u0430\u043A\u0441\u0438\u043C\u0443\u043C: {v}"
     },
     manual_date: {
       en: "Type a date manually",
       de: "Datum manuell eingeben",
-      sv: "Skriv in ett datum manuellt"
+      sv: "Skriv in ett datum manuellt",
+      ru: "\u0412\u0432\u0435\u0441\u0442\u0438 \u0434\u0430\u0442\u0443 \u0432\u0440\u0443\u0447\u043D\u0443\u044E"
     },
     red: {
       en: "Red",
       de: "Rot",
       pt: "Vermelho",
-      sv: "R\xF6d"
+      sv: "R\xF6d",
+      ru: "\u041A\u0440\u0430\u0441\u043D\u044B\u0439"
     },
     orange: {
       en: "Orange",
       de: "Orange",
-      pt: "Laranja"
+      pt: "Laranja",
+      ru: "\u041E\u0440\u0430\u043D\u0436\u0435\u0432\u044B\u0439"
     },
     yellow: {
       en: "Yellow",
       de: "Gelb",
       pt: "Amarelo",
-      sv: "Gul"
+      sv: "Gul",
+      ru: "\u0416\u0435\u043B\u0442\u044B\u0439"
     },
     lime: {
       en: "Lime",
       de: "Limette",
-      pt: "Lima"
+      pt: "Lima",
+      ru: "\u0421\u0430\u043B\u0430\u0442\u043E\u0432\u044B\u0439"
     },
     green: {
       en: "Green",
       de: "Gr\xFCn",
       pt: "Verde",
-      sv: "Gr\xF6n"
+      sv: "Gr\xF6n",
+      ru: "\u0417\u0435\u043B\u0435\u043D\u044B\u0439"
     },
     aqua: {
       en: "Aqua",
       de: "T\xFCrkis",
       pt: "\xC1gua",
-      sv: "Turkos"
+      sv: "Turkos",
+      ru: "\u0411\u0438\u0440\u044E\u0437\u043E\u0432\u044B\u0439"
     },
     blue: {
       en: "Blue",
       de: "Blau",
       pt: "Azul",
-      sv: "Bl\xE5"
+      sv: "Bl\xE5",
+      ru: "\u0421\u0438\u043D\u0438\u0439"
     },
     purple: {
       en: "Purple",
       de: "Lila",
       pt: "Roxo",
-      sv: "Lila"
+      sv: "Lila",
+      ru: "\u0424\u0438\u043E\u043B\u0435\u0442\u043E\u0432\u044B\u0439"
     },
     pink: {
       en: "Pink",
       de: "Rosa",
       pt: "Rosa",
-      sv: "Rosa"
+      sv: "Rosa",
+      ru: "\u0420\u043E\u0437\u043E\u0432\u044B\u0439"
     },
     grey: {
       en: "Grey",
       de: "Grau",
       pt: "Cinza",
-      sv: "Gr\xE5"
+      sv: "Gr\xE5",
+      ru: "\u0421\u0435\u0440\u044B\u0439"
     },
     minis: {
       // 'Minis' is the word i eventually settled on for
       // the games and tools integrated into bleh
       en: "Minis",
       de: "Minis",
-      sv: "Mini"
+      sv: "Mini",
+      ru: "\u041C\u0438\u043D\u0438"
     },
     minis_description: {
       en: "Play mini-games, puzzles, and interact with tools all powered by your listening history",
       de: "Spiele Minispiele, R\xE4tsel und interagiere mit Tools, die auf deinem H\xF6rverlauf basieren",
-      sv: "Spela minispel, pussel, och interagera med verktyg som \xE4r helt baserad p\xE5 din lyssningshistorik"
+      sv: "Spela minispel, pussel, och interagera med verktyg som \xE4r helt baserad p\xE5 din lyssningshistorik",
+      ru: "\u0418\u0433\u0440\u0430\u0439\u0442\u0435 \u0432 \u043C\u0438\u043D\u0438-\u0438\u0433\u0440\u044B, \u0440\u0435\u0448\u0430\u0439\u0442\u0435 \u0433\u043E\u043B\u043E\u0432\u043E\u043B\u043E\u043C\u043A\u0438 \u0438 \u0432\u0437\u0430\u0438\u043C\u043E\u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0439\u0442\u0435 \u0441 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430\u043C\u0438, \u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u043C\u0438 \u043D\u0430 \u0432\u0430\u0448\u0435\u0439 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439"
     },
     no_mini_found: {
       en: "No mini found for \u2018{v}\u2019",
       de: "Kein Mini f\xFCr \u201E{v}\u201C gefunden",
-      sv: "Ingen mini hittad f\xF6r \u2018{v}\u2019"
+      sv: "Ingen mini hittad f\xF6r \u2018{v}\u2019",
+      ru: "\u041C\u0438\u043D\u0438-\u0438\u0433\u0440\u0430 \u0434\u043B\u044F \xAB{v}\xBB \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430"
     },
     pixel: {
       name: {
-        en: "Pixel"
+        en: "Pixel",
+        sv: "Pixel",
+        ru: "\u041F\u0438\u043A\u0441\u0435\u043B\u044C"
       },
       body: {
         en: "Guess the album from it\u2019s pixelated artwork and clues",
         de: "Errate das Album anhand des verpixelten Albumcovers und Hinweisen",
-        sv: "Gissa albumet fr\xE5n sin pixellerad konst och ledtr\xE5dar"
+        sv: "Gissa albumet fr\xE5n sin pixellerad konst och ledtr\xE5dar",
+        ru: "\u0423\u0433\u0430\u0434\u0430\u0439\u0442\u0435 \u0430\u043B\u044C\u0431\u043E\u043C \u043F\u043E \u0435\u0433\u043E \u043F\u0438\u043A\u0441\u0435\u043B\u044C\u043D\u043E\u043C\u0443 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044E \u0438 \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0430\u043C"
       }
     },
     rainbow: {
       name: {
         en: "Rainbow",
-        de: "Regenbogen"
+        de: "Regenbogen",
+        sv: "Rainbow",
+        ru: "\u0420\u0430\u0434\u0443\u0433\u0430"
       },
       body: {
         en: "Arrange your listening history into a swirl of colours",
         de: "Stelle deinen H\xF6rverlauf als Farbwirbel dar",
-        sv: "Ordna ihop din lyssningshistorik till en virvel av f\xE4rg"
+        sv: "Ordna ihop din lyssningshistorik till en virvel av f\xE4rg",
+        ru: "\u0420\u0430\u0437\u043B\u043E\u0436\u0438\u0442\u0435 \u0432\u0430\u0448\u0443 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439 \u0432 \u0432\u0438\u0445\u0440\u0435 \u0446\u0432\u0435\u0442\u043E\u0432"
       }
     },
     receipt: {
       name: {
         en: "Receipt",
-        de: "Quittung"
+        de: "Quittung",
+        sv: "Kvitto",
+        ru: "\u0427\u0435\u043A"
       },
       body: {
         en: "Print out your top tracks as a receipt",
         de: "Drucke deine Top-Songs als Quittung aus",
-        sv: "Skriv ut dina toppl\xE5tar som ett kvitto"
+        sv: "Skriv ut dina toppl\xE5tar som ett kvitto",
+        ru: "\u0420\u0430\u0441\u043F\u0435\u0447\u0430\u0442\u0430\u0439\u0442\u0435 \u0432\u0430\u0448\u0438 \u043B\u0443\u0447\u0448\u0438\u0435 \u0442\u0440\u0435\u043A\u0438 \u0432 \u0432\u0438\u0434\u0435 \u0447\u0435\u043A\u0430"
       }
     },
     collage_description: {
       en: "Generate a personalised image based on your listening history and options",
       de: "Erstelle ein personalisiertes Bild basierend auf deinem H\xF6rverlauf und deinen Einstellungen",
-      sv: "Skapa en personlig bild baserad p\xE5 din lyssningshistoria och inst\xE4llningar"
+      sv: "Skapa en personlig bild baserad p\xE5 din lyssningshistoria och inst\xE4llningar",
+      ru: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u043E\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043D\u0430 \u043E\u0441\u043D\u043E\u0432\u0435 \u0432\u0430\u0448\u0435\u0439 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439 \u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043A"
     },
     labs_cta: {
       // a period on the end looks weird cus of the link
       en: "If you\u2019re looking for more, try out Last.fm\u2019s own {a}Labs feature{/a}",
       de: "Wenn du nach mehr suchst, probiere die {a}Labs-Funktion{/a} von Last.fm aus",
-      sv: "Om du letar efter lite mer, testa Last.fm\u2019s {a}egna Labs{/a}"
+      sv: "Om du letar efter lite mer, testa Last.fm\u2019s {a}egna Labs{/a}",
+      ru: "\u0415\u0441\u043B\u0438 \u0432\u044B \u0438\u0449\u0435\u0442\u0435 \u0447\u0442\u043E-\u0442\u043E \u0435\u0449\u0435, \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 {a}\u0444\u0443\u043D\u043A\u0446\u0438\u044E Labs{/a} \u043E\u0442 Last.fm"
     },
     compare_description: {
       en: "Find your shared artists, albums, and tracks with another",
       de: "Finde heraus, welche gemeinsamen K\xFCnstler:innen, Alben und Tracks du mit jemand anderem teilst",
-      sv: "Hitta dina delade artister, album, och l\xE5tar med n\xE5n annan"
+      sv: "Hitta dina delade artister, album, och l\xE5tar med n\xE5n annan",
+      ru: "\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043E\u0431\u0449\u0438\u0445 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u0439, \u0430\u043B\u044C\u0431\u043E\u043C\u044B \u0438 \u0442\u0440\u0435\u043A\u0438 \u0441 \u0434\u0440\u0443\u0433\u0438\u043C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u0435\u043C"
     },
     enter_a_profile: {
       en: "Enter a profile",
       de: "Profil eingeben",
-      sv: "Skriv in ett anv\xE4ndarnamn"
+      sv: "Skriv in ett anv\xE4ndarnamn",
+      ru: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u044C"
     },
     compare_with: {
       en: "Compare with",
       de: "Vergleichen mit",
-      sv: "J\xE4mf\xF6r"
+      sv: "J\xE4mf\xF6r",
+      ru: "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0441"
     },
     value_settings: {
       en: "{v} Settings",
       de: "{v}-Einstellungen",
-      sv: "{v} Inst\xE4llningar"
+      sv: "{v} Inst\xE4llningar",
+      ru: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 {v}"
     },
     suggest_title: {
       name: {
         en: "This page doesn\u2019t seem official",
         de: "Diese Seite scheint nicht offiziell zu sein",
-        sv: "Denna sida ser inte ut att vara officiell"
+        sv: "Denna sida ser inte ut att vara officiell",
+        ru: "\u042D\u0442\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u043D\u0435 \u043A\u0430\u0436\u0435\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0439"
       },
       body: {
         en: "Navigate to {v} instead",
         de: "Stattdessen zu {v} wechseln",
-        sv: "Hoppa till {v} ist\xE4llet"
+        sv: "Hoppa till {v} ist\xE4llet",
+        ru: "\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A {v} \u0432\u043C\u0435\u0441\u0442\u043E \u044D\u0442\u043E\u0433\u043E"
       }
     },
     lyrics: {
       // lyrics
       en: "Lyrics",
+      ru: "\u0422\u0435\u043A\u0441\u0442\u044B \u043F\u0435\u0441\u0435\u043D",
       name: {
         // the game
-        en: "Lyrics"
+        en: "Lyrics",
+        sv: "Lyrics",
+        ru: "\u0422\u0435\u043A\u0441\u0442\u044B \u043F\u0435\u0441\u0435\u043D"
       },
       body: {
         en: "Guess the song from a random lyric",
         de: "Errate den Song anhand eines zuf\xE4lligen Songtextes",
-        sv: "Gissa l\xE5ten fr\xE5n en slumpad l\xE5ttext"
+        sv: "Gissa l\xE5ten fr\xE5n en slumpad l\xE5ttext",
+        ru: "\u0423\u0433\u0430\u0434\u0430\u0439\u0442\u0435 \u043F\u0435\u0441\u043D\u044E \u043F\u043E \u0441\u043B\u0443\u0447\u0430\u0439\u043D\u043E\u0439 \u0441\u0442\u0440\u043E\u0447\u043A\u0435 \u0442\u0435\u043A\u0441\u0442\u0430"
       }
     },
     jumbled_title: {
       en: "Jumbled title",
       de: "Song-Durcheinander",
-      sv: "Omr\xF6rd titel"
+      sv: "Omr\xF6rd titel",
+      ru: "\u041F\u0435\u0440\u0435\u043F\u0443\u0442\u0430\u043D\u043D\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435"
     },
     re_jumble: {
       en: "Re-jumble",
       de: "Neu mischen",
-      sv: "R\xF6r om igen"
+      sv: "R\xF6r om igen",
+      ru: "\u041F\u0435\u0440\u0435\u043C\u0435\u0448\u0430\u0442\u044C \u0437\u0430\u043D\u043E\u0432\u043E"
     },
     begin: {
       en: "Begin",
       de: "Start",
-      sv: "B\xF6rja"
+      sv: "B\xF6rja",
+      ru: "\u041D\u0430\u0447\u0430\u0442\u044C"
     },
     jumbled_guess: {
       en: "Guess the album name with the pixelated cover, jumbled title, and hints!",
       de: "Errate den Albumtitel mit verpixeltem Cover, durcheinandergew\xFCrfeltem Titel und Hinweisen!",
-      sv: "Gissa albumtiteln med pixellerad konst, omr\xF6rd titel, och ledtr\xE5dar!"
+      sv: "Gissa albumtiteln med pixellerad konst, omr\xF6rd titel, och ledtr\xE5dar!",
+      ru: "\u0423\u0433\u0430\u0434\u0430\u0439\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0430\u043B\u044C\u0431\u043E\u043C\u0430 \u043F\u043E \u043F\u0438\u043A\u0441\u0435\u043B\u044C\u043D\u043E\u043C\u0443 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044E, \u043F\u0435\u0440\u0435\u043F\u0443\u0442\u0430\u043D\u043D\u043E\u043C\u0443 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044E \u0438 \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0430\u043C!"
     },
     add_hint: {
       en: "Add hint",
       de: "Gib\u2019 mir einen Tipp!",
-      sv: "L\xE4gg till ledtr\xE5d"
+      sv: "L\xE4gg till ledtr\xE5d",
+      ru: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0443"
     },
     give_up: {
       en: "Give up",
       de: "Aufgeben",
-      sv: "Ge upp"
+      sv: "Ge upp",
+      ru: "\u0421\u0434\u0430\u0442\u044C\u0441\u044F"
     },
     you_guessed_correctly: {
       en: "You guessed correctly!",
       de: "Du hast richtig geraten!",
-      sv: "Du gissade r\xE4tt!"
+      sv: "Du gissade r\xE4tt!",
+      ru: "\u0412\u044B \u0443\u0433\u0430\u0434\u0430\u043B\u0438 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E!"
     },
     guess: {
       en: "Guess",
       de: "Raten",
-      sv: "Gissa"
+      sv: "Gissa",
+      ru: "\u0423\u0433\u0430\u0434\u0430\u0442\u044C"
     },
     enter_a_guess: {
       en: "Enter a guess",
       de: "Gebe eine Vermutung ein",
-      sv: "Skriv in en gissning"
+      sv: "Skriv in en gissning",
+      ru: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u043E\u0433\u0430\u0434\u043A\u0443"
     },
     hints: {
       en: "Hints",
       de: "Tipps",
       sv: "Ledtr\xE5dar",
+      ru: "\u041F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0438",
       plays: {
         en: "You have {v} plays on this album",
         de: "Du hast {v} mal einen Song von diesem Album geh\xF6rt",
-        sv: "Du har {v} lyssningar p\xE5 det h\xE4r albumet"
+        sv: "Du har {v} lyssningar p\xE5 det h\xE4r albumet",
+        ru: "\u0423 \u0432\u0430\u0441 {v} \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0439 \u044D\u0442\u043E\u0433\u043E \u0430\u043B\u044C\u0431\u043E\u043C\u0430"
       },
       release: {
         en: "Album was released on {v}",
         de: "Das Album wurde am {v} ver\xF6ffentlicht",
-        sv: "Albumet sl\xE4pptes {v}"
+        sv: "Albumet sl\xE4pptes {v}",
+        ru: "\u0410\u043B\u044C\u0431\u043E\u043C \u0431\u044B\u043B \u0432\u044B\u043F\u0443\u0449\u0435\u043D {v}"
       },
       tag: {
         en: "The artist is tagged with {v}",
         de: "Der/die K\xFCnstler:in ist mit {v} getaggt",
-        sv: "Artisten har taggats som {v}"
+        sv: "Artisten har taggats som {v}",
+        ru: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C \u043E\u0442\u043C\u0435\u0447\u0435\u043D \u0442\u0435\u0433\u043E\u043C {v}"
       },
       born: {
         en: "The artist was born {v}",
         de: "Der/die K\xFCnstler:in wurde {v} geboren",
-        sv: "Artisten var f\xF6dd {v}"
+        sv: "Artisten var f\xF6dd {v}",
+        ru: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C \u0440\u043E\u0434\u0438\u043B\u0441\u044F {v}"
       }
     },
     reveal: {
       en: "The album was {name} by {artist}",
       de: "Das Album war {name} von {artist}",
-      sv: "Albumet var {name} av {artist}"
+      sv: "Albumet var {name} av {artist}",
+      ru: "\u0410\u043B\u044C\u0431\u043E\u043C\u043E\u043C \u0431\u044B\u043B {name} \u043E\u0442 {artist}"
     },
     time_up: {
       en: "Time is up!",
       de: "Die Zeit ist um!",
-      sv: "Slut p\xE5 tid!"
+      sv: "Slut p\xE5 tid!",
+      ru: "\u0412\u0440\u0435\u043C\u044F \u0432\u044B\u0448\u043B\u043E!"
     },
     global: {
       en: "Global",
       de: "Weltweit",
-      sv: "Globalt"
+      sv: "Globalt",
+      ru: "\u0413\u043B\u043E\u0431\u0430\u043B\u044C\u043D\u044B\u0439"
     },
     mutuals: {
       en: "Mutuals",
       de: "Mutuals",
-      sv: "\xD6msesidiga f\xF6ljare"
+      sv: "\xD6msesidiga f\xF6ljare",
+      ru: "\u0412\u0437\u0430\u0438\u043C\u043D\u044B\u0435 \u043F\u043E\u0434\u043F\u0438\u0441\u043A\u0438"
     },
     missing_component: {
       // cases when last.fm simply doesn't provide a tasteometer or other things
       en: "Last.fm failed to load this component",
       de: "Last.fm konnte diese Komponente nicht laden",
-      sv: "Last.fm kunde inte ladda denna komponent"
+      sv: "Last.fm kunde inte ladda denna komponent",
+      ru: "Last.fm \u043D\u0435 \u0441\u043C\u043E\u0433 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u044D\u0442\u043E\u0442 \u043A\u043E\u043C\u043F\u043E\u043D\u0435\u043D\u0442"
     },
     last_scrobbled_replace: {
       en: "{u} last scrobbled\u2026",
@@ -62714,337 +63583,422 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     user_commented: {
       en: "{u} commented",
       de: "{u} hat kommentiert",
-      sv: "{u} kommenterade"
+      sv: "{u} kommenterade",
+      ru: "{u} \u043F\u0440\u043E\u043A\u043E\u043C\u043C\u0435\u043D\u0442\u0438\u0440\u043E\u0432\u0430\u043B(\u0430)"
     },
     users_commented: {
       en: "{u} and {c} others commented",
       de: "{u} und {c} andere haben kommentiert",
-      sv: "{u} och {c} andra kommenterade"
+      sv: "{u} och {c} andra kommenterade",
+      ru: "{u} \u0438 \u0435\u0449\u0435 {c} \u043F\u0440\u043E\u043A\u043E\u043C\u043C\u0435\u043D\u0442\u0438\u0440\u043E\u0432\u0430\u043B\u0438"
     },
     user_replied: {
       en: "{u} replied",
       de: "{u} hat geantwortet",
-      sv: "{u} svarade"
+      sv: "{u} svarade",
+      ru: "{u} \u043E\u0442\u0432\u0435\u0442\u0438\u043B(\u0430)"
     },
     users_replied: {
       en: "{u} and {c} others replied",
       de: "{u} und {c} andere haben geantwortet",
-      sv: "{u} och {c} andra svarade"
+      sv: "{u} och {c} andra svarade",
+      ru: "{u} \u0438 \u0435\u0449\u0435 {c} \u043E\u0442\u0432\u0435\u0442\u0438\u043B\u0438"
     },
     obsession_expired: {
       en: "Your obsession has expired",
       de: "Deine Obsession ist ausgelaufen",
-      sv: "Din besatthet har tagit slut"
+      sv: "Din besatthet har tagit slut",
+      ru: "\u0412\u0430\u0448\u0430 \u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0441\u0442\u044C \u0438\u0441\u0442\u0435\u043A\u043B\u0430"
     },
     listening_report_available: {
       en: "View your {m} listening report",
       de: "Schaue deinen H\xF6rbericht an",
-      sv: "Visa din lyssningsrapport f\xF6r {m}"
+      sv: "Visa din lyssningsrapport f\xF6r {m}",
+      ru: "\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0430\u0448 \u043E\u0442\u0447\u0435\u0442 \u043E \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u044F\u0445 \u0437\u0430 {m}"
     },
     count_mutual_listeners: {
       en: "You have {c} mutual listeners",
       de: "Du hast {c} gemeinsame H\xF6rer",
-      sv: "Du har {c} \xF6msesidiga lyssnare"
+      sv: "Du har {c} \xF6msesidiga lyssnare",
+      ru: "\u0423 \u0432\u0430\u0441 {c} \u0432\u0437\u0430\u0438\u043C\u043D\u044B\u0445 \u0441\u043B\u0443\u0448\u0430\u0442\u0435\u043B\u0435\u0439"
     },
     no_mutual_listeners: {
       en: "You have no mutual listeners",
       de: "Du hast keine gemeinsamen H\xF6rer",
-      sv: "Du har inga \xF6msesidiga lyssnare"
+      sv: "Du har inga \xF6msesidiga lyssnare",
+      ru: "\u0423 \u0432\u0430\u0441 \u043D\u0435\u0442 \u0432\u0437\u0430\u0438\u043C\u043D\u044B\u0445 \u0441\u043B\u0443\u0448\u0430\u0442\u0435\u043B\u0435\u0439"
     },
     no_mutual_listeners_explain: {
       en: "This can be due to either simply lacking mutuals who listen or the page being subject to a broken redirect.",
       de: "Dies kann entweder an fehlenden Mutuals oder einer fehlerhaften Seitenweiterleitung liegen.",
-      sv: "Det kan inneb\xE4ra att du antingen inte har \xF6msesidiga f\xF6ljare som lyssnar eller att sidan har en gammal omdirigering"
+      sv: "Det kan inneb\xE4ra att du antingen inte har \xF6msesidiga f\xF6ljare som lyssnar eller att sidan har en gammal omdirigering",
+      ru: "\u042D\u0442\u043E \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u0441\u0432\u044F\u0437\u0430\u043D\u043E \u043B\u0438\u0431\u043E \u0441 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0435\u043C \u0432\u0437\u0430\u0438\u043C\u043D\u044B\u0445 \u0441\u043B\u0443\u0448\u0430\u0442\u0435\u043B\u0435\u0439, \u043B\u0438\u0431\u043E \u0441 \u043D\u0435\u0438\u0441\u043F\u0440\u0430\u0432\u043D\u044B\u043C \u043F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B."
     },
     navigation_items: {
       name: {
         en: "Quick access",
         de: "Schnellzugriff",
-        sv: "Snabb\xE5tkomst"
+        sv: "Snabb\xE5tkomst",
+        ru: "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u0434\u043E\u0441\u0442\u0443\u043F"
       },
       body: {
         en: "Arrange your navigation menu to suit your usage best",
         de: "Ordne dein Navigationsmen\xFC so an, dass es am besten zu deiner Nutzung passt",
-        sv: "Ordna din navigationsmeny f\xF6r att b\xE4st passa dig"
+        sv: "Ordna din navigationsmeny f\xF6r att b\xE4st passa dig",
+        ru: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u0442\u0435 \u0432\u0430\u0448\u0435 \u043D\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u043E\u043D\u043D\u043E\u0435 \u043C\u0435\u043D\u044E, \u0447\u0442\u043E\u0431\u044B \u043E\u043D\u043E \u043D\u0430\u0438\u043B\u0443\u0447\u0448\u0438\u043C \u043E\u0431\u0440\u0430\u0437\u043E\u043C \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u043E\u0432\u0430\u043B\u043E \u0432\u0430\u0448\u0435\u043C\u0443 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D\u0438\u044E"
       }
     },
     edit_quick_access: {
       en: "Edit quick access",
       de: "Schnellzugriff bearbeiten",
-      sv: "Redigera snabb\xE5tkomst"
+      sv: "Redigera snabb\xE5tkomst",
+      ru: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0431\u044B\u0441\u0442\u0440\u044B\u0439 \u0434\u043E\u0441\u0442\u0443\u043F"
     },
     navigation_language: {
       en: "Show option to change language",
       de: "Option zum \xC4ndern der Sprache anzeigen",
-      sv: "Visa alternativet att \xE4ndra spr\xE5k"
+      sv: "Visa alternativet att \xE4ndra spr\xE5k",
+      ru: "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u043E\u043F\u0446\u0438\u044E \u0441\u043C\u0435\u043D\u044B \u044F\u0437\u044B\u043A\u0430"
     },
     branding: {
-      en: "Branding"
+      en: "Branding",
+      sv: "Branding",
+      ru: "\u0411\u0440\u0435\u043D\u0434\u0438\u043D\u0433"
     },
     branding_type: {
       name: {
         en: "Branding type",
         de: "Branding-Art",
-        sv: "Brandingalternativ"
+        sv: "Brandingalternativ",
+        ru: "\u0422\u0438\u043F \u0431\u0440\u0435\u043D\u0434\u0438\u043D\u0433\u0430"
       },
       body: {
         en: "Decide which branding source to use for the header",
         de: "W\xE4hle aus, welches Branding f\xFCr die Kopfzeile verwendet werden soll",
-        sv: "V\xE4lj vilken sorts branding f\xF6r att anv\xE4nda p\xE5 sidhuvudet"
+        sv: "V\xE4lj vilken sorts branding f\xF6r att anv\xE4nda p\xE5 sidhuvudet",
+        ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435, \u043A\u0430\u043A\u043E\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0431\u0440\u0435\u043D\u0434\u0438\u043D\u0433\u0430 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0434\u043B\u044F \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0430"
       }
     },
     rain: {
       name: {
         en: "Enable rainfall",
         de: "Regen aktivieren",
-        sv: "Aktivera regn"
+        sv: "Aktivera regn",
+        ru: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u044D\u0444\u0444\u0435\u043A\u0442 \u0434\u043E\u0436\u0434\u044F"
       },
       body: {
         en: "Immerse yourself in soothing visual rain",
         de: "Tauche in den beruhigenden visuellen Regen ein",
-        sv: "Omsluta dig sj\xE4lv i en lugnande regneffekt"
+        sv: "Omsluta dig sj\xE4lv i en lugnande regneffekt",
+        ru: "\u041F\u043E\u0433\u0440\u0443\u0437\u0438\u0442\u0435\u0441\u044C \u0432 \u0443\u0441\u043F\u043E\u043A\u0430\u0438\u0432\u0430\u044E\u0449\u0438\u0439 \u0432\u0438\u0437\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u0434\u043E\u0436\u0434\u044C"
       }
     },
     images: {
       en: "Images",
       de: "Bilder",
-      sv: "Bilder"
+      sv: "Bilder",
+      ru: "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F"
     },
     static_gifs: {
       en: "Control animation of GIFs",
       de: "Steuere die Animation von GIFs",
-      sv: "Kontrollera GIF-animation"
+      sv: "Kontrollera GIF-animation",
+      ru: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0430\u043D\u0438\u043C\u0430\u0446\u0438\u0435\u0439 GIF"
     },
     always_animate: {
       en: "Always animate",
       de: "Immer animieren",
-      sv: "Animera alltid"
+      sv: "Animera alltid",
+      ru: "\u0412\u0441\u0435\u0433\u0434\u0430 \u0430\u043D\u0438\u043C\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
     },
     only_on_hover: {
       en: "Only on hover",
       de: "Nur beim Hovern",
-      sv: "Endast under hovring"
+      sv: "Endast under hovring",
+      ru: "\u0422\u043E\u043B\u044C\u043A\u043E \u043F\u0440\u0438 \u043D\u0430\u0432\u0435\u0434\u0435\u043D\u0438\u0438"
     },
     static_banners: {
       en: "Prevent animations in profile banners",
       de: "Deaktiviere Animationen in Profilbannern",
-      sv: "St\xE4ng av animationer i profilbanners"
+      sv: "St\xE4ng av animationer i profilbanners",
+      ru: "\u041F\u0440\u0435\u0434\u043E\u0442\u0432\u0440\u0430\u0442\u0438\u0442\u044C \u0430\u043D\u0438\u043C\u0430\u0446\u0438\u044E \u0432 \u0431\u0430\u043D\u043D\u0435\u0440\u0430\u0445 \u043F\u0440\u043E\u0444\u0438\u043B\u044F"
     },
     change_zoom: {
       en: "Change zoom level",
       de: "Zoomlevel \xE4ndern",
-      sv: "\xC4ndra zoomniv\xE5"
+      sv: "\xC4ndra zoomniv\xE5",
+      ru: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u043C\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F"
     },
     static_avatars: {
       en: "User avatars",
       de: "Benutzer-Profilbilder",
-      sv: "Anv\xE4ndarprofilbilder"
+      sv: "Anv\xE4ndarprofilbilder",
+      ru: "\u0410\u0432\u0430\u0442\u0430\u0440\u044B \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u0435\u0439"
     },
     static_music: {
       en: "Artists and albums",
       de: "K\xFCnstler:innen und Alben",
-      sv: "Artister och album"
+      sv: "Artister och album",
+      ru: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0438 \u0438 \u0430\u043B\u044C\u0431\u043E\u043C\u044B"
     },
     apply_to: {
       en: "Apply to",
       de: "Anwenden auf",
-      sv: "Till\xE4mpa till"
+      sv: "Till\xE4mpa till",
+      ru: "\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C \u043A"
     },
     change_images_for: {
       en: "Change images for",
       de: "Bilder \xE4ndern f\xFCr",
-      sv: "\xC4ndra bild f\xF6r"
+      sv: "\xC4ndra bild f\xF6r",
+      ru: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u0434\u043B\u044F"
     },
     leaving_site: {
       name: {
         en: "Don\u2019t get lost",
         de: "Verirre dich nicht",
-        sv: "G\xE5 inte vilse"
+        sv: "G\xE5 inte vilse",
+        ru: "\u041D\u0435 \u043F\u043E\u0442\u0435\u0440\u044F\u0439\u0442\u0435\u0441\u044C"
       },
       body: {
         en: "This link is taking you to the following location",
         de: "Dieser Link f\xFChrt dich zu folgendem Ort",
-        sv: "L\xE4nken tar dig till den h\xE4r platsen"
+        sv: "L\xE4nken tar dig till den h\xE4r platsen",
+        ru: "\u042D\u0442\u0430 \u0441\u0441\u044B\u043B\u043A\u0430 \u0432\u0435\u0434\u0435\u0442 \u0432\u0430\u0441 \u0432 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0435 \u043C\u0435\u0441\u0442\u043E\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435"
       }
     },
     leaving_site_dangerous: {
       name: {
         en: "Be careful",
         de: "Vorsicht",
-        sv: "Var f\xF6rsiktig"
+        sv: "Var f\xF6rsiktig",
+        ru: "\u0411\u0443\u0434\u044C\u0442\u0435 \u043E\u0441\u0442\u043E\u0440\u043E\u0436\u043D\u044B"
       },
       body: {
         en: "This link can open an application on your device",
         de: "Dieser Link kann eine Anwendung auf deinem Ger\xE4t \xF6ffnen",
-        sv: "L\xE4nken kan \xF6ppna en applikation p\xE5 din enhet"
+        sv: "L\xE4nken kan \xF6ppna en applikation p\xE5 din enhet",
+        ru: "\u042D\u0442\u0430 \u0441\u0441\u044B\u043B\u043A\u0430 \u043C\u043E\u0436\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043D\u0430 \u0432\u0430\u0448\u0435\u043C \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435"
       }
     },
     leaving_site_checkbox: {
       en: "Trust {v} links in the future",
       de: "{v}-Links zuk\xFCnftig vertrauen",
-      sv: "Lita p\xE5 l\xE4nkar fr\xE5n {v} i framtiden"
+      sv: "Lita p\xE5 l\xE4nkar fr\xE5n {v} i framtiden",
+      ru: "\u0414\u043E\u0432\u0435\u0440\u044F\u0442\u044C \u0441\u0441\u044B\u043B\u043A\u0430\u043C {v} \u0432 \u0431\u0443\u0434\u0443\u0449\u0435\u043C"
     },
     visit: {
       // visit site
       en: "Visit",
       de: "Besuchen",
-      sv: "Bes\xF6k"
+      sv: "Bes\xF6k",
+      ru: "\u041F\u043E\u0441\u0435\u0442\u0438\u0442\u044C"
     },
     auto_correct_scrobbles: {
       name: {
         en: "Auto correct and redirect scrobbles",
         de: "Automatisches Korrigieren und Umleiten von Scrobbles",
-        sv: "Autokorrigering och omdirigering av skrobblingar"
+        sv: "Autokorrigering och omdirigering av skrobblingar",
+        ru: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0438 \u043F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u044B"
       },
       body: {
         en: "Changes artist names based on the legacy Last.fm redirect system pre-2015, causes many issues",
         de: "\xC4ndert K\xFCnstlernamen basierend auf dem Legacy-Last.fm-Umleitungssystem vor 2015, verursacht viele Probleme",
-        sv: "\xC4ndrar artistnamn baserad p\xE5 Last.fms omdirigeringssystem fr\xE5n innan 2015, skapar m\xE5nga problem"
+        sv: "\xC4ndrar artistnamn baserad p\xE5 Last.fms omdirigeringssystem fr\xE5n innan 2015, skapar m\xE5nga problem",
+        ru: "\u0418\u0437\u043C\u0435\u043D\u044F\u0435\u0442 \u0438\u043C\u0435\u043D\u0430 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u0439 \u043D\u0430 \u043E\u0441\u043D\u043E\u0432\u0435 \u0443\u0441\u0442\u0430\u0440\u0435\u0432\u0448\u0435\u0439 \u0441\u0438\u0441\u0442\u0435\u043C\u044B \u043F\u0435\u0440\u0435\u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F Last.fm \u0434\u043E 2015 \u0433\u043E\u0434\u0430, \u0447\u0442\u043E \u0432\u044B\u0437\u044B\u0432\u0430\u0435\u0442 \u043C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C"
       },
       warning: {
         en: "This setting should be turned off to ensure scrobbles are correctly stored for each artist.",
         de: "Diese Einstellung sollte deaktiviert werden, um sicherzustellen, dass Scrobbles f\xFCr jeden K\xFCnstler korrekt gespeichert werden.",
-        sv: "Denna inst\xE4llning ska st\xE4ngas av f\xF6r att vara s\xE4ker p\xE5 att dina skrobblingar \xE4r r\xE4tt f\xF6r alla artister."
+        sv: "Denna inst\xE4llning ska st\xE4ngas av f\xF6r att vara s\xE4ker p\xE5 att dina skrobblingar \xE4r r\xE4tt f\xF6r alla artister.",
+        ru: "\u042D\u0442\u0443 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0443 \u0441\u043B\u0435\u0434\u0443\u0435\u0442 \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u044C, \u0447\u0442\u043E\u0431\u044B \u0433\u0430\u0440\u0430\u043D\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435 \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u043E\u0432 \u0434\u043B\u044F \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044F."
       },
       false: {
-        en: "Do not apply corrections (recommended)"
+        en: "Do not apply corrections (recommended)",
+        sv: "Till\xE4mpa inte korrigeringar (rekommenderat)",
+        ru: "\u041D\u0435 \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u0442\u044C \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (\u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u0442\u0441\u044F)"
       },
       true: {
-        en: "Auto correct my scrobbles (legacy)"
+        en: "Auto correct my scrobbles (legacy)",
+        sv: "Autokorrigera mina skrobblingar (gammal)",
+        ru: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u043C\u043E\u0438 \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u044B (\u0443\u0441\u0442\u0430\u0440\u0435\u0432\u0448\u0435\u0435)"
       }
     },
     preferred_affiliate: {
       name: {
-        en: "Preferred playback source"
+        en: "Preferred playback source",
+        sv: "F\xF6redragen uppspelningsk\xE4lla",
+        ru: "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u0435\u043C\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0432\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0434\u0435\u043D\u0438\u044F"
       },
       body: {
-        en: "Choose which service to use when interacting with playables across the site"
+        en: "Choose which service to use when interacting with playables across the site",
+        sv: "V\xE4lj vilken service att anv\xE4nda n\xE4r du spelar upp l\xE5tar",
+        ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435, \u043A\u0430\u043A\u043E\u0439 \u0441\u0435\u0440\u0432\u0438\u0441 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u043F\u0440\u0438 \u0432\u0437\u0430\u0438\u043C\u043E\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0438 \u0441 \u0432\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u043C\u044B\u043C \u043A\u043E\u043D\u0442\u0435\u043D\u0442\u043E\u043C \u043D\u0430 \u0441\u0430\u0439\u0442\u0435"
       }
     },
     timezone: {
       en: "Timezone",
       de: "Zeitzone",
-      sv: "Tidszon"
+      sv: "Tidszon",
+      ru: "\u0427\u0430\u0441\u043E\u0432\u043E\u0439 \u043F\u043E\u044F\u0441"
     },
     location: {
       name: {
         en: "Location",
         de: "Standort",
-        sv: "Plats"
+        sv: "Plats",
+        ru: "\u041C\u0435\u0441\u0442\u043E\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435"
       },
       body: {
         en: "Last.fm uses your location for event recommendations and local music data",
         de: "Last.fm verwendet deinen Standort f\xFCr Veranstaltungsempfehlungen und lokale Musikdaten",
-        sv: "Last.fm anv\xE4nder din plats f\xF6r evenemangrekommendationer och lokal musikdata"
+        sv: "Last.fm anv\xE4nder din plats f\xF6r evenemangrekommendationer och lokal musikdata",
+        ru: "Last.fm \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u0432\u0430\u0448\u0435 \u043C\u0435\u0441\u0442\u043E\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0439 \u043C\u0435\u0440\u043E\u043F\u0440\u0438\u044F\u0442\u0438\u0439 \u0438 \u0434\u0430\u043D\u043D\u044B\u0445 \u043E \u043C\u0435\u0441\u0442\u043D\u043E\u0439 \u043C\u0443\u0437\u044B\u043A\u0435"
       }
     },
     event_radius: {
       en: "Event search radius",
       de: "Suchradius f\xFCr Veranstaltungen",
-      sv: "S\xF6kradie f\xF6r evenemang"
+      sv: "S\xF6kradie f\xF6r evenemang",
+      ru: "\u0420\u0430\u0434\u0438\u0443\u0441 \u043F\u043E\u0438\u0441\u043A\u0430 \u043C\u0435\u0440\u043E\u043F\u0440\u0438\u044F\u0442\u0438\u0439"
     },
     you_need_to_be_logged_in: {
       en: "You need to be logged in",
       de: "Du musst eingeloggt sein",
-      sv: "Du l\xE4r vara inloggad"
+      sv: "Du l\xE4r vara inloggad",
+      ru: "\u0412\u0430\u043C \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E \u0432\u043E\u0439\u0442\u0438 \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0443"
     },
     oracle_notice: {
       en: "You are currently testing \u2018oracle\u2019, a redesigned album and track view",
-      de: "Du testest gerade \u201Eoracle\u201C, eine neu gestaltete Album- und Titelseite"
+      de: "Du testest gerade \u201Eoracle\u201C, eine neu gestaltete Album- und Titelseite",
+      sv: "Du testar just no \u2018oracle\u2019, ett omdesignat s\xE4tt att visa album och l\xE5tsidor",
+      ru: "\u0412 \u043D\u0430\u0441\u0442\u043E\u044F\u0449\u0435\u0435 \u0432\u0440\u0435\u043C\u044F \u0432\u044B \u0442\u0435\u0441\u0442\u0438\u0440\u0443\u0435\u0442\u0435 \xABoracle\xBB, \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044B\u0439 \u0432\u0438\u0434 \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432 \u0438 \u0442\u0440\u0435\u043A\u043E\u0432"
     },
     debug: {
-      en: "Debug"
+      en: "Debug",
+      sv: "Debug",
+      ru: "\u041E\u0442\u043B\u0430\u0434\u043A\u0430"
     },
     send_feedback: {
       en: "Send feedback",
-      de: "Feedback senden"
+      de: "Feedback senden",
+      sv: "Skicka feedback",
+      ru: "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043E\u0442\u0437\u044B\u0432"
     },
     oracle_heading: {
       en: "Experimental",
-      de: "Experimentell"
+      de: "Experimentell",
+      sv: "Experimentalt",
+      ru: "\u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u043E"
     },
     oracle_beta: {
       name: {
         en: "Enable the experimental \u2018oracle\u2019 system",
-        de: "Experimentelles \u201Eoracle\u201C-System aktivieren"
+        de: "Experimentelles \u201Eoracle\u201C-System aktivieren",
+        sv: "Aktivera det experimentella \u2018oracle\u2019-systemet",
+        ru: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0438\u0441\u0442\u0435\u043C\u0443 \xABoracle\xBB"
       },
       body: {
         en: "A redesigned album and track view sourcing data from MusicBrainz. May be released in the future or scrapped. Please send feedback from usage.",
-        de: "Eine neu gestaltete Album- und Titelseite, die Daten von MusicBrainz bezieht. Kann in Zukunft ver\xF6ffentlicht oder verworfen werden. Bitte sende Feedback basierend auf deiner Nutzung."
+        de: "Eine neu gestaltete Album- und Titelseite, die Daten von MusicBrainz bezieht. Kann in Zukunft ver\xF6ffentlicht oder verworfen werden. Bitte sende Feedback basierend auf deiner Nutzung.",
+        sv: "Omdesignade album och l\xE5tsidor med data fr\xE5n MusicBrainz. Kan sl\xE4ppas eller skr\xE4pas i framtiden. Skicka g\xE4rna feedback fr\xE5n anv\xE4ndning",
+        ru: "\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044B\u0439 \u0432\u0438\u0434 \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432 \u0438 \u0442\u0440\u0435\u043A\u043E\u0432, \u043F\u043E\u043B\u0443\u0447\u0430\u044E\u0449\u0438\u0439 \u0434\u0430\u043D\u043D\u044B\u0435 \u0438\u0437 MusicBrainz. \u041C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u0432\u044B\u043F\u0443\u0449\u0435\u043D \u0432 \u0431\u0443\u0434\u0443\u0449\u0435\u043C \u0438\u043B\u0438 \u043E\u0442\u043C\u0435\u043D\u0435\u043D. \u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0439\u0442\u0435 \u043E\u0442\u0437\u044B\u0432\u044B \u043E\u0431 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D\u0438\u0438."
       }
     },
     label: {
       en: "Label",
       de: "Label",
-      sv: "Skivbolag"
+      sv: "Skivbolag",
+      ru: "\u041B\u0435\u0439\u0431\u043B"
     },
     explicit: {
       en: "Explicit",
-      de: "Anst\xF6\xDFig"
+      de: "Anst\xF6\xDFig",
+      sv: "Explicit",
+      ru: "\u041D\u0435\u0446\u0435\u043D\u0437\u0443\u0440\u043D\u044B\u0439"
     },
     control_center: {
       en: "Control center",
       de: "Kontrollzentrum",
-      sv: "Kontrollcenter"
+      sv: "Kontrollcenter",
+      ru: "\u0426\u0435\u043D\u0442\u0440 \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F"
     },
     romanise_titles: {
       en: "Romanise music titles and artist names for",
       de: "Musiktitel und K\xFCnstlernamen romanisieren f\xFCr",
-      sv: "Romanisera l\xE5ttitlar och artistnamn f\xF6r"
+      sv: "Romanisera l\xE5ttitlar och artistnamn f\xF6r",
+      ru: "\u0420\u043E\u043C\u0430\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0442\u0440\u0435\u043A\u043E\u0432 \u0438 \u0438\u043C\u0435\u043D\u0430 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u0439 \u0434\u043B\u044F"
     },
     romanise_jp: {
       en: "\u65E5\u672C\u8A9E (Japanese)",
       de: "\u65E5\u672C\u8A9E (Japanisch)",
-      sv: "\u65E5\u672C\u8A9E (Japanska)"
+      sv: "\u65E5\u672C\u8A9E (Japanska)",
+      ru: "\u65E5\u672C\u8A9E (\u042F\u043F\u043E\u043D\u0441\u043A\u0438\u0439)"
     },
     romanise_ko: {
       en: "\uD55C\uAD6D\uC5B4 (Korean)",
       de: "\uD55C\uAD6D\uC5B4 (Koreanisch)",
-      sv: "\uD55C\uAD6D\uC5B4 (Koreanska)"
+      sv: "\uD55C\uAD6D\uC5B4 (Koreanska)",
+      ru: "\uD55C\uAD6D\uC5B4 (\u041A\u043E\u0440\u0435\u0439\u0441\u043A\u0438\u0439)"
     },
     romanise_require: {
-      en: "Romanisation requires either lotus corrections or smart song tags be enabled"
+      en: "Romanisation requires either lotus corrections or smart song tags be enabled",
+      sv: "Romanisation kr\xE4ver antingen att lotus eller smarta l\xE5ttaggar aktiveras",
+      ru: "\u0414\u043B\u044F \u0440\u043E\u043C\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u0438 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043B\u0438\u0431\u043E lotus corrections, \u043B\u0438\u0431\u043E \u0443\u043C\u043D\u044B\u0445 \u0442\u0435\u0433\u043E\u0432 \u043F\u0435\u0441\u0435\u043D"
     },
     disc_number: {
       en: "Disc {n}",
       de: "Disc {n}",
-      sv: "Skiva {n}"
+      sv: "Skiva {n}",
+      ru: "\u0414\u0438\u0441\u043A {n}"
     },
     create_playlist: {
       en: "Create playlist",
       de: "Playlist erstellen",
-      sv: "Skapa spellista"
+      sv: "Skapa spellista",
+      ru: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043F\u043B\u0435\u0439\u043B\u0438\u0441\u0442"
     },
     music_links: {
       name: {
         en: "Music linking",
         de: "Musikverlinkung",
-        sv: "Musikl\xE4nkar"
+        sv: "Musikl\xE4nkar",
+        ru: "\u041C\u0443\u0437\u044B\u043A\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0441\u044B\u043B\u043A\u0438"
       },
       body: {
         en: "Choose which services to display for artists, albums, and tracks",
         de: "W\xE4hle aus, welche Dienste f\xFCr K\xFCnstler:innen, Alben und Songs angezeigt werden sollen",
-        sv: "V\xE4lj vilka tj\xE4nster att visa f\xF6r artister, album, och l\xE5tar"
+        sv: "V\xE4lj vilka tj\xE4nster att visa f\xF6r artister, album, och l\xE5tar",
+        ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435, \u043A\u0430\u043A\u0438\u0435 \u0441\u0435\u0440\u0432\u0438\u0441\u044B \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0442\u044C \u0434\u043B\u044F \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u0439, \u0430\u043B\u044C\u0431\u043E\u043C\u043E\u0432 \u0438 \u0442\u0440\u0435\u043A\u043E\u0432"
       }
     },
     amount_translated: {
       // number of strings translated
-      en: "{c} translated"
+      en: "{c} translated",
+      sv: "{c} \xF6versatt",
+      ru: "\u041F\u0435\u0440\u0435\u0432\u0435\u0434\u0435\u043D\u043E {c}"
     },
     missing_translated: {
       // number of strings missing
-      en: "{c} missing"
+      en: "{c} missing",
+      sv: "{c} saknas",
+      ru: "\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 {c}"
     },
     simulate_scroll: {
       name: {
-        en: "Simulate horizontal scrolling"
+        en: "Simulate horizontal scrolling",
+        sv: "Simulera v\xE5gr\xE4t skrollning"
       },
       body: {
-        en: "Only recommended for desktop devices"
+        en: "Only recommended for desktop devices",
+        sv: "Rekommenderas endast f\xF6r desktop-enheter",
+        ru: "\u0418\u043C\u0438\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0433\u043E\u0440\u0438\u0437\u043E\u043D\u0442\u0430\u043B\u044C\u043D\u0443\u044E \u043F\u0440\u043E\u043A\u0440\u0443\u0442\u043A\u0443"
       }
     },
     credits: {
-      en: "Credits"
+      en: "Credits",
+      sv: "Erk\xE4nnanden",
+      ru: "\u041A\u0440\u0435\u0434\u0438\u0442\u044B"
     },
     view_credits: {
       en: "View credits"

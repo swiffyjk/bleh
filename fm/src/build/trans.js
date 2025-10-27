@@ -432,7 +432,7 @@ export const trans = {
             en: 'Show items you do not share instead',
             de: 'Zeige stattdessen Objekte, die ihr nicht teilt',
             sv: 'Visa istället objekt ni inte delar alls',
-            ru: 'Вместо этого показать несовпадающие элементы' 
+            ru: 'Вместо этого показать несовпадающие элементы'
         }
     },
     one_page: {
@@ -469,7 +469,7 @@ export const trans = {
         de: 'Andere gefeatured',
         pt: 'Outros em destaque',
         sv: 'Gästartister',
-        ru: 'Другие исполнители' 
+        ru: 'Другие исполнители'
     },
     your_scrobbles: {
         en: 'Your scrobbles',
@@ -592,7 +592,7 @@ export const trans = {
         en: 'Added friend',
         de: 'Freund hinzugefügt',
         sv: 'Lagt till som vän',
-        ru: 'Друг добавлен' 
+        ru: 'Друг добавлен'
     },
     removed_friend: {
         en: 'Removed friend',
@@ -616,7 +616,7 @@ export const trans = {
         en: 'Removed star status',
         de: 'Markierung entfernt',
         sv: 'Tog bort stjärnmärke',
-        ru: 'Удален из избранного' 
+        ru: 'Удален из избранного'
     },
     remove_as_star_friend: {
         en: 'Remove star status',
@@ -629,7 +629,7 @@ export const trans = {
         de: 'alias',
         pt: 'vulgo',
         sv: 'också känd som',
-        ru: 'он же' 
+        ru: 'он же'
     },
     account_pronouns: {
         en: 'pronouns',
@@ -768,7 +768,7 @@ export const trans = {
         5: {
             en: 'Daily scrobble limit exceeded',
             sv: 'Max dagliga skrobblingar har nåtts',
-            ru: 'Превышен дневной лимит скробблов' 
+            ru: 'Превышен дневной лимит скробблов'
         }
     },
     artist: {
@@ -776,7 +776,7 @@ export const trans = {
         de: 'Künstler',
         pt: 'Artista',
         sv: 'Artist',
-        ru: 'Исполнитель' 
+        ru: 'Исполнитель'
     },
     artists: {
         en: 'Artists',
@@ -900,7 +900,7 @@ export const trans = {
             de: 'Farbschema',
             pt: 'Temas',
             sv: 'Teman',
-            ru: 'Темы' 
+            ru: 'Темы'
         },
         light: {
             en: 'Light',
@@ -914,7 +914,7 @@ export const trans = {
             de: 'Tinte',
             pt: 'Tinta',
             sv: 'Bläck',
-            ru: 'Чернила' 
+            ru: 'Чернила'
         },
         dark: {
             en: 'Ash',
@@ -943,7 +943,7 @@ export const trans = {
         de: 'Farben',
         pt: 'Colorir',
         sv: 'Färger',
-        ru: 'Цвета' 
+        ru: 'Цвета'
     },
     adaptive: {
         en: 'Adaptive',
@@ -955,7 +955,7 @@ export const trans = {
         en: 'Your theme preference will be either {day} or {night}, based on your system. ',
         de: 'Dein bevorzugtes Farbschema wird entweder {day} oder {night} sein, basierend auf deinem System. ',
         sv: 'Ditt föredragna tema blir antigen {day} eller {night}, beroende på ditt system. ',
-        ru: 'Предпочтительная тема будет {day} или {night} в зависимости от настроек вашей системы.' 
+        ru: 'Предпочтительная тема будет {day} или {night} в зависимости от настроек вашей системы.'
     },
     change_schedule: {
         en: 'Change schedule',
@@ -968,7 +968,7 @@ export const trans = {
             en: 'Use a context-based accent colour when',
             de: 'Kontextbasierte Akzentfarbe verwenden, wenn',
             sv: 'Använd kontextbaserad accentfärg när',
-            ru: 'Использовать контекстный акцентный цвет, когда' 
+            ru: 'Использовать контекстный акцентный цвет, когда'
         },
         body: {
             en: 'Temporarily override your selected accent to match album art',
@@ -989,14 +989,14 @@ export const trans = {
         en: 'Actively scrobbling a track',
         de: 'ein Titel aktiv gescrobbelt wird',
         sv: 'Aktivt skrobblar en låt',
-        ru: 'Происходит активный скробблинг трека' 
+        ru: 'Происходит активный скробблинг трека'
     },
     colourful_all: {
         // a sub-option for change_my_colour_when
         en: 'Viewing any track',
         de: 'ein beliebiger Titel angesehen wird',
         sv: 'Visar en låt',
-        ru: 'Просматривается любой трек' 
+        ru: 'Просматривается любой трек'
     },
     configure: {
         en: 'Configure',
@@ -1177,15 +1177,12 @@ export const trans = {
         },
         notice: {
             en: 'Open the live counter',
-            sv: 'Öppna live-nedräkningen'
-        },
-        live: {
-            en: 'Counter is updating live',
-            sv: 'Nedräkningen uppdateras live',
+            sv: 'Öppna live-nedräkningen',
             ru: 'Открыть счетчик в реальном времени'
         },
         live: {
             en: 'Counter is updating live',
+            sv: 'Nedräkningen uppdateras live',
             ru: 'Счетчик обновляется в реальном времени'
         },
         presets: {
@@ -1199,23 +1196,17 @@ export const trans = {
             fruitcake: {
                 // reference to https://open.spotify.com/album/7EisdwWcodpmHxgpGVE5Pg
                 en: 'fruitcake',
-                sv: 'fruitcake'
-            },
-            mistletoe: {
-                en: 'Mistletoe',
-                sv: 'Mistel'
-            },
-            festival: {
-                en: 'Christmas Eve',
-                sv: 'Julafton',
+                sv: 'fruitcake',
                 ru: 'фруктовый кекс'
             },
             mistletoe: {
                 en: 'Mistletoe',
+                sv: 'Mistel',
                 ru: 'Омела'
             },
             festival: {
                 en: 'Christmas Eve',
+                sv: 'Julafton',
                 ru: 'Сочельник'
             }
         }
@@ -1275,15 +1266,12 @@ export const trans = {
     seasonal_overlays: {
         name: {
             en: 'Display additional seasonal effects',
-            sv: 'Visa extra årstidseffekter'
-        },
-        body: {
-            en: 'During winter seasons this applies a coat of ice to panels, otherwise mainly gradients',
-            sv: 'Under vintersäsongen läggs ett lager is på paneler, annars mest bildgradienter',
+            sv: 'Visa extra årstidseffekter',
             ru: 'Отображать дополнительные сезонные эффекты'
         },
         body: {
             en: 'During winter seasons this applies a coat of ice to panels, otherwise mainly gradients',
+            sv: 'Under vintersäsongen läggs ett lager is på paneler, annars mest bildgradienter',
             ru: 'В зимние сезоны это добавляет эффект наледи на панели, в остальное время - в основном градиенты'
         }
     },
@@ -1448,9 +1436,9 @@ export const trans = {
         ru: 'Импорт'
     },
     import_failed: {
-        en: 'Import failed',,
+        en: 'Import failed',
         sv: 'Importering misslyckades',
-      ru: 'Сбой импорта',
+        ru: 'Сбой импорта',
         notice: {
             en: 'The settings you attempted to import failed to parse, no changes were made.',
             sv: 'Inställningarna du försökte importera kunde inte läsas, inga ändringar har gjorts.',
@@ -1531,15 +1519,12 @@ export const trans = {
         type: {
             major: {
                 en: 'Major release',
-                sv: 'Större utgåva'
-            },
-            minor: {
-                en: 'Minor release',
-                sv: 'Mindre utgåva',
+                sv: 'Större utgåva',
                 ru: 'Крупный релиз'
             },
             minor: {
                 en: 'Minor release',
+                sv: 'Mindre utgåva',
                 ru: 'Мелкий релиз'
             }
         }
@@ -1656,15 +1641,12 @@ export const trans = {
     noise: {
         name: {
             en: 'Noise overlay opacity',
-            sv: 'Brusöverläggsopacitet'
-        },
-        body: {
-            en: 'Apply a coat of subtle noise to add variation to solid backgrounds',
-            sv: 'Tillämpa ett brusöverlägg för lite variation på enfärgade bakgrunder',
+            sv: 'Brusöverläggsopacitet',
             ru: 'Непрозрачность наложения шума'
         },
         body: {
             en: 'Apply a coat of subtle noise to add variation to solid backgrounds',
+            sv: 'Tillämpa ett brusöverlägg för lite variation på enfärgade bakgrunder',
             ru: 'Наложить тонкий слой шума, чтобы добавить разнообразия однотонным фонам'
         }
     },
@@ -1894,15 +1876,12 @@ export const trans = {
     },
     gallery_sum: {
         en: 'This is the sum of votes for ordering',
-        sv: 'Det här är summan röster för bildordning'
-    },
-    view_saved: {
-        en: 'View all saved photos',
-        sv: 'Visa alla sparade foton',
+        sv: 'Det här är summan röster för bildordning',
         ru: 'Это сумма голосов для сортировки'
     },
     view_saved: {
         en: 'View all saved photos',
+        sv: 'Visa alla sparade foton',
         ru: 'Посмотреть все сохраненные фотографии'
     },
     dropzone: {
@@ -2441,15 +2420,12 @@ export const trans = {
     default_avatar_action: {
         name: {
             en: 'Default avatar action',
-            sv: 'Standard bildbetéende'
-        },
-        body: {
-            en: 'Which action should be performed when you click an avatar',
-            sv: 'Hur ska sidan beté sig när du trycker på en profilbild',
+            sv: 'Standard bildbetéende',
             ru: 'Действие по умолчанию при нажатии на аватар'
         },
         body: {
             en: 'Which action should be performed when you click an avatar',
+            sv: 'Hur ska sidan beté sig när du trycker på en profilbild',
             ru: 'Какое действие должно быть выполнено при нажатии на аватар'
         }
     },
@@ -6249,30 +6225,24 @@ export const trans = {
         },
         false: {
             en: 'Do not apply corrections (recommended)',
-            sv: 'Tillämpa inte korrigeringar (rekommenderat)'
-        },
-        true: {
-            en: 'Auto correct my scrobbles (legacy)',
-            sv: 'Autokorrigera mina skrobblingar (gammal)',
+            sv: 'Tillämpa inte korrigeringar (rekommenderat)',
             ru: 'Не применять исправления (рекомендуется)'
         },
         true: {
             en: 'Auto correct my scrobbles (legacy)',
+            sv: 'Autokorrigera mina skrobblingar (gammal)',
             ru: 'Автоматически исправлять мои скробблы (устаревшее)'
         }
     },
     preferred_affiliate: {
         name: {
             en: 'Preferred playback source',
-            sv: 'Föredragen uppspelningskälla'
-        },
-        body: {
-            en: 'Choose which service to use when interacting with playables across the site',
-            sv: 'Välj vilken service att använda när du spelar upp låtar',
+            sv: 'Föredragen uppspelningskälla',
             ru: 'Предпочитаемый источник воспроизведения'
         },
         body: {
             en: 'Choose which service to use when interacting with playables across the site',
+            sv: 'Välj vilken service att använda när du spelar upp låtar',
             ru: 'Выберите, какой сервис использовать при взаимодействии с воспроизводимым контентом на сайте'
         }
     },
@@ -6311,15 +6281,12 @@ export const trans = {
     oracle_notice: {
         en: 'You are currently testing ‘oracle’, a redesigned album and track view',
         de: 'Du testest gerade „oracle“, eine neu gestaltete Album- und Titelseite',
-        sv: 'Du testar just no ‘oracle’, ett omdesignat sätt att visa album och låtsidor'
-    },
-    debug: {
-        en: 'Debug',
-        sv: 'Debug',
+        sv: 'Du testar just no ‘oracle’, ett omdesignat sätt att visa album och låtsidor',
         ru: 'В настоящее время вы тестируете «oracle», обновленный вид альбомов и треков'
     },
     debug: {
         en: 'Debug',
+        sv: 'Debug',
         ru: 'Отладка'
     },
     send_feedback: {
@@ -6436,10 +6403,6 @@ export const trans = {
             en: 'Only recommended for desktop devices',
             sv: 'Rekommenderas endast för desktop-enheter',
             ru: 'Имитировать горизонтальную прокрутку'
-        },
-        body: {
-            en: 'Only recommended for desktop devices',
-            ru: 'Рекомендуется только для настольных устройств'
         }
     },
     credits: {
