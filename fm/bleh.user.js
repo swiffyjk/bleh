@@ -56478,9 +56478,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
 
   // src/pages/users.js
   function bleh_users() {
-    let users = page.structure.main.querySelectorAll(
-      ".user-list-item:not(.user-list-item-mobile-ad)"
-    );
+    const users = page.structure.main?.querySelectorAll(".user-list-item:not(.user-list-item-mobile-ad)");
     users.forEach((user) => {
       let avatar2 = user.querySelector(".user-list-avatar");
       let name = user.querySelector(".user-list-link");
