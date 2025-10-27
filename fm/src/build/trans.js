@@ -143,7 +143,8 @@ export const trans = {
         },
         'user-status-alum': {
             name: {
-                en: 'Alum'
+                en: 'Alum',
+                sv: 'Alumn'
             },
             reason: {
                 en: 'Former member of Last.fm',
@@ -233,20 +234,24 @@ export const trans = {
             name: {
                 en: 'band-aid',
                 de: 'pflaster',
+                sv: 'plåster',
                 ru: 'пластырь'
             },
             reason: {
                 en: 'the sillyness caught up to me',
                 de: 'der unfug hat mich eingeholt',
+                sv: 'det roliga kom ikapp mig',
                 ru: 'милота на меня напала'
             }
         },
         'bubble-tea': {
             name: {
-                en: 'escoffier :3'
+                en: 'escoffier :3',
+                sv: 'escoffier :3'
             },
             reason: {
                 en: 'katelyn’s wife ~',
+                sv: 'katelyn’s fru ~',
                 ru: 'жена кейтлин ~'
             }
         }
@@ -802,6 +807,7 @@ export const trans = {
     },
     albums_and_tracks: {
         en: 'Albums and tracks',
+        sv: 'Album och låtar',
         ru: 'Альбомы и треки'
     },
     album_artist: {
@@ -813,6 +819,7 @@ export const trans = {
     single: {
         // release type
         en: 'Single',
+        sv: 'Singel',
         ru: 'Сингл'
     },
     track: {
@@ -1060,6 +1067,7 @@ export const trans = {
     },
     smart_music_titles: {
         en: 'Smart music titles',
+        sv: 'Smarta musiktitlar',
         ru: 'Умные названия треков'
     },
     playback: {
@@ -1166,6 +1174,11 @@ export const trans = {
         },
         notice: {
             en: 'Open the live counter',
+            sv: 'Öppna live-nedräkningen'
+        },
+        live: {
+            en: 'Counter is updating live',
+            sv: 'Nedräkningen uppdateras live',
             ru: 'Открыть счетчик в реальном времени'
         },
         live: {
@@ -1177,11 +1190,21 @@ export const trans = {
             nonsense: {
                 // reference to https://open.spotify.com/track/7yogx3TwxGwSxO2QITsT2q
                 en: 'A Nonsense Christmas',
+                sv: 'A Nonsense Christmas',
                 ru: 'Бессмысленное Рождество'
             },
             fruitcake: {
                 // reference to https://open.spotify.com/album/7EisdwWcodpmHxgpGVE5Pg
                 en: 'fruitcake',
+                sv: 'fruitcake'
+            },
+            mistletoe: {
+                en: 'Mistletoe',
+                sv: 'Mistel'
+            },
+            festival: {
+                en: 'Christmas Eve',
+                sv: 'Julafton',
                 ru: 'фруктовый кекс'
             },
             mistletoe: {
@@ -1249,6 +1272,11 @@ export const trans = {
     seasonal_overlays: {
         name: {
             en: 'Display additional seasonal effects',
+            sv: 'Visa extra årstidseffekter'
+        },
+        body: {
+            en: 'During winter seasons this applies a coat of ice to panels, otherwise mainly gradients',
+            sv: 'Under vintersäsongen läggs ett lager is på paneler, annars mest bildgradienter',
             ru: 'Отображать дополнительные сезонные эффекты'
         },
         body: {
@@ -1275,18 +1303,21 @@ export const trans = {
         // season start date
         // start date: 1 day ago
         en: 'Start date',
+        sv: 'Startdatum',
         ru: 'Дата начала'
     },
     next_in: {
         // season next date
         // next season: in 3 days
         en: 'Next season',
+        sv: 'Nästa årstid',
         ru: 'Следующий сезон'
     },
     ends_in: {
         // season end date
         // end date: in 2 days
         en: 'End date',
+        sv: 'Slutdatum',
         ru: 'Дата окончания'
     },
     text: {
@@ -1403,10 +1434,12 @@ export const trans = {
         ru: 'Импорт'
     },
     import_failed: {
-        en: 'Import failed',
-        ru: 'Сбой импорта',
+        en: 'Import failed',,
+        sv: 'Importering misslyckades',
+      ru: 'Сбой импорта',
         notice: {
             en: 'The settings you attempted to import failed to parse, no changes were made.',
+            sv: 'Inställningarna du försökte importera kunde inte läsas, inga ändringar har gjorts.',
             ru: 'Настройки, которые вы пытались импортировать, не удалось обработать. Изменения не были внесены.'
         }
     },
@@ -1484,6 +1517,11 @@ export const trans = {
         type: {
             major: {
                 en: 'Major release',
+                sv: 'Större utgåva'
+            },
+            minor: {
+                en: 'Minor release',
+                sv: 'Mindre utgåva',
                 ru: 'Крупный релиз'
             },
             minor: {
@@ -1604,6 +1642,11 @@ export const trans = {
     noise: {
         name: {
             en: 'Noise overlay opacity',
+            sv: 'Brusöverläggsopacitet'
+        },
+        body: {
+            en: 'Apply a coat of subtle noise to add variation to solid backgrounds',
+            sv: 'Tillämpa ett brusöverlägg för lite variation på enfärgade bakgrunder',
             ru: 'Непрозрачность наложения шума'
         },
         body: {
@@ -1837,6 +1880,11 @@ export const trans = {
     },
     gallery_sum: {
         en: 'This is the sum of votes for ordering',
+        sv: 'Det här är summan röster för bildordning'
+    },
+    view_saved: {
+        en: 'View all saved photos',
+        sv: 'Visa alla sparade foton',
         ru: 'Это сумма голосов для сортировки'
     },
     view_saved: {
@@ -2210,6 +2258,7 @@ export const trans = {
     },
     manage_data: {
         en: 'Manage data',
+        sv: 'Hantera data',
         ru: 'Управление данными'
     },
     labs: {
@@ -2378,6 +2427,11 @@ export const trans = {
     default_avatar_action: {
         name: {
             en: 'Default avatar action',
+            sv: 'Standard bildbetéende'
+        },
+        body: {
+            en: 'Which action should be performed when you click an avatar',
+            sv: 'Hur ska sidan beté sig när du trycker på en profilbild',
             ru: 'Действие по умолчанию при нажатии на аватар'
         },
         body: {
@@ -2927,6 +2981,7 @@ export const trans = {
     },
     view_image: {
         en: 'View image',
+        sv: 'Visa bild',
         ru: 'Просмотреть изображение'
     },
     event_cancelled: {
@@ -4532,6 +4587,7 @@ export const trans = {
     },
     remove_save: {
         en: 'Remove save',
+        sv: 'Ta bort bokmärkning',
         ru: 'Удалить из сохраненного'
     },
     no_images_saved: {
@@ -5410,6 +5466,7 @@ export const trans = {
     banners: {
         en: 'Banners',
         de: 'Banner',
+        sv: 'Banner',
         ru: 'Баннеры'
     },
     view_backgrounds_on: {
@@ -5487,12 +5544,14 @@ export const trans = {
             // no profile banner present
             en: 'None',
             de: 'Keins',
+            sv: 'Ingen',
             ru: 'Нет'
         },
         starred_friend: {
             // no starred friend selected
             en: 'None',
             de: 'Kein:e',
+            sv: 'Ingen',
             ru: 'Нет'
         }
     },
@@ -5638,6 +5697,7 @@ export const trans = {
     pixel: {
         name: {
             en: 'Pixel',
+            sv: 'Pixel',
             ru: 'Пиксель'
         },
         body: {
@@ -5651,6 +5711,7 @@ export const trans = {
         name: {
             en: 'Rainbow',
             de: 'Regenbogen',
+            sv: 'Rainbow',
             ru: 'Радуга'
         },
         body: {
@@ -5664,6 +5725,7 @@ export const trans = {
         name: {
             en: 'Receipt',
             de: 'Quittung',
+            sv: 'Kvitto',
             ru: 'Чек'
         },
         body: {
@@ -5731,6 +5793,7 @@ export const trans = {
         name: {
             // the game
             en: 'Lyrics',
+            sv: 'Lyrics',
             ru: 'Тексты песен'
         },
         body: {
@@ -5969,6 +6032,7 @@ export const trans = {
     },
     branding: {
         en: 'Branding',
+        sv: 'Branding',
         ru: 'Брендинг'
     },
     branding_type: {
@@ -6147,6 +6211,11 @@ export const trans = {
         },
         false: {
             en: 'Do not apply corrections (recommended)',
+            sv: 'Tillämpa inte korrigeringar (rekommenderat)'
+        },
+        true: {
+            en: 'Auto correct my scrobbles (legacy)',
+            sv: 'Autokorrigera mina skrobblingar (gammal)',
             ru: 'Не применять исправления (рекомендуется)'
         },
         true: {
@@ -6157,6 +6226,11 @@ export const trans = {
     preferred_affiliate: {
         name: {
             en: 'Preferred playback source',
+            sv: 'Föredragen uppspelningskälla'
+        },
+        body: {
+            en: 'Choose which service to use when interacting with playables across the site',
+            sv: 'Välj vilken service att använda när du spelar upp låtar',
             ru: 'Предпочитаемый источник воспроизведения'
         },
         body: {
@@ -6199,6 +6273,11 @@ export const trans = {
     oracle_notice: {
         en: 'You are currently testing ‘oracle’, a redesigned album and track view',
         de: 'Du testest gerade „oracle“, eine neu gestaltete Album- und Titelseite',
+        sv: 'Du testar just no ‘oracle’, ett omdesignat sätt att visa album och låtsidor'
+    },
+    debug: {
+        en: 'Debug',
+        sv: 'Debug',
         ru: 'В настоящее время вы тестируете «oracle», обновленный вид альбомов и треков'
     },
     debug: {
@@ -6208,22 +6287,26 @@ export const trans = {
     send_feedback: {
         en: 'Send feedback',
         de: 'Feedback senden',
+        sv: 'Skicka feedback',
         ru: 'Отправить отзыв'
     },
     oracle_heading: {
         en: 'Experimental',
         de: 'Experimentell',
+        sv: 'Experimentalt',
         ru: 'Экспериментально'
     },
     oracle_beta: {
         name: {
             en: 'Enable the experimental ‘oracle’ system',
             de: 'Experimentelles „oracle“-System aktivieren',
+            sv: 'Aktivera det experimentella ‘oracle’-systemet',
             ru: 'Включить экспериментальную систему «oracle»'
         },
         body: {
             en: 'A redesigned album and track view sourcing data from MusicBrainz. May be released in the future or scrapped. Please send feedback from usage.',
             de: 'Eine neu gestaltete Album- und Titelseite, die Daten von MusicBrainz bezieht. Kann in Zukunft veröffentlicht oder verworfen werden. Bitte sende Feedback basierend auf deiner Nutzung.',
+            sv: 'Omdesignade album och låtsidor med data från MusicBrainz. Kan släppas eller skräpas i framtiden. Skicka gärna feedback från användning',
             ru: 'Обновленный вид альбомов и треков, получающий данные из MusicBrainz. Может быть выпущен в будущем или отменен. Пожалуйста, отправляйте отзывы об использовании.'
         }
     },
@@ -6236,6 +6319,7 @@ export const trans = {
     explicit: {
         en: 'Explicit',
         de: 'Anstößig',
+        sv: 'Explicit',
         ru: 'Нецензурный'
     },
     control_center: {
@@ -6264,6 +6348,7 @@ export const trans = {
     },
     romanise_require: {
         en: 'Romanisation requires either lotus corrections or smart song tags be enabled',
+        sv: 'Romanisation kräver antingen att lotus eller smarta låttaggar aktiveras',
         ru: 'Для романизации требуется включение либо lotus corrections, либо умных тегов песен'
     },
     disc_number: {
@@ -6295,16 +6380,23 @@ export const trans = {
     amount_translated: {
         // number of strings translated
         en: '{c} translated',
+        sv: '{c} översatt',
         ru: 'Переведено {c}'
     },
     missing_translated: {
         // number of strings missing
         en: '{c} missing',
+        sv: '{c} saknas',
         ru: 'Отсутствует {c}'
     },
     simulate_scroll: {
         name: {
             en: 'Simulate horizontal scrolling',
+            sv: 'Simulera vågrät skrollning'
+        },
+        body: {
+            en: 'Only recommended for desktop devices',
+            sv: 'Rekommenderas endast för desktop-enheter',
             ru: 'Имитировать горизонтальную прокрутку'
         },
         body: {
@@ -6314,6 +6406,7 @@ export const trans = {
     },
     credits: {
         en: 'Credits',
+        sv: 'Erkännanden',
         ru: 'Кредиты'
     }
 };
