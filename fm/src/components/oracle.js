@@ -1177,15 +1177,18 @@ export function oracle_process() {
             });
 
             releases.sort((a, b) => {
-                const rank = (type) => {
-                    if (!type) return 4;
+                const rank = (release) => {
+                    const type = release['release-group']?.['primary-type']?.toLowerCase();
+                    const digital = release.media?.[0]?.format == 'Digital Media';
 
-                    type = type.toLowerCase();
+                    let rank = 4;
+                    if (type == 'single') rank = 0;
+                    else if (type == 'ep') rank = 1;
+                    else if (type == 'album') rank = 3;
+                    else rank = 2;
 
-                    if (type == 'single') return 0;
-                    if (type == 'album') return 1;
-                    if (type == 'ep') return 2;
-                    return 3;
+                    // boost priority for digital media
+                    return (digital ? 0 : 10) + rank;
                 };
 
                 const artist_matches = (release) => {
@@ -1201,9 +1204,7 @@ export function oracle_process() {
                 if (a_artist_match && !b_artist_match) return -1;
                 if (!a_artist_match && b_artist_match) return 1;
 
-                const type_diff =
-                    rank(a['release-group']['primary-type']) -
-                    rank(b['release-group']['primary-type']);
+                const type_diff = rank(a) - rank(b);
                 if (type_diff != 0) return type_diff;
 
                 function parse_date(release) {

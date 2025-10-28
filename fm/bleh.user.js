@@ -44430,13 +44430,15 @@
           );
         });
         releases.sort((a, b) => {
-          const rank = (type) => {
-            if (!type) return 4;
-            type = type.toLowerCase();
-            if (type == "single") return 0;
-            if (type == "album") return 1;
-            if (type == "ep") return 2;
-            return 3;
+          const rank = (release) => {
+            const type = release["release-group"]?.["primary-type"]?.toLowerCase();
+            const digital = release.media?.[0]?.format == "Digital Media";
+            let rank2 = 4;
+            if (type == "single") rank2 = 0;
+            else if (type == "ep") rank2 = 1;
+            else if (type == "album") rank2 = 3;
+            else rank2 = 2;
+            return (digital ? 0 : 10) + rank2;
           };
           const artist_matches = (release) => {
             return release["artist-credit"]?.some((artist2) => {
@@ -44448,7 +44450,7 @@
           const b_artist_match = artist_matches(b);
           if (a_artist_match && !b_artist_match) return -1;
           if (!a_artist_match && b_artist_match) return 1;
-          const type_diff = rank(a["release-group"]["primary-type"]) - rank(b["release-group"]["primary-type"]);
+          const type_diff = rank(a) - rank(b);
           if (type_diff != 0) return type_diff;
           function parse_date(release) {
             if (!release.date) return null;
