@@ -500,8 +500,8 @@ export let includes = {
         '[v8',
         '[v9',
         '- mixed',
-        '- mix',
-        '(mix'
+        '- mix ',
+        '(mix '
     ],
     stems: [
         '- acapella',
@@ -725,9 +725,9 @@ export let includes = {
         '[highlights from',
         '- track by track',
         ': track by track',
-        '- disc',
-        '(disc',
-        '[disc',
+        '- disc ',
+        '(disc ',
+        '[disc ',
         //,
         '- 19',
         '- 20',
