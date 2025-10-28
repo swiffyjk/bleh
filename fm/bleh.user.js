@@ -34796,12 +34796,8 @@
   // src/pages/lastfm_settings.js
   var cropper;
   function bleh_native_settings() {
-    let no_data = page.structure.container.querySelector(
-      ":scope > .no-data-message"
-    );
-    if (no_data) {
-      page.structure.main.appendChild(no_data);
-    }
+    const no_data = page.structure.container.querySelector(":scope > .no-data-message");
+    if (no_data) page.structure.main.appendChild(no_data);
     if (page.subpage == "overview") {
       patch_settings_profile_tab();
     } else if (page.subpage == "privacy") {
@@ -34847,26 +34843,6 @@
     } else if (page.subpage == "applications_overview") {
       bleh_applications();
     }
-    if (ff("katsune")) return;
-    let edit_header = document.createElement("section");
-    edit_header.classList.add(
-      "redesigned-header",
-      "edit-header",
-      "no-background"
-    );
-    edit_header.innerHTML = `
-        <div class="tag-side">
-            <div class="tag-icon cog-icon"></div>
-        </div>
-        <div class="info-side">
-            <div class="sub-text">${tl2(trans.settings)}</div>
-            <h1>${header_text}</h1>
-        </div>
-    `;
-    page.structure.container.insertBefore(
-      edit_header,
-      page.structure.container.firstElementChild
-    );
   }
   function patch_settings_profile_tab() {
     let update_picture = page.structure.main.querySelector("#update-picture");
@@ -35521,136 +35497,129 @@
         cache2.lit
       );
       let edit;
-      render(
-        accent_setting,
-        html`
-                <div class="heading">
-                    <h5>
-                        ${tl2(trans.profile_accent.name)}<span
-                            class="new-badge sponsor-related"
-                            >${tl2(trans.sponsors_only)}</span
-                        ><span class="new-badge beta">${tl2(trans.new)}</span>
-                    </h5>
-                    <p>${tl2(trans.profile_accent.body)}</p>
-                </div>
-                <div class="info">
-                    <div
-                        class="colour-tile colourful"
-                        style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}"
-                    />
-                    <div class="swatch-group palette">
-                        <button
-                            class="swatch-container"
-                            ref=${(el) => edit = el}
-                            onclick=${() => {
-          let hue_range;
-          let sat_range;
-          let lit_range;
-          const match3 = about.value.match(accent_regex);
-          console.info(match3);
-          if (match3) {
-            save_setting(
-              "profile_hue",
-              parseInt(match3[1], 10)
-            );
-            save_setting(
-              "profile_sat",
-              parseFloat(match3[2])
-            );
-            save_setting(
-              "profile_lit",
-              parseFloat(match3[3])
-            );
-            settings_store.profile_hue.default = settings.hue;
-            settings_store.profile_sat.default = settings.sat;
-            settings_store.profile_lit.default = settings.lit;
-          }
-          let accent_preview;
-          dialog({
-            id: "profile_accent",
-            title: tl2(trans.profile_accent.name),
-            body: html.node`
-                                <div class="setting-group">
-                                    <div class="setting" data-type="info">
-                                        <div class="heading">
-                                            <h5>${tl2(trans.preview)}</h5>
+      render(accent_setting, html`
+            <div class="heading">
+                <h5>${tl2(trans.profile_accent.name)}<span class="new-badge sponsor-related">${tl2(trans.sponsors_only)}</span></h5>
+                <p>${tl2(trans.profile_accent.body)}</p>
+            </div>
+            <div class="info">
+                <div
+                    class="colour-tile colourful"
+                    style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}"
+                />
+                <div class="swatch-group palette">
+                    <button
+                        class="swatch-container"
+                        ref=${(el) => edit = el}
+                        onclick=${() => {
+        let hue_range;
+        let sat_range;
+        let lit_range;
+        const match3 = about.value.match(accent_regex);
+        console.info(match3);
+        if (match3) {
+          save_setting(
+            "profile_hue",
+            parseInt(match3[1], 10)
+          );
+          save_setting(
+            "profile_sat",
+            parseFloat(match3[2])
+          );
+          save_setting(
+            "profile_lit",
+            parseFloat(match3[3])
+          );
+          settings_store.profile_hue.default = settings.hue;
+          settings_store.profile_sat.default = settings.sat;
+          settings_store.profile_lit.default = settings.lit;
+        }
+        let accent_preview;
+        dialog({
+          id: "profile_accent",
+          title: tl2(trans.profile_accent.name),
+          body: html.node`
+                                    <div class="setting-group">
+                                        <div class="setting" data-type="info">
+                                            <div class="heading">
+                                                <h5>${tl2(trans.preview)}</h5>
+                                            </div>
+                                            <div class="info">
+                                                <div class="colour-tile colourful" ref=${(el) => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
+                                            </div>
                                         </div>
-                                        <div class="info">
-                                            <div class="colour-tile colourful" ref=${(el) => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
+                                        ${ff("colour_based_on_hex") ? html.node`
+                                        <div class="setting" data-type="text">
+                                            <div class="heading">
+                                                <h5>${tl2(trans.convert_from_hex)}</h5>
+                                            </div>
+                                            <div class="input-container content-form">
+                                                ${colour = input({
+            type: "colour",
+            value: "#999999",
+            maxlength: 7,
+            warn_if_empty: true
+          })}
+                                                <button class="btn primary icon convert" onclick=${() => {
+            const value2 = colour.value();
+            const hsl = hex_to_hsl(value2);
+            hue_range.set(hsl.h);
+            sat_range.set(
+              clamp_sat(hsl.s / 100 * 3)
+            );
+            lit_range.set(
+              hsl.l / 100 + 0.35
+            );
+          }}>${tl2(trans.convert)}</button>
+                                            </div>
                                         </div>
+                                        ` : ""}
+                                        ${hue_range = setting({ id: "profile_hue", func: update_colour_preview })}
+                                        ${sat_range = setting({ id: "profile_sat", func: update_colour_preview })}
+                                        ${lit_range = setting({ id: "profile_lit", func: update_colour_preview })}
                                     </div>
-                                    ${ff("colour_based_on_hex") ? html.node`
-                                    <div class="setting" data-type="text">
-                                        <div class="heading">
-                                            <h5>${tl2(trans.convert_from_hex)}</h5>
-                                        </div>
-                                        <div class="input-container content-form">
-                                            ${colour = input({
-              type: "colour",
-              value: "#999999",
-              maxlength: 7,
-              warn_if_empty: true
-            })}
-                                            <button class="btn primary icon convert" onclick=${() => {
-              const value2 = colour.value();
-              const hsl = hex_to_hsl(value2);
-              hue_range.set(hsl.h);
-              sat_range.set(
-                clamp_sat(hsl.s / 100 * 3)
+                                    <div class="modal-footer">
+                                        <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_accent" })}>
+                                            ${tl2(trans.back)}
+                                        </button>
+                                        <div class="fill"></div>
+                                        <button class="btn primary continue" onclick=${() => {
+            const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
+            if (match3) {
+              about.value = about.value.replace(
+                accent_regex,
+                new_accent
               );
-              lit_range.set(
-                hsl.l / 100 + 0.35
-              );
-            }}>${tl2(trans.convert)}</button>
-                                        </div>
-                                    </div>
-                                    ` : ""}
-                                    ${hue_range = setting({ id: "profile_hue", func: update_colour_preview })}
-                                    ${sat_range = setting({ id: "profile_sat", func: update_colour_preview })}
-                                    ${lit_range = setting({ id: "profile_lit", func: update_colour_preview })}
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_accent" })}>
-                                        ${tl2(trans.back)}
-                                    </button>
-                                    <div class="fill"></div>
-                                    <button class="btn primary continue" onclick=${() => {
-              const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
-              if (match3) {
-                about.value = about.value.replace(
-                  accent_regex,
-                  new_accent
-                );
+            } else {
+              const trimmed = about.value.trimEnd();
+              if (trimmed.length == 0) {
+                about.value = new_accent;
               } else {
-                const trimmed = about.value.trimEnd();
-                if (trimmed.length == 0) {
-                  about.value = new_accent;
-                } else {
-                  about.value = trimmed + "\n\n" + new_accent;
-                }
+                about.value = trimmed + "\n\n" + new_accent;
               }
-              about.dispatchEvent(
-                new InputEvent("input", {
-                  bubbles: true,
-                  cancelable: true
-                })
-              );
-              dialog_rm({ id: "profile_accent" });
-              status({
-                title: tl2(
-                  trans.profile_accent.reminder
-                )
-              });
-            }}>
-                                        ${tl2(trans.change)}
-                                    </button>
-                                </div>
-                            `
-          });
-          function update_colour_preview() {
-            accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
-          }
-        }}
+            }
+            about.dispatchEvent(
+              new InputEvent("input", {
+                bubbles: true,
+                cancelable: true
+              })
+            );
+            dialog_rm({ id: "profile_accent" });
+            status({
+              title: tl2(
+                trans.profile_accent.reminder
+              )
+            });
+          }}>
+                                            ${tl2(trans.change)}
+                                        </button>
+                                    </div>
+                                `
+        });
+        function update_colour_preview() {
+          accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+        }
+      }}
                         >
                             <div
                                 class="swatch colourful"
@@ -35659,8 +35628,7 @@
                         </button>
                     </div>
                 </div>
-            `
-      );
+            `);
       tippy_esm_default(edit, {
         content: tl2(trans.edit)
       });
@@ -37923,8 +37891,8 @@
     view_buttons.classList.add("view-buttons", "blend", "blend-v2");
     let header = document.createElement("div");
     header.classList.add("top-container");
-    let header_text2 = panel.querySelector("h2");
-    header.appendChild(header_text2);
+    let header_text = panel.querySelector("h2");
+    header.appendChild(header_text);
     let refresh_btn;
     if (ff("submit_scrobble") && page.name == auth.name) {
       const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
@@ -55729,7 +55697,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       log("unable to find elements", "page structure");
     }
     let content_top = document.body.querySelector(".content-top");
-    let header_text2 = content_top.querySelector(".content-top-header").textContent;
+    let header_text = content_top.querySelector(".content-top-header").textContent;
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
@@ -55743,7 +55711,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         </div>
         <div class="info-side">
             <div class="sub-text">${tl2(trans.event)}</div>
-            <h1>${header_text2}</h1>
+            <h1>${header_text}</h1>
         </div>
     `;
     page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
