@@ -33,7 +33,7 @@ export let lang_info = {
     pt: {
         name: 'Português',
         by: ['ArthRMH', 'auwora', 'fr0r'],
-        last_updated: '2025-08-10'
+        last_updated: '2025-10-28'
     },
     sv: {
         name: 'Svenska',
@@ -759,7 +759,7 @@ export const trans = {
     },
     scrobble_failed: {
         en: 'Scrobble could not be sent',
-        pt: 'Scrobble não pôde ser enviado.',
+        pt: 'Scrobble não pôde ser enviado',
         de: 'Scrobble konnte nicht gesendet werden',
         sv: 'Skrobblingen kunde inte skickas',
         ru: 'Не удалось отправить скроббл'
@@ -992,11 +992,12 @@ export const trans = {
         ru: 'Адаптивный'
     },
     adaptive_tip: {
+        // the space on the end is intentional
         en: 'Your theme preference will be either {day} or {night}, based on your system. ',
         de: 'Dein bevorzugtes Farbschema wird entweder {day} oder {night} sein, basierend auf deinem System. ',
         pt: 'Sua preferência de tema será {day} ou {night}, com base no seu sistema. ',
         sv: 'Ditt föredragna tema blir antigen {day} eller {night}, beroende på ditt system. ',
-        ru: 'Предпочтительная тема будет {day} или {night} в зависимости от настроек вашей системы.'
+        ru: 'Предпочтительная тема будет {day} или {night} в зависимости от настроек вашей системы. '
     },
     change_schedule: {
         en: 'Change schedule',
@@ -1237,12 +1238,6 @@ export const trans = {
             sv: 'Nedräkningen uppdateras live',
             ru: 'Открыть счетчик в реальном времени'
         },
-        live: {
-            en: 'Counter is updating live',
-            sv: 'Nedräkningen uppdateras live',
-            pt: 'O contador está sendo atualizado em tempo real',
-            ru: 'Счетчик обновляется в реальном времени'
-        },
         presets: {
             // these are seasonal exclusive colour presets
             nonsense: {
@@ -1256,17 +1251,7 @@ export const trans = {
                 // reference to https://open.spotify.com/album/7EisdwWcodpmHxgpGVE5Pg
                 en: 'fruitcake',
                 sv: 'fruitcake',
-                pt: 'bolo de frutas'
-            },
-            mistletoe: {
-                en: 'Mistletoe',
-                pt: 'Visco',
-                sv: 'Mistel'
-            },
-            festival: {
-                en: 'Christmas Eve',
-                pt: 'Véspera de Natal',
-                sv: 'Julafton',
+                pt: 'bolo de frutas',
                 ru: 'фруктовый кекс'
             },
             mistletoe: {
@@ -1345,15 +1330,9 @@ export const trans = {
         },
         body: {
             en: 'During winter seasons this applies a coat of ice to panels, otherwise mainly gradients',
-            pt: 'Durante o inverno, isso aplica uma camada de gelo aos painéis; fora dessa época, aplica principalmente gradientes.',
+            pt: 'Durante o inverno, isso aplica uma camada de gelo aos painéis; fora dessa época, aplica principalmente gradientes',
             sv: 'Under vintersäsongen läggs ett lager is på paneler, annars mest bildgradienter',
             ru: 'Отображать дополнительные сезонные эффекты'
-        },
-        body: {
-            en: 'During winter seasons this applies a coat of ice to panels, otherwise mainly gradients',
-            sv: 'Under vintersäsongen läggs ett lager is på paneler, annars mest bildgradienter',
-            pt: 'Durante o inverno, isso aplica uma camada de gelo aos painéis; fora dessa época, aplica principalmente gradientes.',
-            ru: 'В зимние сезоны это добавляет эффект наледи на панели, в остальное время - в основном градиенты'
         }
     },
     seasonal_offset: {
@@ -1608,12 +1587,6 @@ export const trans = {
                 en: 'Major release',
                 pt: 'Lançamento principal',
                 sv: 'Större utgåva'
-            },
-            minor: {
-                en: 'Minor release',
-                pt: 'Lançamento secundario',
-                sv: 'Mindre utgåva',
-                ru: 'Крупный релиз'
             },
             minor: {
                 en: 'Minor release',
@@ -2313,9 +2286,9 @@ export const trans = {
     },
     sponsor_no_badge: {
         en: 'A custom badge is only available with a monthly sponsorship.',
-        de: 'Ein individuelles Abzeichen ist nur mit einem monatlichen Sponsoring erhältlich',
-        pt: 'Um emblema personalizado só está disponível com um apoio mensal',
-        sv: 'Ett eget anpassat emblem finns bara tillgängligt med månatligt sponsorskap',
+        de: 'Ein individuelles Abzeichen ist nur mit einem monatlichen Sponsoring erhältlich.',
+        pt: 'Um emblema personalizado só está disponível com um apoio mensal.',
+        sv: 'Ett eget anpassat emblem finns bara tillgängligt med månatligt sponsorskap.',
         ru: 'Персонализированный значок доступен только при ежемесячном спонсорстве.'
     },
     manage_sponsor: {
@@ -2576,14 +2549,14 @@ export const trans = {
     wiki_standard_artists: {
         en: 'Album and artist names are left without quotes',
         de: 'Namen von Alben und Künstler:innen werden ohne Anführungszeichen geschrieben',
-        pt: 'Os nomes dos álbuns e artistas não devem ser colocados entre aspas.',
+        pt: 'Os nomes dos álbuns e artistas não devem ser colocados entre aspas',
         sv: 'Album och artistnamn ska skrivas utan citattecken',
         ru: 'Названия альбомов и исполнителей пишутся без кавычек'
     },
     wiki_standard_quotations: {
         en: 'Use ‘ ’ for quotations from the artist or elsewhere',
         de: 'Verwende ‘ ’ für Zitate des Künstlers oder aus anderen Quellen',
-        pt: 'Use ‘ ’ para citações do artista ou de outras fontes.',
+        pt: 'Use ‘ ’ para citações do artista ou de outras fontes',
         sv: 'Använd ‘ ’ för citat från artisten eller från annanstans',
         ru: 'Используйте ‘ ’ для цитат исполнителя или из других источников'
     },
@@ -3313,7 +3286,7 @@ export const trans = {
     },
     blocked_user_message: {
         en: 'Cannot direct message you',
-        de: 'Kann dir keine Direktnachrichten senden.',
+        de: 'Kann dir keine Direktnachrichten senden',
         pt: 'Não podem lhe enviar mensagens diretas',
         sv: 'Kan inte skicka privat meddelande till dig',
         ru: 'Не могут отправлять вам личные сообщения'
@@ -3853,7 +3826,7 @@ export const trans = {
         },
         body: {
             en: 'These notifications can let you undo redirections Last.fm forced upon you, but can also be annoying',
-            de: 'Mit diesen Benachrichtigungen kannst du die von Last.fm erzwungenen Weiterleitungen rückgängig machen, sie können aber auch lästig sein.',
+            de: 'Mit diesen Benachrichtigungen kannst du die von Last.fm erzwungenen Weiterleitungen rückgängig machen, sie können aber auch lästig sein',
             pt: 'Essas notificações podem permitir que você desfaça redirecionamentos que a Last.fm impôs a você, mas também podem ser irritantes',
             sv: 'Dessa notiser låter dig ångra omdirigeringar Last.fm tvingade på dig, men dem kan också vara störande',
             ru: 'Эти уведомления могут позволить вам отменить перенаправления, навязанные Last.fm, но также могут быть раздражающими'
@@ -3870,7 +3843,7 @@ export const trans = {
         body: {
             en: 'Assigns a colour based on an artist’s all-time ranking in your library',
             de: 'Weist eine Farbe basierend auf dem Allzeit-Ranking eines Künstlers in deiner Bibliothek zu',
-            pt: 'Define uma cor pela colocação do artista no ranking geral da sua biblioteca.',
+            pt: 'Define uma cor pela colocação do artista no ranking geral da sua biblioteca',
             sv: 'Tillämpar en färg baserad på en artists alltidsranking i ditt bibliotek',
             ru: 'Назначает цвет в зависимости от общего рейтинга артиста в вашей библиотеке'
         }
@@ -3972,7 +3945,7 @@ export const trans = {
         body: {
             en: 'To change your username hit the button to send an email. Having problems? {a}contact support{/a}.',
             de: 'Um deinen Benutzernamen zu ändern, klicke auf die Schaltfläche „E-Mail senden“. Gibt es Probleme? {a}Kontaktiere den Support{/a}.',
-            pt: 'Para alterar seu nome de usuário, clique no botão para enviar um e-mail. Está com problemas?',
+            pt: 'Para alterar seu nome de usuário, clique no botão para enviar um e-mail. Está com problemas? {a}contact support{/a}.',
             sv: 'För att ändra ditt användarnamn, tryck på knappen för att skicka mejl. Har du ett problem? {a}Kontakta support{/a}.',
             ru: 'Чтобы изменить имя пользователя, нажмите кнопку для отправки электронного письма. Возникли проблемы? {a}Свяжитесь со службой поддержки{/a}.'
         }
@@ -4023,7 +3996,7 @@ export const trans = {
         body: {
             en: 'Last.fm can optionally send promotional emails from time to time',
             de: 'Last.fm kann optional gelegentlich Werbe-E-Mails senden',
-            pt: 'A Last.fm pode, opcionalmente, enviar e-mails promocionais de tempos em tempos.',
+            pt: 'A Last.fm pode, opcionalmente, enviar e-mails promocionais de tempos em tempos',
             sv: 'Last.fm kan valfritt skicka reklammejl då och då',
             ru: 'Last.fm может по желанию время от времени отправлять рекламные электронные письма'
         }
@@ -4311,7 +4284,7 @@ export const trans = {
     accessibility_explain: {
         en: 'Before we continue, let’s assess your accessibility settings.',
         de: 'Lass uns kurz deine Barrierefreiheitseinstellungen überprüfen, bevor wir weitermachen.',
-        pt: 'Antes de continuarmos, vamos acessar suas configurações de acessibilidade',
+        pt: 'Antes de continuarmos, vamos acessar suas configurações de acessibilidade.',
         sv: 'Innan vi fortsätter ska vi kontrollera dina tillgänglighetsinställningar.',
         ru: 'Прежде чем продолжить, давайте оценим ваши настройки доступности.'
     },
@@ -6142,7 +6115,7 @@ export const trans = {
     no_mutual_listeners_explain: {
         en: 'This can be due to either simply lacking mutuals who listen or the page being subject to a broken redirect.',
         de: 'Dies kann entweder an fehlenden Mutuals oder einer fehlerhaften Seitenweiterleitung liegen.',
-        sv: 'Det kan innebära att du antingen inte har ömsesidiga följare som lyssnar eller att sidan har en gammal omdirigering',
+        sv: 'Det kan innebära att du antingen inte har ömsesidiga följare som lyssnar eller att sidan har en gammal omdirigering.',
         ru: 'Это может быть связано либо с отсутствием взаимных слушателей, либо с неисправным перенаправлением страницы.'
     },
     navigation_items: {
@@ -6412,7 +6385,7 @@ export const trans = {
         body: {
             en: 'A redesigned album and track view sourcing data from MusicBrainz. May be released in the future or scrapped. Please send feedback from usage.',
             de: 'Eine neu gestaltete Album- und Titelseite, die Daten von MusicBrainz bezieht. Kann in Zukunft veröffentlicht oder verworfen werden. Bitte sende Feedback basierend auf deiner Nutzung.',
-            sv: 'Omdesignade album och låtsidor med data från MusicBrainz. Kan släppas eller skräpas i framtiden. Skicka gärna feedback från användning',
+            sv: 'Omdesignade album och låtsidor med data från MusicBrainz. Kan släppas eller skräpas i framtiden. Skicka gärna feedback från användning.',
             ru: 'Обновленный вид альбомов и треков, получающий данные из MusicBrainz. Может быть выпущен в будущем или отменен. Пожалуйста, отправляйте отзывы об использовании.'
         }
     },
