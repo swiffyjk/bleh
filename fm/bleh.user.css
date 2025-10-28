@@ -121,7 +121,7 @@
         }
         [data-season="pre_fall"],
         [data-bleh--season="pre_fall"] > & {
-            --hue-seasonal: 244;
+            --hue-seasonal: 40;
             --sat-seasonal: 0.9;
             --lit-seasonal: 1.1;
         }
@@ -132,9 +132,6 @@
             --lit-seasonal: 1.1;
 
             --hue-pos: 150;
-
-            --icon-16-snowgirl: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1zbm93bWFuIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTIgM2E0IDQgMCAwIDEgMi45MDYgNi43NWE2IDYgMCAxIDEgLTUuODEgMGE0IDQgMCAwIDEgMi45MDQgLTYuNzV6IiAvPjxwYXRoIGQ9Ik0xNy41IDExLjVsMi41IC0xLjUiIC8+PHBhdGggZD0iTTYuNSAxMS41bC0yLjUgLTEuNSIgLz48cGF0aCBkPSJNMTIgMTNoLjAxIiAvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiIC8+PC9zdmc+");
-            --icon-16-profile: var(--icon-16-snowgirl);
         }
         [data-season="christmas"],
         [data-bleh--season="christmas"] > & {
@@ -143,10 +140,6 @@
             --lit-seasonal: 1.17;
 
             --hue-pos: 150;
-
-            --icon-16-snowgirl: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1zbm93bWFuIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTIgM2E0IDQgMCAwIDEgMi45MDYgNi43NWE2IDYgMCAxIDEgLTUuODEgMGE0IDQgMCAwIDEgMi45MDQgLTYuNzV6IiAvPjxwYXRoIGQ9Ik0xNy41IDExLjVsMi41IC0xLjUiIC8+PHBhdGggZD0iTTYuNSAxMS41bC0yLjUgLTEuNSIgLz48cGF0aCBkPSJNMTIgMTNoLjAxIiAvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiIC8+PC9zdmc+");
-            --icon-16-profile: var(--icon-16-snowgirl);
-            --icon-16-artist: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1ub3J0aC1zdGFyIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMyAxMmgxOCIgLz48cGF0aCBkPSJNMTIgMjF2LTE4IiAvPjxwYXRoIGQ9Ik03LjUgNy41bDkgOSIgLz48cGF0aCBkPSJNNy41IDE2LjVsOSAtOSIgLz48L3N2Zz4=");
         }
         [data-season="new_years"],
         [data-bleh--season="new_years"] > & {
