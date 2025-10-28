@@ -24,7 +24,7 @@ export function set_season() {
 
     let last_season_seen = localStorage.getItem('bleh_last_season_seen') || '';
 
-    let now = new Date('2025-12-25');
+    let now = new Date();
     log(`it is now ${now}`, 'season', 'log');
 
     stored_season.offset = calculate_offset(now);

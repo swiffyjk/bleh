@@ -48079,7 +48079,7 @@
   function set_season() {
     if (!settings.seasonal) return;
     let last_season_seen = localStorage.getItem("bleh_last_season_seen") || "";
-    let now2 = /* @__PURE__ */ new Date("2025-12-25");
+    let now2 = /* @__PURE__ */ new Date();
     log(`it is now ${now2}`, "season", "log");
     stored_season.offset = calculate_offset(now2);
     log(`calculated offset as ${stored_season.offset}`, "season");
