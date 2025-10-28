@@ -1147,7 +1147,7 @@ export function oracle_process() {
                 const duplicates = self.filter(
                     (r) =>
                         r.title.toLowerCase() == title.toLowerCase() &&
-                        r['artist-credit']?.[0]?.name?.toLowerCase() == artist.toLowerCase()
+                        r['artist-credit']?.[0]?.name?.toLowerCase() == artist?.toLowerCase()
                 );
 
                 // if multiple, prefer digital media pressing

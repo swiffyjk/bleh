@@ -28550,6 +28550,7 @@
     }
     .oracle-notice {
         margin-bottom: calc(-1 * var(--card-padding));
+        order: -11;
     }
     .oracle {
         display: flex;

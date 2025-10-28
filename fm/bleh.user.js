@@ -44413,7 +44413,7 @@
           const artist2 = release["artist-credit"]?.[0]?.name;
           const title = release.title;
           const duplicates = self3.filter(
-            (r) => r.title.toLowerCase() == title.toLowerCase() && r["artist-credit"]?.[0]?.name?.toLowerCase() == artist2.toLowerCase()
+            (r) => r.title.toLowerCase() == title.toLowerCase() && r["artist-credit"]?.[0]?.name?.toLowerCase() == artist2?.toLowerCase()
           );
           if (duplicates.length > 1) {
             const digital_with_date = duplicates.find(
@@ -57434,7 +57434,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page.structure.container.setAttribute("data-short", ff("short"));
   }
   async function register_background(url, origin = null) {
-    if (url.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg")) url = "";
+    if (url && url.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg")) url = "";
     log(`requested register of ${url} from ${origin}`, "background", "log");
     let background = page.structure.container.querySelector(":scope > .bleh-background");
     if (!background) {

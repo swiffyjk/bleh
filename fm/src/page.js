@@ -771,7 +771,7 @@ export function update_page() {
 }
 
 export async function register_background(url, origin = null) {
-    if (url.endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg')) url = '';
+    if (url && url.endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg')) url = '';
 
     log(`requested register of ${url} from ${origin}`, 'background', 'log');
     let background = page.structure.container.querySelector(':scope > .bleh-background');
