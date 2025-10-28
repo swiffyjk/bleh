@@ -771,20 +771,17 @@ export function update_page() {
 }
 
 export async function register_background(url, origin = null) {
+    if (url.endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg')) url = '';
+
     log(`requested register of ${url} from ${origin}`, 'background', 'log');
-    let background = page.structure.container.querySelector(
-        ':scope > .bleh-background'
-    );
+    let background = page.structure.container.querySelector(':scope > .bleh-background');
 
     if (!background) {
         background = html.node`
             <div class="bleh-background katsune-bleh-background" />
         `;
 
-        page.structure.container.insertBefore(
-            background,
-            page.structure.container.firstElementChild
-        );
+        page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
     }
 
     /*
@@ -800,10 +797,7 @@ export async function register_background(url, origin = null) {
     background.setAttribute('data-page-type', page.type);
     background.setAttribute('data-page-subpage', page.subpage);
     background.setAttribute('data-background-origin', origin);
-    background.setAttribute(
-        'data-background-coloured',
-        settings.hue_from_album
-    );
+    background.setAttribute('data-background-coloured', settings.hue_from_album);
 
     background.removeAttribute('data-accent-based');
     background.style.removeProperty('background-image');

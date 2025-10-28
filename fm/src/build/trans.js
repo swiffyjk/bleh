@@ -2843,6 +2843,9 @@ export const trans = {
         sv: 'Älska',
         ru: 'Понравилось'
     },
+    love_track: {
+        en: 'Love track'
+    },
     loved: {
         // as in loved tracks, this can be seen
         // in the native last.fm ui

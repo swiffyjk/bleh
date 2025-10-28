@@ -175,9 +175,9 @@ export function subscribe_to_events() {
                 if (btn.getAttribute('data-type') == 'love') {
                     setTimeout(() => {
                         if (!btn.querySelector('span')) {
-                            let new_text = document.createElement('span');
-                            new_text.textContent = tl(trans.love);
-                            btn.appendChild(new_text);
+                            btn.appendChild(html.node`
+                                <span>${tl(trans.love_track)}</span>
+                            `);
                         }
                     }, 1);
                 }

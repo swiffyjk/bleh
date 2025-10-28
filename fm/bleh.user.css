@@ -13327,7 +13327,7 @@
 
         &[data-theme="mobile"] {
             padding: var(--card-gap) var(--card-gap) calc(var(--card-gap) * 3) !important;
-            background: hsl(var(--b5), 90%) !important;
+            background: hsl(var(--b5), var(--solarium-opacity, var(--menu-opacity))) !important;
             border-radius: var(--item-big-radius) !important;
             box-shadow: var(
                 --override-full-shadow,
@@ -13359,7 +13359,7 @@
 
         &[data-theme="window"] {
             padding: var(--card-gap) !important;
-            background: hsl(var(--b5), 90%) !important;
+            background: hsl(var(--b5), var(--solarium-opacity, var(--menu-opacity))) !important;
             border-radius: var(--item-big-radius) !important;
             box-shadow: var(
                 --override-full-shadow,
