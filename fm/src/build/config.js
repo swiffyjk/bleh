@@ -878,7 +878,8 @@ export let settings_store = {
             none: {
                 name: trans.no_particles
             }
-        }
+        },
+        require_reload: true
     },
     seasonal_particles_fps: {
         default: false,

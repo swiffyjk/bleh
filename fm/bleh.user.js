@@ -48079,7 +48079,7 @@
   function set_season() {
     if (!settings.seasonal) return;
     let last_season_seen = localStorage.getItem("bleh_last_season_seen") || "";
-    let now2 = /* @__PURE__ */ new Date();
+    let now2 = /* @__PURE__ */ new Date("2025-12-25");
     log(`it is now ${now2}`, "season", "log");
     stored_season.offset = calculate_offset(now2);
     log(`calculated offset as ${stored_season.offset}`, "season");
@@ -58799,11 +58799,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ru: "\u041D\u043E\u0432\u044B\u0439 \u0441\u0435\u0437\u043E\u043D!"
     },
     value_for_time: {
-      // e.g. Halloween for 3 days
-      en: "{v} for {time}",
-      pt: "{v} por {time}",
-      sv: "{v} till {time}",
-      ru: "{v} \u043D\u0430 {time}"
+      // e.g. (Halloween) ends (in 3 days)
+      en: "{v} ends {time}"
     },
     seasonal_timeline: {
       en: "Seasonal timeline",
@@ -64905,7 +64902,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         none: {
           name: trans.no_particles
         }
-      }
+      },
+      require_reload: true
     },
     seasonal_particles_fps: {
       default: false,

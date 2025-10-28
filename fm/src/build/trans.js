@@ -1276,11 +1276,8 @@ export const trans = {
         ru: 'Новый сезон!'
     },
     value_for_time: {
-        // e.g. Halloween for 3 days
-        en: '{v} for {time}',
-        pt: '{v} por {time}',
-        sv: '{v} till {time}',
-        ru: '{v} на {time}'
+        // e.g. (Halloween) ends (in 3 days)
+        en: '{v} ends {time}'
     },
     seasonal_timeline: {
         en: 'Seasonal timeline',
