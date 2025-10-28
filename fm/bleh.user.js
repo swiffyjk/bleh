@@ -50765,7 +50765,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       christmas: [
         {
           type: "season",
-          name: tl2(trans.seasonal.presets.nonsense),
+          label: trans.seasonal.presets.nonsense,
           sets: {
             hue: 352,
             sat: 1.8,
@@ -50774,7 +50774,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         },
         {
           type: "season",
-          name: tl2(trans.seasonal.presets.fruitcake),
+          label: trans.seasonal.presets.fruitcake,
           sets: {
             hue: 24,
             sat: 0.93,
@@ -50783,7 +50783,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         },
         {
           type: "season",
-          name: tl2(trans.seasonal.presets.mistletoe),
+          label: trans.seasonal.presets.mistletoe,
           sets: {
             hue: 130,
             sat: 0.45,
@@ -50792,7 +50792,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         },
         {
           type: "season",
-          name: tl2(trans.seasonal.presets.festival),
+          label: trans.seasonal.presets.festival,
           sets: {
             hue: 240,
             sat: 1.4,
@@ -50806,154 +50806,101 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let sat_range;
     let lit_range;
     for (let type in colours) {
-      const swatch_group = page.structure.main.querySelector(
-        `#colour_${type}`
-      );
+      const swatch_group = page.structure.main.querySelector(`#colour_${type}`);
       if (!swatch_group) return;
       colours[type].forEach((colour2) => {
-        if (colour2.requires_flag && version.feature_flags.hasOwnProperty(colour2.requires_flag)) {
-          if (!ff(colour2.requires_flag)) return;
-        }
-        if (colour2.type == "avatar" && !auth.name) return;
-        let text3;
-        if (colour2.label) text3 = tl2(colour2.label);
-        if (!colour2.type) colour2.type = "colour";
-        if (!colour2.displays && colour2.sets) colour2.displays = colour2.sets;
-        let blob;
-        let text_elem;
-        let swatch = html.node`
-                <button class="swatch-container" onclick=${() => {
-          if (!colour2.sets) return;
-          hue_range.set(colour2.sets.hue);
-          sat_range.set(colour2.sets.sat);
-          lit_range.set(colour2.sets.lit);
-        }}>
-                    <div class="swatch colourful" ref=${(el) => blob = el} data-swatch-type=${colour2.type} />
-                    <strong ref=${(el) => text_elem = el} />
-                </button>
-            `;
-        if (type == "custom") text3 = tl2(trans[colour2.type]);
-        if (colour2.type == "customise") {
-          text3 = tl2(trans.edit);
-          let colour3;
-          tippy_esm_default(swatch, {
-            theme: "window",
-            content: html.node`
-                        <div class="dialog-settings">
-                            <div class="setting-group blend">
-                                ${ff("colour_based_on_hex") ? html.node`
-                                <div class="setting" data-type="text">
-                                    <div class="heading">
-                                        <h5>${tl2(trans.convert_from_hex)}</h5>
-                                    </div>
-                                    <div class="input-container content-form">
-                                        ${colour3 = input({
-              type: "colour",
-              value: "#999999",
-              maxlength: 7,
-              warn_if_empty: true
-            })}
-                                        <button class="btn primary icon convert" onclick=${() => {
-              const value = colour3.value();
-              const hsl = hex_to_hsl(value);
-              hue_range.set(hsl.h);
-              sat_range.set(
-                clamp_sat2(hsl.s / 100 * 3)
-              );
-              lit_range.set(hsl.l / 100 + 0.35);
-            }}>${tl2(trans.convert)}</button>
-                                    </div>
-                                </div>
-                                ` : ""}
-                                ${hue_range = setting({ id: "hue", func: update_colour_swatches })}
-                                ${sat_range = setting({ id: "sat", func: update_colour_swatches })}
-                                ${lit_range = setting({ id: "lit", func: update_colour_swatches })}
-                            </div>
-                        </div>
-                    `,
-            placement: "bottom",
-            interactive: true,
-            interactiveBorder: 10,
-            trigger: "click",
-            appendTo: document.body
+        if (colour2.type == "default" && stored_season.id != "none" && exclusives[stored_season.id]) {
+          swatch_group.appendChild(create_swatch(type, colour2));
+          exclusives[stored_season.id].forEach((exclusive) => {
+            swatch_group.appendChild(create_swatch(type, exclusive));
           });
+          return;
         }
-        if (colour2.sets) {
-          colour2.sets.accent_type = colour2.type;
-          blob.style.setProperty("--hue-over", colour2.displays.hue);
-          blob.style.setProperty("--sat-over", colour2.displays.sat);
-          blob.style.setProperty("--lit-over", colour2.displays.lit);
-        }
-        if (colour2.type == "default" && stored_season.id != "none") {
-          text3 = tl2(trans.seasonal.name);
-          if (exclusives.hasOwnProperty(stored_season.id)) {
-            delete colour2.sets;
-            exclusives[stored_season.id] = [
-              {
-                type: "default",
-                name: tl2(trans.default),
-                sets: {
-                  hue: 255,
-                  sat: 1,
-                  lit: 1
-                },
-                displays: {
-                  hue: "var(--hue-seasonal, 255)",
-                  sat: "var(--sat-seasonal, 1)",
-                  lit: "var(--lit-seasonal, 1)"
-                }
-              },
-              ...exclusives[stored_season.id]
-            ];
-            tippy_esm_default(swatch, {
-              theme: "menu",
-              content: "",
-              allowHTML: true,
-              placement: "bottom",
-              interactive: true,
-              interactiveBorder: 10,
-              trigger: "click",
-              onShow(instance) {
-                const content2 = instance.popper.querySelector(".tippy-content");
-                render(
-                  content2,
-                  html`
-                                    ${exclusives[stored_season.id].forEach(
-                    (colour3) => {
-                      colour3.sets = {
-                        accent_type: colour3.type,
-                        ...colour3.sets
-                      };
-                      if (!colour3.displays)
-                        colour3.displays = colour3.sets;
-                      return html.node`
-                                        <button class="dropdown-menu-clickable-item" aria-checked=${colour3.displays.hue == settings.hue && colour3.displays.sat == settings.sat && colour3.displays.lit} onclick=${() => {
-                        hue_range.set(colour3.displays.hue);
-                        sat_range.set(colour3.displays.sat);
-                        lit_range.set(colour3.displays.lit);
-                      }} style="--hue-over: ${colour3.displays.hue}; --sat-over: ${colour3.displays.sat}; --lit-over: ${colour3.displays.lit}">
-                                            ${colour3.name}
-                                        </button>
-                                    `;
-                    }
-                  )}
-                                `
-                );
-                display_seasonal_exclusives(
-                  content2,
-                  colours,
-                  exclusives
-                );
-              }
-            });
-          }
-        }
-        text_elem.textContent = text3;
-        tippy_esm_default(swatch, {
-          content: text3
-        });
-        swatch_group.appendChild(swatch);
+        swatch_group.appendChild(create_swatch(type, colour2));
       });
+    }
+    function create_swatch(type, colour2) {
+      if (colour2.requires_flag && version.feature_flags.hasOwnProperty(colour2.requires_flag)) {
+        if (!ff(colour2.requires_flag)) return html.node``;
+      }
+      if (colour2.type == "avatar" && !auth.name) return html.node``;
+      let text3;
+      if (colour2.label) text3 = tl2(colour2.label);
+      if (!colour2.type) colour2.type = "colour";
+      if (!colour2.displays && colour2.sets) colour2.displays = colour2.sets;
+      let blob;
+      let text_elem;
+      const swatch = html.node`
+            <button class="swatch-container" onclick=${() => {
+        if (!colour2.sets) return;
+        hue_range.set(colour2.sets.hue);
+        sat_range.set(colour2.sets.sat);
+        lit_range.set(colour2.sets.lit);
+      }}>
+                <div class="swatch colourful" ref=${(el) => blob = el} data-swatch-type=${colour2.type} />
+                <strong ref=${(el) => text_elem = el} />
+            </button>
+        `;
+      if (type == "custom" && !colour2.label) text3 = tl2(trans[colour2.type]);
+      if (colour2.type == "customise") {
+        text3 = tl2(trans.edit);
+        let colour3;
+        tippy_esm_default(swatch, {
+          theme: "window",
+          content: html.node`
+                    <div class="dialog-settings">
+                        <div class="setting-group blend">
+                            ${ff("colour_based_on_hex") ? html.node`
+                            <div class="setting" data-type="text">
+                                <div class="heading">
+                                    <h5>${tl2(trans.convert_from_hex)}</h5>
+                                </div>
+                                <div class="input-container content-form">
+                                    ${colour3 = input({
+            type: "colour",
+            value: "#999999",
+            maxlength: 7,
+            warn_if_empty: true
+          })}
+                                    <button class="btn primary icon convert" onclick=${() => {
+            const value = colour3.value();
+            const hsl = hex_to_hsl(value);
+            hue_range.set(hsl.h);
+            sat_range.set(
+              clamp_sat2(hsl.s / 100 * 3)
+            );
+            lit_range.set(hsl.l / 100 + 0.35);
+          }}>${tl2(trans.convert)}</button>
+                                </div>
+                            </div>
+                            ` : ""}
+                            ${hue_range = setting({ id: "hue", func: update_colour_swatches })}
+                            ${sat_range = setting({ id: "sat", func: update_colour_swatches })}
+                            ${lit_range = setting({ id: "lit", func: update_colour_swatches })}
+                        </div>
+                    </div>
+                `,
+          placement: "bottom",
+          interactive: true,
+          interactiveBorder: 10,
+          trigger: "click",
+          appendTo: document.body
+        });
+      }
+      if (colour2.sets) {
+        colour2.sets.accent_type = colour2.type;
+        blob.style.setProperty("--hue-over", colour2.displays.hue);
+        blob.style.setProperty("--sat-over", colour2.displays.sat);
+        blob.style.setProperty("--lit-over", colour2.displays.lit);
+      }
+      if (colour2.type == "default" && stored_season.id != "none") {
+        text3 = tl2(trans.seasonal.name);
+      }
+      text_elem.textContent = text3;
+      tippy_esm_default(swatch, {
+        content: text3
+      });
+      return swatch;
     }
   }
   function init_profile_notes() {

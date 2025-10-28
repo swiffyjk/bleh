@@ -2257,7 +2257,7 @@ export function display_colour_presets() {
         christmas: [
             {
                 type: 'season',
-                name: tl(trans.seasonal.presets.nonsense),
+                label: trans.seasonal.presets.nonsense,
                 sets: {
                     hue: 352,
                     sat: 1.8,
@@ -2266,7 +2266,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: tl(trans.seasonal.presets.fruitcake),
+                label: trans.seasonal.presets.fruitcake,
                 sets: {
                     hue: 24,
                     sat: 0.93,
@@ -2275,7 +2275,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: tl(trans.seasonal.presets.mistletoe),
+                label: trans.seasonal.presets.mistletoe,
                 sets: {
                     hue: 130,
                     sat: 0.45,
@@ -2284,7 +2284,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: tl(trans.seasonal.presets.festival),
+                label: trans.seasonal.presets.festival,
                 sets: {
                     hue: 240,
                     sat: 1.4,
@@ -2300,187 +2300,129 @@ export function display_colour_presets() {
     let lit_range;
 
     for (let type in colours) {
-        const swatch_group = page.structure.main.querySelector(
-            `#colour_${type}`
-        );
+        const swatch_group = page.structure.main.querySelector(`#colour_${type}`);
         if (!swatch_group) return;
 
-        colours[type].forEach((colour) => {
-            if (
-                colour.requires_flag &&
-                version.feature_flags.hasOwnProperty(colour.requires_flag)
-            ) {
-                if (!ff(colour.requires_flag)) return;
-            }
+        colours[type].forEach(colour => {
+            if (colour.type == 'default' && stored_season.id != 'none' && exclusives[stored_season.id]) {
+                swatch_group.appendChild(create_swatch(type, colour));
 
-            if (colour.type == 'avatar' && !auth.name) return;
-
-            let text;
-            if (colour.label) text = tl(colour.label);
-
-            if (!colour.type) colour.type = 'colour';
-
-            if (!colour.displays && colour.sets) colour.displays = colour.sets;
-
-            let blob;
-            let text_elem;
-            let swatch = html.node`
-                <button class="swatch-container" onclick=${() => {
-                    if (!colour.sets) return;
-
-                    hue_range.set(colour.sets.hue);
-                    sat_range.set(colour.sets.sat);
-                    lit_range.set(colour.sets.lit);
-                }}>
-                    <div class="swatch colourful" ref=${(el) => (blob = el)} data-swatch-type=${colour.type} />
-                    <strong ref=${(el) => (text_elem = el)} />
-                </button>
-            `;
-
-            if (type == 'custom') text = tl(trans[colour.type]);
-
-            if (colour.type == 'customise') {
-                text = tl(trans.edit);
-
-                let colour;
-
-                tippy(swatch, {
-                    theme: 'window',
-                    content: html.node`
-                        <div class="dialog-settings">
-                            <div class="setting-group blend">
-                                ${ff('colour_based_on_hex')
-                            ? html.node`
-                                <div class="setting" data-type="text">
-                                    <div class="heading">
-                                        <h5>${tl(trans.convert_from_hex)}</h5>
-                                    </div>
-                                    <div class="input-container content-form">
-                                        ${(colour = input({
-                                type: 'colour',
-                                value: '#999999',
-                                maxlength: 7,
-                                warn_if_empty: true
-                            }))}
-                                        <button class="btn primary icon convert" onclick=${() => {
-                                    const value = colour.value();
-                                    const hsl = hex_to_hsl(value);
-
-                                    hue_range.set(hsl.h);
-                                    sat_range.set(
-                                        clamp_sat((hsl.s / 100) * 3)
-                                    );
-                                    lit_range.set(hsl.l / 100 + 0.35);
-                                }}>${tl(trans.convert)}</button>
-                                    </div>
-                                </div>
-                                `
-                            : ''
-                        }
-                                ${(hue_range = setting({ id: 'hue', func: update_colour_swatches }))}
-                                ${(sat_range = setting({ id: 'sat', func: update_colour_swatches }))}
-                                ${(lit_range = setting({ id: 'lit', func: update_colour_swatches }))}
-                            </div>
-                        </div>
-                    `,
-                    placement: 'bottom',
-                    interactive: true,
-                    interactiveBorder: 10,
-                    trigger: 'click',
-                    appendTo: document.body
+                exclusives[stored_season.id].forEach(exclusive => {
+                    swatch_group.appendChild(create_swatch(type, exclusive));
                 });
+
+                return;
             }
 
-            if (colour.sets) {
-                colour.sets.accent_type = colour.type;
+            swatch_group.appendChild(create_swatch(type, colour));
+        });
+    }
 
-                blob.style.setProperty('--hue-over', colour.displays.hue);
-                blob.style.setProperty('--sat-over', colour.displays.sat);
-                blob.style.setProperty('--lit-over', colour.displays.lit);
-            }
+    function create_swatch(type, colour) {
+        if (
+            colour.requires_flag &&
+            version.feature_flags.hasOwnProperty(colour.requires_flag)
+        ) {
+            if (!ff(colour.requires_flag)) return html.node``;
+        }
 
-            if (colour.type == 'default' && stored_season.id != 'none') {
-                text = tl(trans.seasonal.name);
+        if (colour.type == 'avatar' && !auth.name) return html.node``;
 
-                if (exclusives.hasOwnProperty(stored_season.id)) {
-                    delete colour.sets;
+        let text;
+        if (colour.label) text = tl(colour.label);
 
-                    exclusives[stored_season.id] = [
-                        {
-                            type: 'default',
-                            name: tl(trans.default),
-                            sets: {
-                                hue: 255,
-                                sat: 1,
-                                lit: 1
-                            },
-                            displays: {
-                                hue: 'var(--hue-seasonal, 255)',
-                                sat: 'var(--sat-seasonal, 1)',
-                                lit: 'var(--lit-seasonal, 1)'
-                            }
-                        },
-                        ...exclusives[stored_season.id]
-                    ];
+        if (!colour.type) colour.type = 'colour';
 
-                    tippy(swatch, {
-                        theme: 'menu',
-                        content: '',
-                        allowHTML: true,
-                        placement: 'bottom',
-                        interactive: true,
-                        interactiveBorder: 10,
-                        trigger: 'click',
+        if (!colour.displays && colour.sets) colour.displays = colour.sets;
 
-                        onShow(instance) {
-                            const content =
-                                instance.popper.querySelector('.tippy-content');
+        let blob;
+        let text_elem;
+        const swatch = html.node`
+            <button class="swatch-container" onclick=${() => {
+                if (!colour.sets) return;
 
-                            render(
-                                content,
-                                html`
-                                    ${exclusives[stored_season.id].forEach(
-                                    (colour) => {
-                                        colour.sets = {
-                                            accent_type: colour.type,
-                                            ...colour.sets
-                                        };
+                hue_range.set(colour.sets.hue);
+                sat_range.set(colour.sets.sat);
+                lit_range.set(colour.sets.lit);
+            }}>
+                <div class="swatch colourful" ref=${(el) => (blob = el)} data-swatch-type=${colour.type} />
+                <strong ref=${(el) => (text_elem = el)} />
+            </button>
+        `;
 
-                                        if (!colour.displays)
-                                            colour.displays = colour.sets;
+        if (type == 'custom' && !colour.label) text = tl(trans[colour.type]);
 
-                                        return html.node`
-                                        <button class="dropdown-menu-clickable-item" aria-checked=${colour.displays.hue == settings.hue && colour.displays.sat == settings.sat && colour.displays.lit} onclick=${() => {
-                                                hue_range.set(colour.displays.hue);
-                                                sat_range.set(colour.displays.sat);
-                                                lit_range.set(colour.displays.lit);
-                                            }} style="--hue-over: ${colour.displays.hue}; --sat-over: ${colour.displays.sat}; --lit-over: ${colour.displays.lit}">
-                                            ${colour.name}
-                                        </button>
-                                    `;
-                                    }
-                                )}
-                                `
-                            );
+        if (colour.type == 'customise') {
+            text = tl(trans.edit);
 
-                            display_seasonal_exclusives(
-                                content,
-                                colours,
-                                exclusives
-                            );
-                        }
-                    });
-                }
-            }
-
-            text_elem.textContent = text;
+            let colour;
 
             tippy(swatch, {
-                content: text
-            });
+                theme: 'window',
+                content: html.node`
+                    <div class="dialog-settings">
+                        <div class="setting-group blend">
+                            ${ff('colour_based_on_hex')
+                        ? html.node`
+                            <div class="setting" data-type="text">
+                                <div class="heading">
+                                    <h5>${tl(trans.convert_from_hex)}</h5>
+                                </div>
+                                <div class="input-container content-form">
+                                    ${(colour = input({
+                            type: 'colour',
+                            value: '#999999',
+                            maxlength: 7,
+                            warn_if_empty: true
+                        }))}
+                                    <button class="btn primary icon convert" onclick=${() => {
+                                const value = colour.value();
+                                const hsl = hex_to_hsl(value);
 
-            swatch_group.appendChild(swatch);
+                                hue_range.set(hsl.h);
+                                sat_range.set(
+                                    clamp_sat((hsl.s / 100) * 3)
+                                );
+                                lit_range.set(hsl.l / 100 + 0.35);
+                            }}>${tl(trans.convert)}</button>
+                                </div>
+                            </div>
+                            `
+                        : ''
+                    }
+                            ${(hue_range = setting({ id: 'hue', func: update_colour_swatches }))}
+                            ${(sat_range = setting({ id: 'sat', func: update_colour_swatches }))}
+                            ${(lit_range = setting({ id: 'lit', func: update_colour_swatches }))}
+                        </div>
+                    </div>
+                `,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click',
+                appendTo: document.body
+            });
+        }
+
+        if (colour.sets) {
+            colour.sets.accent_type = colour.type;
+
+            blob.style.setProperty('--hue-over', colour.displays.hue);
+            blob.style.setProperty('--sat-over', colour.displays.sat);
+            blob.style.setProperty('--lit-over', colour.displays.lit);
+        }
+
+        if (colour.type == 'default' && stored_season.id != 'none') {
+            text = tl(trans.seasonal.name);
+        }
+
+        text_elem.textContent = text;
+
+        tippy(swatch, {
+            content: text
         });
+
+        return swatch;
     }
 }
 
