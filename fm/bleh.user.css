@@ -23397,14 +23397,6 @@
 
         height: var(--profile-header-background-height);
 
-        &[data-page-type="album"][data-background-coloured="true"]:before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-color: hsl(var(--h4), 60%);
-            mix-blend-mode: overlay;
-        }
-
         &:after {
             content: "";
             position: absolute;
@@ -23491,7 +23483,7 @@
                 content: "";
                 position: absolute;
                 inset: 0;
-                background: hsl(var(--b6), 50%);
+                background: hsl(var(--b6), 44%);
                 mix-blend-mode: darken;
             }
 
