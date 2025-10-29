@@ -23005,13 +23005,18 @@
                 & > h2 {
                     padding: var(--card-padding) !important;
                     margin: calc(-1 * var(--card-padding)) !important;
+
+                    &:has(> .track-explicit) {
+                        position: relative;
+                        padding-left: calc(var(--card-padding) + 20px + 6px) !important;
+                    }
                 }
 
                 & > .sub-text,
                 & > .title-container > .header-title-label-wrap,
                 & > .title-container > h1,
                 & > .header-title-secondary,
-                & > h2 {
+                & > h2 > [itemprop="byArtist"] {
                     filter: var(--header-filter-shadow) !important;
                 }
             }
@@ -28644,13 +28649,8 @@
             --mask-size: 22px;
 
             position: absolute;
-            top: calc((28px - 20px) / 2);
-            left: 0;
-        }
-
-        h2:has(> &) {
-            position: relative;
-            padding-left: calc(20px + 6px);
+            top: calc(((28px - 20px) / 2) + var(--card-padding));
+            left: var(--card-padding);
         }
     }
 
