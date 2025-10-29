@@ -614,7 +614,7 @@ export function oracle_process() {
     function oracle_pick_release(data) {
         if (!data || !data.releases) return null;
 
-        const filtered = data.releases.filter((release) => {
+        const filtered = data.releases.filter(release => {
             const artists = release['artist-credit'] || [];
             const various = artists.some(
                 (artist) => artist.name == 'Various Artists'
@@ -625,10 +625,24 @@ export function oracle_process() {
             return !various && official && !fake;
         });
 
+        const similarity = (title) => {
+            const name = page.name.toLowerCase();
+
+            if (title == name) return 1;
+
+            const longer = title.length > name.length ? title : name;
+            const shorter = title.length > name.length ? name : title;
+
+            const same = [...shorter].filter((character, index) => longer[index] == character).length;
+            return same / longer.length;
+        };
+
         filtered.sort((a, b) => {
             const rank = (release) => {
                 const type = release['release-group']?.['primary-type']?.toLowerCase();
                 const digital = release.media?.[0]?.format == 'Digital Media';
+
+                const similar = similarity(release.title.toLowerCase());
 
                 let rank = 4;
                 if (type == 'album') rank = 0;
@@ -636,8 +650,12 @@ export function oracle_process() {
                 else if (type == 'single') rank = 3;
                 else rank = 2;
 
+                if (digital) rank -= 0.2;
+
+                const weight = 2 * (1 - similar);
+
                 // boost priority for digital media
-                return (digital ? 0 : 10) + rank;
+                return rank + weight;
             };
 
             const a_rank = rank(a);

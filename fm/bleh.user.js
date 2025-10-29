@@ -44052,16 +44052,27 @@
         const fake = release.title?.toLowerCase().includes("(spotify)");
         return !various && official && !fake;
       });
+      const similarity = (title) => {
+        const name = page.name.toLowerCase();
+        if (title == name) return 1;
+        const longer = title.length > name.length ? title : name;
+        const shorter = title.length > name.length ? name : title;
+        const same = [...shorter].filter((character, index3) => longer[index3] == character).length;
+        return same / longer.length;
+      };
       filtered.sort((a, b) => {
         const rank = (release) => {
           const type = release["release-group"]?.["primary-type"]?.toLowerCase();
           const digital = release.media?.[0]?.format == "Digital Media";
+          const similar = similarity(release.title.toLowerCase());
           let rank2 = 4;
           if (type == "album") rank2 = 0;
           else if (type == "ep") rank2 = 1;
           else if (type == "single") rank2 = 3;
           else rank2 = 2;
-          return (digital ? 0 : 10) + rank2;
+          if (digital) rank2 -= 0.2;
+          const weight = 2 * (1 - similar);
+          return rank2 + weight;
         };
         const a_rank = rank(a);
         const b_rank = rank(b);
