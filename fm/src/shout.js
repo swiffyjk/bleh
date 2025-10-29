@@ -256,8 +256,6 @@ function shout_send(send_button) {
 }
 
 export function shout_header(shout_controls) {
-    if (!shout_controls) return;
-
     let panel;
     let settings_btn;
 
@@ -284,7 +282,7 @@ export function shout_header(shout_controls) {
         `,
             panel.firstElementChild
         );
-    } else {
+    } else if (shout_controls) {
         panel = shout_controls.parentElement;
 
         let select_btn = panel.querySelector('.dropdown-menu-clickable-button');
@@ -335,6 +333,8 @@ export function shout_header(shout_controls) {
             panel.firstElementChild
         );
     }
+
+    if (!settings_btn) return;
 
     tippy(settings_btn, {
         theme: 'window',

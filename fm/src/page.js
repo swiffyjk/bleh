@@ -519,14 +519,9 @@ function load_page(main_content = null) {
             });
         }
 
-        if (['artist', 'album', 'track', 'user', 'tag'].includes(page.type)) {
-            if (
-                !['user', 'tag'].includes(page.type) &&
-                page.subpage.startsWith('shoutbox')
-            )
-                shout_header(
-                    page.structure.main.querySelector('.section-controls')
-                );
+        if (['artist', 'album', 'track', 'user', 'tag', 'events'].includes(page.type)) {
+            if (!['user', 'tag'].includes(page.type) && page.subpage.startsWith('shoutbox'))
+                shout_header(page.structure.main.querySelector('.section-controls'));
             else if (page.subpage == 'overview' || page.subpage == 'image')
                 shout_header(page.structure.main.querySelector('.shoutbox'));
         }

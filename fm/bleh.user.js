@@ -51072,7 +51072,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   function export_settings() {
     share(JSON.stringify(compile_settings()));
   }
-  unsafeWindow._reset_settings = function() {
+  function reset_settings() {
     dialog({
       id: "reset_settings",
       title: tl2(trans.reset_settings),
@@ -51082,24 +51082,24 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <a class="see-more" onclick=${() => export_settings()}>${tl2(trans.make_a_backup)}</a>
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick="_dialog_rm({id: 'reset_settings'})">
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "reset_settings" })}>
                     ${tl2(trans.cancel)}
                 </button>
                 <div class="fill"></div>
-                <button class="btn primary icon" data-type="reset" onclick="_confirm_reset()">
+                <button class="btn primary icon" data-type="reset" onclick=${() => confirm_reset()}>
                     ${tl2(trans.reset)}
                 </button>
             </div>
         `
     });
-  };
-  unsafeWindow._confirm_reset = function() {
+  }
+  function confirm_reset() {
     for (var member in settings) delete settings[member];
     load_settings(true);
     dialog_rm({
       id: "reset_settings"
     });
-  };
+  }
   function activity_preview() {
     let preview = page.structure.main.querySelector(".activity-preview");
     if (!preview) return;
@@ -56121,7 +56121,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
   }
   function shout_header(shout_controls) {
-    if (!shout_controls) return;
     let panel;
     let settings_btn;
     if (page.subpage == "shoutbox_shout") {
@@ -56145,7 +56144,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         `,
         panel.firstElementChild
       );
-    } else {
+    } else if (shout_controls) {
       panel = shout_controls.parentElement;
       let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
       let header = panel.querySelector("h2");
@@ -56187,6 +56186,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         panel.firstElementChild
       );
     }
+    if (!settings_btn) return;
     tippy_esm_default(settings_btn, {
       theme: "window",
       content: html.node`
@@ -57251,11 +57251,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           );
         });
       }
-      if (["artist", "album", "track", "user", "tag"].includes(page.type)) {
+      if (["artist", "album", "track", "user", "tag", "events"].includes(page.type)) {
         if (!["user", "tag"].includes(page.type) && page.subpage.startsWith("shoutbox"))
-          shout_header(
-            page.structure.main.querySelector(".section-controls")
-          );
+          shout_header(page.structure.main.querySelector(".section-controls"));
         else if (page.subpage == "overview" || page.subpage == "image")
           shout_header(page.structure.main.querySelector(".shoutbox"));
       }

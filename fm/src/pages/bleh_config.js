@@ -2623,7 +2623,7 @@ function export_settings() {
 }
 
 // reset settings
-unsafeWindow._reset_settings = function () {
+function reset_settings() {
     dialog({
         id: 'reset_settings',
         title: tl(trans.reset_settings),
@@ -2633,26 +2633,26 @@ unsafeWindow._reset_settings = function () {
                 <a class="see-more" onclick=${() => export_settings()}>${tl(trans.make_a_backup)}</a>
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick="_dialog_rm({id: 'reset_settings'})">
+                <button class="see-more cancel" onclick=${() => dialog_rm({id: 'reset_settings'})}>
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill"></div>
-                <button class="btn primary icon" data-type="reset" onclick="_confirm_reset()">
+                <button class="btn primary icon" data-type="reset" onclick=${() => confirm_reset()}>
                     ${tl(trans.reset)}
                 </button>
             </div>
         `
     });
-};
+}
 
-unsafeWindow._confirm_reset = function () {
+function confirm_reset() {
     for (var member in settings) delete settings[member];
     load_settings(true);
 
     dialog_rm({
         id: 'reset_settings'
     });
-};
+}
 
 function activity_preview() {
     let preview = page.structure.main.querySelector('.activity-preview');

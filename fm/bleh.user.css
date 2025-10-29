@@ -6563,7 +6563,7 @@
     }
     .chartlist-type,
     .chartlist-index {
-        margin-right: 12px;
+        margin-right: unset;
         text-align: center !important;
         position: relative;
         inset: unset !important;
@@ -7374,6 +7374,10 @@
                 background: var(--shout-tree);
                 display: block;
             }
+        }
+
+        &:first-child {
+            padding-top: unset;
         }
     }
     .shout-list-item {
@@ -11741,6 +11745,8 @@
         }
     }
     .popup_wrapper {
+        backdrop-filter: unset !important;
+        -webkit-backdrop-filter: unset !important;
         transform-origin: top;
 
         transition-property: transform, opacity;
