@@ -7,6 +7,7 @@
 import { html, render } from 'lighterhtml';
 import { log } from '../build/log';
 import {
+    auth,
     oracle_albums,
     oracle_artists,
     oracle_tracks,
@@ -57,12 +58,13 @@ export function oracle_process() {
 
     const info_panel = page.structure.main.firstElementChild;
 
-    let oracle_cache =
-        JSON.parse(localStorage.getItem('bleh_oracle_cache')) || {};
+    const mb_delay = 1600;
+
+    const split = window.location.pathname.split('/');
+
+    let oracle_cache = JSON.parse(localStorage.getItem('bleh_oracle_cache')) || {};
 
     const now = Date.now();
-
-    const mb_delay = 1600;
 
     for (const artist in oracle_cache) {
         for (const item in oracle_cache[artist]) {
@@ -250,7 +252,28 @@ export function oracle_process() {
         info_panel.appendChild(label_panel);
 
         function source_own_tracklist() {
+            fetch(`${root}user/${auth.name}/library/music/${page.sister}/${page.name}`)
+                .then(res => {
+                    if (!res.ok) {
+                        log('error fetching own plays', 'oracle', 'error', { res });
+                        throw new Error();
+                    }
 
+                    return res.text();
+                })
+                .then(dom => {
+                    const doc = new DOMParser().parseFromString(dom, 'text/html');
+
+                    const tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
+
+                    if (!tracklist) return;
+
+                    tracklist.classList.remove('chartlist--with-image');
+
+                    render(tracklist_own, html`
+                        ${tracklist}
+                    `);
+                });
         }
     }
 

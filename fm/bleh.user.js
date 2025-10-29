@@ -43605,9 +43605,10 @@
     let artist_data;
     let artist_template = `artist:"${page.sister}"`;
     const info_panel = page.structure.main.firstElementChild;
+    const mb_delay = 1600;
+    const split = window.location.pathname.split("/");
     let oracle_cache = JSON.parse(localStorage.getItem("bleh_oracle_cache")) || {};
     const now2 = Date.now();
-    const mb_delay = 1600;
     for (const artist2 in oracle_cache) {
       for (const item2 in oracle_cache[artist2]) {
         const entry = oracle_cache[artist2][item2];
@@ -43709,6 +43710,21 @@
       info_panel.after(releases_panel);
     } else if (page.type == "album" && page.subpage == "overview") {
       let source_own_tracklist = function() {
+        fetch(`${root}user/${auth.name}/library/music/${page.sister}/${page.name}`).then((res) => {
+          if (!res.ok) {
+            log("error fetching own plays", "oracle", "error", { res });
+            throw new Error();
+          }
+          return res.text();
+        }).then((dom) => {
+          const doc = new DOMParser().parseFromString(dom, "text/html");
+          const tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
+          if (!tracklist) return;
+          tracklist.classList.remove("chartlist--with-image");
+          render(tracklist_own, html`
+                        ${tracklist}
+                    `);
+        });
       };
       let tracklist_view_panel;
       tracklist_panel = html.node`
