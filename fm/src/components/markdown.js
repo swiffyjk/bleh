@@ -97,10 +97,7 @@ export function markdown(
                         cache.banner = '';
                         return '';
                     }
-
-                    const escaped = safe.href.replace(/"/g, '&quot;');
-
-                    cache.banner = escaped;
+                    cache.banner = `https://images.weserv.nl/?url=${encodeURIComponent(url)}&output=webp&n=-1`;
                 } catch {
                     cache.banner = 'accent';
                 }
@@ -412,6 +409,19 @@ export function markdown(
             if (!line_breaks) {
                 image.remove();
                 return;
+            }
+
+            // for counter-like sites
+            const proxy_free = [
+                'count.getloli.com'
+            ];
+
+            try {
+                const url = new URL(image.src);
+
+                if (!proxy_free.includes(url.hostname)) image.src = `https://images.weserv.nl/?url=${encodeURIComponent(image.src)}&output=webp&n=-1`;
+            } catch(e) {
+                image.src = `https://images.weserv.nl/?url=${encodeURIComponent(image.src)}&output=webp&n=-1`;
             }
 
             image.setAttribute('loading', 'lazy');

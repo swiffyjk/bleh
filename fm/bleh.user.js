@@ -47566,8 +47566,7 @@
               cache2.banner = "";
               return "";
             }
-            const escaped = safe.href.replace(/"/g, "&quot;");
-            cache2.banner = escaped;
+            cache2.banner = `https://images.weserv.nl/?url=${encodeURIComponent(url)}&output=webp&n=-1`;
           } catch {
             cache2.banner = "accent";
           }
@@ -47811,6 +47810,15 @@
         if (!line_breaks) {
           image.remove();
           return;
+        }
+        const proxy_free = [
+          "count.getloli.com"
+        ];
+        try {
+          const url = new URL(image.src);
+          if (!proxy_free.includes(url.hostname)) image.src = `https://images.weserv.nl/?url=${encodeURIComponent(image.src)}&output=webp&n=-1`;
+        } catch (e) {
+          image.src = `https://images.weserv.nl/?url=${encodeURIComponent(image.src)}&output=webp&n=-1`;
         }
         image.setAttribute("loading", "lazy");
         let func = () => expand_avatar(image.src, image.alt);
