@@ -38574,6 +38574,7 @@
         allow_banners: true,
         allow_icons: true,
         allow_hue: true,
+        allow_fonts: true,
         cache: cache2,
         take_effect,
         allow_socials: true,

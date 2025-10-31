@@ -1902,6 +1902,7 @@ function bio_parse(text, cache = true, take_effect = true) {
             allow_banners: true,
             allow_icons: true,
             allow_hue: true,
+            allow_fonts: true,
             cache,
             take_effect,
             allow_socials: true,
