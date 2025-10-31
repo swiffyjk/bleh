@@ -1091,6 +1091,7 @@
         --icon-16-grid: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItbGF5b3V0LWdyaWQiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik05IDNhMiAyIDAgMCAxIDIgMnY0YTIgMiAwIDAgMSAtMiAyaC00YTIgMiAwIDAgMSAtMiAtMnYtNGEyIDIgMCAwIDEgMiAtMnoiIC8+PHBhdGggZD0iTTE5IDNhMiAyIDAgMCAxIDIgMnY0YTIgMiAwIDAgMSAtMiAyaC00YTIgMiAwIDAgMSAtMiAtMnYtNGEyIDIgMCAwIDEgMiAtMnoiIC8+PHBhdGggZD0iTTkgMTNhMiAyIDAgMCAxIDIgMnY0YTIgMiAwIDAgMSAtMiAyaC00YTIgMiAwIDAgMSAtMiAtMnYtNGEyIDIgMCAwIDEgMiAtMnoiIC8+PHBhdGggZD0iTTE5IDEzYTIgMiAwIDAgMSAyIDJ2NGEyIDIgMCAwIDEgLTIgMmgtNGEyIDIgMCAwIDEgLTIgLTJ2LTRhMiAyIDAgMCAxIDIgLTJ6IiAvPjwvc3ZnPg==");
         --icon-16-list: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItbGF5b3V0LWxpc3QiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xOCAzYTMgMyAwIDAgMSAzIDN2MmEzIDMgMCAwIDEgLTMgM2gtMTJhMyAzIDAgMCAxIC0zIC0zdi0yYTMgMyAwIDAgMSAzIC0zeiIgLz48cGF0aCBkPSJNMTggMTNhMyAzIDAgMCAxIDMgM3YyYTMgMyAwIDAgMSAtMyAzaC0xMmEzIDMgMCAwIDEgLTMgLTN2LTJhMyAzIDAgMCAxIDMgLTN6IiAvPjwvc3ZnPg==");
         --icon-16-collage: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItbGF5b3V0LTIiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik04IDNhMyAzIDAgMCAxIDMgM3YxYTMgMyAwIDAgMSAtMyAzaC0yYTMgMyAwIDAgMSAtMyAtM3YtMWEzIDMgMCAwIDEgMyAtM3oiIC8+PHBhdGggZD0iTTggMTJhMyAzIDAgMCAxIDMgM3YzYTMgMyAwIDAgMSAtMyAzaC0yYTMgMyAwIDAgMSAtMyAtM3YtM2EzIDMgMCAwIDEgMyAtM3oiIC8+PHBhdGggZD0iTTE4IDNhMyAzIDAgMCAxIDMgM3YzYTMgMyAwIDAgMSAtMyAzaC0yYTMgMyAwIDAgMSAtMyAtM3YtM2EzIDMgMCAwIDEgMyAtM3oiIC8+PHBhdGggZD0iTTE4IDE0YTMgMyAwIDAgMSAzIDN2MWEzIDMgMCAwIDEgLTMgM2gtMmEzIDMgMCAwIDEgLTMgLTN2LTFhMyAzIDAgMCAxIDMgLTN6IiAvPjwvc3ZnPg==");
+        --icon-16-plot: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1vdXRsaW5lIGljb24tdGFibGVyLWNoYXJ0LWJhciI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTMgMTNhMSAxIDAgMCAxIDEgLTFoNGExIDEgMCAwIDEgMSAxdjZhMSAxIDAgMCAxIC0xIDFoLTRhMSAxIDAgMCAxIC0xIC0xeiIgLz48cGF0aCBkPSJNMTUgOWExIDEgMCAwIDEgMSAtMWg0YTEgMSAwIDAgMSAxIDF2MTBhMSAxIDAgMCAxIC0xIDFoLTRhMSAxIDAgMCAxIC0xIC0xeiIgLz48cGF0aCBkPSJNOSA1YTEgMSAwIDAgMSAxIC0xaDRhMSAxIDAgMCAxIDEgMXYxNGExIDEgMCAwIDEgLTEgMWgtNGExIDEgMCAwIDEgLTEgLTF6IiAvPjxwYXRoIGQ9Ik00IDIwaDE0IiAvPjwvc3ZnPg==");
         --icon-16-block: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItZm9yYmlkLTIiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xNyAzLjM0YTEwIDEwIDAgMSAxIC0xNC45OTUgOC45ODRsLS4wMDUgLS4zMjRsLjAwNSAtLjMyNGExMCAxMCAwIDAgMSAxNC45OTUgLTguMzM2em0tMS4yOTMgNC45NTNhMSAxIDAgMCAwIC0xLjQxNCAwbC02IDZsLS4wODMgLjA5NGExIDEgMCAwIDAgMS40OTcgMS4zMmw2IC02bC4wODMgLS4wOTRhMSAxIDAgMCAwIC0uMDgzIC0xLjMyeiIgLz48L3N2Zz4=");
         --icon-16-warning: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItYWxlcnQtY2lyY2xlIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTIgMmM1LjUyMyAwIDEwIDQuNDc3IDEwIDEwYTEwIDEwIDAgMCAxIC0xOS45OTUgLjMyNGwtLjAwNSAtLjMyNGwuMDA0IC0uMjhjLjE0OCAtNS4zOTMgNC41NjYgLTkuNzIgOS45OTYgLTkuNzJ6bS4wMSAxM2wtLjEyNyAuMDA3YTEgMSAwIDAgMCAwIDEuOTg2bC4xMTcgLjAwN2wuMTI3IC0uMDA3YTEgMSAwIDAgMCAwIC0xLjk4NmwtLjExNyAtLjAwN3ptLS4wMSAtOGExIDEgMCAwIDAgLS45OTMgLjg4M2wtLjAwNyAuMTE3djRsLjAwNyAuMTE3YTEgMSAwIDAgMCAxLjk4NiAwbC4wMDcgLS4xMTd2LTRsLS4wMDcgLS4xMTdhMSAxIDAgMCAwIC0uOTkzIC0uODgzeiIgLz48L3N2Zz4=");
         --icon-16-layout-manage: url("data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItbGF5b3V0LWNhcmRzIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNOCAzYTMgMyAwIDAgMSAzIDN2MTJhMyAzIDAgMCAxIC0zIDNoLTJhMyAzIDAgMCAxIC0zIC0zdi0xMmEzIDMgMCAwIDEgMyAtM3oiIC8+PHBhdGggZD0iTTE4IDNhMyAzIDAgMCAxIDMgM3Y2YTMgMyAwIDAgMSAtMyAzaC0yYTMgMyAwIDAgMSAtMyAtM3YtNmEzIDMgMCAwIDEgMyAtM3oiIC8+PC9zdmc+");
@@ -10222,6 +10223,7 @@
     [data-type="minus"] {
         --mask: var(--icon-16-minus);
     }
+    [data-type="plus"],
     [data-type="add"] {
         --mask: var(--icon-16-plus);
     }
@@ -10261,6 +10263,9 @@
     }
     [data-type="collage"] {
         --mask: var(--icon-16-collage);
+    }
+    [data-type="plot"] {
+        --mask: var(--icon-16-plot);
     }
     [data-type="continue"] {
         --mask: var(--icon-16-arrow-right);
@@ -18446,7 +18451,7 @@
             }
         }
 
-        &[data-type="text"] {
+        &[data-type="text"]:not(.v) {
             & > .heading {
                 min-height: var(--button-height);
                 max-height: 62px;
@@ -26807,7 +26812,7 @@
             gap: var(--card-gap);
             flex: 1;
 
-            .bleh-icon {
+            & > .bleh-icon {
                 --icon: var(--icon-16-dots);
                 background-image: linear-gradient(
                     90deg,
@@ -28794,5 +28799,53 @@
     .font-preview {
         text-align: center;
         margin: var(--card-gap) 0 !important;
+    }
+
+
+    .compare-users.for-plot {
+        --plot-user-pad: 0;
+        margin: calc(-1 * var(--plot-user-pad));
+    }
+    .compare-user-btn {
+        --bg: transparent;
+        --bg-hov: transparent;
+        --bg-atv: transparent;
+        --shadow: none;
+        --padding: var(--plot-user-pad);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: var(--icon-gap);
+
+        min-width: 30px !important;
+        min-height: 30px !important;
+
+        & > .compare-user {
+            cursor: pointer;
+            background: hsl(var(--b5));
+        }
+
+        & > .bleh-icon {
+            --icon: var(--mask);
+            transform-origin: left;
+
+            transition-property: margin-left, opacity;
+            transition-duration: 0.2s;
+            transition-timing-function: var(--trans-function);
+        }
+
+        &:not(.add-user) {
+            & > .bleh-icon {
+                --icon-size: 14px;
+            }
+
+            &:not(:hover) {
+                & > .bleh-icon {
+                    opacity: 0;
+                    margin-left: calc(-1 * (var(--icon-size) + var(--icon-gap)));
+                }
+            }
+        }
     }
 }

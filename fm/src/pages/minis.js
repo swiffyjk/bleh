@@ -12,6 +12,7 @@ import { collage } from '../components/collage.js';
 import { compare } from '../components/compare.js';
 import { pixel } from '../components/pixel.js';
 import { ff } from '../sku.js';
+import { plot } from '../components/plot.js';
 
 let valid_minis;
 
@@ -48,6 +49,14 @@ export function bleh_minis(skip = false) {
             body: tl(trans.compare_description),
             func: bleh_minis_compare,
             by: ['clairedoll']
+        },
+        plot: {
+            name: tl(trans.plot.name),
+            body: tl(trans.plot.body),
+            func: bleh_minis_plot,
+            by: ['clairedoll'],
+            new_release: true,
+            hide_if: !ff('unlock_minis')
         },
         pixel: {
             name: tl(trans.pixel?.name),
@@ -119,29 +128,29 @@ export function bleh_minis(skip = false) {
                         if (mini.hide_if) return html.node``;
 
                         return html.node`
-                        <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
-                            window.history.replaceState(
-                                id,
-                                '',
-                                `${root}bleh/minis/${id}`
-                            );
-                            page.structure.container.setAttribute(
-                                'data-mini',
-                                id
-                            );
-                            render(page.structure.main, html``);
-                            valid_minis[id].func();
-                        }}>
-                            <div class="mini-icon colourful">
-                                <div class="bleh-icon" />
-                            </div>
-                            <div class="mini-info">
-                                <h5>${mini.name}</h5>
-                                <p>${mini.body}</p>
-                            </div>
-                            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
-                        </button>
-                    `;
+                            <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
+                                window.history.replaceState(
+                                    id,
+                                    '',
+                                    `${root}bleh/minis/${id}`
+                                );
+                                page.structure.container.setAttribute(
+                                    'data-mini',
+                                    id
+                                );
+                                render(page.structure.main, html``);
+                                valid_minis[id].func();
+                            }}>
+                                <div class="mini-icon colourful">
+                                    <div class="bleh-icon" />
+                                </div>
+                                <div class="mini-info">
+                                    <h5>${mini.name}${mini.new_release ? html.node`<div class="new-badge new">${tl(trans.new)}</div>` : ''}</h5>
+                                    <p>${mini.body}</p>
+                                </div>
+                                <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+                            </button>
+                        `;
                     })}
                 </div>
                 <p class="card-tip">
@@ -243,6 +252,44 @@ function bleh_minis_compare() {
     );
 
     compare({
+        host: content,
+        sidebar: mini_settings
+    });
+}
+
+function bleh_minis_plot() {
+    let content;
+    let mini_settings;
+
+    render(
+        page.structure.main,
+        html`
+            <section class="minis">
+                ${return_to_minis('plot')}
+                <div class="minis-content" ref=${(el) => (content = el)} />
+            </section>
+        `
+    );
+
+    render(
+        page.structure.side,
+        html`
+            <section
+                class="current-mini-settings"
+                ref=${(el) => (mini_settings = el)}
+            />
+            <section class="mini-faq">
+                <p class="card-tip">
+                    ${tl(trans.value_by_user, {
+                        v: valid_minis.plot.name,
+                        u: valid_minis.plot.by.join(',')
+                    })}
+                </p>
+            </section>
+        `
+    );
+
+    plot({
         host: content,
         sidebar: mini_settings
     });

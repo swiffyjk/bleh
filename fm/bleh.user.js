@@ -423,7 +423,7 @@
             step((generator = generator.apply(thisArg, _arguments || [])).next());
           });
         }
-        function __generator(thisArg, body) {
+        function __generator(thisArg, body2) {
           var _ = { label: 0, sent: function() {
             if (t[0] & 1) throw t[1];
             return t[1];
@@ -481,7 +481,7 @@
                   _.trys.pop();
                   continue;
               }
-              op = body.call(thisArg, _);
+              op = body2.call(thisArg, _);
             } catch (e2) {
               op = [6, e2];
               y = 0;
@@ -534,13 +534,13 @@
           return Bounds.fromClientRect(context, node.getBoundingClientRect());
         };
         var parseDocumentSize = function(document2) {
-          var body = document2.body;
+          var body2 = document2.body;
           var documentElement = document2.documentElement;
-          if (!body || !documentElement) {
+          if (!body2 || !documentElement) {
             throw new Error("Unable to get document size");
           }
-          var width = Math.max(Math.max(body.scrollWidth, documentElement.scrollWidth), Math.max(body.offsetWidth, documentElement.offsetWidth), Math.max(body.clientWidth, documentElement.clientWidth));
-          var height = Math.max(Math.max(body.scrollHeight, documentElement.scrollHeight), Math.max(body.offsetHeight, documentElement.offsetHeight), Math.max(body.clientHeight, documentElement.clientHeight));
+          var width = Math.max(Math.max(body2.scrollWidth, documentElement.scrollWidth), Math.max(body2.offsetWidth, documentElement.offsetWidth), Math.max(body2.clientWidth, documentElement.clientWidth));
+          var height = Math.max(Math.max(body2.scrollHeight, documentElement.scrollHeight), Math.max(body2.offsetHeight, documentElement.offsetHeight), Math.max(body2.clientHeight, documentElement.clientHeight));
           return new Bounds(0, 0, width, height);
         };
         var toCodePoints$1 = function(str) {
@@ -6649,15 +6649,15 @@
         var PSEUDO_HIDE_ELEMENT_CLASS_BEFORE = "___html2canvas___pseudoelement_before";
         var PSEUDO_HIDE_ELEMENT_CLASS_AFTER = "___html2canvas___pseudoelement_after";
         var PSEUDO_HIDE_ELEMENT_STYLE = '{\n    content: "" !important;\n    display: none !important;\n}';
-        var createPseudoHideStyles = function(body) {
-          createStyles(body, ".".concat(PSEUDO_HIDE_ELEMENT_CLASS_BEFORE).concat(PSEUDO_BEFORE).concat(PSEUDO_HIDE_ELEMENT_STYLE, "\n         .").concat(PSEUDO_HIDE_ELEMENT_CLASS_AFTER).concat(PSEUDO_AFTER).concat(PSEUDO_HIDE_ELEMENT_STYLE));
+        var createPseudoHideStyles = function(body2) {
+          createStyles(body2, ".".concat(PSEUDO_HIDE_ELEMENT_CLASS_BEFORE).concat(PSEUDO_BEFORE).concat(PSEUDO_HIDE_ELEMENT_STYLE, "\n         .").concat(PSEUDO_HIDE_ELEMENT_CLASS_AFTER).concat(PSEUDO_AFTER).concat(PSEUDO_HIDE_ELEMENT_STYLE));
         };
-        var createStyles = function(body, styles) {
-          var document2 = body.ownerDocument;
+        var createStyles = function(body2, styles) {
+          var document2 = body2.ownerDocument;
           if (document2) {
             var style = document2.createElement("style");
             style.textContent = styles;
-            body.appendChild(style);
+            body2.appendChild(style);
           }
         };
         var addBase = function(targetELement, referenceDocument) {
@@ -7535,14 +7535,14 @@
               var container = this._document.createElement("div");
               var img = this._document.createElement("img");
               var span = this._document.createElement("span");
-              var body = this._document.body;
+              var body2 = this._document.body;
               container.style.visibility = "hidden";
               container.style.fontFamily = fontFamily2;
               container.style.fontSize = fontSize2;
               container.style.margin = "0";
               container.style.padding = "0";
               container.style.whiteSpace = "nowrap";
-              body.appendChild(container);
+              body2.appendChild(container);
               img.src = SMALL_IMAGE;
               img.width = 1;
               img.height = 1;
@@ -7562,7 +7562,7 @@
               container.style.lineHeight = "normal";
               img.style.verticalAlign = "super";
               var middle = img.offsetTop - container.offsetTop + 2;
-              body.removeChild(container);
+              body2.removeChild(container);
               return { baseline, middle };
             };
             FontMetrics2.prototype.getMetrics = function(fontFamily2, fontSize2) {
@@ -11463,18 +11463,18 @@
                 return;
               }
               var sizingImage = document.createElement("img");
-              var body = document.body || document.documentElement;
+              var body2 = document.body || document.documentElement;
               this.sizingImage = sizingImage;
               sizingImage.onload = function() {
                 done(sizingImage.width, sizingImage.height);
                 if (!isIOSWebKit) {
-                  body.removeChild(sizingImage);
+                  body2.removeChild(sizingImage);
                 }
               };
               sizingImage.src = image.src;
               if (!isIOSWebKit) {
                 sizingImage.style.cssText = "left:0;max-height:none!important;max-width:none!important;min-height:0!important;min-width:0!important;opacity:0;position:absolute;top:0;z-index:-1;";
-                body.appendChild(sizingImage);
+                body2.appendChild(sizingImage);
               }
             }
           }, {
@@ -16865,13 +16865,13 @@
     var _element$ownerDocumen;
     var html3 = getDocumentElement(element);
     var winScroll = getWindowScroll(element);
-    var body = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
-    var width = max(html3.scrollWidth, html3.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
-    var height = max(html3.scrollHeight, html3.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
+    var body2 = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
+    var width = max(html3.scrollWidth, html3.clientWidth, body2 ? body2.scrollWidth : 0, body2 ? body2.clientWidth : 0);
+    var height = max(html3.scrollHeight, html3.clientHeight, body2 ? body2.scrollHeight : 0, body2 ? body2.clientHeight : 0);
     var x = -winScroll.scrollLeft + getWindowScrollBarX(element);
     var y = -winScroll.scrollTop;
-    if (getComputedStyle2(body || html3).direction === "rtl") {
-      x += max(html3.clientWidth, body ? body.clientWidth : 0) - width;
+    if (getComputedStyle2(body2 || html3).direction === "rtl") {
+      x += max(html3.clientWidth, body2 ? body2.clientWidth : 0) - width;
     }
     return {
       width,
@@ -20289,7 +20289,7 @@
   function notify({
     id,
     title,
-    body,
+    body: body2,
     icon,
     classname,
     actions = [],
@@ -20302,7 +20302,7 @@
     log(`creating ${title}`, "notification", "info", {
       id,
       title,
-      body,
+      body: body2,
       icon,
       classname,
       persist,
@@ -20346,8 +20346,8 @@
         >
             <div class="notification-information" ref=${(el) => information = el}>
                 <div class="notification-title">${title}</div>
-                ${body ? html.node`
-                <div class="notification-body">${body}</div>
+                ${body2 ? html.node`
+                <div class="notification-body">${body2}</div>
                 ` : ""}
             </div>
             ${!persist ? html.node`
@@ -20373,11 +20373,11 @@
     notif.set = (value) => {
       bar.style.setProperty("width", `${value}%`);
     };
-    notif.set_body = (body2) => {
+    notif.set_body = (body3) => {
       render(information, html`
             <div class="notification-title">${title}</div>
-            ${body2 ? html.node`
-            <div class="notification-body">${body2}</div>
+            ${body3 ? html.node`
+            <div class="notification-body">${body3}</div>
             ` : ""}
         `);
     };
@@ -28962,7 +28962,7 @@
     id = "",
     title,
     subtitle,
-    body = html.node``,
+    body: body2 = html.node``,
     dismiss = true,
     type = "",
     has_overlays = true,
@@ -28978,7 +28978,7 @@
       id,
       title,
       subtitle,
-      body,
+      body: body2,
       dismiss,
       type,
       has_overlays,
@@ -29041,7 +29041,7 @@
     let modal_body = document.createElement("div");
     modal_body.classList.add("bleh-modal-body");
     modal_body.setAttribute("data-allow-scroll", allow_scroll);
-    modal_body.appendChild(body);
+    modal_body.appendChild(body2);
     modal.appendChild(modal_body);
     dialogs[id] = {
       instance: modal
@@ -29120,7 +29120,7 @@
       document.body.appendChild(notification_host);
     }
   }
-  function status({ title, body, type }) {
+  function status({ title, body: body2, type }) {
     let icon = "icon-16-info";
     if (type == "error") {
       icon = "icon-16-x";
@@ -29131,7 +29131,7 @@
                 <div class="bleh-icon" style="--icon: var(--${icon})" />
             </div>
             <div class="status-title">${title}</div>
-            ${body ? html.node`<div class="status-body">${body}</div>` : ""}
+            ${body2 ? html.node`<div class="status-body">${body2}</div>` : ""}
         </div>
     `;
     setTimeout(() => {
@@ -32183,7 +32183,7 @@
     let type;
     let settings_btn;
     let submit;
-    let body;
+    let body2;
     let value = 3;
     let min2 = 1;
     let max2 = 20;
@@ -32333,7 +32333,7 @@
             <div
                 class="compare-body"
                 data-filled="false"
-                ref=${(el) => body = el}
+                ref=${(el) => body2 = el}
             >
                 <div class="loading-data-container">
                     <div class="loading-data-text info">
@@ -32477,7 +32477,7 @@
     }
     function get_grid(current_page, pages) {
       render(
-        body,
+        body2,
         html`
                 <div class="loading-data-container">
                     <div class="loading-data-text">
@@ -32535,7 +32535,7 @@
       log("gathered initial values", "collage", "info", page.state.collage);
       if (page.state.collage.length == 0) {
         render(
-          body,
+          body2,
           html`
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">
@@ -32639,7 +32639,7 @@
             </div>
         `;
       render(
-        body,
+        body2,
         html`
                 <div class="loading-data-container">
                     <div class="loading-data-text">
@@ -32700,7 +32700,7 @@
             `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
           );
           render(
-            body,
+            body2,
             html`
                         <div class="collage-finished">
                             <strong>${tl2(trans.your_collage_is_ready)}</strong>
@@ -33050,6 +33050,148 @@
     return output;
   }
 
+  // src/components/plot.js
+  function plot({ host, sidebar } = {}) {
+    if (!host || !sidebar) return;
+    let timeframe;
+    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
+    let previous_year = current_year - 1;
+    const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
+    let users = [page.name];
+    let users_elem;
+    render(host, html`
+        <div class="compare-header">
+            <div class="compare-users for-plot" ref=${(el) => users_elem = el} />
+            <div class="compare-selection">
+                ${timeframe = select(
+      [
+        {
+          text: tl2(trans.timeframe)
+        },
+        {
+          value: "date_preset=LAST_7_DAYS",
+          text: tl2(trans.last_count_days).replace(
+            "{c}",
+            "7"
+          )
+        },
+        {
+          value: "date_preset=LAST_30_DAYS",
+          text: tl2(trans.last_count_days).replace(
+            "{c}",
+            "30"
+          )
+        },
+        {
+          value: "date_preset=LAST_90_DAYS",
+          text: tl2(trans.last_count_days).replace(
+            "{c}",
+            "90"
+          )
+        },
+        {
+          value: "date_preset=LAST_180_DAYS",
+          text: tl2(trans.last_count_days).replace(
+            "{c}",
+            "180"
+          )
+        },
+        {
+          value: "date_preset=LAST_365_DAYS",
+          text: tl2(trans.last_count_days).replace(
+            "{c}",
+            "365"
+          )
+        },
+        {
+          value: "date_preset=ALL",
+          text: tl2(trans.all_time)
+        },
+        {
+          value: `from=${current_year}-01-01&rangetype=year`,
+          text: current_year
+        },
+        {
+          value: `from=${previous_year}-01-01&rangetype=year`,
+          text: previous_year
+        }
+      ],
+      default_timeframe
+    )}
+            </div>
+        </div>
+        <div
+            class="compare-body"
+            data-filled="false"
+            ref=${(el) => body = el}
+        >
+            <div class="loading-data-container">
+                <div class="loading-data-text info">
+                    ${tl2(trans.choose_a_timeframe_above)}
+                </div>
+            </div>
+        </div>
+    `);
+    render_users();
+    function render_users() {
+      render(users_elem, html`
+            ${users.map((user) => html.node`
+                <button class="compare-user-btn" onclick=${() => {
+        users = users.filter((user_name) => user_name != user);
+        render_users();
+      }}>
+                    ${user_placeholder(user)}
+                    <div class="bleh-icon" data-type="minus" />
+                </button>
+            `)}
+            <button class="compare-user-btn add-user" onclick=${() => {
+        let input_box;
+        dialog({
+          id: "add_user",
+          title: tl2(trans.plot.name),
+          body: html.node`
+                        ${input_box = input({
+            focus: true,
+            func: complete_add,
+            warn_if_empty: true
+          })}
+                        <div class="modal-footer">
+                            <button class="see-more cancel" onclick=${() => dialog_rm({ id: "add_user" })}>
+                                ${tl2(trans.cancel)}
+                            </button>
+                            <div class="fill"></div>
+                            <button class="btn primary icon" data-type="add" onclick=${() => complete_add(input_box.value())}>
+                                ${tl2(trans.add)}
+                            </button>
+                        </div>
+                    `
+        });
+        setTimeout(() => {
+          input_box.focus();
+        }, 1);
+        function complete_add(val) {
+          if (val.length < 1 || users.includes(val)) return;
+          dialog_rm({ id: "add_user" });
+          users = [...users, val];
+          render_users();
+        }
+      }}>
+                <div class="bleh-icon" data-type="plus" />
+            </button>
+        `);
+    }
+    function user_placeholder(name, avatar2) {
+      if (name == auth.name) avatar2 = auth.avatar;
+      const elem = html.node`
+            <div class="compare-user" />
+        `;
+      render(elem, html`
+            ${render_user(name, avatar2, elem)}
+        `);
+      return elem;
+    }
+  }
+
   // src/pages/minis.js
   var valid_minis;
   function bleh_minis(skip2 = false) {
@@ -33079,6 +33221,14 @@
         body: tl2(trans.compare_description),
         func: bleh_minis_compare,
         by: ["clairedoll"]
+      },
+      plot: {
+        name: tl2(trans.plot.name),
+        body: tl2(trans.plot.body),
+        func: bleh_minis_plot,
+        by: ["clairedoll"],
+        new_release: true,
+        hide_if: !ff("unlock_minis")
       },
       pixel: {
         name: tl2(trans.pixel?.name),
@@ -33143,7 +33293,7 @@
                     ${Object.entries(valid_minis).map(([id, mini2]) => {
         if (mini2.hide_if) return html.node``;
         return html.node`
-                        <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
+                            <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
           window.history.replaceState(
             id,
             "",
@@ -33156,16 +33306,16 @@
           render(page.structure.main, html``);
           valid_minis[id].func();
         }}>
-                            <div class="mini-icon colourful">
-                                <div class="bleh-icon" />
-                            </div>
-                            <div class="mini-info">
-                                <h5>${mini2.name}</h5>
-                                <p>${mini2.body}</p>
-                            </div>
-                            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
-                        </button>
-                    `;
+                                <div class="mini-icon colourful">
+                                    <div class="bleh-icon" />
+                                </div>
+                                <div class="mini-info">
+                                    <h5>${mini2.name}${mini2.new_release ? html.node`<div class="new-badge new">${tl2(trans.new)}</div>` : ""}</h5>
+                                    <p>${mini2.body}</p>
+                                </div>
+                                <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+                            </button>
+                        `;
       })}
                 </div>
                 <p class="card-tip">
@@ -33256,6 +33406,40 @@
         `
     );
     compare({
+      host: content2,
+      sidebar: mini_settings
+    });
+  }
+  function bleh_minis_plot() {
+    let content2;
+    let mini_settings;
+    render(
+      page.structure.main,
+      html`
+            <section class="minis">
+                ${return_to_minis("plot")}
+                <div class="minis-content" ref=${(el) => content2 = el} />
+            </section>
+        `
+    );
+    render(
+      page.structure.side,
+      html`
+            <section
+                class="current-mini-settings"
+                ref=${(el) => mini_settings = el}
+            />
+            <section class="mini-faq">
+                <p class="card-tip">
+                    ${tl2(trans.value_by_user, {
+        v: valid_minis.plot.name,
+        u: valid_minis.plot.by.join(",")
+      })}
+                </p>
+            </section>
+        `
+    );
+    plot({
       host: content2,
       sidebar: mini_settings
     });
@@ -33362,7 +33546,7 @@
     let timeframe;
     let type;
     let submit;
-    let body;
+    let body2;
     if (page.name == auth.name) {
       page.name = "";
       page.avatar = "";
@@ -33527,7 +33711,7 @@
             <div
                 class="compare-body"
                 data-filled="false"
-                ref=${(el) => body = el}
+                ref=${(el) => body2 = el}
             >
                 <div class="loading-data-container">
                     <div class="loading-data-text info">
@@ -33649,7 +33833,7 @@
     }
     function get_grid(user2, current_page, page_count, next_user = null) {
       render(
-        body,
+        body2,
         html`
                 <div class="loading-data-container">
                     <div class="loading-data-text">
@@ -33739,10 +33923,10 @@
         (a, b) => b.plays.shared - a.plays.shared
       );
       log("gathered shared values", "compare", "info", page.state.compare);
-      body.innerHTML = "";
+      body2.innerHTML = "";
       if (page.state.compare.shared.length == 0) {
         render(
-          body,
+          body2,
           html`
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">
@@ -33804,7 +33988,7 @@
                     </li>
                 `);
         });
-        render(body, grid);
+        render(body2, grid);
         music_grids(grid);
       } else {
         let table = document.createElement("table");
@@ -33867,8 +34051,8 @@
                     </tr>
                 `);
         });
-        body.appendChild(table);
-        patch_titles(body);
+        body2.appendChild(table);
+        patch_titles(body2);
       }
     }
   }
@@ -34674,7 +34858,7 @@
     type = "toggle",
     name = "",
     title = "",
-    body = "",
+    body: body2 = "",
     small = "",
     disabled = false,
     data: data2 = "",
@@ -34693,7 +34877,7 @@
     }}>
             <div class="heading">
                 <h5>${title}</h5>
-                ${body != "" ? html.node`<p>${body}</p>` : ""}
+                ${body2 != "" ? html.node`<p>${body2}</p>` : ""}
                 ${small != "" ? html.node`<small>${small}</small>` : ""}
             </div>
             ${type == "toggle" ? html.node`
@@ -40010,7 +40194,7 @@
         });
       const type = settings_store[id].type || "toggle";
       const title = settings_store[id].title ? tl2(settings_store[id].title) : id;
-      let body = settings_store[id].body ? tl2(settings_store[id].body) : null;
+      let body2 = settings_store[id].body ? tl2(settings_store[id].body) : null;
       const icon = settings_store[id].icon;
       if (![
         "toggle",
@@ -40027,8 +40211,8 @@
         });
       const incompatible_with = settings_store[id].incompatible;
       const hide_if_incompatible = settings_store[id].hide_if_incompatible || false;
-      if (!body && settings_store[id].keybind)
-        body = keybind(settings_store[id].keybind);
+      if (!body2 && settings_store[id].keybind)
+        body2 = keybind(settings_store[id].keybind);
       let disabled = false;
       let disabled_reason = "";
       if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
@@ -40084,7 +40268,7 @@
                     ${text3 ? html.node`
                     <div class="heading">
                         <h5>${html_title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
+                        ${body2 ? html.node`<p>${body2}</p>` : ""}
                     </div>
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
@@ -40167,7 +40351,7 @@
                     ${text3 ? html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_range()}>${tl2(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
+                        ${body2 ? html.node`<p>${body2}</p>` : ""}
                     </div>
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
@@ -40249,7 +40433,7 @@
                     ${text3 ? html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar2)}>${tl2(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
+                        ${body2 ? html.node`<p>${body2}</p>` : ""}
                     </div>
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
@@ -40381,7 +40565,7 @@
                     ${text3 ? html.node`
                     <div class="heading">
                         <h5>${html_title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
+                        ${body2 ? html.node`<p>${body2}</p>` : ""}
                     </div>
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
@@ -40487,7 +40671,7 @@
                     ${text3 ? html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_radio()}>${tl2(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
+                        ${body2 ? html.node`<p>${body2}</p>` : ""}
                     </div>
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
@@ -40672,7 +40856,7 @@
                     ${text3 ? html.node`
                     <div class="heading">
                         <h5>${html_title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
+                        ${body2 ? html.node`<p>${body2}</p>` : ""}
                     </div>
                     ` : ""}
                     <div class="setting-lists" ref=${(el) => lists = el} />
@@ -40728,7 +40912,7 @@
                     ${text3 ? html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_select()}>${tl2(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
+                        ${body2 ? html.node`<p>${body2}</p>` : ""}
                     </div>
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
@@ -47230,14 +47414,14 @@
         } catch (_) {
         }
       }
-      const body = doc.body || doc.documentElement;
+      const body2 = doc.body || doc.documentElement;
       if (dirty && leadingWhitespace) {
-        body.insertBefore(document2.createTextNode(leadingWhitespace), body.childNodes[0] || null);
+        body2.insertBefore(document2.createTextNode(leadingWhitespace), body2.childNodes[0] || null);
       }
       if (NAMESPACE === HTML_NAMESPACE) {
         return getElementsByTagName.call(doc, WHOLE_DOCUMENT ? "html" : "body")[0];
       }
-      return WHOLE_DOCUMENT ? doc.documentElement : body;
+      return WHOLE_DOCUMENT ? doc.documentElement : body2;
     };
     const _createNodeIterator = function _createNodeIterator2(root2) {
       return createNodeIterator.call(
@@ -47471,7 +47655,7 @@
     };
     DOMPurify.sanitize = function(dirty) {
       let cfg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-      let body = null;
+      let body2 = null;
       let importedNode = null;
       let currentNode = null;
       let returnNode = null;
@@ -47507,29 +47691,29 @@
           }
         }
       } else if (dirty instanceof Node2) {
-        body = _initDocument("<!---->");
-        importedNode = body.ownerDocument.importNode(dirty, true);
+        body2 = _initDocument("<!---->");
+        importedNode = body2.ownerDocument.importNode(dirty, true);
         if (importedNode.nodeType === NODE_TYPE.element && importedNode.nodeName === "BODY") {
-          body = importedNode;
+          body2 = importedNode;
         } else if (importedNode.nodeName === "HTML") {
-          body = importedNode;
+          body2 = importedNode;
         } else {
-          body.appendChild(importedNode);
+          body2.appendChild(importedNode);
         }
       } else {
         if (!RETURN_DOM && !SAFE_FOR_TEMPLATES && !WHOLE_DOCUMENT && // eslint-disable-next-line unicorn/prefer-includes
         dirty.indexOf("<") === -1) {
           return trustedTypesPolicy && RETURN_TRUSTED_TYPE ? trustedTypesPolicy.createHTML(dirty) : dirty;
         }
-        body = _initDocument(dirty);
-        if (!body) {
+        body2 = _initDocument(dirty);
+        if (!body2) {
           return RETURN_DOM ? null : RETURN_TRUSTED_TYPE ? emptyHTML : "";
         }
       }
-      if (body && FORCE_BODY) {
-        _forceRemove(body.firstChild);
+      if (body2 && FORCE_BODY) {
+        _forceRemove(body2.firstChild);
       }
-      const nodeIterator = _createNodeIterator(IN_PLACE ? dirty : body);
+      const nodeIterator = _createNodeIterator(IN_PLACE ? dirty : body2);
       while (currentNode = nodeIterator.nextNode()) {
         _sanitizeElements(currentNode);
         _sanitizeAttributes(currentNode);
@@ -47542,21 +47726,21 @@
       }
       if (RETURN_DOM) {
         if (RETURN_DOM_FRAGMENT) {
-          returnNode = createDocumentFragment.call(body.ownerDocument);
-          while (body.firstChild) {
-            returnNode.appendChild(body.firstChild);
+          returnNode = createDocumentFragment.call(body2.ownerDocument);
+          while (body2.firstChild) {
+            returnNode.appendChild(body2.firstChild);
           }
         } else {
-          returnNode = body;
+          returnNode = body2;
         }
         if (ALLOWED_ATTR.shadowroot || ALLOWED_ATTR.shadowrootmode) {
           returnNode = importNode2.call(originalDocument, returnNode, true);
         }
         return returnNode;
       }
-      let serializedHTML = WHOLE_DOCUMENT ? body.outerHTML : body.innerHTML;
-      if (WHOLE_DOCUMENT && ALLOWED_TAGS["!doctype"] && body.ownerDocument && body.ownerDocument.doctype && body.ownerDocument.doctype.name && regExpTest(DOCTYPE_NAME, body.ownerDocument.doctype.name)) {
-        serializedHTML = "<!DOCTYPE " + body.ownerDocument.doctype.name + ">\n" + serializedHTML;
+      let serializedHTML = WHOLE_DOCUMENT ? body2.outerHTML : body2.innerHTML;
+      if (WHOLE_DOCUMENT && ALLOWED_TAGS["!doctype"] && body2.ownerDocument && body2.ownerDocument.doctype && body2.ownerDocument.doctype.name && regExpTest(DOCTYPE_NAME, body2.ownerDocument.doctype.name)) {
+        serializedHTML = "<!DOCTYPE " + body2.ownerDocument.doctype.name + ">\n" + serializedHTML;
       }
       if (SAFE_FOR_TEMPLATES) {
         arrayForEach([MUSTACHE_EXPR2, ERB_EXPR2, TMPLIT_EXPR2], (expr) => {
@@ -47860,8 +48044,8 @@
       ALLOWED_TAGS,
       ALLOWED_ATTR
     });
-    const body = html.node([parsed2]);
-    log("rendered", "markdown", "info", { body });
+    const body2 = html.node([parsed2]);
+    log("rendered", "markdown", "info", { body: body2 });
     const link_strings = {
       "open.spotify.com": "Spotify",
       "spotify.com": "Spotify",
@@ -47889,7 +48073,7 @@
       "discogs.com": "Discogs"
     };
     if (links.length > 0) {
-      body.appendChild(html.node`
+      body2.appendChild(html.node`
             <div class="social-links-container">
                 <div class="sub-text music-small-header">
                     ${tl2(trans.links)}
@@ -47912,10 +48096,10 @@
             </div>
         `);
     }
-    if (body.nodeName != "#text") patch_wiki_contents(body);
-    if (line_breaks && body.nodeName != "#text") {
-      local_restriction(body);
-      body.querySelectorAll("p").forEach((text4) => {
+    if (body2.nodeName != "#text") patch_wiki_contents(body2);
+    if (line_breaks && body2.nodeName != "#text") {
+      local_restriction(body2);
+      body2.querySelectorAll("p").forEach((text4) => {
         local_restriction(text4);
       });
     }
@@ -47923,8 +48107,8 @@
       if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name))
         allow_hue = false;
     }
-    if (body.nodeName != "#text") {
-      body.querySelectorAll("img").forEach((image) => {
+    if (body2.nodeName != "#text") {
+      body2.querySelectorAll("img").forEach((image) => {
         if (!line_breaks) {
           image.remove();
           return;
@@ -47978,7 +48162,7 @@
       });
       save_profile_cache(cache2, profile_cache, name);
     }
-    return body;
+    return body2;
   }
   function markdown_prompt({
     allow_headers = false,
@@ -56619,9 +56803,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       );
       if (!modal_dialog) return;
       modal_dialog.setAttribute("data-dialog-extender", "true");
-      let body = modal_dialog.querySelector(".modal-body");
-      let title = body.querySelector(".modal-title");
-      let contents = body.querySelector(":scope > div");
+      let body2 = modal_dialog.querySelector(".modal-body");
+      let title = body2.querySelector(".modal-title");
+      let contents = body2.querySelector(":scope > div");
       let form = contents.querySelector("form");
       if (!form) return;
       let dismiss = modal_dialog.querySelector(".modal-dismiss");
@@ -56684,14 +56868,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     </form>
                 `
         );
-      } else if (body.classList.contains("automatic-edit-modal-body-v2")) {
+      } else if (body2.classList.contains("automatic-edit-modal-body-v2")) {
         let bulk_edit_active = false;
-        let edit_all = body.querySelector('[name="edit_all"]');
+        let edit_all = body2.querySelector('[name="edit_all"]');
         if (edit_all && edit_all.disabled) bulk_edit_active = true;
         if (!bulk_edit_active) title.textContent = tl2(trans.edit_scrobble);
         else title.textContent = tl2(trans.edit_scrobbles_in_bulk);
         modal_dialog.classList.add("automatic-edit-modal");
-        let checkboxes = body.querySelectorAll(".checkbox");
+        let checkboxes = body2.querySelectorAll(".checkbox");
         checkboxes.forEach((checkbox) => {
           let input_el = checkbox.querySelector("input");
           let value = input_el.checked;
@@ -56712,15 +56896,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     `
           );
         });
-        let original_fields = body.querySelectorAll(
+        let original_fields = body2.querySelectorAll(
           ".edit-scrobble-label--originally"
         );
         original_fields.forEach((field) => {
           field.textContent = field.textContent.trim().replace(/"([^"]*)"/g, "\u2018$1\u2019");
         });
-        let submit = body.querySelector(".form-group--submit");
+        let submit = body2.querySelector(".form-group--submit");
         submit.classList = "modal-footer";
-        let delete_form = body.querySelector(".edit-scrobble-form-delete");
+        let delete_form = body2.querySelector(".edit-scrobble-form-delete");
         let delete_btn;
         if (delete_form)
           delete_btn = delete_form.querySelector(".btn-delete");
@@ -56754,15 +56938,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     </div>
                 `
         );
-      } else if (body.querySelector(".lastfm-bulk-edit-list")) {
+      } else if (body2.querySelector(".lastfm-bulk-edit-list")) {
         let checks;
-        let controls = body.querySelector(
+        let controls = body2.querySelector(
           ".lastfm-bulk-edit-form-group-controls"
         );
         if (controls) {
           let parent = controls.parentElement;
           parent.parentElement.removeChild(parent);
-          let disclaimer = body.querySelector(".form-disclaimer");
+          let disclaimer = body2.querySelector(".form-disclaimer");
           disclaimer.after(html.node`
                     <div class="button-group">
                         <button class="flex-button" onclick=${() => {
@@ -56784,7 +56968,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     </div>
                 `);
         }
-        let list = body.querySelector(".lastfm-bulk-edit-list");
+        let list = body2.querySelector(".lastfm-bulk-edit-list");
         let checkboxes = list.querySelectorAll(".checkbox");
         checkboxes.forEach((checkbox) => {
           let input_el = checkbox.querySelector("input");
@@ -56816,7 +57000,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           );
         });
         checks = list.querySelectorAll(".setting");
-        let footer = body.querySelector(".form-group--submit");
+        let footer = body2.querySelector(".form-group--submit");
         footer.classList = "modal-footer";
         render(
           footer,
@@ -64134,6 +64318,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     sign_up: {
       en: "Sign up"
+    },
+    plot: {
+      name: {
+        en: "Plot"
+      },
+      body: {
+        en: "Create graphs from user libraries"
+      }
     }
   };
   function tl2(key, replacements = {}) {
@@ -77876,18 +78068,18 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
   function getTooltipSize(tooltip, options) {
     const ctx = tooltip.chart.ctx;
-    const { body, footer, title } = tooltip;
+    const { body: body2, footer, title } = tooltip;
     const { boxWidth, boxHeight } = options;
     const bodyFont = toFont(options.bodyFont);
     const titleFont = toFont(options.titleFont);
     const footerFont = toFont(options.footerFont);
     const titleLineCount = title.length;
     const footerLineCount = footer.length;
-    const bodyLineItemCount = body.length;
+    const bodyLineItemCount = body2.length;
     const padding = toPadding(options.padding);
     let height = padding.height;
     let width = 0;
-    let combinedBodyLength = body.reduce((count, bodyItem) => count + bodyItem.before.length + bodyItem.lines.length + bodyItem.after.length, 0);
+    let combinedBodyLength = body2.reduce((count, bodyItem) => count + bodyItem.before.length + bodyItem.lines.length + bodyItem.after.length, 0);
     combinedBodyLength += tooltip.beforeBody.length + tooltip.afterBody.length;
     if (titleLineCount) {
       height += titleLineCount * titleFont.lineHeight + (titleLineCount - 1) * options.titleSpacing + options.titleMarginBottom;
@@ -77909,7 +78101,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     ctx.font = bodyFont.string;
     each(tooltip.beforeBody.concat(tooltip.afterBody), maxLineWidth);
     widthPadding = options.displayColors ? boxWidth + 2 + options.boxPadding : 0;
-    each(body, (bodyItem) => {
+    each(body2, (bodyItem) => {
       each(bodyItem.before, maxLineWidth);
       each(bodyItem.lines, maxLineWidth);
       each(bodyItem.after, maxLineWidth);
@@ -78417,7 +78609,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ctx.fillStyle = this.labelTextColors[i];
     }
     drawBody(pt, ctx, options) {
-      const { body } = this;
+      const { body: body2 } = this;
       const { bodySpacing, bodyAlign, displayColors, boxHeight, boxWidth, boxPadding } = options;
       const bodyFont = toFont(options.bodyFont);
       let bodyLineHeight = bodyFont.lineHeight;
@@ -78436,8 +78628,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       ctx.fillStyle = options.bodyColor;
       each(this.beforeBody, fillLineOfText);
       xLinePadding = displayColors && bodyAlignForCalculation !== "right" ? bodyAlign === "center" ? boxWidth / 2 + boxPadding : boxWidth + 2 + boxPadding : 0;
-      for (i = 0, ilen = body.length; i < ilen; ++i) {
-        bodyItem = body[i];
+      for (i = 0, ilen = body2.length; i < ilen; ++i) {
+        bodyItem = body2[i];
         textColor = this.labelTextColors[i];
         ctx.fillStyle = textColor;
         each(bodyItem.before, fillLineOfText);

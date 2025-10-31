@@ -6514,6 +6514,14 @@ export const trans = {
     },
     sign_up: {
         en: 'Sign up'
+    },
+    plot: {
+        name: {
+            en: 'Plot'
+        },
+        body: {
+            en: 'Create graphs from user libraries'
+        }
     }
 };
 
