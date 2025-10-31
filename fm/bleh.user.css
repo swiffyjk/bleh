@@ -28446,6 +28446,7 @@
         line-height: 34px;
         font-weight: var(--custom-font-weight, var(--font-weight-bold));
         cursor: default;
+        user-select: none;
     }
 
     .font-options {
