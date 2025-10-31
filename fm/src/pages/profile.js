@@ -2046,7 +2046,7 @@ export function bleh_profile_chart_render(
 }
 
 export function save_profile_cache(
-    { avatar, banner, hue, sat, lit, aka, created } = {},
+    { avatar, banner, banner_orig, hue, sat, lit, aka, created } = {},
     profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) ||
         {},
     name = page.name
@@ -2072,6 +2072,7 @@ export function save_profile_cache(
     profile_cache[name] = {
         avatar,
         banner,
+        banner_orig,
         hue,
         sat,
         lit,

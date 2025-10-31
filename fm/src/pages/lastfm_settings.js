@@ -758,14 +758,12 @@ function patch_settings_profile_panel(token, update_picture) {
                 <div class="heading">
                     <h5>${tl(trans.profile_banner.name)}</h5>
                     <p>${tl(trans.profile_banner.body)}</p>
-                    ${cache.banner ?
-                        html.node`
-                <p>${tl(trans.current_banner_value).replace('{v}', cache.banner)}</p>
-                `
-                    :   ''}
+                    ${cache.banner_orig ? html.node`
+                        <p>${tl(trans.current_banner_value).replace('{v}', cache.banner_orig)}</p>
+                    ` : ''}
                 </div>
                 ${() => {
-                    if (!cache.banner)
+                    if (!cache.banner_orig)
                         return html.node`
                         <div class="info">
                             <p>${tl(trans.none)}</p>
@@ -773,11 +771,11 @@ function patch_settings_profile_panel(token, update_picture) {
                     `;
 
                     let banner_image = html.node`
-                    <div class="banner-image" style="background-image: url(${cache.banner})" />
-                `;
+                        <div class="banner-image" style="background-image: url(${cache.banner})" />
+                    `;
 
                     tippy(banner_image, {
-                        content: cache.banner
+                        content: cache.banner_orig
                     });
 
                     return banner_image;
@@ -785,8 +783,7 @@ function patch_settings_profile_panel(token, update_picture) {
             `
         );
 
-        const accent_regex =
-            /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
+        const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
 
         console.info(
             'cache update',
@@ -816,9 +813,12 @@ function patch_settings_profile_panel(token, update_picture) {
                             let sat_range;
                             let lit_range;
 
+                            settings_store.profile_hue.default = settings.hue;
+                            settings_store.profile_sat.default = settings.sat;
+                            settings_store.profile_lit.default = settings.lit;
+
                             const match = about.value.match(accent_regex);
 
-                            console.info(match);
                             if (match) {
                                 save_setting(
                                     'profile_hue',
@@ -832,13 +832,6 @@ function patch_settings_profile_panel(token, update_picture) {
                                     'profile_lit',
                                     parseFloat(match[3])
                                 );
-
-                                settings_store.profile_hue.default =
-                                    settings.hue;
-                                settings_store.profile_sat.default =
-                                    settings.sat;
-                                settings_store.profile_lit.default =
-                                    settings.lit;
                             }
 
                             let accent_preview;

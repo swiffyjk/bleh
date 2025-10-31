@@ -90,14 +90,14 @@ export function markdown(
             regex: /\[banner=([^\]]+)\]/g,
             replace: (_, url) => {
                 delete cache.banner;
+                delete cache.banner_orig;
 
                 try {
                     const safe = new URL(url);
-                    if (!['http:', 'https:'].includes(safe.protocol)) {
-                        cache.banner = '';
-                        return '';
-                    }
+                    if (!['http:', 'https:'].includes(safe.protocol)) return '';
+
                     cache.banner = `https://images.weserv.nl/?url=${encodeURIComponent(url)}&output=webp&n=-1`;
+                    if (name == auth.name) cache.banner_orig = url;
                 } catch {
                     cache.banner = 'accent';
                 }

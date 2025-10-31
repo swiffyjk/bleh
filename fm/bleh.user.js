@@ -35467,22 +35467,22 @@
                 <div class="heading">
                     <h5>${tl2(trans.profile_banner.name)}</h5>
                     <p>${tl2(trans.profile_banner.body)}</p>
-                    ${cache2.banner ? html.node`
-                <p>${tl2(trans.current_banner_value).replace("{v}", cache2.banner)}</p>
-                ` : ""}
+                    ${cache2.banner_orig ? html.node`
+                        <p>${tl2(trans.current_banner_value).replace("{v}", cache2.banner_orig)}</p>
+                    ` : ""}
                 </div>
                 ${() => {
-          if (!cache2.banner)
+          if (!cache2.banner_orig)
             return html.node`
                         <div class="info">
                             <p>${tl2(trans.none)}</p>
                         </div>
                     `;
           let banner_image = html.node`
-                    <div class="banner-image" style="background-image: url(${cache2.banner})" />
-                `;
+                        <div class="banner-image" style="background-image: url(${cache2.banner})" />
+                    `;
           tippy_esm_default(banner_image, {
-            content: cache2.banner
+            content: cache2.banner_orig
           });
           return banner_image;
         }}
@@ -35515,8 +35515,10 @@
         let hue_range;
         let sat_range;
         let lit_range;
+        settings_store.profile_hue.default = settings.hue;
+        settings_store.profile_sat.default = settings.sat;
+        settings_store.profile_lit.default = settings.lit;
         const match3 = about.value.match(accent_regex);
-        console.info(match3);
         if (match3) {
           save_setting(
             "profile_hue",
@@ -35530,9 +35532,6 @@
             "profile_lit",
             parseFloat(match3[3])
           );
-          settings_store.profile_hue.default = settings.hue;
-          settings_store.profile_sat.default = settings.sat;
-          settings_store.profile_lit.default = settings.lit;
         }
         let accent_preview;
         dialog({
@@ -38559,7 +38558,7 @@
     });
     scrobble_canvas_container.appendChild(scrobble_canvas);
   }
-  function save_profile_cache({ avatar: avatar2, banner, hue: hue2, sat, lit, aka, created } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
+  function save_profile_cache({ avatar: avatar2, banner, banner_orig, hue: hue2, sat, lit, aka, created } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
     let profile_cache_o = Object.keys(profile_cache);
     if (profile_cache_o.length > 400) {
       const keys2 = Reflect.ownKeys(profile_cache);
@@ -38573,6 +38572,7 @@
     profile_cache[name] = {
       avatar: avatar2,
       banner,
+      banner_orig,
       hue: hue2,
       sat,
       lit,
@@ -47560,13 +47560,12 @@
         regex: /\[banner=([^\]]+)\]/g,
         replace: (_, url) => {
           delete cache2.banner;
+          delete cache2.banner_orig;
           try {
             const safe = new URL(url);
-            if (!["http:", "https:"].includes(safe.protocol)) {
-              cache2.banner = "";
-              return "";
-            }
+            if (!["http:", "https:"].includes(safe.protocol)) return "";
             cache2.banner = `https://images.weserv.nl/?url=${encodeURIComponent(url)}&output=webp&n=-1`;
+            if (name == auth.name) cache2.banner_orig = url;
           } catch {
             cache2.banner = "accent";
           }
