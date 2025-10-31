@@ -32,6 +32,7 @@ export function markdown(
         in_dialog = false,
         allow_icons = false,
         allow_hue = false,
+        allow_fonts = false,
         take_effect = false,
         cache = false,
         allow_socials = false,
@@ -170,6 +171,19 @@ export function markdown(
         }
     ];
 
+    // sets a profile's font
+    const font = () => [
+        {
+            type: 'lang',
+            regex: /\[font=([^\]]+)\]/g,
+            replace: (_, family) => {
+                if (name == 'clairedoll') cache.font = family;
+
+                return '';
+            }
+        }
+    ];
+
     // retrieves social links if a user supplies them
     const social_links = () => [
         {
@@ -262,6 +276,7 @@ export function markdown(
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
+    if (allow_fonts) extensions.push(font());
     if (allow_socials) extensions.push(social_links());
     if (!allow_headers) extensions.push(header_minify());
     extensions.push(mentions());

@@ -527,6 +527,7 @@ function patch_settings_profile_panel(token, update_picture) {
         allow_banners: true,
         allow_icons: true,
         allow_hue: true,
+        allow_fonts: true,
         cache: true,
         take_effect: false,
         allow_socials: true,
@@ -535,6 +536,7 @@ function patch_settings_profile_panel(token, update_picture) {
 
     let banner_setting;
     let accent_setting;
+    let font_setting;
 
     render(
         update_picture,
@@ -713,6 +715,14 @@ function patch_settings_profile_panel(token, update_picture) {
                     disabled=${!auth.sponsor}
                     ref=${(el) => (accent_setting = el)}
                 />
+                ${ff('profile_fonts') ? html.node`
+                <div
+                    class="setting"
+                    data-type="info"
+                    disabled=${!auth.sponsor || auth.name != 'clairedoll'}
+                    ref=${(el) => (font_setting = el)}
+                />
+                ` : ''}
                 ${setting({ id: 'avatar_radius' })}
             </div>
         `
@@ -784,6 +794,7 @@ function patch_settings_profile_panel(token, update_picture) {
         );
 
         const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
+        const font_regex = /\[font=([^\]]+)\]/;
 
         console.info(
             'cache update',
@@ -793,7 +804,7 @@ function patch_settings_profile_panel(token, update_picture) {
             cache.lit
         );
 
-        let edit;
+        let accent_edit;
         render(accent_setting, html`
             <div class="heading">
                 <h5>${tl(trans.profile_accent.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span></h5>
@@ -807,7 +818,7 @@ function patch_settings_profile_panel(token, update_picture) {
                 <div class="swatch-group palette">
                     <button
                         class="swatch-container"
-                        ref=${(el) => (edit = el)}
+                        ref=${(el) => (accent_edit = el)}
                         onclick=${() => {
                             let hue_range;
                             let sat_range;
@@ -945,9 +956,145 @@ function patch_settings_profile_panel(token, update_picture) {
                 </div>
             `);
 
-        tippy(edit, {
+        tippy(accent_edit, {
             content: tl(trans.edit)
         });
+
+        if (font_setting) {
+            let font_edit;
+            let font_tile;
+            render(font_setting, html`
+                <div class="heading">
+                    <h5>${tl(trans.profile_font.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span></h5>
+                    <p>${tl(trans.profile_font.body)}</p>
+                </div>
+                <div class="info">
+                    <div class="font-tile" data-font=${cache.font} ref=${el => font_tile = el}>
+                        Aa
+                    </div>
+                    <div class="swatch-group palette">
+                        <button
+                            class="swatch-container"
+                            ref=${(el) => (font_edit = el)}
+                            onclick=${() => {
+                                const match = about.value.match(font_regex);
+
+                                if (match) {
+                                    save_setting(
+                                        'profile_hue',
+                                        parseInt(match[1], 10)
+                                    );
+                                    save_setting(
+                                        'profile_sat',
+                                        parseFloat(match[2])
+                                    );
+                                    save_setting(
+                                        'profile_lit',
+                                        parseFloat(match[3])
+                                    );
+                                }
+
+                                let font_name = cache.font;
+                                let font_preview;
+                                let font_buttons = [];
+
+                                dialog({
+                                    id: 'profile_font',
+                                    title: tl(trans.profile_font.name),
+                                    body: html.node`
+                                        <div class="font-name-preview" data-font=${font_name} ref=${el => font_preview = el}>
+                                            ${auth.name}
+                                        </div>
+                                        <div class="font-options">
+                                            ${Object.entries(page.state.fonts).map(([font, family]) => {
+                                                if (family == '') family = tl(trans.none);
+
+                                                const elem = html.node`
+                                                    <button class="font-selection" data-font=${font} aria-checked=${font == font_name} onclick=${() => {
+                                                        font_name = font;
+
+                                                        font_preview.setAttribute('data-font', font);
+                                                        font_tile.setAttribute('data-font', font);
+                                                        font_buttons.forEach(btn => {
+                                                            btn.setAttribute('aria-checked', btn.getAttribute('data-font') == font)
+                                                        });
+                                                    }}>
+                                                        Aa
+                                                    </button>
+                                                `;
+
+                                                tippy(elem, {
+                                                    content: family
+                                                });
+
+                                                font_buttons.push(elem);
+                                                return elem;
+                                            })}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="see-more cancel" onclick=${() => dialog_rm({ id: 'profile_font' })}>
+                                                ${tl(trans.back)}
+                                            </button>
+                                            <div class="fill"></div>
+                                            <button class="btn primary continue" onclick=${() => {
+                                                const new_font = `[font=${font_name}]`;
+
+                                                if (match) {
+                                                    about.value = about.value.replace(
+                                                        font_regex,
+                                                        new_font
+                                                    );
+                                                } else {
+                                                    const trimmed = about.value.trimEnd();
+
+                                                    if (trimmed.length == 0) {
+                                                        about.value = new_font;
+                                                    } else {
+                                                        about.value =
+                                                            trimmed +
+                                                            '\n\n' +
+                                                            new_font;
+                                                    }
+                                                }
+
+                                                about.dispatchEvent(
+                                                    new InputEvent('input', {
+                                                        bubbles: true,
+                                                        cancelable: true
+                                                    })
+                                                );
+
+                                                dialog_rm({ id: 'profile_font' });
+                                                status({
+                                                    title: tl(
+                                                        trans.profile_font.reminder
+                                                    )
+                                                });
+                                            }}>
+                                                ${tl(trans.change)}
+                                            </button>
+                                        </div>
+                                    `
+                                        });
+
+                                        function update_colour_preview() {
+                                            accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+                                        }
+                                    }}
+                            >
+                                <div
+                                    class="swatch colourful"
+                                    data-swatch-type="customise"
+                                />
+                            </button>
+                        </div>
+                    </div>
+                `);
+
+            tippy(font_edit, {
+                content: tl(trans.edit)
+            });
+        }
     }
 
     // subtitle

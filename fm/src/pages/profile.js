@@ -64,7 +64,8 @@ export async function bleh_profiles() {
     let profile_header = document.body.querySelector('.header--user');
     if (!profile_header) return;
 
-    page.name = profile_header.querySelector('.header-title a').textContent;
+    const profile_name = profile_header.querySelector('.header-title a');
+    page.name = profile_name.textContent;
 
     // are we on the overview page?
     let is_subpage = page.subpage != 'overview';
@@ -135,6 +136,8 @@ export async function bleh_profiles() {
     let title_wrap = profile_header.querySelector('.header-title-label-wrap');
     let sub_wrap = profile_header.querySelector('.header-title-secondary');
 
+    if (ff('profile_fonts') && page.name == 'clairedoll') profile_name.setAttribute('data-font', cache.font);
+
     // new account
     if (!avatar) {
         avatar = profile_header.querySelector('.header-avatar-add');
@@ -163,7 +166,7 @@ export async function bleh_profiles() {
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.profile)}</div>
-                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ''}
+                <div class="title-container">${title_wrap}</div>
                 ${
                     sub_wrap ? sub_wrap
                     : cache.aka || cache.created ?
@@ -2046,7 +2049,7 @@ export function bleh_profile_chart_render(
 }
 
 export function save_profile_cache(
-    { avatar, banner, banner_orig, hue, sat, lit, aka, created } = {},
+    { avatar, banner, banner_orig, hue, sat, lit, aka, created, font } = {},
     profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) ||
         {},
     name = page.name
@@ -2077,7 +2080,8 @@ export function save_profile_cache(
         sat,
         lit,
         aka,
-        created
+        created,
+        font
     };
 
     log('saved to cache', 'profile', 'info', {

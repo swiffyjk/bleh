@@ -35253,6 +35253,7 @@
       allow_banners: true,
       allow_icons: true,
       allow_hue: true,
+      allow_fonts: true,
       cache: true,
       take_effect: false,
       allow_socials: true,
@@ -35260,6 +35261,7 @@
     };
     let banner_setting;
     let accent_setting;
+    let font_setting;
     render(
       update_picture,
       html`
@@ -35436,6 +35438,14 @@
                     disabled=${!auth.sponsor}
                     ref=${(el) => accent_setting = el}
                 />
+                ${ff("profile_fonts") ? html.node`
+                <div
+                    class="setting"
+                    data-type="info"
+                    disabled=${!auth.sponsor || auth.name != "clairedoll"}
+                    ref=${(el) => font_setting = el}
+                />
+                ` : ""}
                 ${setting({ id: "avatar_radius" })}
             </div>
         `
@@ -35489,6 +35499,7 @@
             `
       );
       const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
+      const font_regex = /\[font=([^\]]+)\]/;
       console.info(
         "cache update",
         about.value,
@@ -35496,7 +35507,7 @@
         cache2.sat,
         cache2.lit
       );
-      let edit;
+      let accent_edit;
       render(accent_setting, html`
             <div class="heading">
                 <h5>${tl2(trans.profile_accent.name)}<span class="new-badge sponsor-related">${tl2(trans.sponsors_only)}</span></h5>
@@ -35510,7 +35521,7 @@
                 <div class="swatch-group palette">
                     <button
                         class="swatch-container"
-                        ref=${(el) => edit = el}
+                        ref=${(el) => accent_edit = el}
                         onclick=${() => {
         let hue_range;
         let sat_range;
@@ -35533,7 +35544,7 @@
             parseFloat(match3[3])
           );
         }
-        let accent_preview;
+        let accent_preview2;
         dialog({
           id: "profile_accent",
           title: tl2(trans.profile_accent.name),
@@ -35544,7 +35555,7 @@
                                                 <h5>${tl2(trans.preview)}</h5>
                                             </div>
                                             <div class="info">
-                                                <div class="colour-tile colourful" ref=${(el) => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
+                                                <div class="colour-tile colourful" ref=${(el) => accent_preview2 = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
                                             </div>
                                         </div>
                                         ${ff("colour_based_on_hex") ? html.node`
@@ -35616,7 +35627,7 @@
                                 `
         });
         function update_colour_preview() {
-          accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+          accent_preview2.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
         }
       }}
                         >
@@ -35628,9 +35639,128 @@
                     </div>
                 </div>
             `);
-      tippy_esm_default(edit, {
+      tippy_esm_default(accent_edit, {
         content: tl2(trans.edit)
       });
+      if (font_setting) {
+        let font_edit;
+        let font_tile;
+        render(font_setting, html`
+                <div class="heading">
+                    <h5>${tl2(trans.profile_font.name)}<span class="new-badge sponsor-related">${tl2(trans.sponsors_only)}</span></h5>
+                    <p>${tl2(trans.profile_font.body)}</p>
+                </div>
+                <div class="info">
+                    <div class="font-tile" data-font=${cache2.font} ref=${(el) => font_tile = el}>
+                        Aa
+                    </div>
+                    <div class="swatch-group palette">
+                        <button
+                            class="swatch-container"
+                            ref=${(el) => font_edit = el}
+                            onclick=${() => {
+          const match3 = about.value.match(font_regex);
+          if (match3) {
+            save_setting(
+              "profile_hue",
+              parseInt(match3[1], 10)
+            );
+            save_setting(
+              "profile_sat",
+              parseFloat(match3[2])
+            );
+            save_setting(
+              "profile_lit",
+              parseFloat(match3[3])
+            );
+          }
+          let font_name = cache2.font;
+          let font_preview;
+          let font_buttons = [];
+          dialog({
+            id: "profile_font",
+            title: tl2(trans.profile_font.name),
+            body: html.node`
+                                        <div class="font-name-preview" data-font=${font_name} ref=${(el) => font_preview = el}>
+                                            ${auth.name}
+                                        </div>
+                                        <div class="font-options">
+                                            ${Object.entries(page.state.fonts).map(([font, family]) => {
+              if (family == "") family = tl2(trans.none);
+              const elem = html.node`
+                                                    <button class="font-selection" data-font=${font} aria-checked=${font == font_name} onclick=${() => {
+                font_name = font;
+                font_preview.setAttribute("data-font", font);
+                font_tile.setAttribute("data-font", font);
+                font_buttons.forEach((btn) => {
+                  btn.setAttribute("aria-checked", btn.getAttribute("data-font") == font);
+                });
+              }}>
+                                                        Aa
+                                                    </button>
+                                                `;
+              tippy_esm_default(elem, {
+                content: family
+              });
+              font_buttons.push(elem);
+              return elem;
+            })}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_font" })}>
+                                                ${tl2(trans.back)}
+                                            </button>
+                                            <div class="fill"></div>
+                                            <button class="btn primary continue" onclick=${() => {
+              const new_font = `[font=${font_name}]`;
+              if (match3) {
+                about.value = about.value.replace(
+                  font_regex,
+                  new_font
+                );
+              } else {
+                const trimmed = about.value.trimEnd();
+                if (trimmed.length == 0) {
+                  about.value = new_font;
+                } else {
+                  about.value = trimmed + "\n\n" + new_font;
+                }
+              }
+              about.dispatchEvent(
+                new InputEvent("input", {
+                  bubbles: true,
+                  cancelable: true
+                })
+              );
+              dialog_rm({ id: "profile_font" });
+              status({
+                title: tl2(
+                  trans.profile_font.reminder
+                )
+              });
+            }}>
+                                                ${tl2(trans.change)}
+                                            </button>
+                                        </div>
+                                    `
+          });
+          function update_colour_preview() {
+            accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+          }
+        }}
+                            >
+                                <div
+                                    class="swatch colourful"
+                                    data-swatch-type="customise"
+                                />
+                            </button>
+                        </div>
+                    </div>
+                `);
+        tippy_esm_default(font_edit, {
+          content: tl2(trans.edit)
+        });
+      }
     }
     update_display_name(form_display_name);
   }
@@ -36976,7 +37106,8 @@
     }
     let profile_header = document.body.querySelector(".header--user");
     if (!profile_header) return;
-    page.name = profile_header.querySelector(".header-title a").textContent;
+    const profile_name = profile_header.querySelector(".header-title a");
+    page.name = profile_name.textContent;
     let is_subpage = page.subpage != "overview";
     page.structure.container = document.body.querySelector(
       ".page-content:not(.profile-cards-container, .report-box-container .page-content)"
@@ -37029,6 +37160,7 @@
     let avatar2 = profile_header.querySelector(".avatar");
     let title_wrap = profile_header.querySelector(".header-title-label-wrap");
     let sub_wrap = profile_header.querySelector(".header-title-secondary");
+    if (ff("profile_fonts") && page.name == "clairedoll") profile_name.setAttribute("data-font", cache2.font);
     if (!avatar2) {
       avatar2 = profile_header.querySelector(".header-avatar-add");
       new_account = true;
@@ -37046,7 +37178,7 @@
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl2(trans.profile)}</div>
-                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
+                <div class="title-container">${title_wrap}</div>
                 ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
                 <p class="header-title-secondary">
                     ${cache2.aka ? html.node`
@@ -38558,7 +38690,7 @@
     });
     scrobble_canvas_container.appendChild(scrobble_canvas);
   }
-  function save_profile_cache({ avatar: avatar2, banner, banner_orig, hue: hue2, sat, lit, aka, created } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
+  function save_profile_cache({ avatar: avatar2, banner, banner_orig, hue: hue2, sat, lit, aka, created, font } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
     let profile_cache_o = Object.keys(profile_cache);
     if (profile_cache_o.length > 400) {
       const keys2 = Reflect.ownKeys(profile_cache);
@@ -38577,7 +38709,8 @@
       sat,
       lit,
       aka,
-      created
+      created,
+      font
     };
     log("saved to cache", "profile", "info", {
       name,
@@ -46513,6 +46646,17 @@
         text: "Last.fm"
       }
     ];
+    page.state.fonts = {
+      none: "",
+      momo: "Momo Trust Display",
+      lilita: "Lilita One",
+      shippori: "Shippori Antique B1",
+      eb: "EB Garamond",
+      balsamiq: "Balsamiq Sans",
+      gochi: "Gochi Hand",
+      joti: "Joti One",
+      code: "Google Sans Code"
+    };
   }
 
   // src/components/markdown.js
@@ -47508,6 +47652,7 @@
     in_dialog = false,
     allow_icons = false,
     allow_hue = false,
+    allow_fonts = false,
     take_effect = false,
     cache: cache2 = false,
     allow_socials = false,
@@ -47621,6 +47766,16 @@
         }
       }
     ];
+    const font = () => [
+      {
+        type: "lang",
+        regex: /\[font=([^\]]+)\]/g,
+        replace: (_, family) => {
+          if (name == "clairedoll") cache2.font = family;
+          return "";
+        }
+      }
+    ];
     const social_links = () => [
       {
         type: "lang",
@@ -47695,6 +47850,7 @@
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
+    if (allow_fonts) extensions.push(font());
     if (allow_socials) extensions.push(social_links());
     if (!allow_headers) extensions.push(header_minify());
     extensions.push(mentions());
@@ -63153,6 +63309,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         ru: "\u0412\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0438 \u0430\u043A\u0446\u0435\u043D\u0442, \u043D\u0435 \u0437\u0430\u0431\u0443\u0434\u044C\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C!"
       }
     },
+    profile_font: {
+      name: {
+        en: "Profile name font"
+      },
+      body: {
+        en: "Customise the font family used for your username, only visible on your profile"
+      },
+      reminder: {
+        en: "Changed your name font, don\u2019t forget to save!"
+      }
+    },
     none: {
       en: "None",
       de: "Keins",
@@ -65755,6 +65922,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         default: false,
         name: "Verified replaces sponsor badge",
         date: "2025-10-22"
+      },
+      profile_fonts: {
+        default: false,
+        name: "Unlock profile name fonts for sponsors",
+        date: "2025-10-31"
       }
     }
   };

@@ -1830,4 +1830,16 @@ export function prepare_music() {
             text: 'Last.fm'
         }
     ];
+
+    page.state.fonts = {
+        none: '',
+        momo: 'Momo Trust Display',
+        lilita: 'Lilita One',
+        shippori: 'Shippori Antique B1',
+        eb: 'EB Garamond',
+        balsamiq: 'Balsamiq Sans',
+        gochi: 'Gochi Hand',
+        joti: 'Joti One',
+        code: 'Google Sans Code'
+    };
 }

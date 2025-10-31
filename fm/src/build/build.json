@@ -344,6 +344,11 @@
             "default": false,
             "name": "Verified replaces sponsor badge",
             "date": "2025-10-22"
+        },
+        "profile_fonts": {
+            "default": false,
+            "name": "Unlock profile name fonts for sponsors",
+            "date": "2025-10-31"
         }
     }
 }

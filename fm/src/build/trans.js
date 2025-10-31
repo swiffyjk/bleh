@@ -5649,6 +5649,17 @@ export const trans = {
             ru: 'Вы изменили акцент, не забудьте сохранить!'
         }
     },
+    profile_font: {
+        name: {
+            en: 'Profile name font'
+        },
+        body: {
+            en: 'Customise the font family used for your username, only visible on your profile'
+        },
+        reminder: {
+            en: 'Changed your name font, don’t forget to save!'
+        }
+    },
     none: {
         en: 'None',
         de: 'Keins',
