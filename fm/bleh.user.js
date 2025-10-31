@@ -35262,190 +35262,159 @@
     let banner_setting;
     let accent_setting;
     let font_setting;
+    render(page.structure.side, html`
+        <section>
+            <h2>${tl2(trans.about_me_preview)}</h2>
+            <span
+                class="bleh--about-me-preview markdown-body"
+                ref=${(el) => preview = el}
+            ></span>
+        </section>
+    `);
     render(
       update_picture,
       html`
             <h4>${tl2(trans.profile)}</h4>
-            <div class="banner-preview"></div>
-            <div class="profile-container">
-                <div class="avatar-side">
-                    <div
-                        class="avatar image-upload-preview"
-                        onclick=${() => avatar(token)}
-                    >
-                        <img
-                            src=${avatar_url}
-                            alt=${tl2(trans.your_avatar)}
-                            loading="lazy"
-                        />
-                        <div class="avatar-overlay"></div>
-                    </div>
-                </div>
-                <div class="info-side">
-                    <div class="header-info">
-                        <div class="header">
-                            <h1>${auth.name}</h1>
+            <form
+                class="dont-move"
+                action="${root}settings#update-profile"
+                name="profile-form"
+                data-form-type="identity"
+                method="post"
+            >
+                <input
+                    type="hidden"
+                    name="csrfmiddlewaretoken"
+                    value="${token}"
+                />
+                <div class="setting-group">
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl2(trans.avatar)}</h5>
                         </div>
-                        <div class="header-title-secondary">
-                            <span
-                                class="header-title-secondary--pre"
-                                id="header-title-display-name--pre"
-                            ></span>
-                            <span
-                                class="header-title-display-name"
-                                id="header-title-display-name"
-                            ></span>
-                            <!--<span class="header-title-secondary--pre" id="header-scrobble-since--pre">created</span>
-                        <span class="header-scrobble-since" id="header-scrobble-since"></span>-->
+                        <div class="info">
+                            <div class="avatar image-uploader" onclick=${() => avatar(token)}>
+                                <img
+                                    src=${avatar_url}
+                                    alt=${tl2(trans.your_avatar)}
+                                    loading="lazy"
+                                />
+                                <div class="avatar-overlay" />
+                            </div>
                         </div>
                     </div>
-                    <div class="sub-info">
-                        <form
-                            action="${root}settings#update-profile"
-                            name="profile-form"
-                            data-form-type="identity"
-                            method="post"
-                        >
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl2(trans.subtitle)}</h5>
+                            <p>${tl2(trans.pronoun_tip)}</p>
+                        </div>
+                        <div class="input-container content-form">
                             <input
-                                type="hidden"
-                                name="csrfmiddlewaretoken"
-                                value="${token}"
+                                type="text"
+                                name="full_name"
+                                value=${form_display_name}
+                                maxlength="36"
+                                id="id_full_name"
+                                data-form-type="other"
                             />
-                            <div class="info-grid">
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl2(trans.subtitle)}
-                                    </div>
-                                    <div class="input">
-                                        <input
-                                            type="text"
-                                            name="full_name"
-                                            value=${form_display_name}
-                                            maxlength="36"
-                                            id="id_full_name"
-                                            oninput="_update_display_name(this.value)"
-                                            data-form-type="other"
-                                        />
-                                        <div class="tip">
-                                            ${tl2(trans.pronoun_tip)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl2(trans.country)}
-                                    </div>
-                                    ${select(
+                        </div>
+                    </div>
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl2(trans.website)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input
+                                type="url"
+                                name="homepage"
+                                value="${form_website}"
+                                id="id_homepage"
+                                data-form-type="website"
+                            />
+                        </div>
+                    </div>
+                    <div class="setting" data-type="select">
+                        <div class="heading">
+                            <h5>${tl2(trans.country)}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector">
+                            ${select(
         select_prepare(form_country),
         form_country.value,
         "country"
       )}
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">${tl2(trans.about)}</div>
-                                    <div class="input about-me" id="about_me">
-                                        <textarea
-                                            name="about_me"
-                                            placeholder=${tl2(
-        trans.anything_you_can_imagine
-      )}
-                                            cols="40"
-                                            rows="10"
-                                            class="textarea--s"
-                                            maxlength=${bio_max_length}
-                                            id="id_about_me"
-                                            oninput=${() => update_about()}
-                                            ref=${(el) => about = el}
-                                            data-form-type="other"
-                                        >
-                                            ${form_about_me}
-                                        </textarea
-                                        >
-                                        <div class="dual-tip">
-                                            <div
-                                                class="tip markdown-enabled"
-                                                onclick=${() => markdown_prompt(
-        markdown_settings
-      )}
-                                            >
-                                                ${tl2(trans.supports_markdown)}
-                                            </div>
-                                            <div
-                                                class="tip characters"
-                                                ref=${(el) => chars = el}
-                                            >
-                                                ${tl2(
+                        </div>
+                    </div>
+                    <div
+                        class="setting"
+                        data-type="info"
+                        ref=${(el) => banner_setting = el}
+                    />
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!auth.sponsor}
+                        ref=${(el) => accent_setting = el}
+                    />
+                    ${ff("profile_fonts") ? html.node`
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!auth.sponsor || auth.name != "clairedoll"}
+                        ref=${(el) => font_setting = el}
+                    />
+                    ` : ""}
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl2(trans.about)}</h5>
+                            <p class="tip markdown-enabled" onclick=${() => {
+        markdown_prompt(markdown_settings);
+      }}>
+                                ${tl2(trans.supports_markdown)}
+                            </p>
+                            <p class="tip characters" ref=${(el) => chars = el}>
+                                ${tl2(
         trans.value_characters_max,
         { v: bio_max_length }
       )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl2(trans.about_me_preview)}
-                                    </div>
-                                    <span
-                                        class="bleh--about-me-preview markdown-body"
-                                        ref=${(el) => preview = el}
-                                    ></span>
-                                </div>
-                                <div class="info-row" style="display: none">
-                                    <div class="title">
-                                        ${tl2(trans.website)}
-                                    </div>
-                                    <div class="input">
-                                        <input
-                                            type="url"
-                                            name="homepage"
-                                            value="${form_website}"
-                                            id="id_homepage"
-                                            data-form-type="website"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="save-row">
-                                <div class="form-submit">
-                                    <button
-                                        type="submit"
-                                        class="btn-primary save"
-                                        data-form-type="action"
-                                    >
-                                        ${tl2(trans.save)}
-                                    </button>
-                                    <input
-                                        type="hidden"
-                                        value="profile"
-                                        name="submit"
-                                    />
-                                </div>
-                            </div>
-                        </form>
+                            </p>
+                        </div>
+                        <div class="input-container content-form textarea">
+                            <textarea
+                                name="about_me"
+                                placeholder=${tl2(
+        trans.anything_you_can_imagine
+      )}
+                                cols="40"
+                                rows="10"
+                                class="textarea--s"
+                                maxlength=${bio_max_length}
+                                id="id_about_me"
+                                oninput=${() => update_about()}
+                                ref=${(el) => about = el}
+                                data-form-type="other"
+                            >
+                                ${form_about_me}
+                            </textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="settings-footer end">
+                    <button
+                        type="submit"
+                        class="btn-primary save"
+                        data-form-type="action"
+                    >
+                        ${tl2(trans.save)}
+                    </button>
+                    <input
+                        type="hidden"
+                        value="profile"
+                        name="submit"
+                    />
+                </div>
+            </form>
             <div class="setting-group">
-                <div
-                    class="setting"
-                    data-type="info"
-                    ref=${(el) => banner_setting = el}
-                />
-                <div
-                    class="setting"
-                    data-type="info"
-                    disabled=${!auth.sponsor}
-                    ref=${(el) => accent_setting = el}
-                />
-                ${ff("profile_fonts") ? html.node`
-                <div
-                    class="setting"
-                    data-type="info"
-                    disabled=${!auth.sponsor || auth.name != "clairedoll"}
-                    ref=${(el) => font_setting = el}
-                />
-                ` : ""}
                 ${setting({ id: "avatar_radius" })}
             </div>
         `
@@ -35522,6 +35491,7 @@
                     <button
                         class="swatch-container"
                         ref=${(el) => accent_edit = el}
+                        type="button"
                         onclick=${() => {
         let hue_range;
         let sat_range;
@@ -35658,6 +35628,7 @@
                         <button
                             class="swatch-container"
                             ref=${(el) => font_edit = el}
+                            type="button"
                             onclick=${() => {
           const match3 = about.value.match(font_regex);
           if (match3) {
@@ -35762,15 +35733,6 @@
         });
       }
     }
-    update_display_name(form_display_name);
-  }
-  unsafeWindow._update_display_name = function(value) {
-    update_display_name(value);
-  };
-  function update_display_name(value) {
-    document.getElementById("header-title-display-name").textContent = value;
-    let pronouns = use_pronouns(value);
-    document.getElementById("header-title-display-name--pre").textContent = pronouns ? tl2(trans.account_pronouns) : tl2(trans.aka);
   }
   function use_pronouns(value) {
     value = value.replaceAll(" ", "");
@@ -50530,38 +50492,36 @@
       );
     } else if (page_id == "sku") {
       register_skip_to([]);
-      render(
-        page.structure.main,
-        html`
-                <div class="bleh--panel">
-                    <div class="panel-intro">
-                        <div class="sub-text">
-                            ${version.build}.${version.sku}
-                        </div>
-                        <h1>☆⌒(>w<)</h1>
+      render(page.structure.main, html`
+            <div class="bleh--panel">
+                <div class="panel-intro">
+                    <div class="sub-text">
+                        ${version.build}.${version.sku}
                     </div>
-                    <div class="sep" />
-                    <h4>${tl2(trans.manage_feature_flags)}</h4>
-                    <div class="alert alert-danger">
-                        ${tl2(trans.beware_notice)}
-                    </div>
-                    <div class="setting-group">
-                        ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
-          let value = ff(flag);
-          let checkbox;
-          let state;
-          return html.node`
+                    <h1>☆⌒(>w<)</h1>
+                </div>
+                <div class="sep" />
+                <h4>${tl2(trans.manage_feature_flags)}</h4>
+                <div class="alert alert-danger">
+                    ${tl2(trans.beware_notice)}
+                </div>
+                <div class="setting-group">
+                    ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
+        let value = ff(flag);
+        let checkbox;
+        let state;
+        return html.node`
                             <div class="setting" data-type="toggle" onclick=${() => {
-            let current = checkbox.checked;
-            checkbox.checked = !current;
-            state.setAttribute("aria-checked", !current);
-            settings.feature_flags[flag] = !current;
-            document.documentElement.setAttribute(
-              `data-ff--${flag}`,
-              (!current).toString()
-            );
-            compile_settings();
-          }}>
+          let current = checkbox.checked;
+          checkbox.checked = !current;
+          state.setAttribute("aria-checked", !current);
+          settings.feature_flags[flag] = !current;
+          document.documentElement.setAttribute(
+            `data-ff--${flag}`,
+            (!current).toString()
+          );
+          compile_settings();
+        }}>
                                 <div class="heading">
                                     <h5>${details.name}</h5>
                                     ${details.notice ? html.node`<p>${{ html: details.notice }}</p>` : ""}
@@ -50577,11 +50537,10 @@
                                 </div>
                             </div>
                         `;
-        })}
-                    </div>
+      })}
                 </div>
-            `
-      );
+            </div>
+        `);
     } else if (page_id == "music") {
       register_skip_to([
         {
@@ -65890,7 +65849,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         date: "2025-09-25"
       },
       refreshed_lotus: {
-        default: false,
+        default: true,
         name: "Refreshed flow for submitting a lotus correction",
         date: "2025-09-26"
       },
@@ -65925,7 +65884,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         date: "2025-10-22"
       },
       profile_fonts: {
-        default: false,
+        default: true,
         name: "Unlock profile name fonts for sponsors",
         date: "2025-10-31"
       }

@@ -1769,25 +1769,21 @@ export async function render_setting_page(page_id) {
     } else if (page_id == 'sku') {
         register_skip_to([]);
 
-        render(
-            page.structure.main,
-            html`
-                <div class="bleh--panel">
-                    <div class="panel-intro">
-                        <div class="sub-text">
-                            ${version.build}.${version.sku}
-                        </div>
-                        <h1>☆⌒(>w<)</h1>
+        render(page.structure.main, html`
+            <div class="bleh--panel">
+                <div class="panel-intro">
+                    <div class="sub-text">
+                        ${version.build}.${version.sku}
                     </div>
-                    <div class="sep" />
-                    <h4>${tl(trans.manage_feature_flags)}</h4>
-                    <div class="alert alert-danger">
-                        ${tl(trans.beware_notice)}
-                    </div>
-                    <div class="setting-group">
-                        ${Object.entries(version.feature_flags)
-                    .reverse()
-                    .map(([flag, details]) => {
+                    <h1>☆⌒(>w<)</h1>
+                </div>
+                <div class="sep" />
+                <h4>${tl(trans.manage_feature_flags)}</h4>
+                <div class="alert alert-danger">
+                    ${tl(trans.beware_notice)}
+                </div>
+                <div class="setting-group">
+                    ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
                         let value = ff(flag);
 
                         let checkbox;
@@ -1823,10 +1819,9 @@ export async function render_setting_page(page_id) {
                             </div>
                         `;
                     })}
-                    </div>
                 </div>
-            `
-        );
+            </div>
+        `);
     } else if (page_id == 'music') {
         register_skip_to([
             {

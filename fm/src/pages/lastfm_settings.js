@@ -538,191 +538,160 @@ function patch_settings_profile_panel(token, update_picture) {
     let accent_setting;
     let font_setting;
 
+    render(page.structure.side, html`
+        <section>
+            <h2>${tl(trans.about_me_preview)}</h2>
+            <span
+                class="bleh--about-me-preview markdown-body"
+                ref=${(el) => (preview = el)}
+            ></span>
+        </section>
+    `);
+
     render(
         update_picture,
         html`
             <h4>${tl(trans.profile)}</h4>
-            <div class="banner-preview"></div>
-            <div class="profile-container">
-                <div class="avatar-side">
-                    <div
-                        class="avatar image-upload-preview"
-                        onclick=${() => avatar(token)}
-                    >
-                        <img
-                            src=${avatar_url}
-                            alt=${tl(trans.your_avatar)}
-                            loading="lazy"
-                        />
-                        <div class="avatar-overlay"></div>
-                    </div>
-                </div>
-                <div class="info-side">
-                    <div class="header-info">
-                        <div class="header">
-                            <h1>${auth.name}</h1>
+            <form
+                class="dont-move"
+                action="${root}settings#update-profile"
+                name="profile-form"
+                data-form-type="identity"
+                method="post"
+            >
+                <input
+                    type="hidden"
+                    name="csrfmiddlewaretoken"
+                    value="${token}"
+                />
+                <div class="setting-group">
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.avatar)}</h5>
                         </div>
-                        <div class="header-title-secondary">
-                            <span
-                                class="header-title-secondary--pre"
-                                id="header-title-display-name--pre"
-                            ></span>
-                            <span
-                                class="header-title-display-name"
-                                id="header-title-display-name"
-                            ></span>
-                            <!--<span class="header-title-secondary--pre" id="header-scrobble-since--pre">created</span>
-                        <span class="header-scrobble-since" id="header-scrobble-since"></span>-->
+                        <div class="info">
+                            <div class="avatar image-uploader" onclick=${() => avatar(token)}>
+                                <img
+                                    src=${avatar_url}
+                                    alt=${tl(trans.your_avatar)}
+                                    loading="lazy"
+                                />
+                                <div class="avatar-overlay" />
+                            </div>
                         </div>
                     </div>
-                    <div class="sub-info">
-                        <form
-                            action="${root}settings#update-profile"
-                            name="profile-form"
-                            data-form-type="identity"
-                            method="post"
-                        >
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.subtitle)}</h5>
+                            <p>${tl(trans.pronoun_tip)}</p>
+                        </div>
+                        <div class="input-container content-form">
                             <input
-                                type="hidden"
-                                name="csrfmiddlewaretoken"
-                                value="${token}"
+                                type="text"
+                                name="full_name"
+                                value=${form_display_name}
+                                maxlength="36"
+                                id="id_full_name"
+                                data-form-type="other"
                             />
-                            <div class="info-grid">
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl(trans.subtitle)}
-                                    </div>
-                                    <div class="input">
-                                        <input
-                                            type="text"
-                                            name="full_name"
-                                            value=${form_display_name}
-                                            maxlength="36"
-                                            id="id_full_name"
-                                            oninput="_update_display_name(this.value)"
-                                            data-form-type="other"
-                                        />
-                                        <div class="tip">
-                                            ${tl(trans.pronoun_tip)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl(trans.country)}
-                                    </div>
-                                    ${select(
-                                        select_prepare(form_country),
-                                        form_country.value,
-                                        'country'
-                                    )}
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">${tl(trans.about)}</div>
-                                    <div class="input about-me" id="about_me">
-                                        <textarea
-                                            name="about_me"
-                                            placeholder=${tl(
-                                                trans.anything_you_can_imagine
-                                            )}
-                                            cols="40"
-                                            rows="10"
-                                            class="textarea--s"
-                                            maxlength=${bio_max_length}
-                                            id="id_about_me"
-                                            oninput=${() => update_about()}
-                                            ref=${(el) => (about = el)}
-                                            data-form-type="other"
-                                        >
-                                            ${form_about_me}
-                                        </textarea
-                                        >
-                                        <div class="dual-tip">
-                                            <div
-                                                class="tip markdown-enabled"
-                                                onclick=${() =>
-                                                    markdown_prompt(
-                                                        markdown_settings
-                                                    )}
-                                            >
-                                                ${tl(trans.supports_markdown)}
-                                            </div>
-                                            <div
-                                                class="tip characters"
-                                                ref=${(el) => (chars = el)}
-                                            >
-                                                ${tl(
-                                                    trans.value_characters_max,
-                                                    { v: bio_max_length }
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl(trans.about_me_preview)}
-                                    </div>
-                                    <span
-                                        class="bleh--about-me-preview markdown-body"
-                                        ref=${(el) => (preview = el)}
-                                    ></span>
-                                </div>
-                                <div class="info-row" style="display: none">
-                                    <div class="title">
-                                        ${tl(trans.website)}
-                                    </div>
-                                    <div class="input">
-                                        <input
-                                            type="url"
-                                            name="homepage"
-                                            value="${form_website}"
-                                            id="id_homepage"
-                                            data-form-type="website"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="save-row">
-                                <div class="form-submit">
-                                    <button
-                                        type="submit"
-                                        class="btn-primary save"
-                                        data-form-type="action"
-                                    >
-                                        ${tl(trans.save)}
-                                    </button>
-                                    <input
-                                        type="hidden"
-                                        value="profile"
-                                        name="submit"
-                                    />
-                                </div>
-                            </div>
-                        </form>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.website)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input
+                                type="url"
+                                name="homepage"
+                                value="${form_website}"
+                                id="id_homepage"
+                                data-form-type="website"
+                            />
+                        </div>
+                    </div>
+                    <div class="setting" data-type="select">
+                        <div class="heading">
+                            <h5>${tl(trans.country)}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector">
+                            ${select(
+                                select_prepare(form_country),
+                                form_country.value,
+                                'country'
+                            )}
+                        </div>
+                    </div>
+                    <div
+                        class="setting"
+                        data-type="info"
+                        ref=${(el) => (banner_setting = el)}
+                    />
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!auth.sponsor}
+                        ref=${(el) => (accent_setting = el)}
+                    />
+                    ${ff('profile_fonts') ? html.node`
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!auth.sponsor || auth.name != 'clairedoll'}
+                        ref=${(el) => (font_setting = el)}
+                    />
+                    ` : ''}
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.about)}</h5>
+                            <p class="tip markdown-enabled" onclick=${() => {
+                                markdown_prompt(markdown_settings);
+                            }}>
+                                ${tl(trans.supports_markdown)}
+                            </p>
+                            <p class="tip characters" ref=${(el) => (chars = el)}>
+                                ${tl(
+                                    trans.value_characters_max,
+                                    { v: bio_max_length }
+                                )}
+                            </p>
+                        </div>
+                        <div class="input-container content-form textarea">
+                            <textarea
+                                name="about_me"
+                                placeholder=${tl(
+                                    trans.anything_you_can_imagine
+                                )}
+                                cols="40"
+                                rows="10"
+                                class="textarea--s"
+                                maxlength=${bio_max_length}
+                                id="id_about_me"
+                                oninput=${() => update_about()}
+                                ref=${(el) => (about = el)}
+                                data-form-type="other"
+                            >
+                                ${form_about_me}
+                            </textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="settings-footer end">
+                    <button
+                        type="submit"
+                        class="btn-primary save"
+                        data-form-type="action"
+                    >
+                        ${tl(trans.save)}
+                    </button>
+                    <input
+                        type="hidden"
+                        value="profile"
+                        name="submit"
+                    />
+                </div>
+            </form>
             <div class="setting-group">
-                <div
-                    class="setting"
-                    data-type="info"
-                    ref=${(el) => (banner_setting = el)}
-                />
-                <div
-                    class="setting"
-                    data-type="info"
-                    disabled=${!auth.sponsor}
-                    ref=${(el) => (accent_setting = el)}
-                />
-                ${ff('profile_fonts') ? html.node`
-                <div
-                    class="setting"
-                    data-type="info"
-                    disabled=${!auth.sponsor || auth.name != 'clairedoll'}
-                    ref=${(el) => (font_setting = el)}
-                />
-                ` : ''}
                 ${setting({ id: 'avatar_radius' })}
             </div>
         `
@@ -819,6 +788,7 @@ function patch_settings_profile_panel(token, update_picture) {
                     <button
                         class="swatch-container"
                         ref=${(el) => (accent_edit = el)}
+                        type="button"
                         onclick=${() => {
                             let hue_range;
                             let sat_range;
@@ -976,6 +946,7 @@ function patch_settings_profile_panel(token, update_picture) {
                         <button
                             class="swatch-container"
                             ref=${(el) => (font_edit = el)}
+                            type="button"
                             onclick=${() => {
                                 const match = about.value.match(font_regex);
 
@@ -1096,22 +1067,6 @@ function patch_settings_profile_panel(token, update_picture) {
             });
         }
     }
-
-    // subtitle
-    update_display_name(form_display_name);
-}
-
-unsafeWindow._update_display_name = function (value) {
-    update_display_name(value);
-};
-function update_display_name(value) {
-    document.getElementById('header-title-display-name').textContent = value;
-
-    // pronouns?
-    let pronouns = use_pronouns(value);
-
-    document.getElementById('header-title-display-name--pre').textContent =
-        pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
 }
 
 export function use_pronouns(value) {
