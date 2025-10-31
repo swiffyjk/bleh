@@ -14,7 +14,7 @@
     @import url("https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap");
     @import url("https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap");
     @import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Gochi+Hand&family=Joti+One&family=Lilita+One&family=Momo+Trust+Display&family=Shippori+Antique+B1&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Gochi+Hand&family=Joti+One&family=Lilita+One&family=Momo+Trust+Display&family=Single+Day&display=swap');
 
     body {
         --version-build: "2025.1016";
@@ -28493,8 +28493,9 @@
     [data-font="lilita"] {
         --custom-font: 'Lilita One', var(--font);
     }
-    [data-font="shippori"] {
-        --custom-font: 'Shippori Antique B1', var(--font);
+    [data-font="single"] {
+        --custom-font: 'Single Day', var(--font);
+        --custom-font-weight: 600 !important;
     }
     [data-font="eb"] {
         --custom-font: 'EB Garamond', var(--font);

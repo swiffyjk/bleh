@@ -46651,7 +46651,7 @@
       none: "",
       momo: "Momo Trust Display",
       lilita: "Lilita One",
-      shippori: "Shippori Antique B1",
+      single: "Single Day",
       eb: "EB Garamond",
       balsamiq: "Balsamiq Sans",
       gochi: "Gochi Hand",
