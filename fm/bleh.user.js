@@ -43732,7 +43732,7 @@
     page.state.oracle_debug = {};
     if (ff("oracle_album_reordering") && page.type == "track") {
     }
-    if (!ff("oracle_connect") || page.type == "artist" || !["overview", "albums"].includes(page.subpage)) return;
+    if (!ff("oracle_connect") || page.type == "artist" || !["overview", "albums"].includes(page.subpage) && page.type == "album") return;
     let tries = 3;
     const item = page.name.toLowerCase();
     const artist = page.sister.toLowerCase();
