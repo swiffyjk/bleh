@@ -35802,8 +35802,8 @@
                     <p>${tl2(trans.profile_font.body)}</p>
                 </div>
                 <div class="info">
-                    <div class="font-tile" data-font=${cache2.font} data-font-style=${cache2.font_style} ref=${(el) => font_tile = el}>
-                        Aa
+                    <div class="font-tile">
+                        <span class="preview-style" data-font=${cache2.font} data-font-style=${cache2.font_style} ref=${(el) => font_tile = el}>Aa</span>
                     </div>
                     <div class="swatch-group palette">
                         <button
@@ -35835,8 +35835,8 @@
             id: "profile_font",
             title: tl2(trans.profile_font.name),
             body: html.node`
-                                        <div class="font-name-preview" data-font=${font_name} data-font-style=${font_style} ref=${(el) => font_preview = el}>
-                                            ${auth.name}
+                                        <div class="font-name-preview">
+                                            <span data-font=${font_name} data-font-style=${font_style} ref=${(el) => font_preview = el}>${auth.name}</span>
                                         </div>
                                         <h4 class="font-options-header">${tl2(trans.font.name)}</h4>
                                         <div class="font-options">

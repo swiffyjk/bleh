@@ -28345,6 +28345,8 @@
         font-weight: var(--custom-font-weight, var(--font-weight-bold));
         cursor: default;
         user-select: none;
+
+        height: 94px;
     }
 
     .font-options {

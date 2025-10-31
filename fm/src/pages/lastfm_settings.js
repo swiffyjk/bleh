@@ -939,8 +939,8 @@ function patch_settings_profile_panel(token, update_picture) {
                     <p>${tl(trans.profile_font.body)}</p>
                 </div>
                 <div class="info">
-                    <div class="font-tile" data-font=${cache.font} data-font-style=${cache.font_style} ref=${el => font_tile = el}>
-                        Aa
+                    <div class="font-tile">
+                        <span class="preview-style" data-font=${cache.font} data-font-style=${cache.font_style} ref=${el => font_tile = el}>Aa</span>
                     </div>
                     <div class="swatch-group palette">
                         <button
@@ -976,8 +976,8 @@ function patch_settings_profile_panel(token, update_picture) {
                                     id: 'profile_font',
                                     title: tl(trans.profile_font.name),
                                     body: html.node`
-                                        <div class="font-name-preview" data-font=${font_name} data-font-style=${font_style} ref=${el => font_preview = el}>
-                                            ${auth.name}
+                                        <div class="font-name-preview">
+                                            <span data-font=${font_name} data-font-style=${font_style} ref=${el => font_preview = el}>${auth.name}</span>
                                         </div>
                                         <h4 class="font-options-header">${tl(trans.font.name)}</h4>
                                         <div class="font-options">
