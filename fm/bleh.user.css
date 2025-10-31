@@ -6366,12 +6366,23 @@
             display: none !important;
         }
 
+        .more-button-wrapper {
+            order: 1;
+        }
+
+        .chartlist-timestamp {
+            order: 2;
+        }
+
         .chartlist-album {
             order: 1;
             color: hsl(var(--c3));
 
             /* no hover offset nonsense */
-            margin-right: var(--item-list-gap) !important;
+            margin-right: unset !important;
+
+            width: unset !important;
+            flex: 1 !important;
         }
     }
     .chartlist-artist {
@@ -23128,8 +23139,8 @@
 
             h1 {
                 margin: unset;
-                font-size: 30px;
-                line-height: 36px;
+                font-size: 26px;
+                line-height: 30px;
                 font-weight: var(--font-weight-bold);
                 letter-spacing: unset;
                 cursor: default;
@@ -23138,6 +23149,7 @@
 
                 & > a {
                     color: inherit;
+                    position: relative;
                 }
             }
 
@@ -28486,6 +28498,8 @@
 
         font-family: var(--custom-font);
         font-weight: var(--custom-font-weight);
+
+        top: var(--custom-font-align, 0);
     }
 
     [data-font="momo"] {
@@ -28504,6 +28518,7 @@
     [data-font="balsamiq"] {
         --custom-font: 'Balsamiq Sans', var(--font);
         --custom-font-weight: 600 !important;
+        --custom-font-align: 3px;
     }
     [data-font="gochi"] {
         --custom-font: 'Gochi Hand', var(--font);
