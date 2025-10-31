@@ -1838,7 +1838,7 @@ export function prepare_music() {
         single: 'Single Day',
         eb: 'EB Garamond',
         balsamiq: 'Balsamiq Sans',
-        gochi: 'Gochi Hand',
+        cherry: 'Cherry Bomb One',
         joti: 'Joti One',
         code: 'Google Sans Code'
     };

@@ -14,7 +14,7 @@
     @import url("https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap");
     @import url("https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap");
     @import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Gochi+Hand&family=Joti+One&family=Lilita+One&family=Momo+Trust+Display&family=Single+Day&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Cherry+Bomb+One&family=Joti+One&family=Lilita+One&family=Momo+Trust+Display&family=Single+Day&display=swap');
 
     body {
         --version-build: "2025.1016";
@@ -28401,8 +28401,9 @@
         --custom-font-weight: 600 !important;
         --custom-font-align: 3px;
     }
-    [data-font="gochi"] {
-        --custom-font: 'Gochi Hand', var(--font);
+    [data-font="cherry"] {
+        --custom-font: 'Cherry Bomb One', var(--font);
+        --custom-font-align: -1px;
     }
     [data-font="joti"] {
         --custom-font: 'Joti One', var(--font);
@@ -28431,9 +28432,9 @@
 
         .status-alert {
             padding: 6px 16px;
-            background: hsl(var(--b4), 40%);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: hsl(var(--b4), var(--solarium-opacity, 40%));
+            backdrop-filter: var(--solarium);
+            -webkit-backdrop-filter: var(--solarium);
             border-radius: var(--item-big-radius);
 
             width: fit-content;
