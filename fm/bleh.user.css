@@ -28364,10 +28364,14 @@
             --bg-atv: hsl(var(--b4), 60%);
             --shadow: inset 0 0 0 1px var(--card-border-base);
 
-            font-family: var(--custom-font) !important;
             --font-weight: var(--custom-font-weight, var(--font-weight-bold));
             --col: hsl(var(--c2));
             --font-size: 26px;
+
+            & > span {
+                font-family: var(--custom-font, var(--font)) !important;
+                position: relative;
+            }
 
             &[aria-checked="true"] {
                 --bg: hsla(var(--h4), 20%);
@@ -28376,6 +28380,20 @@
                 --col: hsl(var(--l3-c));
                 --shadow: inset 0 0 0 1px hsl(var(--l3-c));
             }
+
+            &.font-style {
+                --font-size: 18px;
+            }
+        }
+    }
+
+    .font-options-header {
+        font-size: 16px;
+        line-height: 20px;
+        margin-bottom: 10px;
+
+        .font-options + & {
+            margin-top: var(--card-gap);
         }
     }
 
@@ -28386,6 +28404,14 @@
         font-weight: var(--custom-font-weight);
 
         top: var(--custom-font-align, 0);
+    }
+
+    [data-font-style]:not([data-font-style="solid"]) {
+        text-shadow: var(--custom-font-style-shadow);
+
+        &.preview-style {
+            text-shadow: var(--custom-font-style-shadow-mini);
+        }
     }
 
     [data-font="momo"] {
@@ -28415,6 +28441,11 @@
     }
     [data-font="code"] {
         --custom-font: 'Google Sans Code', var(--font);
+    }
+
+    [data-font-style="pop"] {
+        --custom-font-style-shadow: 0 4px 0 hsl(var(--h4));
+        --custom-font-style-shadow-mini: 0 3px 0 hsl(var(--h4));
     }
 
     .social-links-container {

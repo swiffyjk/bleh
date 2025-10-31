@@ -939,7 +939,7 @@ function patch_settings_profile_panel(token, update_picture) {
                     <p>${tl(trans.profile_font.body)}</p>
                 </div>
                 <div class="info">
-                    <div class="font-tile" data-font=${cache.font} ref=${el => font_tile = el}>
+                    <div class="font-tile" data-font=${cache.font} data-font-style=${cache.font_style} ref=${el => font_tile = el}>
                         Aa
                     </div>
                     <div class="swatch-group palette">
@@ -966,16 +966,20 @@ function patch_settings_profile_panel(token, update_picture) {
                                 }
 
                                 let font_name = cache.font;
+                                let font_style = cache.font_style;
+
                                 let font_preview;
                                 let font_buttons = [];
+                                let font_style_buttons = [];
 
                                 dialog({
                                     id: 'profile_font',
                                     title: tl(trans.profile_font.name),
                                     body: html.node`
-                                        <div class="font-name-preview" data-font=${font_name} ref=${el => font_preview = el}>
+                                        <div class="font-name-preview" data-font=${font_name} data-font-style=${font_style} ref=${el => font_preview = el}>
                                             ${auth.name}
                                         </div>
+                                        <h4 class="font-options-header">${tl(trans.font.name)}</h4>
                                         <div class="font-options">
                                             ${Object.entries(page.state.fonts).map(([font, family]) => {
                                                 if (family == '') family = tl(trans.none);
@@ -990,7 +994,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                                             btn.setAttribute('aria-checked', btn.getAttribute('data-font') == font)
                                                         });
                                                     }}>
-                                                        Aa
+                                                        <span data-font=${font}>Aa</span>
                                                     </button>
                                                 `;
 
@@ -1002,13 +1006,34 @@ function patch_settings_profile_panel(token, update_picture) {
                                                 return elem;
                                             })}
                                         </div>
+                                        <h4 class="font-options-header">${tl(trans.font_style)}</h4>
+                                        <div class="font-options">
+                                            ${['solid', 'pop'].map(style => {
+                                                const elem = html.node`
+                                                    <button class="font-selection font-style" data-font-style=${style} aria-checked=${style == font_style} onclick=${() => {
+                                                        font_style = style;
+
+                                                        font_preview.setAttribute('data-font-style', style);
+                                                        font_tile.setAttribute('data-font-style', style);
+                                                        font_style_buttons.forEach(btn => {
+                                                            btn.setAttribute('aria-checked', btn.getAttribute('data-font-style') == style)
+                                                        });
+                                                    }}>
+                                                        <span class="preview-style" data-font-style=${style}>${tl(trans.font_style[style])}</span>
+                                                    </button>
+                                                `;
+
+                                                font_style_buttons.push(elem);
+                                                return elem;
+                                            })}
+                                        </div>
                                         <div class="modal-footer">
                                             <button class="see-more cancel" onclick=${() => dialog_rm({ id: 'profile_font' })}>
                                                 ${tl(trans.back)}
                                             </button>
                                             <div class="fill"></div>
                                             <button class="btn primary continue" onclick=${() => {
-                                                const new_font = `[font=${font_name}]`;
+                                                const new_font = `[font=${font_name}${font_style != 'solid' ? `,${font_style}` : ''}]`;
 
                                                 if (match) {
                                                     about.value = about.value.replace(

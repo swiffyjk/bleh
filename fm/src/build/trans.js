@@ -3699,6 +3699,15 @@ export const trans = {
             ru: 'Выберите пользовательский набор шрифтов, который вам подходит'
         }
     },
+    font_style: {
+        en: 'Font style',
+        solid: {
+            en: 'Solid'
+        },
+        pop: {
+            en: 'Pop'
+        }
+    },
     font_weight: {
         name: {
             en: 'Font weight',

@@ -177,7 +177,12 @@ export function markdown(
             type: 'lang',
             regex: /\[font=([^\]]+)\]/g,
             replace: (_, family) => {
-                if (name == 'clairedoll') cache.font = family;
+                if (name == 'clairedoll') {
+                    const split = family.split(',');
+
+                    cache.font = split[0];
+                    cache.font_style = split[1] || 'solid';
+                }
 
                 return '';
             }

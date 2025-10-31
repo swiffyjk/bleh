@@ -32203,146 +32203,143 @@
       }, 100);
     }
     let user;
-    render(
-      host,
-      html`
-            <div class="compare-header">
-                <div class="compare-users">
-                    <div class="compare-user focus" ref=${(el) => user = el}>
-                        ${render_user(page.name, page.avatar, user, true)}
-                    </div>
-                </div>
-                <div class="compare-selection">
-                    <div class="input-group">
-                        ${width = input({
-        type: "number",
-        value,
-        placeholder: value,
-        min: min2,
-        max: max2
-      })}
-                        <div
-                            class="bleh-icon"
-                            style="--icon: var(--icon-16-x)"
-                        />
-                        ${height = input({
-        type: "number",
-        value,
-        placeholder: value,
-        min: min2,
-        max: max2
-      })}
-                    </div>
-                    ${type = select(
-        [
-          {
-            text: tl2(trans.item_type)
-          },
-          {
-            value: "artists",
-            text: html`<div
-                                        class="bleh-icon"
-                                        style="--icon: var(--icon-16-artist)"
-                                    />
-                                    ${tl2(trans.artists)}`
-          },
-          {
-            value: "albums",
-            text: html`<div
-                                        class="bleh-icon"
-                                        style="--icon: var(--icon-16-album)"
-                                    />
-                                    ${tl2(trans.albums)}`
-          },
-          {
-            value: "tracks",
-            text: html`<div
-                                        class="bleh-icon"
-                                        style="--icon: var(--icon-16-track)"
-                                    />
-                                    ${tl2(trans.tracks)}`
-          }
-        ],
-        default_type
-      )}
-                    ${timeframe = select(
-        [
-          {
-            text: tl2(trans.timeframe)
-          },
-          {
-            value: "date_preset=LAST_7_DAYS",
-            text: tl2(trans.last_count_days).replace(
-              "{c}",
-              "7"
-            )
-          },
-          {
-            value: "date_preset=LAST_30_DAYS",
-            text: tl2(trans.last_count_days).replace(
-              "{c}",
-              "30"
-            )
-          },
-          {
-            value: "date_preset=LAST_90_DAYS",
-            text: tl2(trans.last_count_days).replace(
-              "{c}",
-              "90"
-            )
-          },
-          {
-            value: "date_preset=LAST_180_DAYS",
-            text: tl2(trans.last_count_days).replace(
-              "{c}",
-              "180"
-            )
-          },
-          {
-            value: "date_preset=LAST_365_DAYS",
-            text: tl2(trans.last_count_days).replace(
-              "{c}",
-              "365"
-            )
-          },
-          {
-            value: "date_preset=ALL",
-            text: tl2(trans.all_time)
-          },
-          {
-            value: `from=${current_year}-01-01&rangetype=year`,
-            text: current_year
-          },
-          {
-            value: `from=${previous_year}-01-01&rangetype=year`,
-            text: previous_year
-          }
-        ],
-        default_timeframe
-      )}
-                    <button
-                        class="btn primary icon"
-                        data-type="collage"
-                        ref=${(el) => submit = el}
-                        onclick=${() => make_collage()}
-                    >
-                        ${tl2(trans.generate)}
-                    </button>
+    render(host, html`
+        <div class="compare-header">
+            <div class="compare-users">
+                <div class="compare-user focus" ref=${(el) => user = el}>
+                    ${render_user(page.name, page.avatar, user, true)}
                 </div>
             </div>
-            <div
-                class="compare-body"
-                data-filled="false"
-                ref=${(el) => body2 = el}
-            >
-                <div class="loading-data-container">
-                    <div class="loading-data-text info">
-                        ${tl2(trans.choose_a_timeframe_above)}
-                    </div>
+            <div class="compare-selection">
+                <div class="input-group">
+                    ${width = input({
+      type: "number",
+      value,
+      placeholder: value,
+      min: min2,
+      max: max2
+    })}
+                    <div
+                        class="bleh-icon"
+                        style="--icon: var(--icon-16-x)"
+                    />
+                    ${height = input({
+      type: "number",
+      value,
+      placeholder: value,
+      min: min2,
+      max: max2
+    })}
+                </div>
+                ${type = select(
+      [
+        {
+          text: tl2(trans.item_type)
+        },
+        {
+          value: "artists",
+          text: html`<div
+                                    class="bleh-icon"
+                                    style="--icon: var(--icon-16-artist)"
+                                />
+                                ${tl2(trans.artists)}`
+        },
+        {
+          value: "albums",
+          text: html`<div
+                                    class="bleh-icon"
+                                    style="--icon: var(--icon-16-album)"
+                                />
+                                ${tl2(trans.albums)}`
+        },
+        {
+          value: "tracks",
+          text: html`<div
+                                    class="bleh-icon"
+                                    style="--icon: var(--icon-16-track)"
+                                />
+                                ${tl2(trans.tracks)}`
+        }
+      ],
+      default_type
+    )}
+                ${timeframe = select(
+      [
+        {
+          text: tl2(trans.timeframe)
+        },
+        {
+          value: "date_preset=LAST_7_DAYS",
+          text: tl2(trans.last_count_days).replace(
+            "{c}",
+            "7"
+          )
+        },
+        {
+          value: "date_preset=LAST_30_DAYS",
+          text: tl2(trans.last_count_days).replace(
+            "{c}",
+            "30"
+          )
+        },
+        {
+          value: "date_preset=LAST_90_DAYS",
+          text: tl2(trans.last_count_days).replace(
+            "{c}",
+            "90"
+          )
+        },
+        {
+          value: "date_preset=LAST_180_DAYS",
+          text: tl2(trans.last_count_days).replace(
+            "{c}",
+            "180"
+          )
+        },
+        {
+          value: "date_preset=LAST_365_DAYS",
+          text: tl2(trans.last_count_days).replace(
+            "{c}",
+            "365"
+          )
+        },
+        {
+          value: "date_preset=ALL",
+          text: tl2(trans.all_time)
+        },
+        {
+          value: `from=${current_year}-01-01&rangetype=year`,
+          text: current_year
+        },
+        {
+          value: `from=${previous_year}-01-01&rangetype=year`,
+          text: previous_year
+        }
+      ],
+      default_timeframe
+    )}
+                <button
+                    class="btn primary icon"
+                    data-type="collage"
+                    ref=${(el) => submit = el}
+                    onclick=${() => make_collage()}
+                >
+                    ${tl2(trans.generate)}
+                </button>
+            </div>
+        </div>
+        <div
+            class="compare-body"
+            data-filled="false"
+            ref=${(el) => body2 = el}
+        >
+            <div class="loading-data-container">
+                <div class="loading-data-text info">
+                    ${tl2(trans.choose_a_timeframe_above)}
                 </div>
             </div>
-        `
-    );
+        </div>
+    `);
     let setting_group;
     let inputter2;
     render(
@@ -35805,7 +35802,7 @@
                     <p>${tl2(trans.profile_font.body)}</p>
                 </div>
                 <div class="info">
-                    <div class="font-tile" data-font=${cache2.font} ref=${(el) => font_tile = el}>
+                    <div class="font-tile" data-font=${cache2.font} data-font-style=${cache2.font_style} ref=${(el) => font_tile = el}>
                         Aa
                     </div>
                     <div class="swatch-group palette">
@@ -35830,15 +35827,18 @@
             );
           }
           let font_name = cache2.font;
+          let font_style = cache2.font_style;
           let font_preview;
           let font_buttons = [];
+          let font_style_buttons = [];
           dialog({
             id: "profile_font",
             title: tl2(trans.profile_font.name),
             body: html.node`
-                                        <div class="font-name-preview" data-font=${font_name} ref=${(el) => font_preview = el}>
+                                        <div class="font-name-preview" data-font=${font_name} data-font-style=${font_style} ref=${(el) => font_preview = el}>
                                             ${auth.name}
                                         </div>
+                                        <h4 class="font-options-header">${tl2(trans.font.name)}</h4>
                                         <div class="font-options">
                                             ${Object.entries(page.state.fonts).map(([font, family]) => {
               if (family == "") family = tl2(trans.none);
@@ -35851,7 +35851,7 @@
                   btn.setAttribute("aria-checked", btn.getAttribute("data-font") == font);
                 });
               }}>
-                                                        Aa
+                                                        <span data-font=${font}>Aa</span>
                                                     </button>
                                                 `;
               tippy_esm_default(elem, {
@@ -35861,13 +35861,32 @@
               return elem;
             })}
                                         </div>
+                                        <h4 class="font-options-header">${tl2(trans.font_style)}</h4>
+                                        <div class="font-options">
+                                            ${["solid", "pop"].map((style) => {
+              const elem = html.node`
+                                                    <button class="font-selection font-style" data-font-style=${style} aria-checked=${style == font_style} onclick=${() => {
+                font_style = style;
+                font_preview.setAttribute("data-font-style", style);
+                font_tile.setAttribute("data-font-style", style);
+                font_style_buttons.forEach((btn) => {
+                  btn.setAttribute("aria-checked", btn.getAttribute("data-font-style") == style);
+                });
+              }}>
+                                                        <span class="preview-style" data-font-style=${style}>${tl2(trans.font_style[style])}</span>
+                                                    </button>
+                                                `;
+              font_style_buttons.push(elem);
+              return elem;
+            })}
+                                        </div>
                                         <div class="modal-footer">
                                             <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_font" })}>
                                                 ${tl2(trans.back)}
                                             </button>
                                             <div class="fill"></div>
                                             <button class="btn primary continue" onclick=${() => {
-              const new_font = `[font=${font_name}]`;
+              const new_font = `[font=${font_name}${font_style != "solid" ? `,${font_style}` : ""}]`;
               if (match3) {
                 about.value = about.value.replace(
                   font_regex,
@@ -37306,7 +37325,10 @@
     let avatar2 = profile_header.querySelector(".avatar");
     let title_wrap = profile_header.querySelector(".header-title-label-wrap");
     let sub_wrap = profile_header.querySelector(".header-title-secondary");
-    if (ff("profile_fonts") && page.name == "clairedoll") profile_name.setAttribute("data-font", cache2.font);
+    if (ff("profile_fonts") && page.name == "clairedoll") {
+      profile_name.setAttribute("data-font", cache2.font);
+      profile_name.setAttribute("data-font-style", cache2.font_style);
+    }
     if (!avatar2) {
       avatar2 = profile_header.querySelector(".header-avatar-add");
       new_account = true;
@@ -38837,7 +38859,7 @@
     });
     scrobble_canvas_container.appendChild(scrobble_canvas);
   }
-  function save_profile_cache({ avatar: avatar2, banner, banner_orig, hue: hue2, sat, lit, aka, created, font } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
+  function save_profile_cache({ avatar: avatar2, banner, banner_orig, hue: hue2, sat, lit, aka, created, font, font_style } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
     let profile_cache_o = Object.keys(profile_cache);
     if (profile_cache_o.length > 400) {
       const keys2 = Reflect.ownKeys(profile_cache);
@@ -38857,7 +38879,8 @@
       lit,
       aka,
       created,
-      font
+      font,
+      font_style
     };
     log("saved to cache", "profile", "info", {
       name,
@@ -47918,7 +47941,11 @@
         type: "lang",
         regex: /\[font=([^\]]+)\]/g,
         replace: (_, family) => {
-          if (name == "clairedoll") cache2.font = family;
+          if (name == "clairedoll") {
+            const split = family.split(",");
+            cache2.font = split[0];
+            cache2.font_style = split[1] || "solid";
+          }
           return "";
         }
       }
@@ -61501,6 +61528,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         pt: "Selecione uma fonte customizada que te agrada",
         sv: "V\xE4lj ett typsnitt som b\xE4st passar dig",
         ru: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u0438\u0439 \u043D\u0430\u0431\u043E\u0440 \u0448\u0440\u0438\u0444\u0442\u043E\u0432, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0432\u0430\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u0438\u0442"
+      }
+    },
+    font_style: {
+      en: "Font style",
+      solid: {
+        en: "Solid"
+      },
+      pop: {
+        en: "Pop"
       }
     },
     font_weight: {

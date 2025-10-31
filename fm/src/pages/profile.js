@@ -136,7 +136,10 @@ export async function bleh_profiles() {
     let title_wrap = profile_header.querySelector('.header-title-label-wrap');
     let sub_wrap = profile_header.querySelector('.header-title-secondary');
 
-    if (ff('profile_fonts') && page.name == 'clairedoll') profile_name.setAttribute('data-font', cache.font);
+    if (ff('profile_fonts') && page.name == 'clairedoll') {
+        profile_name.setAttribute('data-font', cache.font);
+        profile_name.setAttribute('data-font-style', cache.font_style);
+    }
 
     // new account
     if (!avatar) {
@@ -2050,7 +2053,7 @@ export function bleh_profile_chart_render(
 }
 
 export function save_profile_cache(
-    { avatar, banner, banner_orig, hue, sat, lit, aka, created, font } = {},
+    { avatar, banner, banner_orig, hue, sat, lit, aka, created, font, font_style } = {},
     profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) ||
         {},
     name = page.name
@@ -2082,7 +2085,8 @@ export function save_profile_cache(
         lit,
         aka,
         created,
-        font
+        font,
+        font_style
     };
 
     log('saved to cache', 'profile', 'info', {
