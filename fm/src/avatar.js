@@ -69,7 +69,7 @@ export function patch_avatar(
                     </div>
                 </div>
                 <div class="info">
-                    <h5 class="title">${name}</h5>
+                    <h5 class="title">@${name}</h5>
                     ${
                         badges ?
                             html.node`

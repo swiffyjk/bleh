@@ -30,6 +30,8 @@ export function bleh_users() {
 
         log('patching', 'user', 'info', { user, name: name?.textContent, md });
 
+        if (name) name.textContent = `@${name.textContent}`;
+
         if (md) {
             render(
                 md,

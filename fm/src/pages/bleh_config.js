@@ -322,7 +322,7 @@ export async function render_setting_page(page_id) {
                                     </div>
                                 </div>
                                 <div class="heading">
-                                    <h5>${auth.name}</h5>
+                                    <h5>@${auth.name}</h5>
                                 </div>
                                 <div class="info">
                                     <p>${tl(trans.profile_and_badges, { c: badge_count.toString() })}</p>

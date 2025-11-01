@@ -637,7 +637,7 @@ function patch_settings_profile_panel(token, update_picture) {
                     <div
                         class="setting"
                         data-type="info"
-                        disabled=${!auth.sponsor || auth.name != 'clairedoll'}
+                        disabled=${!auth.sponsor || !['clairedoll', 'evangelicgirl'].includes(auth.name)}
                         ref=${(el) => (font_setting = el)}
                     />
                     ` : ''}

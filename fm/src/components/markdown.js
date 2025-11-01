@@ -177,11 +177,28 @@ export function markdown(
             type: 'lang',
             regex: /\[font=([^\]]+)\]/g,
             replace: (_, family) => {
-                if (name == 'clairedoll') {
+                if (['clairedoll', 'evangelicgirl'].includes(name)) {
                     const split = family.split(',');
 
                     cache.font = split[0];
                     cache.font_style = split[1] || 'solid';
+                }
+
+                return '';
+            }
+        }
+    ];
+
+    // sets a profile's display name
+    const display_name = () => [
+        {
+            type: 'lang',
+            regex: /\[name=([^\]]+)\]/g,
+            replace: (_, username) => {
+                delete cache.username;
+
+                if (sponsor_list && sponsor_list.sponsors.includes(name)) {
+                    cache.username = username;
                 }
 
                 return '';
@@ -280,7 +297,7 @@ export function markdown(
     if (line_breaks) extensions.push(blockquotes());
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
-    if (allow_hue) extensions.push(accent());
+    if (allow_hue) extensions.push(accent(), display_name());
     if (allow_fonts) extensions.push(font());
     if (allow_socials) extensions.push(social_links());
     if (!allow_headers) extensions.push(header_minify());

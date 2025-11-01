@@ -780,22 +780,12 @@ export function append_nav() {
                             <div class="avatar">
                                 <img src="${auth.avatar.replace('avatar42s', 'avatar170s')}" alt="${auth.name}" />
                             </div>
-                            ${
-                                cache.banner ?
-                                    html.node`
+                            ${cache.banner ? html.node`
                             <div class="bg" style="background-image: url(${cache.banner})" />
-                            `
-                                : (
-                                    !auth.avatar.endsWith(
-                                        '818148bf682d429dc215c1705eb27b98.png'
-                                    )
-                                ) ?
-                                    html.node`
+                            ` : !auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png') ? html.node`
                             <div class="bg" style="background-image: url(${auth.avatar.replace('avatar42s', 'avatar170s')})" />
-                            `
-                                :   ''
-                            }
-                            <div class="name">${auth.name}</div>
+                            ` : ''}
+                            <div class="name">${cache.username ? cache.username : `@${auth.name}`}</div>
                             ${
                                 badges || auth.pro ?
                                     html.node`

@@ -45,6 +45,7 @@ export function patch_shouts() {
             if (!shout_name) return;
 
             let shout_name_text = shout_name.textContent;
+            shout_name.textContent = `@${shout_name_text}`;
 
             let shout_avatar = shout.querySelector('.shout-user-avatar');
 

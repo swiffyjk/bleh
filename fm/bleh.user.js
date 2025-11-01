@@ -29525,7 +29525,7 @@
                     </div>
                 </div>
                 <div class="info">
-                    <h5 class="title">${name}</h5>
+                    <h5 class="title">@${name}</h5>
                     ${badges ? html.node`
                     <div class="badges">
                         ${badges.map((badge, index3) => create_badge(badge, false, index3 == badges.length - 1))}
@@ -35541,7 +35541,7 @@
                     <div
                         class="setting"
                         data-type="info"
-                        disabled=${!auth.sponsor || auth.name != "clairedoll"}
+                        disabled=${!auth.sponsor || !["clairedoll", "evangelicgirl"].includes(auth.name)}
                         ref=${(el) => font_setting = el}
                     />
                     ` : ""}
@@ -37298,6 +37298,9 @@
         delete cache2.hue;
         delete cache2.sat;
         delete cache2.lit;
+        delete cache2.font;
+        delete cache2.font_style;
+        delete cache2.username;
         about_me_sidebar = html.node`
                 <section class="about-me-sidebar">
                     <h2>${tl2(trans.about)}</h2>
@@ -37325,7 +37328,7 @@
     let avatar2 = profile_header.querySelector(".avatar");
     let title_wrap = profile_header.querySelector(".header-title-label-wrap");
     let sub_wrap = profile_header.querySelector(".header-title-secondary");
-    if (ff("profile_fonts") && page.name == "clairedoll") {
+    if (ff("profile_fonts") && ["clairedoll", "evangelicgirl"].includes(page.name)) {
       profile_name.setAttribute("data-font", cache2.font);
       profile_name.setAttribute("data-font-style", cache2.font_style);
     }
@@ -37338,6 +37341,19 @@
     }
     let pronouns;
     if (cache2.aka) pronouns = use_pronouns(cache2.aka);
+    if (cache2.username) {
+      profile_name.textContent = cache2.username;
+      tippy_esm_default(profile_name, {
+        content: `@${page.name}`
+      });
+      if (sub_wrap) {
+        sub_wrap.insertBefore(html.node`
+                <span class="header-username">
+                    <a href="${root}user/${page.name}">@${page.name}</a>
+                </span>
+            `, sub_wrap.firstElementChild);
+      }
+    }
     let expander;
     let redesigned_profile_header = html.node`
         <section class="redesigned-header redesigned-profile-header no-background">
@@ -37348,22 +37364,27 @@
                 <div class="sub-text">${tl2(trans.profile)}</div>
                 <div class="title-container">${title_wrap}</div>
                 ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
-                <p class="header-title-secondary">
-                    ${cache2.aka ? html.node`
-                    <span class="header-title-secondary--pre">
-                        ${pronouns ? tl2(trans.account_pronouns) : tl2(trans.aka)}
-                    </span>
-                    <span class="header-title-display-name">
-                        ${cache2.aka}
-                    </span>
-                    ` : ""}
-                    <span class="header-title-secondary--pre">
-                        ${tl2(trans.account_created)}
-                    </span>
-                    <span class="header-scrobble-since">
-                        ${cache2.created}
-                    </span>
-                </p>
+                    <p class="header-title-secondary">
+                        ${cache2.username ? html.node`
+                        <span class="header-username">
+                            <a href="${root}user/${page.name}">@${page.name}</a>
+                        </span>
+                        ` : ""}
+                        ${cache2.aka ? html.node`
+                        <span class="header-title-secondary--pre">
+                            ${pronouns ? tl2(trans.account_pronouns) : tl2(trans.aka)}
+                        </span>
+                        <span class="header-title-display-name">
+                            ${cache2.aka}
+                        </span>
+                        ` : ""}
+                        <span class="header-title-secondary--pre">
+                            ${tl2(trans.account_created)}
+                        </span>
+                        <span class="header-scrobble-since">
+                            ${cache2.created}
+                        </span>
+                    </p>
                 ` : ""}
             </div>
             <div class="expand-side">
@@ -38859,7 +38880,7 @@
     });
     scrobble_canvas_container.appendChild(scrobble_canvas);
   }
-  function save_profile_cache({ avatar: avatar2, banner, banner_orig, hue: hue2, sat, lit, aka, created, font, font_style } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
+  function save_profile_cache({ avatar: avatar2, banner, banner_orig, hue: hue2, sat, lit, aka, created, font, font_style, username: username2 } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
     let profile_cache_o = Object.keys(profile_cache);
     if (profile_cache_o.length > 400) {
       const keys2 = Reflect.ownKeys(profile_cache);
@@ -38880,7 +38901,8 @@
       aka,
       created,
       font,
-      font_style
+      font_style,
+      username: username2
     };
     log("saved to cache", "profile", "info", {
       name,
@@ -47941,10 +47963,23 @@
         type: "lang",
         regex: /\[font=([^\]]+)\]/g,
         replace: (_, family) => {
-          if (name == "clairedoll") {
+          if (["clairedoll", "evangelicgirl"].includes(name)) {
             const split = family.split(",");
             cache2.font = split[0];
             cache2.font_style = split[1] || "solid";
+          }
+          return "";
+        }
+      }
+    ];
+    const display_name = () => [
+      {
+        type: "lang",
+        regex: /\[name=([^\]]+)\]/g,
+        replace: (_, username2) => {
+          delete cache2.username;
+          if (sponsor_list && sponsor_list.sponsors.includes(name)) {
+            cache2.username = username2;
           }
           return "";
         }
@@ -48023,7 +48058,7 @@
     if (line_breaks) extensions.push(blockquotes());
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
-    if (allow_hue) extensions.push(accent());
+    if (allow_hue) extensions.push(accent(), display_name());
     if (allow_fonts) extensions.push(font());
     if (allow_socials) extensions.push(social_links());
     if (!allow_headers) extensions.push(header_minify());
@@ -49347,7 +49382,7 @@
                                     </div>
                                 </div>
                                 <div class="heading">
-                                    <h5>${auth.name}</h5>
+                                    <h5>@${auth.name}</h5>
                                 </div>
                                 <div class="info">
                                     <p>${tl2(trans.profile_and_badges, { c: badge_count.toString() })}</p>
@@ -53444,12 +53479,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             </div>
                             ${cache2.banner ? html.node`
                             <div class="bg" style="background-image: url(${cache2.banner})" />
-                            ` : !auth.avatar.endsWith(
-          "818148bf682d429dc215c1705eb27b98.png"
-        ) ? html.node`
+                            ` : !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
                             <div class="bg" style="background-image: url(${auth.avatar.replace("avatar42s", "avatar170s")})" />
                             ` : ""}
-                            <div class="name">${auth.name}</div>
+                            <div class="name">${cache2.username ? cache2.username : `@${auth.name}`}</div>
                             ${badges || auth.pro ? html.node`
                                 <div class="badges">
                                     ${badges ? badges.map((badge) => create_badge(badge)) : ""}
@@ -56313,6 +56346,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         let shout_name = shout.querySelector(".shout-user a");
         if (!shout_name) return;
         let shout_name_text = shout_name.textContent;
+        shout_name.textContent = `@${shout_name_text}`;
         let shout_avatar = shout.querySelector(".shout-user-avatar");
         let badge = patch_avatar(shout_avatar, shout_name_text, "shout");
         if (badge) {
@@ -56739,6 +56773,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       });
       const md = user.querySelector(".user-list-about-me");
       log("patching", "user", "info", { user, name: name?.textContent, md });
+      if (name) name.textContent = `@${name.textContent}`;
       if (md) {
         render(
           md,

@@ -103,6 +103,9 @@ export async function bleh_profiles() {
             delete cache.hue;
             delete cache.sat;
             delete cache.lit;
+            delete cache.font;
+            delete cache.font_style;
+            delete cache.username;
 
             about_me_sidebar = html.node`
                 <section class="about-me-sidebar">
@@ -136,7 +139,7 @@ export async function bleh_profiles() {
     let title_wrap = profile_header.querySelector('.header-title-label-wrap');
     let sub_wrap = profile_header.querySelector('.header-title-secondary');
 
-    if (ff('profile_fonts') && page.name == 'clairedoll') {
+    if (ff('profile_fonts') && ['clairedoll', 'evangelicgirl'].includes(page.name)) {
         profile_name.setAttribute('data-font', cache.font);
         profile_name.setAttribute('data-font-style', cache.font_style);
     }
@@ -161,6 +164,21 @@ export async function bleh_profiles() {
     let pronouns;
     if (cache.aka) pronouns = use_pronouns(cache.aka);
 
+    if (cache.username) {
+        profile_name.textContent = cache.username;
+        tippy(profile_name, {
+            content: `@${page.name}`
+        });
+
+        if (sub_wrap) {
+            sub_wrap.insertBefore(html.node`
+                <span class="header-username">
+                    <a href="${root}user/${page.name}">@${page.name}</a>
+                </span>
+            `, sub_wrap.firstElementChild);
+        }
+    }
+
     let expander;
     let redesigned_profile_header = html.node`
         <section class="redesigned-header redesigned-profile-header no-background">
@@ -170,33 +188,29 @@ export async function bleh_profiles() {
             <div class="info-side">
                 <div class="sub-text">${tl(trans.profile)}</div>
                 <div class="title-container">${title_wrap}</div>
-                ${
-                    sub_wrap ? sub_wrap
-                    : cache.aka || cache.created ?
-                        html.node`
-                <p class="header-title-secondary">
-                    ${
-                        cache.aka ?
-                            html.node`
-                    <span class="header-title-secondary--pre">
-                        ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
-                    </span>
-                    <span class="header-title-display-name">
-                        ${cache.aka}
-                    </span>
-                    `
-                        :   ''
-                    }
-                    <span class="header-title-secondary--pre">
-                        ${tl(trans.account_created)}
-                    </span>
-                    <span class="header-scrobble-since">
-                        ${cache.created}
-                    </span>
-                </p>
-                `
-                    :   ''
-                }
+                ${sub_wrap ? sub_wrap : cache.aka || cache.created ? html.node`
+                    <p class="header-title-secondary">
+                        ${cache.username ? html.node`
+                        <span class="header-username">
+                            <a href="${root}user/${page.name}">@${page.name}</a>
+                        </span>
+                        ` : ''}
+                        ${cache.aka ? html.node`
+                        <span class="header-title-secondary--pre">
+                            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+                        </span>
+                        <span class="header-title-display-name">
+                            ${cache.aka}
+                        </span>
+                        ` : ''}
+                        <span class="header-title-secondary--pre">
+                            ${tl(trans.account_created)}
+                        </span>
+                        <span class="header-scrobble-since">
+                            ${cache.created}
+                        </span>
+                    </p>
+                ` : ''}
             </div>
             <div class="expand-side">
                 <button class="header-expand-button icon" ref=${(el) => (expander = el)} onclick=${() => {
@@ -2053,7 +2067,7 @@ export function bleh_profile_chart_render(
 }
 
 export function save_profile_cache(
-    { avatar, banner, banner_orig, hue, sat, lit, aka, created, font, font_style } = {},
+    { avatar, banner, banner_orig, hue, sat, lit, aka, created, font, font_style, username } = {},
     profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) ||
         {},
     name = page.name
@@ -2086,7 +2100,8 @@ export function save_profile_cache(
         aka,
         created,
         font,
-        font_style
+        font_style,
+        username
     };
 
     log('saved to cache', 'profile', 'info', {
@@ -2131,10 +2146,7 @@ export async function load_profile_cache_externally(name = page.name) {
 
     if (cache) {
         if (cache.hue || cache.sat || cache.lit) {
-            if (
-                !sponsor_list ||
-                (sponsor_list && !sponsor_list.sponsors.includes(name))
-            ) {
+            if (!sponsor_list || (sponsor_list && !sponsor_list.sponsors.includes(name))) {
                 delete cache.hue;
                 delete cache.sat;
                 delete cache.lit;
