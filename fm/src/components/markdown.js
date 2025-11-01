@@ -450,7 +450,9 @@ export function markdown(
 
             // for counter-like sites
             const proxy_free = [
-                'count.getloli.com'
+                'count.getloli.com',
+                'i.imgur.com',
+                'media1.tenor.com'
             ];
 
             try {

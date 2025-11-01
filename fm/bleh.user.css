@@ -22634,6 +22634,8 @@
         [data-ff--katsune="true"] &:not(.about-artist-panel) {
             margin: -20px -40px !important;
             padding: var(--card-gap) calc(var(--card-gap) + var(--card-padding)) !important;
+            align-items: center;
+            gap: calc(var(--card-gap) + var(--card-padding));
 
             [data-ff--beret="true"] & {
                 width: var(--cards-width);
@@ -22690,18 +22692,12 @@
                 min-height: 54px;
             }
 
-            .avatar-side {
-                background: var(--avatar-generic-background);
-                margin-top: -20px;
-            }
-
             &.redesigned-album-header,
             &.redesigned-track-header,
             &.redesigned-artist-header {
                 background: unset !important;
                 box-shadow: unset !important;
                 height: 100%;
-                align-items: center;
                 z-index: 5;
                 position: relative;
 
@@ -22709,8 +22705,6 @@
                     margin-top: calc(
                         -1 * (var(--banner-height) - 150px) - 78px
                     ) !important;
-
-                    gap: calc(var(--card-gap) + var(--card-padding));
 
                     .avatar-side {
                         --avatar-size: var(--header-avatar-size) !important;
@@ -22785,36 +22779,23 @@
             }
 
             &.redesigned-profile-header {
-                align-items: end;
-                transition: margin-top 0.45s var(--trans-function);
+                margin-top: calc(
+                    -1 * (var(--banner-height) - 150px) - 78px
+                ) !important;
 
                 .avatar-side {
                     --mask-size: var(--cover-size-200) !important;
                     --avatar-size: calc(
                         var(--header-avatar-size) - 20px
                     ) !important;
-                    margin-top: -48px !important;
                     cursor: pointer;
-
-                    transition-property: width, height, margin, transform;
-                    transition-duration: var(--trans);
-                    transition-timing-function: var(--trans-function);
                 }
 
                 [data-bleh--profile_header_expand="false"] & {
-                    margin-top: calc(
-                        -1 * (var(--banner-height) - 52px)
-                    ) !important;
-
                     .avatar-side {
-                        margin: unset !important;
                         --mask-size: var(--cover-size-100) !important;
                         --avatar-size: 74px !important;
                     }
-                }
-
-                .info-side {
-                    min-height: 74px;
                 }
             }
 
@@ -22874,6 +22855,7 @@
 
         .avatar-side {
             --avatar-size: 50px;
+            background: var(--avatar-generic-background);
             width: var(--avatar-size);
             height: var(--avatar-size);
             border-radius: var(--avatar-radius);
@@ -22947,8 +22929,8 @@
                 cursor: pointer;
             }
 
-            transition-property: transform;
-            transition-duration: var(--trans);
+            transition-property: width, height, transform;
+            transition-duration: 0.3s;
             transition-timing-function: var(--trans-function);
 
             &:active {
@@ -23032,7 +23014,7 @@
             h1 {
                 margin: unset;
                 font-size: 26px;
-                line-height: 30px;
+                line-height: 40px;
                 font-weight: var(--font-weight-bold);
                 letter-spacing: unset;
                 cursor: default;
@@ -23042,6 +23024,7 @@
                 & > a {
                     color: inherit;
                     position: relative;
+                    font-size: calc(26px + var(--custom-font-size-multiplier, 0px));
                 }
             }
 
@@ -23051,8 +23034,8 @@
 
             .title-container {
                 display: flex;
-                align-items: center;
-                gap: var(--item-list-gap);
+                flex-direction: column;
+                gap: 6px;
                 cursor: default;
 
                 h1 {
@@ -23078,24 +23061,6 @@
                     .feat {
                         font-size: 18px;
                         color: hsl(var(--c2), 70%);
-                    }
-                }
-
-                & > .badges {
-                    display: flex;
-                    flex-direction: row-reverse;
-                    gap: 4px;
-                    flex-wrap: wrap;
-
-                    @media (max-width: 980px) {
-                        justify-content: center;
-                    }
-
-                    & > .user-status-subscriber {
-                        order: -1;
-                    }
-                    & > .user-follow {
-                        order: -2;
                     }
                 }
 
@@ -23162,10 +23127,31 @@
             }
 
             .header-title-secondary {
-                margin-top: 6px !important;
+                margin-top: 4px !important;
 
                 @media (max-width: 980px) {
                     justify-content: center;
+                }
+            }
+
+            & > .badges {
+                display: flex;
+                flex-direction: row-reverse;
+                gap: 4px;
+                flex-wrap: wrap;
+                width: fit-content;
+
+                margin-top: 10px;
+
+                @media (max-width: 980px) {
+                    justify-content: center;
+                }
+
+                & > .user-status-subscriber {
+                    order: -1;
+                }
+                & > .user-follow {
+                    order: -2;
                 }
             }
 
@@ -28411,7 +28397,11 @@
         font-family: var(--custom-font);
         font-weight: var(--custom-font-weight);
 
-        top: var(--custom-font-align, 0);
+        top: var(--custom-font-align-mini, 0);
+
+        &.profile-name {
+            top: var(--custom-font-align, 0);
+        }
     }
 
     [data-font-style]:not([data-font-style="solid"]) {
@@ -28442,7 +28432,9 @@
     }
     [data-font="cherry"] {
         --custom-font: 'Cherry Bomb One', var(--font);
-        --custom-font-align: -1px;
+        --custom-font-align: -4px;
+        --custom-font-align-mini: -1px;
+        --custom-font-size-multiplier: 3px;
     }
     [data-font="joti"] {
         --custom-font: 'Joti One', var(--font);

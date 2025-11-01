@@ -35484,7 +35484,6 @@
                         </div>
                     </div>
                     ${() => {
-        let input_box;
         const username_regex = /\[name=([^\]]+)\]/;
         const elem = html.node`
                             <div class="setting" data-type="text">
@@ -35520,6 +35519,14 @@
                         `;
         return elem;
       }}
+                    ${ff("profile_fonts") ? html.node`
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!auth.sponsor || !["clairedoll", "evangelicgirl"].includes(auth.name)}
+                        ref=${(el) => font_setting = el}
+                    />
+                    ` : ""}
                     <div class="setting" data-type="text">
                         <div class="heading">
                             <h5>${tl2(trans.subtitle)}</h5>
@@ -35573,14 +35580,6 @@
                         disabled=${!auth.sponsor}
                         ref=${(el) => accent_setting = el}
                     />
-                    ${ff("profile_fonts") ? html.node`
-                    <div
-                        class="setting"
-                        data-type="info"
-                        disabled=${!auth.sponsor || !["clairedoll", "evangelicgirl"].includes(auth.name)}
-                        ref=${(el) => font_setting = el}
-                    />
-                    ` : ""}
                     <div class="setting" data-type="text">
                         <div class="heading">
                             <h5>${tl2(trans.about)}</h5>
@@ -37364,7 +37363,31 @@
     let avatar2 = profile_header.querySelector(".avatar");
     let title_wrap = profile_header.querySelector(".header-title-label-wrap");
     let sub_wrap = profile_header.querySelector(".header-title-secondary");
+    log(`querying badges for ${page.name}`, "profile");
+    if (ff("badges")) {
+      let stock_badges = title_wrap.querySelectorAll(".label");
+      stock_badges.forEach((badge) => {
+        if (badge.classList[1] == "user-status-None") return;
+        badge.classList.add("expand");
+        tippy_esm_default(badge, {
+          theme: "badge",
+          placement: "bottom",
+          content: html.node`
+                    <div class="badge-name">${badge.textContent}</div>
+                    <div class="badge-reason">${tl2(trans.badges[badge.classList[1]].reason)}</div>
+                `
+        });
+      });
+    }
+    let badges = load_badges(page.name);
+    if (badges) {
+      badges.forEach((badge) => {
+        title_wrap.appendChild(create_badge(badge, false, true));
+      });
+    }
+    const badge_elements = Array.from(title_wrap.querySelectorAll(".label"));
     if (ff("profile_fonts") && ["clairedoll", "evangelicgirl"].includes(page.name)) {
+      profile_name.classList.add("profile-name");
       profile_name.setAttribute("data-font", cache2.font);
       profile_name.setAttribute("data-font-style", cache2.font_style);
     }
@@ -37421,6 +37444,13 @@
                             ${cache2.created}
                         </span>
                     </p>
+                ` : ""}
+                ${badge_elements.length > 0 ? html.node`
+                <div class="badges">
+                    ${badge_elements.map((badge) => html.node`
+                        ${badge}
+                    `)}
+                </div>
                 ` : ""}
             </div>
             <div class="expand-side">
@@ -37949,39 +37979,6 @@
     log("status is", "page", "info", page);
     update_page();
     patch_profile_following();
-    log(`querying badges for ${page.name}`, "profile");
-    let profile_name_obj;
-    profile_name_obj = page.structure.container.querySelector(
-      ".redesigned-profile-header .title-container"
-    );
-    if (ff("badges")) {
-      let stock_badges = profile_name_obj.querySelectorAll(".label");
-      stock_badges.forEach((badge) => {
-        if (badge.classList[1] == "user-status-None") return;
-        badge.classList.add("expand");
-        tippy_esm_default(badge, {
-          theme: "badge",
-          placement: "bottom",
-          content: html.node`
-                    <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl2(trans.badges[badge.classList[1]].reason)}</div>
-                `
-        });
-      });
-    }
-    let badges = load_badges(page.name);
-    if (badges) {
-      badges.forEach((badge) => {
-        profile_name_obj.appendChild(create_badge(badge, false, true));
-      });
-    }
-    let badge_elements = profile_name_obj.querySelectorAll(".label");
-    let label_container = document.createElement("div");
-    label_container.classList.add("badges");
-    badge_elements.forEach((badge) => {
-      label_container.appendChild(badge);
-    });
-    profile_name_obj.appendChild(label_container);
     save_profile_cache(cache2, profile_cache, page.name);
   }
   function create_profile_note_panel(username2, has_note) {
@@ -48212,7 +48209,9 @@
           return;
         }
         const proxy_free = [
-          "count.getloli.com"
+          "count.getloli.com",
+          "i.imgur.com",
+          "media1.tenor.com"
         ];
         try {
           const url = new URL(image.src);

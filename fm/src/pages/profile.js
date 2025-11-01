@@ -139,7 +139,39 @@ export async function bleh_profiles() {
     let title_wrap = profile_header.querySelector('.header-title-label-wrap');
     let sub_wrap = profile_header.querySelector('.header-title-secondary');
 
+    // badges
+    log(`querying badges for ${page.name}`, 'profile');
+
+    if (ff('badges')) {
+        let stock_badges = title_wrap.querySelectorAll('.label');
+        stock_badges.forEach((badge) => {
+            if (badge.classList[1] == 'user-status-None') return;
+
+            badge.classList.add('expand');
+
+            tippy(badge, {
+                theme: 'badge',
+                placement: 'bottom',
+                content: html.node`
+                    <div class="badge-name">${badge.textContent}</div>
+                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
+                `
+            });
+        });
+    }
+
+    let badges = load_badges(page.name);
+
+    if (badges) {
+        badges.forEach((badge) => {
+            title_wrap.appendChild(create_badge(badge, false, true));
+        });
+    }
+
+    const badge_elements = Array.from(title_wrap.querySelectorAll('.label'));
+
     if (ff('profile_fonts') && ['clairedoll', 'evangelicgirl'].includes(page.name)) {
+        profile_name.classList.add('profile-name');
         profile_name.setAttribute('data-font', cache.font);
         profile_name.setAttribute('data-font-style', cache.font_style);
     }
@@ -210,6 +242,13 @@ export async function bleh_profiles() {
                             ${cache.created}
                         </span>
                     </p>
+                ` : ''}
+                ${badge_elements.length > 0 ? html.node`
+                <div class="badges">
+                    ${badge_elements.map(badge => html.node`
+                        ${badge}
+                    `)}
+                </div>
                 ` : ''}
             </div>
             <div class="expand-side">
@@ -884,48 +923,6 @@ export async function bleh_profiles() {
     update_page();
 
     patch_profile_following();
-
-    // badges
-    log(`querying badges for ${page.name}`, 'profile');
-
-    let profile_name_obj;
-    profile_name_obj = page.structure.container.querySelector(
-        '.redesigned-profile-header .title-container'
-    );
-
-    if (ff('badges')) {
-        let stock_badges = profile_name_obj.querySelectorAll('.label');
-        stock_badges.forEach((badge) => {
-            if (badge.classList[1] == 'user-status-None') return;
-
-            badge.classList.add('expand');
-
-            tippy(badge, {
-                theme: 'badge',
-                placement: 'bottom',
-                content: html.node`
-                    <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `
-            });
-        });
-    }
-
-    let badges = load_badges(page.name);
-
-    if (badges) {
-        badges.forEach((badge) => {
-            profile_name_obj.appendChild(create_badge(badge, false, true));
-        });
-    }
-
-    let badge_elements = profile_name_obj.querySelectorAll('.label');
-    let label_container = document.createElement('div');
-    label_container.classList.add('badges');
-    badge_elements.forEach((badge) => {
-        label_container.appendChild(badge);
-    });
-    profile_name_obj.appendChild(label_container);
 
     save_profile_cache(cache, profile_cache, page.name);
 }

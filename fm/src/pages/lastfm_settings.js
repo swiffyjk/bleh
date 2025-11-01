@@ -581,8 +581,6 @@ function patch_settings_profile_panel(token, update_picture) {
                         </div>
                     </div>
                     ${() => {
-                        let input_box;
-
                         const username_regex = /\[name=([^\]]+)\]/;
 
                         const elem = html.node`
@@ -627,6 +625,14 @@ function patch_settings_profile_panel(token, update_picture) {
 
                         return elem;
                     }}
+                    ${ff('profile_fonts') ? html.node`
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!auth.sponsor || !['clairedoll', 'evangelicgirl'].includes(auth.name)}
+                        ref=${(el) => (font_setting = el)}
+                    />
+                    ` : ''}
                     <div class="setting" data-type="text">
                         <div class="heading">
                             <h5>${tl(trans.subtitle)}</h5>
@@ -680,14 +686,6 @@ function patch_settings_profile_panel(token, update_picture) {
                         disabled=${!auth.sponsor}
                         ref=${(el) => (accent_setting = el)}
                     />
-                    ${ff('profile_fonts') ? html.node`
-                    <div
-                        class="setting"
-                        data-type="info"
-                        disabled=${!auth.sponsor || !['clairedoll', 'evangelicgirl'].includes(auth.name)}
-                        ref=${(el) => (font_setting = el)}
-                    />
-                    ` : ''}
                     <div class="setting" data-type="text">
                         <div class="heading">
                             <h5>${tl(trans.about)}</h5>
@@ -772,8 +770,7 @@ function patch_settings_profile_panel(token, update_picture) {
 
         render(preview, markdown(value, markdown_settings));
 
-        let profile_cache =
-            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+        let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
         let cache = profile_cache[auth.name];
 
         console.info('cache', cache);
