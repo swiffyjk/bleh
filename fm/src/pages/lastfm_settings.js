@@ -541,12 +541,12 @@ function patch_settings_profile_panel(token, update_picture) {
     render(page.structure.side, html`
         <section>
             <h2>${tl(trans.about_me_preview)}</h2>
-            <span
-                class="bleh--about-me-preview markdown-body"
-                ref=${(el) => (preview = el)}
-            ></span>
+            <span class="bleh--about-me-preview markdown-body" ref=${(el) => (preview = el)} />
         </section>
     `);
+
+    let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    let cache = profile_cache[auth.name];
 
     render(
         update_picture,
@@ -580,6 +580,53 @@ function patch_settings_profile_panel(token, update_picture) {
                             </div>
                         </div>
                     </div>
+                    ${() => {
+                        let input_box;
+
+                        const username_regex = /\[name=([^\]]+)\]/;
+
+                        const elem = html.node`
+                            <div class="setting" data-type="text">
+                                <div class="heading">
+                                    <h5>${tl(trans.display_name.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span></h5>
+                                    <p>${tl(trans.display_name.body)}</p>
+                                </div>
+                                ${input({
+                                    value: cache.username,
+                                    placeholder: auth.name,
+                                    func: (val) => {
+                                        const match = about.value.match(username_regex);
+
+                                        const new_name = `[name=${val}]`;
+
+                                        if (match) {
+                                            about.value = about.value.replace(username_regex, new_name);
+                                        } else {
+                                            const trimmed = about.value.trimEnd();
+
+                                            if (trimmed.length == 0) {
+                                                about.value = new_name;
+                                            } else {
+                                                about.value =
+                                                    trimmed +
+                                                    '\n\n' +
+                                                    new_name;
+                                            }
+                                        }
+
+                                        about.dispatchEvent(
+                                            new InputEvent('input', {
+                                                bubbles: true,
+                                                cancelable: true
+                                            })
+                                        );
+                                    }
+                                })}
+                            </div>
+                        `;
+
+                        return elem;
+                    }}
                     <div class="setting" data-type="text">
                         <div class="heading">
                             <h5>${tl(trans.subtitle)}</h5>
@@ -879,8 +926,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                                     new_accent
                                                 );
                                             } else {
-                                                const trimmed =
-                                                    about.value.trimEnd();
+                                                const trimmed = about.value.trimEnd();
 
                                                 if (trimmed.length == 0) {
                                                     about.value = new_accent;

@@ -35446,12 +35446,11 @@
     render(page.structure.side, html`
         <section>
             <h2>${tl2(trans.about_me_preview)}</h2>
-            <span
-                class="bleh--about-me-preview markdown-body"
-                ref=${(el) => preview = el}
-            ></span>
+            <span class="bleh--about-me-preview markdown-body" ref=${(el) => preview = el} />
         </section>
     `);
+    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+    let cache2 = profile_cache[auth.name];
     render(
       update_picture,
       html`
@@ -35484,6 +35483,43 @@
                             </div>
                         </div>
                     </div>
+                    ${() => {
+        let input_box;
+        const username_regex = /\[name=([^\]]+)\]/;
+        const elem = html.node`
+                            <div class="setting" data-type="text">
+                                <div class="heading">
+                                    <h5>${tl2(trans.display_name.name)}<span class="new-badge sponsor-related">${tl2(trans.sponsors_only)}</span></h5>
+                                    <p>${tl2(trans.display_name.body)}</p>
+                                </div>
+                                ${input({
+          value: cache2.username,
+          placeholder: auth.name,
+          func: (val) => {
+            const match3 = about.value.match(username_regex);
+            const new_name = `[name=${val}]`;
+            if (match3) {
+              about.value = about.value.replace(username_regex, new_name);
+            } else {
+              const trimmed = about.value.trimEnd();
+              if (trimmed.length == 0) {
+                about.value = new_name;
+              } else {
+                about.value = trimmed + "\n\n" + new_name;
+              }
+            }
+            about.dispatchEvent(
+              new InputEvent("input", {
+                bubbles: true,
+                cancelable: true
+              })
+            );
+          }
+        })}
+                            </div>
+                        `;
+        return elem;
+      }}
                     <div class="setting" data-type="text">
                         <div class="heading">
                             <h5>${tl2(trans.subtitle)}</h5>
@@ -35618,31 +35654,31 @@
       });
       chars.setAttribute("data-exceeded", length > bio_max_length);
       render(preview, markdown(value, markdown_settings));
-      let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      let cache2 = profile_cache[auth.name];
-      console.info("cache", cache2);
+      let profile_cache2 = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+      let cache3 = profile_cache2[auth.name];
+      console.info("cache", cache3);
       render(
         banner_setting,
         html`
                 <div class="heading">
                     <h5>${tl2(trans.profile_banner.name)}</h5>
                     <p>${tl2(trans.profile_banner.body)}</p>
-                    ${cache2.banner_orig ? html.node`
-                        <p>${tl2(trans.current_banner_value).replace("{v}", cache2.banner_orig)}</p>
+                    ${cache3.banner_orig ? html.node`
+                        <p>${tl2(trans.current_banner_value).replace("{v}", cache3.banner_orig)}</p>
                     ` : ""}
                 </div>
                 ${() => {
-          if (!cache2.banner_orig)
+          if (!cache3.banner_orig)
             return html.node`
                         <div class="info">
                             <p>${tl2(trans.none)}</p>
                         </div>
                     `;
           let banner_image = html.node`
-                        <div class="banner-image" style="background-image: url(${cache2.banner})" />
+                        <div class="banner-image" style="background-image: url(${cache3.banner})" />
                     `;
           tippy_esm_default(banner_image, {
-            content: cache2.banner_orig
+            content: cache3.banner_orig
           });
           return banner_image;
         }}
@@ -35653,9 +35689,9 @@
       console.info(
         "cache update",
         about.value,
-        cache2.hue,
-        cache2.sat,
-        cache2.lit
+        cache3.hue,
+        cache3.sat,
+        cache3.lit
       );
       let accent_edit;
       render(accent_setting, html`
@@ -35666,7 +35702,7 @@
             <div class="info">
                 <div
                     class="colour-tile colourful"
-                    style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}"
+                    style="--hue-over: ${cache3.hue}; --sat-over: ${cache3.sat}; --lit-over: ${cache3.lit}"
                 />
                 <div class="swatch-group palette">
                     <button
@@ -35803,7 +35839,7 @@
                 </div>
                 <div class="info">
                     <div class="font-tile">
-                        <span class="preview-style" data-font=${cache2.font} data-font-style=${cache2.font_style} ref=${(el) => font_tile = el}>Aa</span>
+                        <span class="preview-style" data-font=${cache3.font} data-font-style=${cache3.font_style} ref=${(el) => font_tile = el}>Aa</span>
                     </div>
                     <div class="swatch-group palette">
                         <button
@@ -35826,8 +35862,8 @@
               parseFloat(match3[3])
             );
           }
-          let font_name = cache2.font;
-          let font_style = cache2.font_style;
+          let font_name = cache3.font;
+          let font_style = cache3.font_style;
           let font_preview;
           let font_buttons = [];
           let font_style_buttons = [];
@@ -61086,6 +61122,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Pa\xEDs",
       sv: "Land",
       ru: "\u0421\u0442\u0440\u0430\u043D\u0430"
+    },
+    display_name: {
+      name: {
+        en: "Display name"
+      },
+      body: {
+        en: "Changes your name on your profile, with your real @username shown below"
+      }
     },
     subtitle: {
       en: "Subtitle",

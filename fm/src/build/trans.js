@@ -3221,6 +3221,14 @@ export const trans = {
         sv: 'Land',
         ru: 'Страна'
     },
+    display_name: {
+        name: {
+            en: 'Display name'
+        },
+        body: {
+            en: 'Changes your name on your profile, with your real @username shown below'
+        }
+    },
     subtitle: {
         en: 'Subtitle',
         de: 'Untertitel',
