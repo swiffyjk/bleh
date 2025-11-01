@@ -1682,7 +1682,7 @@ export function convert_top_listener(listener, index, key = 'top-listeners') {
                 </span>
                 <h4 class="user-list-name">
                     <a class="user-list-link link-block-target" href=${name_wrap.getAttribute('href')} ref=${(el) => (name_link = el)}>
-                        ${name}
+                        @${name}
                     </a>
                 </h4>
                 <span class="avatar user-list-avatar" ref=${(el) => (user_list_avatar = el)}>
@@ -1833,13 +1833,13 @@ export function prepare_music() {
 
     page.state.fonts = {
         none: '',
-        momo: 'Momo Trust Display',
+        uni: 'UnifrakturCook',
         lilita: 'Lilita One',
         single: 'Single Day',
-        eb: 'EB Garamond',
-        balsamiq: 'Balsamiq Sans',
         cherry: 'Cherry Bomb One',
-        joti: 'Joti One',
+        balsamiq: 'Balsamiq Sans',
+        crimson: 'Crimson Text',
+        rokkitt: 'Rokkitt',
         code: 'Google Sans Code'
     };
 }

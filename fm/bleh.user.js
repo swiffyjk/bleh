@@ -46736,7 +46736,7 @@
                 </span>
                 <h4 class="user-list-name">
                     <a class="user-list-link link-block-target" href=${name_wrap.getAttribute("href")} ref=${(el) => name_link = el}>
-                        ${name}
+                        @${name}
                     </a>
                 </h4>
                 <span class="avatar user-list-avatar" ref=${(el) => user_list_avatar = el}>
@@ -46873,13 +46873,13 @@
     ];
     page.state.fonts = {
       none: "",
-      momo: "Momo Trust Display",
+      uni: "UnifrakturCook",
       lilita: "Lilita One",
       single: "Single Day",
-      eb: "EB Garamond",
-      balsamiq: "Balsamiq Sans",
       cherry: "Cherry Bomb One",
-      joti: "Joti One",
+      balsamiq: "Balsamiq Sans",
+      crimson: "Crimson Text",
+      rokkitt: "Rokkitt",
       code: "Google Sans Code"
     };
   }
@@ -54443,19 +54443,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     checkup_page_structure(is_subpage, artist_header);
     let katsune = ff("katsune");
-    let featured_items = artist_header.querySelector(
-      ".artist-header-featured-items"
-    );
+    let featured_items = artist_header.querySelector(".artist-header-featured-items");
     if (ff("refreshed_music_nav")) {
-      let avatar2 = artist_header.querySelector(
-        ".header-new-background-image"
-      );
+      let avatar2 = artist_header.querySelector(".header-new-background-image");
       let title = artist_header.querySelector(".header-new-title");
       let on_tour = artist_header.querySelector(".header-new-on-tour");
-      let position = artist_header.querySelector(
-        ".header-new-chart-position-number"
-      );
-      if (on_tour) on_tour.classList.add("label", "no-hover");
+      let position = artist_header.querySelector(".header-new-chart-position-number");
+      if (on_tour) on_tour.classList.add("label", "no-hover", "expand");
       let multi_info_box;
       let redesigned_artist_header = html.node`
             <section class="redesigned-header redesigned-artist-header no-background">
@@ -54479,12 +54473,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     <div class="title-container" data-multi=${page.multi}>
                         ${title}
                         ${position}
-                        ${on_tour ? html.node`
-                        <div class="badges">
-                            ${on_tour}
-                        </div>
-                        ` : ""}
                     </div>
+                    ${on_tour ? html.node`
+                    <div class="badges">
+                        ${on_tour}
+                    </div>
+                    ` : ""}
                 </div>
             </section>
         `;
@@ -54498,9 +54492,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           content: tl2(trans.view_the_charts)
         });
       }
-      let bg;
-      if (avatar2) bg = register_background(avatar2.getAttribute("content"));
-      else bg = register_background(null);
+      if (avatar2) register_background(avatar2.getAttribute("content"));
+      else register_background(null);
       page.structure.container.insertBefore(
         redesigned_artist_header,
         page.structure.container.firstElementChild
@@ -54544,30 +54537,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           }
         });
         register_menu(avatar_side, menu);
-      }
-      if (!is_subpage) {
-        let view_button = redesigned_artist_header.querySelector(".view-all-button");
-        if (view_button) {
-          let view_menu = tippy_esm_default(view_button, {
-            theme: "context-menu",
-            content: html.node`
-                        <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                            ${tl2(trans.settings)}
-                        </a>
-                    `,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event3) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(view_button, view_menu);
-        }
       }
     }
     if (!is_subpage) {

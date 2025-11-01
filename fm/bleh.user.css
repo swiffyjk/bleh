@@ -14,7 +14,7 @@
     @import url("https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap");
     @import url("https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap");
     @import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Cherry+Bomb+One&family=Joti+One&family=Lilita+One&family=Momo+Trust+Display&family=Single+Day&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Cherry+Bomb+One&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Lilita+One&family=Rokkitt:ital,wght@0,100..900;1,100..900&family=Single+Day&family=UnifrakturCook:wght@700&display=swap');
 
     body {
         --version-build: "2025.1016";
@@ -23024,7 +23024,7 @@
                 & > a {
                     color: inherit;
                     position: relative;
-                    font-size: calc(26px + var(--custom-font-size-multiplier, 0px));
+                    font-size: calc(26px * var(--custom-font-size-multiplier, 1));
                 }
             }
 
@@ -23034,7 +23034,7 @@
 
             .title-container {
                 display: flex;
-                flex-direction: column;
+                align-items: center;
                 gap: 6px;
                 cursor: default;
 
@@ -23098,8 +23098,8 @@
                     color: hsl(var(--l2-c-theme-switch));
                     text-shadow: 0 0 20px hsl(var(--h4));
 
-                    font-size: 16px;
-                    line-height: 20px;
+                    font-size: 18px;
+                    line-height: 22px;
                 }
             }
 
@@ -28332,11 +28332,14 @@
         padding: 20px 0 40px;
 
         color: hsl(var(--c1));
-        font-size: 34px;
         line-height: 34px;
         font-weight: var(--custom-font-weight, var(--font-weight-bold));
         cursor: default;
         user-select: none;
+
+        & > span {
+            font-size: calc(34px * var(--custom-font-size-multiplier, 1));
+        }
 
         height: 94px;
     }
@@ -28392,7 +28395,7 @@
     }
 
     [data-font]:not([data-font="none"], [data-font="undefined"]) {
-        --custom-font-weight: 400;
+        --custom-font-weight: 600;
 
         font-family: var(--custom-font);
         font-weight: var(--custom-font-weight);
@@ -28412,18 +28415,19 @@
         }
     }
 
-    [data-font="momo"] {
-        --custom-font: 'Momo Trust Display', var(--font);
+    [data-font="uni"] {
+        --custom-font: 'UnifrakturCook', var(--font);
     }
     [data-font="lilita"] {
         --custom-font: 'Lilita One', var(--font);
+        --custom-font-weight: 300 !important;
     }
     [data-font="single"] {
         --custom-font: 'Single Day', var(--font);
-        --custom-font-weight: 600 !important;
+        --custom-font-size-multiplier: 1.05;
     }
-    [data-font="eb"] {
-        --custom-font: 'EB Garamond', var(--font);
+    [data-font="crimson"] {
+        --custom-font: 'Crimson Text', var(--font);
     }
     [data-font="balsamiq"] {
         --custom-font: 'Balsamiq Sans', var(--font);
@@ -28432,15 +28436,17 @@
     }
     [data-font="cherry"] {
         --custom-font: 'Cherry Bomb One', var(--font);
+        --custom-font-weight: 300 !important;
         --custom-font-align: -4px;
         --custom-font-align-mini: -1px;
-        --custom-font-size-multiplier: 3px;
+        --custom-font-size-multiplier: 1.12;
     }
-    [data-font="joti"] {
-        --custom-font: 'Joti One', var(--font);
+    [data-font="rokkitt"] {
+        --custom-font: 'Rokkitt', var(--font);
     }
     [data-font="code"] {
         --custom-font: 'Google Sans Code', var(--font);
+        --custom-font-size-multiplier: 0.85;
     }
 
     [data-font-style="pop"] {
