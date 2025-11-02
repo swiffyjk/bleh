@@ -1199,18 +1199,14 @@ export const trans = {
                 ru: 'Хэллоуин'
             },
             pre_fall: {
-                en: 'Early autumn',
-                de: 'Früher Herbst',
-                pt: 'Pré-outono',
-                sv: 'Tidig höst',
-                ru: 'Ранняя осень'
-            },
-            fall: {
                 en: 'Autumn',
                 de: 'Herbst',
                 pt: 'Outono',
                 sv: 'Höst',
                 ru: 'Осень'
+            },
+            fall: {
+                en: 'Winter'
             },
             christmas: {
                 en: 'Christmas',

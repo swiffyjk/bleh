@@ -59068,18 +59068,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           ru: "\u0425\u044D\u043B\u043B\u043E\u0443\u0438\u043D"
         },
         pre_fall: {
-          en: "Early autumn",
-          de: "Fr\xFCher Herbst",
-          pt: "Pr\xE9-outono",
-          sv: "Tidig h\xF6st",
-          ru: "\u0420\u0430\u043D\u043D\u044F\u044F \u043E\u0441\u0435\u043D\u044C"
-        },
-        fall: {
           en: "Autumn",
           de: "Herbst",
           pt: "Outono",
           sv: "H\xF6st",
           ru: "\u041E\u0441\u0435\u043D\u044C"
+        },
+        fall: {
+          en: "Winter"
         },
         christmas: {
           en: "Christmas",
