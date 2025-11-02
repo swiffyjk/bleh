@@ -35486,9 +35486,9 @@
                     ${() => {
         const username_regex = /\[name=([^\]]+)\]/;
         const elem = html.node`
-                            <div class="setting" data-type="text">
+                            <div class="setting" data-type="text" disabled=${!auth.sponsor}>
                                 <div class="heading">
-                                    <h5>${tl2(trans.display_name.name)}<span class="new-badge sponsor-related">${tl2(trans.sponsors_only)}</span></h5>
+                                    <h5>${tl2(trans.display_name.name)}<span class="new-badge sponsor-related">${tl2(trans.sponsors_only)}</span><span class="new-badge new">${tl2(trans.new)}</span></h5>
                                     <p>${tl2(trans.display_name.body)}</p>
                                 </div>
                                 ${input({
@@ -35523,7 +35523,7 @@
                     <div
                         class="setting"
                         data-type="info"
-                        disabled=${!auth.sponsor || !["clairedoll", "evangelicgirl"].includes(auth.name)}
+                        disabled=${!auth.sponsor}
                         ref=${(el) => font_setting = el}
                     />
                     ` : ""}
@@ -35551,7 +35551,7 @@
                             <input
                                 type="url"
                                 name="homepage"
-                                value="${form_website}"
+                                value=${form_website}
                                 id="id_homepage"
                                 data-form-type="website"
                             />
@@ -35833,7 +35833,7 @@
         let font_tile;
         render(font_setting, html`
                 <div class="heading">
-                    <h5>${tl2(trans.profile_font.name)}<span class="new-badge sponsor-related">${tl2(trans.sponsors_only)}</span></h5>
+                    <h5>${tl2(trans.profile_font.name)}<span class="new-badge sponsor-related">${tl2(trans.sponsors_only)}</span><span class="new-badge new">${tl2(trans.new)}</span></h5>
                     <p>${tl2(trans.profile_font.body)}</p>
                 </div>
                 <div class="info">
@@ -35871,7 +35871,7 @@
             title: tl2(trans.profile_font.name),
             body: html.node`
                                         <div class="font-name-preview">
-                                            <span data-font=${font_name} data-font-style=${font_style} ref=${(el) => font_preview = el}>${auth.name}</span>
+                                            <span data-font=${font_name} data-font-style=${font_style} ref=${(el) => font_preview = el}>${cache3.username ? cache3.username : auth.name}</span>
                                         </div>
                                         <h4 class="font-options-header">${tl2(trans.font.name)}</h4>
                                         <div class="font-options">
@@ -37386,7 +37386,7 @@
       });
     }
     const badge_elements = Array.from(title_wrap.querySelectorAll(".label"));
-    if (ff("profile_fonts") && ["clairedoll", "evangelicgirl"].includes(page.name)) {
+    if (ff("profile_fonts")) {
       profile_name.classList.add("profile-name");
       profile_name.setAttribute("data-font", cache2.font);
       profile_name.setAttribute("data-font-style", cache2.font_style);
@@ -37452,13 +37452,6 @@
                     `)}
                 </div>
                 ` : ""}
-            </div>
-            <div class="expand-side">
-                <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
-      let current = settings.profile_header_expand;
-      expander.setAttribute("aria-expanded", !current);
-      save_setting("profile_header_expand", !current);
-    }} aria-expanded=${settings.profile_header_expand}>${tl2(trans.expand)}</button>
             </div>
         </section>
     `;
@@ -47997,7 +47990,9 @@
         type: "lang",
         regex: /\[font=([^\]]+)\]/g,
         replace: (_, family) => {
-          if (["clairedoll", "evangelicgirl"].includes(name)) {
+          delete cache2.font;
+          delete cache2.font_style;
+          if (sponsor_list && sponsor_list.sponsors.includes(name)) {
             const split = family.split(",");
             cache2.font = split[0];
             cache2.font_style = split[1] || "solid";
@@ -65100,9 +65095,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       default: false,
       title: trans.theme_loading.name,
       body: trans.theme_loading.body
-    },
-    profile_header_expand: {
-      default: true
     },
     accessible_name_colours: {
       default: false,

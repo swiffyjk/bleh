@@ -584,9 +584,9 @@ function patch_settings_profile_panel(token, update_picture) {
                         const username_regex = /\[name=([^\]]+)\]/;
 
                         const elem = html.node`
-                            <div class="setting" data-type="text">
+                            <div class="setting" data-type="text" disabled=${!auth.sponsor}>
                                 <div class="heading">
-                                    <h5>${tl(trans.display_name.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span></h5>
+                                    <h5>${tl(trans.display_name.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span><span class="new-badge new">${tl(trans.new)}</span></h5>
                                     <p>${tl(trans.display_name.body)}</p>
                                 </div>
                                 ${input({
@@ -629,7 +629,7 @@ function patch_settings_profile_panel(token, update_picture) {
                     <div
                         class="setting"
                         data-type="info"
-                        disabled=${!auth.sponsor || !['clairedoll', 'evangelicgirl'].includes(auth.name)}
+                        disabled=${!auth.sponsor}
                         ref=${(el) => (font_setting = el)}
                     />
                     ` : ''}
@@ -657,7 +657,7 @@ function patch_settings_profile_panel(token, update_picture) {
                             <input
                                 type="url"
                                 name="homepage"
-                                value="${form_website}"
+                                value=${form_website}
                                 id="id_homepage"
                                 data-form-type="website"
                             />
@@ -978,7 +978,7 @@ function patch_settings_profile_panel(token, update_picture) {
             let font_tile;
             render(font_setting, html`
                 <div class="heading">
-                    <h5>${tl(trans.profile_font.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span></h5>
+                    <h5>${tl(trans.profile_font.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span><span class="new-badge new">${tl(trans.new)}</span></h5>
                     <p>${tl(trans.profile_font.body)}</p>
                 </div>
                 <div class="info">
@@ -1020,7 +1020,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                     title: tl(trans.profile_font.name),
                                     body: html.node`
                                         <div class="font-name-preview">
-                                            <span data-font=${font_name} data-font-style=${font_style} ref=${el => font_preview = el}>${auth.name}</span>
+                                            <span data-font=${font_name} data-font-style=${font_style} ref=${el => font_preview = el}>${cache.username ? cache.username : auth.name}</span>
                                         </div>
                                         <h4 class="font-options-header">${tl(trans.font.name)}</h4>
                                         <div class="font-options">

@@ -170,7 +170,7 @@ export async function bleh_profiles() {
 
     const badge_elements = Array.from(title_wrap.querySelectorAll('.label'));
 
-    if (ff('profile_fonts') && ['clairedoll', 'evangelicgirl'].includes(page.name)) {
+    if (ff('profile_fonts')) {
         profile_name.classList.add('profile-name');
         profile_name.setAttribute('data-font', cache.font);
         profile_name.setAttribute('data-font-style', cache.font_style);
@@ -250,13 +250,6 @@ export async function bleh_profiles() {
                     `)}
                 </div>
                 ` : ''}
-            </div>
-            <div class="expand-side">
-                <button class="header-expand-button icon" ref=${(el) => (expander = el)} onclick=${() => {
-                    let current = settings.profile_header_expand;
-                    expander.setAttribute('aria-expanded', !current);
-                    save_setting('profile_header_expand', !current);
-                }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
             </div>
         </section>
     `;

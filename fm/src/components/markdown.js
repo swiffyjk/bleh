@@ -177,7 +177,10 @@ export function markdown(
             type: 'lang',
             regex: /\[font=([^\]]+)\]/g,
             replace: (_, family) => {
-                if (['clairedoll', 'evangelicgirl'].includes(name)) {
+                delete cache.font;
+                delete cache.font_style;
+
+                if (sponsor_list && sponsor_list.sponsors.includes(name)) {
                     const split = family.split(',');
 
                     cache.font = split[0];

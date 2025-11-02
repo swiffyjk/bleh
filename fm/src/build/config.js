@@ -690,9 +690,6 @@ export let settings_store = {
         title: trans.theme_loading.name,
         body: trans.theme_loading.body
     },
-    profile_header_expand: {
-        default: true
-    },
     accessible_name_colours: {
         default: false,
         title: trans.accessible_name_colours.name,

@@ -21045,6 +21045,11 @@
         &.new {
             animation: new 2.5s linear infinite;
         }
+
+        &.sponsor-related {
+            background: unset;
+            border-radius: unset;
+        }
     }
 
     @keyframes new {
@@ -22790,13 +22795,6 @@
                     ) !important;
                     cursor: pointer;
                 }
-
-                [data-bleh--profile_header_expand="false"] & {
-                    .avatar-side {
-                        --mask-size: var(--cover-size-100) !important;
-                        --avatar-size: 74px !important;
-                    }
-                }
             }
 
             .expand-side {
@@ -23307,11 +23305,6 @@
             }
 
             &[data-page-type="user"] {
-                [data-bleh--profile_header_expand="false"] & {
-                    opacity: 0;
-                    pointer-events: none;
-                }
-
                 &[data-page-subpage="obsessions_obsession"] {
                     height: 700px;
 
@@ -28424,7 +28417,8 @@
     }
     [data-font="single"] {
         --custom-font: 'Single Day', var(--font);
-        --custom-font-size-multiplier: 1.05;
+        --custom-font-size-multiplier: 1.3;
+        --custom-font-align: -1px;
     }
     [data-font="crimson"] {
         --custom-font: 'Crimson Text', var(--font);
