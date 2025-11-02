@@ -20731,10 +20731,6 @@
         position: fixed;
         left: 0px;
         top: 0px;
-        filter: var(
-            --seasonal-particles-glow,
-            drop-shadow(0 0 5px var(--snow))
-        );
         z-index: 900;
         user-select: none;
         pointer-events: none;
@@ -20755,6 +20751,10 @@
         width: 8px;
         height: 8px;
         margin-top: -8px;
+        filter: var(
+            --seasonal-particles-glow,
+            drop-shadow(0 0 5px var(--snow))
+        );
     }
 
     .icon {
