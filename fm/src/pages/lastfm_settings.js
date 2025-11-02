@@ -1051,7 +1051,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                         </div>
                                         <h4 class="font-options-header">${tl(trans.font_style)}</h4>
                                         <div class="font-options">
-                                            ${['solid', 'pop'].map(style => {
+                                            ${['solid', 'pop', 'glow'].map(style => {
                                                 const elem = html.node`
                                                     <button class="font-selection font-style" data-font-style=${style} aria-checked=${style == font_style} onclick=${() => {
                                                         font_style = style;

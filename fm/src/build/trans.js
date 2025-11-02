@@ -3714,6 +3714,9 @@ export const trans = {
         },
         pop: {
             en: 'Pop'
+        },
+        glow: {
+            en: 'Glow'
         }
     },
     font_weight: {

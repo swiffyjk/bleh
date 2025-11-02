@@ -35898,7 +35898,7 @@
                                         </div>
                                         <h4 class="font-options-header">${tl2(trans.font_style)}</h4>
                                         <div class="font-options">
-                                            ${["solid", "pop"].map((style) => {
+                                            ${["solid", "pop", "glow"].map((style) => {
               const elem = html.node`
                                                     <button class="font-selection font-style" data-font-style=${style} aria-checked=${style == font_style} onclick=${() => {
                 font_style = style;
@@ -44556,6 +44556,7 @@
       if (labels && labels.length > 0 && page.subpage == "overview") {
         const seen = /* @__PURE__ */ new Set();
         labels = labels.filter((label) => {
+          if (!label.label) return;
           const name = label.label.name;
           if (seen.has(name)) return false;
           seen.add(name);
@@ -61584,6 +61585,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       },
       pop: {
         en: "Pop"
+      },
+      glow: {
+        en: "Glow"
       }
     },
     font_weight: {

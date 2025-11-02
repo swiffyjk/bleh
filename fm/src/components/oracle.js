@@ -841,6 +841,8 @@ export function oracle_process() {
             // filter out visually duplicates
             const seen = new Set();
             labels = labels.filter((label) => {
+                if (!label.label) return;
+
                 const name = label.label.name;
                 if (seen.has(name)) return false;
 
