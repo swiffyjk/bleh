@@ -17,7 +17,7 @@ import cropper_css from 'cropperjs/dist/cropper.min.css';
 import { root } from './build/page.js';
 
 export function append_style() {
-    document.documentElement.classList.add('bleh-supports-loading');
+    document.documentElement.classList.add('florence-supports-loading');
 
     for (var member in settings) delete settings[member];
     Object.assign(settings, JSON.parse(localStorage.getItem('bleh')));

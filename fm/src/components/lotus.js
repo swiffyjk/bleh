@@ -416,43 +416,33 @@ export function name_includes(
         original_artist = correct_artist(artist_corrections[original_artist]);
     }
 
-    // no tags found
-    if (matches.length == 0) {
-        const result = [
-            formatted_title,
-            [],
-            original_artist,
-            [],
-            original_title_corrected
-        ];
-
-        log('finalised', 'lotus', 'log', { result });
-        return result;
-    }
-
     // everything before the first tag
-    const cleaned_title = formatted_title
-        .slice(0, matches[0].idx)
-        .trim()
-        .replace(/[\(\[\{]+$/, '')
-        .trim();
-
-    // extract each tag block
-    const extras = matches.map((match, i) => {
-        const start = match.idx;
-        const end =
-            i + 1 < matches.length ?
-                matches[i + 1].idx
-            :   formatted_title.length;
-        const tag_text = formatted_title
-            .slice(start, end)
-            .replace(/^[\(\[\{\)\]\}\-\:\s]+|[\(\[\{\)\]\}\-\:\s]+$/g, '')
+    let cleaned_title = formatted_title;
+    let extras = [];
+    if (matches.length > 0) {
+        cleaned_title = formatted_title
+            .slice(0, matches[0].idx)
+            .trim()
+            .replace(/[\(\[\{]+$/, '')
             .trim();
-        return {
-            group: match.group,
-            text: tag_text
-        };
-    });
+
+        // extract each tag block
+        extras = matches.map((match, i) => {
+            const start = match.idx;
+            const end =
+                i + 1 < matches.length ?
+                    matches[i + 1].idx
+                :   formatted_title.length;
+            const tag_text = formatted_title
+                .slice(start, end)
+                .replace(/^[\(\[\{\)\]\}\-\:\s]+|[\(\[\{\)\]\}\-\:\s]+$/g, '')
+                .trim();
+            return {
+                group: match.group,
+                text: tag_text
+            };
+        });
+    }
 
     // collect all guest artists
     let song_guests = [];
@@ -524,14 +514,10 @@ export function smart_title(song_title, song_tags) {
 
 export function smart_artists(song_artist, song_guests) {
     return html`
-        <a href="${root}music/${redirect()}${sanitise(song_artist)}"
-            >${romanise(song_artist)}</a
-        >
+        <a href="${root}music/${redirect()}${sanitise(song_artist)}">${romanise(song_artist)}</a>
         ${song_guests.map(
             (guest) => html.node`
-                ,<a href="${root}music/${redirect()}${sanitise(guest)}"
-                    >${romanise(guest)}</a
-                >
+                ,<a href="${root}music/${redirect()}${sanitise(guest)}">${romanise(guest)}</a>
             `
         )}
     `;

@@ -311,7 +311,7 @@
             "date": "2025-09-25"
         },
         "refreshed_lotus": {
-            "default": false,
+            "default": true,
             "name": "Refreshed flow for submitting a lotus correction",
             "date": "2025-09-26"
         },
@@ -339,6 +339,16 @@
             "default": false,
             "name": "Present album and track credits via oracle",
             "date": "2025-10-14"
+        },
+        "verified": {
+            "default": false,
+            "name": "Verified replaces sponsor badge",
+            "date": "2025-10-22"
+        },
+        "profile_fonts": {
+            "default": true,
+            "name": "Unlock profile name fonts for sponsors",
+            "date": "2025-10-31"
         }
     }
 }

@@ -110,26 +110,11 @@ export function patch_titles(search = page.structure.main) {
             ':is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)'
         );
 
-        let track_index = 0;
+        tracks.forEach((track, index) => {
+            smart_track(track, index);
+        });
 
-        function batch() {
-            const batch_size = 20;
-            const end_index = Math.min(track_index + batch_size, tracks.length);
-
-            for (let i = track_index; i < end_index; i++) {
-                track(tracks[i], i);
-            }
-
-            track_index = end_index;
-
-            if (track_index < tracks.length) {
-                setTimeout(batch, 0);
-            }
-        }
-
-        batch();
-
-        function track(track, index) {
+        function smart_track(track, index) {
             console.log('track', track);
             if (track.getAttribute('data-track-type')) return;
 
@@ -396,10 +381,7 @@ export function patch_titles(search = page.structure.main) {
                         'log'
                     );
                     // replaces with corrected artist if applicable
-                    render(
-                        song_artist_element,
-                        smart_artists(formatted_title[2], formatted_title[3])
-                    );
+                    render(song_artist_element, smart_artists(formatted_title[2], formatted_title[3]));
                 }
 
                 if (track.getAttribute('data-disambig') == 'explicit') {

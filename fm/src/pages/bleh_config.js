@@ -49,7 +49,8 @@ import { match } from '../components/dynamic_theming.js';
 import { manage_oracle_data, oracle_data } from '../components/oracle.js';
 import { render_activity } from '../activity.js';
 import { DateTime } from 'luxon';
-import { sponsor, sponsor_manage } from '../sponsor.js';
+import { sponsor, sponsor_manage, sponsors } from '../sponsor.js';
+import { version as florence_version } from '@tealmiku/florence';
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -139,58 +140,40 @@ export function bleh_settings() {
         </div>
     `;
 
-    render(
-        page.structure.side,
-        html`
-            <div class="cta first priority sponsor colourful">
-                ${auth.sponsor ?
-                    html.node`
-            <strong>${tl(trans.you_are_a_sponsor)}</strong>
-            <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-            `
-                :   html.node`
-            <strong>${tl(trans.news_sponsor_cta)}</strong>
-            <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+    render(page.structure.side, html`
+        <div class="cta first priority sponsor colourful">
+            ${auth.sponsor ? html.node`
+                <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                <a class="see-more" onclick=${() => sponsor_manage()}>${tl(trans.manage_sponsor)}</a>
+            ` : html.node`
+                <strong>${tl(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick=${() => sponsor()}>${tl(trans.sponsor)}</a>
             `}
-            </div>
-            <section class="side-actions">
-                <button
-                    class="btn side-action"
-                    data-type="import"
-                    onclick=${() => import_settings()}
-                >
-                    ${tl(trans.import)}
-                </button>
-                <button
-                    class="btn side-action"
-                    data-type="export"
-                    onclick=${() => export_settings()}
-                >
-                    ${tl(trans.export)}
-                </button>
-                <button
-                    class="btn side-action"
-                    data-type="reset"
-                    onclick="_reset_settings()"
-                >
-                    ${tl(trans.reset)}
-                </button>
-            </section>
-            ${ff('skip_to_setting') ?
-                html.node`
-        <div class="bleh--panel">
-            <h4>${tl(trans.skip_to)}</h4>
-            <div class="skip-to-list"></div>
         </div>
-        `
-            :   ''}
+        <section class="side-actions">
+            <button class="btn side-action" data-type="import" onclick=${() => import_settings()}>
+                ${tl(trans.import)}
+            </button>
+            <button class="btn side-action" data-type="export" onclick=${() => export_settings()}>
+                ${tl(trans.export)}
+            </button>
+            <button class="btn side-action" data-type="reset" onclick=${() => reset_settings()}>
+                ${tl(trans.reset)}
+            </button>
+        </section>
+        ${ff('skip_to_setting') ? html.node`
             <div class="bleh--panel">
-                <p class="card-tip">
-                    ${version.brand} ${version.build}.${version.sku}
-                </p>
+                <h4>${tl(trans.skip_to)}</h4>
+                <div class="skip-to-list"></div>
             </div>
-        `
-    );
+        ` : ''}
+        <div class="bleh--panel">
+            <p class="card-tip">
+                ${version.brand} ${version.build}.${version.sku}
+                <i>(florence ${florence_version})</i>
+            </p>
+        </div>
+    `);
 
     page.structure.row.insertBefore(nav, page.structure.content);
 
@@ -201,16 +184,13 @@ export function bleh_settings() {
 }
 
 function page_loading() {
-    render(
-        page.structure.main,
-        html`
-            <div class="bleh--panel">
-                <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.loading)}</div>
-                </div>
+    render(page.structure.main, html`
+        <div class="bleh--panel">
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.loading)}</div>
             </div>
-        `
-    );
+        </div>
+    `);
 }
 
 export async function render_setting_page(page_id) {
@@ -228,12 +208,9 @@ export async function render_setting_page(page_id) {
         let update_btn;
         let pause_btn;
 
-        const update_required =
-            localStorage.getItem('bleh_update_required') || 'false';
-        const last_checked =
-            localStorage.getItem('bleh_update_checked') || null;
-        const version_to_install =
-            localStorage.getItem('bleh_update_to') || null;
+        const update_required = localStorage.getItem('bleh_update_required') || 'false';
+        const last_checked = localStorage.getItem('bleh_update_checked') || null;
+        const version_to_install = localStorage.getItem('bleh_update_to') || null;
 
         let paused = localStorage.getItem('bleh_update_paused') || 'false';
         let paused_until =
@@ -248,88 +225,50 @@ export async function render_setting_page(page_id) {
         const auth_key = localStorage.getItem('bleh_auth');
         const auth_valid = localStorage.getItem('bleh_auth_valid');
 
-        render(
-            page.structure.main,
-            html`
+        render(page.structure.main, html`
                 <section class="bleh--panel">
                     <div class="update-center-header">
-                        ${paused === 'true' ?
-                            html.node`
-                    <div class="update-center-icon">
-                        <div class="update-container">
-                            <div class="bleh-icon" data-type="update" />
-                        </div>
-                        <div class="check-circle paused colourful">
-                            <div class="bleh-icon" data-type="paused" />
-                        </div>
-                    </div>
-                    <div class="update-center-details">
-                        <h2>${tl(trans.updates_paused)}</h2>
-                        <p class="last-checked">${tl(trans.paused_until_date).replace('{d}', DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
-                    </div>
-                    <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} disabled>${tl(trans.check)}</button>
-                    `
-                        : update_required === 'false' ?
-                            html.node`
-                    <div class="update-center-icon">
-                        <div class="update-container">
-                            <div class="bleh-icon" data-type="update" />
-                        </div>
-                        ${
-                            last_checked ?
-                                html.node`
-                        <div class="check-circle colourful">
-                            <div class="bleh-icon" data-type="check-thick" />
-                        </div>
-                        `
-                            :   ''
-                        }
-                    </div>
-                    <div class="update-center-details">
-                        ${
-                            last_checked ?
-                                html.node`
-                        <h2>${tl(trans.you_are_up_to_date)}</h2>
-                        <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
-                        `
-                            :   html.node`
-                        <h2>${tl(trans.missing_updates)}</h2>
-                        <p class="last-checked">${tl(trans.never_checked)}</p>
-                        `
-                        }
-                    </div>
-                    <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() =>
-                        update_check(true, update_btn, () => {
-                            notify({
-                                id: 'update',
-                                title: tl(trans.updates),
-                                body: tl(trans.checked_for_updates),
-                                icon: 'icon-16-update'
-                            });
-                            render_setting_page('general');
-                        })}>${tl(trans.check)}</button>
-                    `
-                        :   html.node`
-                    <div class="update-center-icon">
-                        <div class="update-container">
-                            <div class="bleh-icon" data-type="update" />
-                        </div>
-                    </div>
-                    <div class="update-center-details">
-                        <h2>${tl(trans.update_available_to_install)}</h2>
-                        ${
-                            last_checked ?
-                                html.node`
-                        <p class="last-checked">${tl(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
-                        `
-                            :   html.node`
-                        <p class="last-checked">${tl(trans.never_checked)}</p>
-                        `
-                        }
-                    </div>
-                    <div class="button-group">
-                        <button class="btn icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() =>
-                            update_check(true, update_btn, () => {
+                        ${paused === 'true' ? html.node`
+                            <div class="update-center-icon">
+                                <div class="update-container">
+                                    <div class="bleh-icon" data-type="update" />
+                                </div>
+                                <div class="check-circle paused colourful">
+                                    <div class="bleh-icon" data-type="paused" />
+                                </div>
+                            </div>
+                            <div class="update-center-details">
+                                <h2>${tl(trans.updates_paused)}</h2>
+                                <p class="last-checked">${tl(trans.paused_until_date).replace('{d}', DateTime.fromJSDate(new Date(paused_until)).toRelative())}</p>
+                            </div>
+                            <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} disabled>${tl(trans.check)}</button>
+                        ` : update_required === 'false' ? html.node`
+                            <div class="update-center-icon">
+                                <div class="update-container">
+                                    <div class="bleh-icon" data-type="update" />
+                                </div>
+                                ${last_checked
+                                        ? html.node`
+                                <div class="check-circle colourful">
+                                    <div class="bleh-icon" data-type="check-thick" />
+                                </div>
+                                `
+                                        : ''
+                                    }
+                            </div>
+                            <div class="update-center-details">
+                                ${last_checked
+                                        ? html.node`
+                                <h2>${tl(trans.you_are_up_to_date)}</h2>
+                                <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', DateTime.fromJSDate(new Date(last_checked)).toRelative())}</p>
+                                `
+                                        : html.node`
+                                <h2>${tl(trans.missing_updates)}</h2>
+                                <p class="last-checked">${tl(trans.never_checked)}</p>
+                                `
+                                    }
+                            </div>
+                            <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => update_check(true, update_btn, () => {
                                 notify({
                                     id: 'update',
                                     title: tl(trans.updates),
@@ -338,256 +277,244 @@ export async function render_setting_page(page_id) {
                                 });
                                 render_setting_page('general');
                             })}>${tl(trans.check)}</button>
-                        <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
+                        ` : html.node`
+                            <div class="update-center-icon">
+                                <div class="update-container">
+                                    <div class="bleh-icon" data-type="update" />
+                                </div>
+                            </div>
+                            <div class="update-center-details">
+                                <h2>${tl(trans.update_available_to_install)}</h2>
+                                ${last_checked ? html.node`
+                                    <p class="last-checked">${tl(trans.last_checked_date, { d: DateTime.fromJSDate(new Date(last_checked)).toRelative() })}</p>
+                                ` : html.node`
+                                    <p class="last-checked">${tl(trans.never_checked)}</p>
+                                `}
+                            </div>
+                            <div class="button-group">
+                                <button class="btn icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => update_check(true, update_btn, () => {
+                                    notify({
+                                        id: 'update',
+                                        title: tl(trans.updates),
+                                        body: tl(trans.checked_for_updates),
+                                        icon: 'icon-16-update'
+                                    });
+                                    render_setting_page('general');
+                                })}>${tl(trans.check)}</button>
+                                <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
+                            </div>
+                        `}
                     </div>
+                    ${last_checked && paused === 'false' && update_required === 'true' ? html.node`
+                        <div class="alert alert-info">${tl(trans.you_are_installing_version, { v: version_to_install })}</div>
+                    ` : html.node`
+                        <div class="alert alert-info">${tl(trans.you_are_running_version, { v: version.build })}</div>
                     `}
-                    </div>
-                    ${(
-                        last_checked &&
-                        paused === 'false' &&
-                        update_required === 'true'
-                    ) ?
-                        html.node`
-                <div class="alert alert-info">${tl(trans.you_are_installing_version, { v: version_to_install })}</div>
-                `
-                    :   html.node`
-                <div class="alert alert-info">${tl(trans.you_are_running_version, { v: version.build })}</div>
-                `}
                 </section>
                 <section class="bleh--panel">
                     <h4>${tl(trans.profile)}</h4>
                     <div class="setting-group">
-                        ${auth.name ?
-                            html.node`
-                    <div class="setting" data-type="info">
-                        <div class="avatar-container">
-                            <div class="avatar-inner">
-                                <img src=${auth.avatar} alt=${auth.name} />
-                            </div>
-                        </div>
-                        <div class="heading">
-                            <h5>${auth.name}</h5>
-                        </div>
-                        <div class="info">
-                            <p>${tl(trans.profile_and_badges, { c: badge_count.toString() })}</p>
-                            ${
-                                badge_count > 0 ?
-                                    html.node`
-                            <button class="see-more" onclick=${() => {
-                                dialog({
-                                    id: 'badges',
-                                    title: auth.name,
-                                    body: html.node`
-                                        <div class="generic-table-list badge-list">
-                                            ${
-                                                badges ?
-                                                    badges.map((badge) => {
-                                                        let style;
-                                                        let classname = '';
-                                                        if (
-                                                            badge.icon &&
-                                                            badge.hue &&
-                                                            badge.sat &&
-                                                            badge.lit
-                                                        ) {
-                                                            style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
-                                                        } else {
-                                                            classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
-                                                        }
+                        ${auth.name ? html.node`
+                            <div class="setting" data-type="info">
+                                <div class="avatar-container">
+                                    <div class="avatar-inner">
+                                        <img src=${auth.avatar} alt=${auth.name} />
+                                    </div>
+                                </div>
+                                <div class="heading">
+                                    <h5>@${auth.name}</h5>
+                                </div>
+                                <div class="info">
+                                    <p>${tl(trans.profile_and_badges, { c: badge_count.toString() })}</p>
+                                    ${badge_count > 0 ? html.node`
+                                        <button class="see-more" onclick=${() => {
+                                            dialog({
+                                                id: 'badges',
+                                                title: auth.name,
+                                                body: html.node`
+                                                    <div class="generic-table-list badge-list">
+                                                        ${badges ? badges.map(badge => {
+                                                            let style;
+                                                            let classname = '';
+                                                            if (
+                                                                badge.icon &&
+                                                                badge.hue &&
+                                                                badge.sat &&
+                                                                badge.lit
+                                                            ) {
+                                                                style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
+                                                            } else {
+                                                                classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
+                                                            }
 
-                                                        return html.node`
-                                                    <div class="generic-table-list-entry badge-list-entry">
-                                                        <div class="icon-container colourful ${classname}" style=${style}>
-                                                            <div class="bleh-icon" style="--icon: var(--mask)" />
-                                                        </div>
-                                                        <div class="name colourful ${classname}" style=${style}>
-                                                            ${badge.name}
-                                                        </div>
-                                                        <div class="text">
-                                                            ${badge.reason}
-                                                        </div>
+                                                            return html.node`
+                                                                <div class="generic-table-list-entry badge-list-entry">
+                                                                    <div class="icon-container colourful ${classname}" style=${style}>
+                                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                                    </div>
+                                                                    <div class="name colourful ${classname}" style=${style}>
+                                                                        ${badge.name}
+                                                                    </div>
+                                                                    <div class="text">
+                                                                        ${badge.reason}
+                                                                    </div>
+                                                                </div>
+                                                            `;
+                                                        }) : ''}
+                                                        ${auth.pro ? html.node`
+                                                            <div class="generic-table-list-entry badge-list-entry">
+                                                                <div class="icon-container colourful user-status-subscriber">
+                                                                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                                </div>
+                                                                <div class="name colourful user-status-subscriber">
+                                                                    ${tl(trans.badges['user-status-subscriber'].name)}
+                                                                </div>
+                                                                <div class="text">
+                                                                    ${tl(trans.badges['user-status-subscriber'].reason)}
+                                                                </div>
+                                                            </div>
+                                                        ` : ''}
                                                     </div>
-                                                `;
-                                                    })
-                                                :   ''
-                                            }
-                                            ${
-                                                auth.pro ?
-                                                    html.node`
-                                                <div class="generic-table-list-entry badge-list-entry">
-                                                    <div class="icon-container colourful user-status-subscriber">
-                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
-                                                    </div>
-                                                    <div class="name colourful user-status-subscriber">
-                                                        ${tl(trans.badges['user-status-subscriber'].name)}
-                                                    </div>
-                                                    <div class="text">
-                                                        ${tl(trans.badges['user-status-subscriber'].reason)}
-                                                    </div>
-                                                </div>
-                                            `
-                                                :   ''
-                                            }
-                                        </div>
-                                    `
-                                });
-                            }}>${tl(trans.view)}</button>
-                            `
-                                :   ''
-                            }
-                        </div>
-                    </div>
-                    `
-                        :   ''}
-                        ${auth.sponsor ?
-                            html.node`
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.you_are_a_sponsor)}</h5>
-                            <p>${tl(trans.sponsor_get_badge)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
-                                ${tl(trans.manage_sponsor)}
-                            </button>
-                        </div>
-                    </div>
-                    `
-                        :   html.node`
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.news_sponsor_cta)}</h5>
-                            <p>${tl(trans.api.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
-                                ${tl(trans.sponsor)}
-                            </button>
-                        </div>
-                    </div>
-                    `}
+                                                `
+                                            });
+                                        }}>${tl(trans.view)}</button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        ` : ''}
+                        ${auth.sponsor ? html.node`
+                            <div class="setting" data-type="action">
+                                <div class="heading">
+                                    <h5>${tl(trans.you_are_a_sponsor)}</h5>
+                                    <p>${tl(trans.sponsor_get_badge)}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor_manage()}>
+                                        ${tl(trans.manage_sponsor)}
+                                    </button>
+                                </div>
+                            </div>
+                        ` : html.node`
+                            <div class="setting" data-type="action">
+                                <div class="heading">
+                                    <h5>${tl(trans.news_sponsor_cta)}</h5>
+                                    <p>${tl(trans.api.body)}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="btn primary icon sponsor" data-type="sponsor" onclick=${() => sponsor()}>
+                                        ${tl(trans.sponsor)}
+                                    </button>
+                                </div>
+                            </div>
+                        `}
                         <div class="setting" data-type="info">
                             <div class="heading">
                                 <h5>${tl(trans.current_version)}</h5>
                             </div>
                             <div class="info">
-                                <button
-                                    class="see-more update-check sponsor-related"
-                                    onclick="_sponsor_check()"
-                                >
+                                <p>${sponsor_list.latest}</p>
+                                <button class="see-more update-check sponsor-related" onclick=${() => sponsors(true, () => {
+                                    render_setting_page('general');
+                                })}>
                                     ${tl(trans.update_check)}
                                 </button>
-                                <p>${sponsor_list.latest}</p>
                             </div>
                         </div>
                     </div>
                 </section>
-                ${!page.mobile ?
-                    html.node`
-            <section class="bleh--panel">
-                <h4>${tl(trans.branding)}</h4>
-                <div class="setting-group">
-                    ${setting({ id: 'branding_type' })}
-                </div>
-            </section>
-            `
-                :   ''}
-                ${auth.name ?
-                    html.node`
-            <section class="bleh--panel">
-                <h4>API</h4>
-                <div class="setting-group">
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.api.name)}</h5>
-                            <p>${tl(trans.api.body)}</p>
+                ${!page.mobile ? html.node`
+                    <section class="bleh--panel">
+                        <h4>${tl(trans.branding)}</h4>
+                        <div class="setting-group">
+                            ${setting({ id: 'branding_type' })}
                         </div>
-                        <div class="toggle-wrap">
-                            <a class="btn ${auth_key && auth_valid == 'true' ? '' : 'primary'} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
-                                ${tl(trans.connect)}
-                            </a>
+                    </section>
+                ` : ''}
+                ${auth.name ? html.node`
+                    <section class="bleh--panel">
+                        <h4>API</h4>
+                        <div class="setting-group">
+                            <div class="setting" data-type="action">
+                                <div class="heading">
+                                    <h5>${tl(trans.api.name)}</h5>
+                                    <p>${tl(trans.api.body)}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <a class="btn ${auth_key && auth_valid == 'true' ? '' : 'primary'} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                                        ${tl(trans.connect)}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="setting" data-type="info">
+                                <div class="heading">
+                                    <h5>${tl(trans.api_status)}</h5>
+                                </div>
+                                <div class="info">
+                                    ${auth_key && auth_valid == 'true'
+                                    ? html.node`
+                                    <p>${tl(trans.connected)}</p>
+                                    `
+                                    : html.node`
+                                    <p>${tl(trans.not_connected)}</p>
+                                    `
+                                }
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="setting" data-type="info">
-                        <div class="heading">
-                            <h5>${tl(trans.api_status)}</h5>
-                        </div>
-                        <div class="info">
-                            ${
-                                auth_key && auth_valid == 'true' ?
-                                    html.node`
-                            <p>${tl(trans.connected)}</p>
-                            `
-                                :   html.node`
-                            <p>${tl(trans.not_connected)}</p>
-                            `
-                            }
-                        </div>
-                    </div>
-                </div>
-            </section>
-            `
-                :   ''}
+                    </section>
+                ` : ''}
                 <section class="bleh--panel">
                     <h4>${tl(trans.language)}</h4>
                     <div class="setting-group">
                         <div class="languages">
-                            ${Object.entries(lang_info)
-                                .sort(([, a], [, b]) => b.percent - a.percent)
-                                .map(([key, language]) => {
-                                    let date;
+                            ${Object.entries(lang_info).sort(([, a], [, b]) => b.percent - a.percent).map(([key, language]) => {
+                                let date;
 
-                                    const row = html.node`
-                                        <div class="language-row${lang == key ? ' active' : ''}">
-                                            <div class="flag-container">
-                                                <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
-                                            </div>
-                                            <div class="name">
-                                                <h5>${language.name}</h5>
-                                                <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(', ') }) }}</p>
-                                            </div>
-                                            ${
-                                                language.new ?
-                                                    html.node`
+                                const row = html.node`
+                                    <div class="language-row${lang == key ? ' active' : ''}">
+                                        <div class="flag-container">
+                                            <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
+                                        </div>
+                                        <div class="name">
+                                            <h5>${language.name}</h5>
+                                            <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(', ') }) }}</p>
+                                        </div>
+                                        ${language.new ? html.node`
                                             <div class="badges">
                                                 <div class="new-badge">${tl(trans.new)}</div>
                                             </div>
-                                            `
-                                                :   html.node`<div class="badges"></div>`
-                                            }
-                                            ${
-                                                language.percent ?
-                                                    () => {
-                                                        const elem = html.node`
-                                                            <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
-                                                                ${language.percent}%
-                                                            </div>
-                                                        `;
+                                        ` : html.node`
+                                            <div class="badges"></div>
+                                        `}
+                                        ${language.percent ? () => {
+                                            const elem = html.node`
+                                                                    <div class="percent colourful" style="--hue-over: ${language.percent * 1.2}; --sat-over: 1.2; --lit-over: 1;" data-percent=${language.percent}>
+                                                                        ${language.percent}%
+                                                                    </div>
+                                                                `;
 
-                                                        tippy(elem, {
-                                                            content: `${tl(trans.amount_translated, { c: language.translated })}, ${tl(trans.missing_translated, { c: language.missing })}`
-                                                        });
+                                            tippy(elem, {
+                                                content: `${tl(trans.amount_translated, { c: language.translated })}, ${tl(trans.missing_translated, { c: language.missing })}`
+                                            });
 
-                                                        return elem;
-                                                    }
-                                                :   ''
-                                            }
-                                            <div class="date">
-                                                <p ref=${(el) => (date = el)}>${language.last_updated != 'latest' ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
-                                            </div>
+                                            return elem;
+                                        } : ''}
+                                        <div class="date">
+                                            <p ref=${(el) => (date = el)}>${language.last_updated != 'latest' ? DateTime.fromISO(language.last_updated).toRelative() : language.last_updated}</p>
                                         </div>
-                                    `;
+                                    </div>
+                                `;
 
-                                    if (language.last_updated != 'latest') {
-                                        tippy(date, {
-                                            content: DateTime.fromISO(
-                                                language.last_updated
-                                            ).toLocaleString(DateTime.DATE_MED)
-                                        });
-                                    }
+                                if (language.last_updated != 'latest') {
+                                    tippy(date, {
+                                        content: DateTime.fromISO(
+                                            language.last_updated
+                                        ).toLocaleString(DateTime.DATE_MED)
+                                    });
+                                }
 
-                                    return row;
-                                })}
+                                return row;
+                            })}
                         </div>
                     </div>
                     <div class="setting-group">
@@ -597,12 +524,9 @@ export async function render_setting_page(page_id) {
                                 <p>${tl(trans.submit_language.body)}</p>
                             </div>
                             <div class="toggle-wrap">
-                                <a
-                                    class="see-more"
-                                    href="https://github.com/katelyynn/bleh/wiki"
-                                    target="_blank"
-                                    >${tl(trans.help_contribute)}</a
-                                >
+                                <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">
+                                    ${tl(trans.help_contribute)}
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -635,18 +559,16 @@ export async function render_setting_page(page_id) {
         function render_tip() {
             adaptive_tip.setAttribute('aria-hidden', !settings.theme_schedule);
 
-            render(
-                adaptive_tip,
-                html`
-                    ${tl(trans.adaptive_tip, {
-                        day: tl(trans.themes[settings.theme_day]),
-                        night: tl(trans.themes[settings.theme_night])
-                    })}<a
-                        onclick=${() => {
-                            dialog({
-                                id: 'auto_theme',
-                                title: tl(trans.themes.name),
-                                body: html.node`
+            render(adaptive_tip, html`
+                ${tl(trans.adaptive_tip, {
+                    day: tl(trans.themes[settings.theme_day]),
+                    night: tl(trans.themes[settings.theme_night])
+                })}
+                <a onclick=${() => {
+                    dialog({
+                        id: 'auto_theme',
+                        title: tl(trans.themes.name),
+                        body: html.node`
                             <div class="setting-group">
                                 ${(theme_day = setting({
                                     id: 'theme_day',
@@ -711,17 +633,14 @@ export async function render_setting_page(page_id) {
                             </div>
                             <p class="card-tip">${tl(trans.theme_schedule)}</p>
                         `
-                            });
-                        }}
-                        >${tl(trans.change_schedule)}</a
-                    >
-                `
-            );
+                    });
+                }}>
+                    ${tl(trans.change_schedule)}
+                </a>
+            `);
         }
 
-        render(
-            page.structure.main,
-            html`
+        render(page.structure.main, html`
                 <section class="bleh--panel">
                     <h4>${tl(trans.appearance)}</h4>
                     <div class="setting-group">
@@ -731,11 +650,11 @@ export async function render_setting_page(page_id) {
                             </div>
                             <div class="info v">
                                 ${(bubbles = theme_bubbles(() => {
-                                    sat_bg.compat();
+                sat_bg.compat();
 
-                                    render_tip();
-                                    match();
-                                }))}
+                render_tip();
+                match();
+            }))}
                                 <p
                                     class="card-tip"
                                     ref=${(el) => (adaptive_tip = el)}
@@ -743,9 +662,9 @@ export async function render_setting_page(page_id) {
                             </div>
                         </div>
                         ${setting({ id: 'solarium' })}
-                        ${ff('high_contrast') ?
-                            setting({ id: 'high_contrast' })
-                        :   ''}
+                        ${ff('high_contrast')
+                    ? setting({ id: 'high_contrast' })
+                    : ''}
                         <div class="setting" data-type="action">
                             <div class="heading">
                                 <h5>${tl(trans.hue)}</h5>
@@ -769,35 +688,38 @@ export async function render_setting_page(page_id) {
                             </div>
                             <div class="primary-selections">
                                 ${setting({
-                                    id: 'hue_from_album',
-                                    standalone: true
-                                })}
+                        id: 'hue_from_album',
+                        standalone: true
+                    })}
                                 ${(colourful_active = setting({
-                                    id: 'colourful_tracks',
-                                    standalone: true,
-                                    func: () => {
-                                        colourful_all.compat();
-                                    }
-                                }))}
+                        id: 'colourful_tracks',
+                        standalone: true,
+                        func: () => {
+                            colourful_all.compat();
+                        }
+                    }))}
                                 ${(colourful_all = setting({
-                                    id: 'colourful_tracks_all',
-                                    standalone: true,
-                                    func: () => {
-                                        colourful_active.compat();
-                                    }
-                                }))}
+                        id: 'colourful_tracks_all',
+                        standalone: true,
+                        func: () => {
+                            colourful_active.compat();
+                        }
+                    }))}
                             </div>
                         </div>
-                        ${ff('card_saturation') ?
-                            html.node`
+                        ${ff('card_saturation')
+                    ? html.node`
                                 ${(sat_bg = setting({ id: 'sat_bg' }))}
                             `
-                        :   ''}
+                    : ''}
                         ${setting({ id: 'noise' })}
                     </div>
                 </section>
                 <section class="bleh--panel">
                     <h4>${tl(trans.fonts)}</h4>
+                    <div class="inner-preview pad">
+                        <h1 class="font-preview">${tl(trans.font_example)}</h1>
+                    </div>
                     <div class="setting-group">
                         ${setting({ id: 'font' })}
                         ${setting({ id: 'font_weight' })}
@@ -909,179 +831,148 @@ export async function render_setting_page(page_id) {
         function render_track_preview() {
             const avi = auth.avatar.replace('/avatar42s/', '/avatar170s/');
 
-            render(
-                preview,
-                html`
-                    <table
-                        class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist chartlist--with-more"
-                    >
-                        <tbody>
-                            <tr
-                                class="chartlist-row chartlist-row--with-artist chartlist-row--now-scrobbling"
-                                data-has-bar="false"
-                                data-show-album-text=${settings.expand_tracks !=
-                                    'never' &&
-                                settings.track_layout == 'column'}
-                            >
-                                <td class="chartlist-image">
-                                    <a class="cover-art">
-                                        <img src=${avi} loading="lazy" />
-                                    </a>
-                                </td>
-                                <td class="kate-placeholder" />
-                                <td class="track-info" data-has-bar="false">
-                                    <span class="chartlist-name">
-                                        <a>Track name</a>
+            render(preview, html`
+                <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist chartlist--with-more">
+                    <tbody>
+                        <tr
+                            class="chartlist-row chartlist-row--with-artist chartlist-row--now-scrobbling"
+                            data-has-bar="false"
+                            data-show-album-text=${settings.expand_tracks != 'never' && settings.track_layout == 'column'}
+                        >
+                            <td class="chartlist-image">
+                                <a class="cover-art">
+                                    <img src=${avi} loading="lazy" />
+                                </a>
+                            </td>
+                            <td class="kate-placeholder" />
+                            <td class="track-info" data-has-bar="false">
+                                <span class="chartlist-name">
+                                    <a>Track name</a>
+                                </span>
+                                <span class="chartlist-artist">
+                                    <a>Artist name</a>
+                                </span>
+                                ${settings.expand_tracks != 'never' && settings.track_layout == 'column' ? html.node`
+                                    <span class="chartlist-album custom-album-text">
+                                        <a>Album name</a>
                                     </span>
-                                    <span class="chartlist-artist">
-                                        <a>Artist name</a>
+                                ` : ''}
+                            </td>
+                        </tr>
+                        <tr
+                            class="chartlist-row chartlist-row--with-artist"
+                            data-has-bar="false"
+                            data-show-album-text=${settings.expand_tracks == 'always' && settings.expand_tracks != 'never' && settings.track_layout == 'column'}
+                        >
+                            <td class="chartlist-image">
+                                <a class="cover-art">
+                                    <img src=${avi} loading="lazy" />
+                                </a>
+                            </td>
+                            <td class="kate-placeholder" />
+                            <td class="track-info" data-has-bar="false">
+                                <span class="chartlist-name">
+                                    <a>Track name</a>
+                                </span>
+                                <span class="chartlist-artist">
+                                    <a>Artist name</a>
+                                </span>
+                                ${settings.expand_tracks == 'always' && settings.expand_tracks != 'never' &&settings.track_layout == 'column' ? html.node`
+                                    <span class="chartlist-album custom-album-text">
+                                        <a>Album name</a>
                                     </span>
-                                    ${(
-                                        settings.expand_tracks != 'never' &&
-                                        settings.track_layout == 'column'
-                                    ) ?
-                                        html.node`
-                                        <span
-                                            class="chartlist-album custom-album-text"
-                                        >
-                                            <a>Album name</a>
-                                        </span>
-                                    `
-                                    :   ''}
-                                </td>
-                            </tr>
-                            <tr
-                                class="chartlist-row chartlist-row--with-artist"
-                                data-has-bar="false"
-                                data-show-album-text=${settings.expand_tracks ==
-                                    'always' &&
-                                settings.expand_tracks != 'never' &&
-                                settings.track_layout == 'column'}
-                            >
-                                <td class="chartlist-image">
-                                    <a class="cover-art">
-                                        <img src=${avi} loading="lazy" />
-                                    </a>
-                                </td>
-                                <td class="kate-placeholder" />
-                                <td class="track-info" data-has-bar="false">
-                                    <span class="chartlist-name">
-                                        <a>Track name</a>
-                                    </span>
-                                    <span class="chartlist-artist">
-                                        <a>Artist name</a>
-                                    </span>
-                                    ${(
-                                        settings.expand_tracks == 'always' &&
-                                        settings.expand_tracks != 'never' &&
-                                        settings.track_layout == 'column'
-                                    ) ?
-                                        html.node`
-                                        <span
-                                            class="chartlist-album custom-album-text"
-                                        >
-                                            <a>Album name</a>
-                                        </span>
-                                    `
-                                    :   ''}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `
-            );
+                                ` : ''}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            `);
         }
 
-        render(
-            page.structure.main,
-            html`
-                <section class="bleh--panel">
-                    <h4>${tl(trans.tracklist)}</h4>
-                    <div
-                        class="inner-preview pad"
-                        ref=${(el) => (preview = el)}
-                    />
-                    <div class="setting-group">
-                        ${(track_layout = setting({
-                            id: 'track_layout',
-                            func: () => {
-                                expand_tracks.compat();
-                                track_album_name_location.compat();
-                                render_track_preview();
-                            }
-                        }))}
-                        ${(expand_tracks = setting({
-                            id: 'expand_tracks',
-                            func: () => {
-                                render_track_preview();
-                            }
-                        }))}
-                        ${(track_album_name_location = setting({
-                            id: 'track_album_name_location'
-                        }))}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <div class="inner-preview pad">
-                        <div class="bars" ref=${(el) => (bars = el)}>
-                            ${() => {
-                                let max = 30_000;
+        render(page.structure.main, html`
+            <section class="bleh--panel">
+                <h4>${tl(trans.tracklist)}</h4>
+                <div class="inner-preview pad" ref=${(el) => (preview = el)} />
+                <div class="setting-group">
+                    ${(track_layout = setting({
+                        id: 'track_layout',
+                        func: () => {
+                            expand_tracks.compat();
+                            track_album_name_location.compat();
+                            render_track_preview();
+                        }
+                    }))}
+                    ${(expand_tracks = setting({
+                        id: 'expand_tracks',
+                        func: () => {
+                            render_track_preview();
+                        }
+                    }))}
+                    ${(track_album_name_location = setting({
+                        id: 'track_album_name_location'
+                    }))}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <div class="inner-preview pad">
+                    <div class="bars" ref=${(el) => (bars = el)}>
+                        ${() => {
+                            let max = 30_000;
 
-                                for (
-                                    let value = 1_000;
-                                    value <= max;
-                                    value += 1_000
-                                ) {
-                                    bars.appendChild(chartlist_bar(value, max));
-                                }
-                            }}
-                        </div>
+                            for (
+                                let value = 1_000;
+                                value <= max;
+                                value += 1_000
+                            ) {
+                                bars.appendChild(chartlist_bar(value, max));
+                            }
+                        }}
                     </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'colourful_counts' })}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <h4>${tl(trans.overview)}</h4>
-                    <div class="setting-group">
-                        ${setting({
-                            id: 'music_links',
-                            list: page.state.music_links
-                        })}
-                        ${setting({ id: 'default_avatar_action' })}
-                        ${setting({ id: 'simulate_scroll' })}
-                    </div>
-                    <div class="inner-preview pad flex">
-                        <section class="catalogue-tags">
-                            <ul class="tags-list tags-list--global">
-                                <li class="tag">
-                                    <a href="/tag/pop">pop</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/country">country</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/singer-songwriter"
-                                        >singer-songwriter</a
-                                    >
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/female+vocalists"
-                                        >female vocalists</a
-                                    >
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/synthpop">synthpop</a>
-                                </li>
-                            </ul>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'gendered_tags' })}
-                    </div>
-                </section>
-                ${!page.mobile ?
-                    html.node`
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: 'colourful_counts' })}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl(trans.overview)}</h4>
+                <div class="setting-group">
+                    ${setting({
+                        id: 'music_links',
+                        list: page.state.music_links
+                    })}
+                    ${setting({ id: 'default_avatar_action' })}
+                    ${setting({ id: 'simulate_scroll' })}
+                </div>
+                <div class="inner-preview pad flex">
+                    <section class="catalogue-tags">
+                        <ul class="tags-list tags-list--global">
+                            <li class="tag">
+                                <a href="/tag/pop">pop</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/country">country</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/singer-songwriter"
+                                    >singer-songwriter</a
+                                >
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/female+vocalists"
+                                    >female vocalists</a
+                                >
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/synthpop">synthpop</a>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: 'gendered_tags' })}
+                </div>
+            </section>
+            ${!page.mobile ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.navigation_items.name)}</h4>
                 <div class="setting-group">
@@ -1089,54 +980,52 @@ export async function render_setting_page(page_id) {
                     ${setting({ id: 'navigation_language' })}
                 </div>
             </section>
-            `
-                :   ''}
-                <section class="bleh--panel">
-                    <h4>${tl(trans.shouts)}</h4>
-                    <div class="inner-preview pad flex">
-                        <div
-                            class="shout js-shout js-link-block"
-                            data-kate-processed="true"
-                        >
-                            ${auth.name ?
-                                html.node`
-                        <h3 class="shout-user">
-                            <a>${auth.name}</a>
-                        </h3>
-                        <span class="avatar shout-user-avatar">
-                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}" loading="lazy">
-                        </span>
-                        `
-                            :   html.node`
-                        <h3 class="shout-user">
-                            <a>${tl(trans.profile)}</a>
-                        </h3>
-                        <span class="avatar shout-user-avatar">
-                            <img class="missing-avatar" alt="${tl(trans.your_avatar)}" loading="lazy">
-                        </span>
-                        `}
-                            <a class="shout-permalink shout-timestamp">
-                                <time
-                                    datetime="2024-06-05T02:33:39+01:00"
-                                    title="Wednesday 5 Jun 2024, 2:33am"
-                                >
-                                    5 Jun 2:33am
-                                </time>
-                            </a>
-                            <div class="shout-body if-markdown-on">
-                                ${markdown(tl(trans.markdown_shouts.preview))}
-                            </div>
-                            <div class="shout-body if-markdown-off">
-                                <p>${tl(trans.markdown_shouts.preview)}</p>
-                            </div>
+            ` : ''}
+            <section class="bleh--panel">
+                <h4>${tl(trans.shouts)}</h4>
+                <div class="inner-preview pad flex">
+                    <div
+                        class="shout js-shout js-link-block"
+                        data-kate-processed="true"
+                    >
+                        ${auth.name
+                ? html.node`
+                    <h3 class="shout-user">
+                        <a>${auth.name}</a>
+                    </h3>
+                    <span class="avatar shout-user-avatar">
+                        <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}" loading="lazy">
+                    </span>
+                    `
+                : html.node`
+                    <h3 class="shout-user">
+                        <a>${tl(trans.profile)}</a>
+                    </h3>
+                    <span class="avatar shout-user-avatar">
+                        <img class="missing-avatar" alt="${tl(trans.your_avatar)}" loading="lazy">
+                    </span>
+                    `}
+                        <a class="shout-permalink shout-timestamp">
+                            <time
+                                datetime="2024-06-05T02:33:39+01:00"
+                                title="Wednesday 5 Jun 2024, 2:33am"
+                            >
+                                5 Jun 2:33am
+                            </time>
+                        </a>
+                        <div class="shout-body if-markdown-on">
+                            ${markdown(tl(trans.markdown_shouts.preview))}
+                        </div>
+                        <div class="shout-body if-markdown-off">
+                            <p>${tl(trans.markdown_shouts.preview)}</p>
                         </div>
                     </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'shout_markdown' })}
-                    </div>
-                </section>
-                ${!page.mobile ?
-                    html.node`
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: 'shout_markdown' })}
+                </div>
+            </section>
+            ${!page.mobile ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.quick_switcher)}</h4>
                 <div class="setting-group">
@@ -1147,10 +1036,10 @@ export async function render_setting_page(page_id) {
                         </div>
                         <div class="toggle-wrap">
                             <button class="btn see-more" onclick=${() => {
-                                dialog({
-                                    id: 'quick_switcher_keybinds',
-                                    title: tl(trans.quick_switcher),
-                                    body: html.node`
+                            dialog({
+                                id: 'quick_switcher_keybinds',
+                                title: tl(trans.quick_switcher),
+                                body: html.node`
                                         <div class="setting-group">
                                             ${setting({ id: 'rabbit_primary' })}
                                             ${setting({ id: 'rabbit_search' })}
@@ -1159,18 +1048,16 @@ export async function render_setting_page(page_id) {
                                             ${setting({ id: 'rabbit_bleh_settings' })}
                                         </div>
                                     `
-                                });
-                            }}>
+                            });
+                        }}>
                                 ${tl(trans.change_now)}
                             </button>
                         </div>
                     </div>
                 </div>
             </section>
-            `
-                :   ''}
-            `
-        );
+            `: ''}
+        `);
 
         render_track_preview();
     } else if (page_id == 'playback') {
@@ -1190,233 +1077,73 @@ export async function render_setting_page(page_id) {
         let romanise_jp;
         let romanise_ko;
 
-        render(
-            page.structure.main,
-            html`
-                <section class="bleh--panel">
-                    <h4>${tl(trans.music_corrections)}</h4>
-                    <div class="inner-preview pad">
-                        <div class="lotus-preview">
-                            <div class="before">
-                                <h1>mY aNtI-aIrCrAfT fRiEnD</h1>
-                                <h2>jUlIe</h2>
-                            </div>
-                            <div class="after">
-                                <h1>my anti-aircraft friend</h1>
-                                <h2>julie</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${(corrections = setting({
-                            id: 'corrections',
-                            func: () => {
-                                romanise_jp.compat();
-                                romanise_ko.compat();
-                            }
-                        }))}
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version ||
-                            !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl(trans.corrections_loaded)}</h5>
-                            </div>
-                            <div class="info">
-                                <p>
-                                    ${tl(trans.corrections_loaded_value)
-                                        .replace('{c1}', total_artists)
-                                        .replace('{c2}', total_album_tracks)}
-                                </p>
-                                <button
-                                    class="see-more"
-                                    onclick="_open_correction_modal()"
-                                >
-                                    ${tl(trans.view_all)}
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version ||
-                            !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl(trans.current_version)}</h5>
-                            </div>
-                            <div class="info">
-                                <p>
-                                    ${(
-                                        artist_corrections.version ==
-                                        album_track_corrections.version
-                                    ) ?
-                                        artist_corrections.version
-                                    :   `${artist_corrections.version}, ${album_track_corrections.version}`}
-                                </p>
-                                <button
-                                    class="see-more update-check"
-                                    onclick="_lotus_check()"
-                                >
-                                    ${tl(trans.update_check)}
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="setting"
-                            data-type="info"
-                            disabled=${!artist_corrections.version ||
-                            !album_track_corrections.version}
-                        >
-                            <div class="heading">
-                                <h5>${tl(trans.help_contribute)}</h5>
-                            </div>
-                            <div class="info">
-                                <a
-                                    class="see-more"
-                                    href="https://github.com/katelyynn/lotus/issues/new/choose"
-                                    target="_blank"
-                                >
-                                    ${tl(trans.suggest_correction)}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'prefer_no_redirect' })}
-                        <div class="setting" data-type="action">
-                            <div class="heading">
-                                <h5>${tl(trans.legacy_redirects.name)}</h5>
-                                <p>${tl(trans.legacy_redirects.body)}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <a
-                                    class="btn see-more"
-                                    href="${root}settings/website"
-                                    target="_blank"
-                                >
-                                    ${tl(trans.change_now)}
-                                </a>
-                            </div>
-                        </div>
-                        ${setting({ id: 'travis' })}
-                    </div>
-                </section>
-                <section class="bleh--panel">
-                    <h4>${tl(trans.smart_music_titles)}</h4>
-                    <div class="inner-preview pad flex">
-                        <section
-                            class="redesigned-header mockup redesigned-track-header no-top-margin"
-                        >
-                            <div class="avatar-side">
-                                <img
-                                    src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg"
-                                />
-                            </div>
-                            <div class="info-side">
-                                <div class="sub-text">${tl(trans.track)}</div>
-                                <div class="title-container">
-                                    <h1 class="bleh--name-with-features">
-                                        <div class="title">California Love</div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="ft."
-                                            data-bleh--tag-group="guests"
-                                        >
-                                            ft. Dr. Dre, Roger Troutman
-                                        </div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="- remix"
-                                            data-bleh--tag-group="mixes"
-                                        >
-                                            Remix
-                                        </div>
-                                    </h1>
-                                    <h1 class="bleh--name-without-features">
-                                        California Love (ft. Dr. Dre, Roger
-                                        Troutman) - Remix
-                                    </h1>
-                                </div>
-                                <h2>
-                                    <a class="header-new-crumb">2Pac</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Dr. Dre</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Roger Troutman</a
-                                    >
-                                </h2>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${(format_guest_features = setting({
-                            id: 'format_guest_features',
-                            func: () => {
-                                romanise_jp.compat();
-                                romanise_ko.compat();
-                            }
-                        }))}
-                        ${setting({ id: 'show_guest_features' })}
-                        ${setting({ id: 'show_remaster_tags' })}
-                    </div>
-                    <div class="setting-group">
-                        <div class="setting" data-type="options">
-                            <div class="heading">
-                                <h5>${tl(trans.romanise_titles)}</h5>
-                            </div>
-                            <div class="primary-selections">
-                                ${(romanise_jp = setting({
-                                    id: 'romanise_jp',
-                                    standalone: true
-                                }))}
-                                ${(romanise_ko = setting({
-                                    id: 'romanise_ko',
-                                    standalone: true
-                                }))}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-tip">${tl(trans.romanise_require)}</div>
-                    <div class="setting-group">
-                        ${setting({ id: 'glacier_library_graphs' })}
-                    </div>
-                </section>
-                ${ff('oracle') ?
-                    html.node`
+        let tracklist_source;
+
+        render(page.structure.main, html`
             <section class="bleh--panel">
-                <h4>${tl(trans.oracle_heading)}</h4>
+                <h4>${tl(trans.music_corrections)}</h4>
+                <div class="inner-preview pad">
+                    <div class="lotus-preview">
+                        <div class="before">
+                            <h1>mY aNtI-aIrCrAfT fRiEnD</h1>
+                            <h2>jUlIe</h2>
+                        </div>
+                        <div class="after">
+                            <h1>my anti-aircraft friend</h1>
+                            <h2>julie</h2>
+                        </div>
+                    </div>
+                </div>
                 <div class="setting-group">
-                    ${setting({ id: 'oracle_beta' })}
+                    ${(corrections = setting({
+            id: 'corrections',
+            func: () => {
+                romanise_jp.compat();
+                romanise_ko.compat();
+            }
+        }))}
                     <div
                         class="setting"
                         data-type="info"
-                        disabled=${
-                            !oracle_artists.version ||
-                            !oracle_albums.version ||
-                            !oracle_tracks.version
-                        }
+                        disabled=${!artist_corrections.version ||
+            !album_track_corrections.version}
+                    >
+                        <div class="heading">
+                            <h5>${tl(trans.corrections_loaded)}</h5>
+                        </div>
+                        <div class="info">
+                            <p>
+                                ${tl(trans.corrections_loaded_value)
+                .replace('{c1}', total_artists)
+                .replace('{c2}', total_album_tracks)}
+                            </p>
+                            <button
+                                class="see-more"
+                                onclick="_open_correction_modal()"
+                            >
+                                ${tl(trans.view_all)}
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!artist_corrections.version ||
+            !album_track_corrections.version}
                     >
                         <div class="heading">
                             <h5>${tl(trans.current_version)}</h5>
                         </div>
                         <div class="info">
                             <p>
-                                ${oracle_artists.version}, ${oracle_albums.version}, ${oracle_tracks.version}
+                                ${artist_corrections.version ==
+                album_track_corrections.version
+                ? artist_corrections.version
+                : `${artist_corrections.version}, ${album_track_corrections.version}`}
                             </p>
                             <button
                                 class="see-more update-check"
-                                onclick=${() => oracle_data(true)}
+                                onclick="_lotus_check()"
                             >
                                 ${tl(trans.update_check)}
                             </button>
@@ -1425,30 +1152,177 @@ export async function render_setting_page(page_id) {
                     <div
                         class="setting"
                         data-type="info"
-                        disabled=${
-                            !oracle_artists.version ||
-                            !oracle_albums.version ||
-                            !oracle_tracks.version
-                        }
+                        disabled=${!artist_corrections.version ||
+            !album_track_corrections.version}
                     >
                         <div class="heading">
-                            <h5>${tl(trans.manage_data)}</h5>
+                            <h5>${tl(trans.help_contribute)}</h5>
                         </div>
                         <div class="info">
-                            <button
+                            <a
                                 class="see-more"
-                                onclick=${() => manage_oracle_data()}
+                                href="https://github.com/katelyynn/lotus/issues/new/choose"
+                                target="_blank"
                             >
-                                ${tl(trans.view_all)}
-                            </button>
+                                ${tl(trans.suggest_correction)}
+                            </a>
                         </div>
                     </div>
                 </div>
+                <div class="setting-group">
+                    ${setting({ id: 'prefer_no_redirect' })}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.legacy_redirects.name)}</h5>
+                            <p>${tl(trans.legacy_redirects.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a
+                                class="btn see-more"
+                                href="${root}settings/website"
+                                target="_blank"
+                            >
+                                ${tl(trans.change_now)}
+                            </a>
+                        </div>
+                    </div>
+                    ${setting({ id: 'travis' })}
+                </div>
             </section>
-            `
-                :   ''}
-            `
-        );
+            <section class="bleh--panel">
+                <h4>${tl(trans.smart_music_titles)}</h4>
+                <div class="inner-preview pad flex">
+                    <section
+                        class="redesigned-header mockup redesigned-track-header no-top-margin"
+                    >
+                        <div class="avatar-side">
+                            <img
+                                src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg"
+                            />
+                        </div>
+                        <div class="info-side">
+                            <div class="sub-text">${tl(trans.track)}</div>
+                            <div class="title-container">
+                                <h1 class="bleh--name-with-features">
+                                    <div class="title">California Love</div>
+                                    <div
+                                        class="feat"
+                                        data-bleh--tag-type="ft."
+                                        data-bleh--tag-group="guests"
+                                    >
+                                        ft. Dr. Dre, Roger Troutman
+                                    </div>
+                                    <div
+                                        class="feat"
+                                        data-bleh--tag-type="- remix"
+                                        data-bleh--tag-group="mixes"
+                                    >
+                                        Remix
+                                    </div>
+                                </h1>
+                                <h1 class="bleh--name-without-features">
+                                    California Love (ft. Dr. Dre, Roger
+                                    Troutman) - Remix
+                                </h1>
+                            </div>
+                            <h2>
+                                <a class="header-new-crumb">2Pac</a
+                                ><span class="bleh--name-with-features"
+                                    >,
+                                </span>
+                                <a
+                                    class="header-new-crumb bleh--name-with-features"
+                                    >Dr. Dre</a
+                                ><span class="bleh--name-with-features"
+                                    >,
+                                </span>
+                                <a
+                                    class="header-new-crumb bleh--name-with-features"
+                                    >Roger Troutman</a
+                                >
+                            </h2>
+                        </div>
+                    </section>
+                </div>
+                <div class="setting-group">
+                    ${(format_guest_features = setting({
+                id: 'format_guest_features',
+                func: () => {
+                    romanise_jp.compat();
+                    romanise_ko.compat();
+                }
+            }))}
+                    ${setting({ id: 'show_guest_features' })}
+                    ${setting({ id: 'show_remaster_tags' })}
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.romanise_titles)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${(romanise_jp = setting({
+                id: 'romanise_jp',
+                standalone: true
+            }))}
+                            ${(romanise_ko = setting({
+                id: 'romanise_ko',
+                standalone: true
+            }))}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-tip">${tl(trans.romanise_require)}</div>
+                <div class="setting-group">
+                    ${setting({ id: 'glacier_library_graphs' })}
+                </div>
+            </section>
+            ${ff('oracle') ? html.node`
+                <section class="bleh--panel">
+                    <h4>${tl(trans.oracle_heading)}</h4>
+                    <div class="setting-group">
+                        ${setting({ id: 'oracle_beta', func: () => {
+                            tracklist_source.compat();
+                        } })}
+                        ${tracklist_source = setting({ id: 'tracklist_source', list: page.state.tracklist_sources })}
+                        <div
+                            class="setting"
+                            data-type="info"
+                            disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
+                        >
+                            <div class="heading">
+                                <h5>${tl(trans.current_version)}</h5>
+                            </div>
+                            <div class="info">
+                                <p>
+                                    ${oracle_artists.version}, ${oracle_albums.version}, ${oracle_tracks.version}
+                                </p>
+                                <button
+                                    class="see-more update-check"
+                                    onclick=${() => oracle_data(true)}
+                                >
+                                    ${tl(trans.update_check)}
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            class="setting"
+                            data-type="info"
+                            disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
+                        >
+                            <div class="heading">
+                                <h5>${tl(trans.manage_data)}</h5>
+                            </div>
+                            <div class="info">
+                                <button class="see-more" onclick=${() => manage_oracle_data()}>
+                                    ${tl(trans.view_all)}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            ` : ''}
+        `);
     } else if (page_id == 'seasonal') {
         register_skip_to([]);
 
@@ -1462,8 +1336,8 @@ export async function render_setting_page(page_id) {
                         </div>
                         <h4>
                             ${DateTime.fromJSDate(
-                                new Date(stored_season.now)
-                            ).toLocaleString(DateTime.DATE_FULL)}
+                new Date(stored_season.now)
+            ).toLocaleString(DateTime.DATE_FULL)}
                         </h4>
                     </div>
                     <div class="setting-group">
@@ -1482,20 +1356,18 @@ export async function render_setting_page(page_id) {
                                     ></div>
                                     <p>
                                         ${tl(
-                                            trans.seasonal.listing[
-                                                stored_season.id
-                                            ]
-                                        )}
+                trans.seasonal.listing[
+                stored_season.id
+                ]
+            )}
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        ${(
-                            stored_season.id != 'none' &&
-                            stored_season.start &&
-                            stored_season.end
-                        ) ?
-                            html.node`
+                        ${stored_season.id != 'none' &&
+                    stored_season.start &&
+                    stored_season.end
+                    ? html.node`
                     <div class="setting" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.started)}</h5>
@@ -1513,8 +1385,8 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     `
-                        : settings.seasonal ?
-                            html.node`
+                    : settings.seasonal
+                        ? html.node`
                     <div class="setting" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.next_in)}</h5>
@@ -1524,9 +1396,9 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     `
-                        :   ''}
-                        ${settings.seasonal ?
-                            html.node`
+                        : ''}
+                        ${settings.seasonal
+                    ? html.node`
                     <div class="setting" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.calculated_offset)}</h5>
@@ -1536,7 +1408,7 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     `
-                        :   ''}
+                    : ''}
                     </div>
                     <h4>${tl(trans.settings)}</h4>
                     <div class="setting-group">
@@ -1603,10 +1475,10 @@ export async function render_setting_page(page_id) {
                             Theme will expire at
                             <span class="time"
                                 >${time(
-                                    localStorage.getItem(
-                                        'bleh_cached_style_timeout'
-                                    )
-                                )}</span
+                localStorage.getItem(
+                    'bleh_cached_style_timeout'
+                )
+            )}</span
                             >
                         </li>
                         <li>
@@ -1616,8 +1488,8 @@ export async function render_setting_page(page_id) {
                             (artist) will expire at
                             <span class="time"
                                 >${time(
-                                    localStorage.getItem('lotus_artist_expire')
-                                )}</span
+                localStorage.getItem('lotus_artist_expire')
+            )}</span
                             >
                         </li>
                         <li>
@@ -1627,10 +1499,10 @@ export async function render_setting_page(page_id) {
                             (album_track) will expire at
                             <span class="time"
                                 >${time(
-                                    localStorage.getItem(
-                                        'lotus_album_track_expire'
-                                    )
-                                )}</span
+                localStorage.getItem(
+                    'lotus_album_track_expire'
+                )
+            )}</span
                             >
                         </li>
                         <br />
@@ -1642,10 +1514,10 @@ export async function render_setting_page(page_id) {
                         <li>
                             Has the timeout expired?
                             ${new Date(
-                                localStorage.getItem(
-                                    'bleh_cached_style_timeout'
-                                )
-                            ) < new Date()}
+                localStorage.getItem(
+                    'bleh_cached_style_timeout'
+                )
+            ) < new Date()}
                         </li>
                     </ul>
                     <div class="sep"></div>
@@ -1653,18 +1525,18 @@ export async function render_setting_page(page_id) {
                     <button
                         class="see-more"
                         onclick=${() => {
-                            if (settings.hu_tao == 'develop') {
-                                change_settings_page('sku');
-                            } else {
-                                dialog({
-                                    id: 'hu_tao',
-                                    title: tl(trans.development),
-                                    body: html.node`
+                    if (settings.hu_tao == 'develop') {
+                        change_settings_page('sku');
+                    } else {
+                        dialog({
+                            id: 'hu_tao',
+                            title: tl(trans.development),
+                            body: html.node`
                                 ${setting({ id: 'hu_tao', text: false, focus: true })}
                             `
-                                });
-                            }
-                        }}
+                        });
+                    }
+                }}
                     >
                         ${tl(trans.manage_feature_flags)}
                     </button>
@@ -1736,15 +1608,15 @@ export async function render_setting_page(page_id) {
                             <div
                                 class="profile-mockup-background from-avatar"
                                 style="background-image: url(${auth.avatar.replace(
-                                    '/avatar42s/',
-                                    '/avatar300s/'
-                                )})"
+                '/avatar42s/',
+                '/avatar300s/'
+            )})"
                             ></div>
-                            ${cache.banner ?
-                                html.node`
+                            ${cache.banner
+                    ? html.node`
                         <div class="profile-mockup-background from-banner" style="background-image: url(${cache.banner})"></div>
                         `
-                            :   html.node`
+                    : html.node`
                         <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
                         `}
                         </div>
@@ -1756,20 +1628,20 @@ export async function render_setting_page(page_id) {
                             </div>
                             <div class="primary-selections">
                                 ${setting({
-                                    id: 'profile_header_own',
-                                    standalone: true
-                                })}
+                        id: 'profile_header_own',
+                        standalone: true
+                    })}
                                 ${setting({
-                                    id: 'profile_header_others',
-                                    standalone: true
-                                })}
+                        id: 'profile_header_others',
+                        standalone: true
+                    })}
                             </div>
                         </div>
                         ${setting({ id: 'profile_avi_background' })}
                     </div>
                 </section>
-                ${ff('friends') ?
-                    html.node`
+                ${ff('friends')
+                    ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.friends)}</h4>
                 <div class="setting-group">
@@ -1790,7 +1662,7 @@ export async function render_setting_page(page_id) {
                 <p class="card-tip">${tl(trans.friend_difference)}</p>
             </section>
             `
-                :   ''}
+                    : ''}
                 <section class="bleh--panel">
                     <h4>${tl(trans.other)}</h4>
                     <div class="setting-group">
@@ -1826,17 +1698,17 @@ export async function render_setting_page(page_id) {
                                 <button
                                     class="see-more"
                                     onclick=${() => {
-                                        localStorage.removeItem(
-                                            'bwaa_recent_activity'
-                                        );
-                                        notify({
-                                            id: 'cleared_history',
-                                            title: tl(
-                                                trans.cleared_activity_history
-                                            ),
-                                            type: 'success'
-                                        });
-                                    }}
+                    localStorage.removeItem(
+                        'bwaa_recent_activity'
+                    );
+                    notify({
+                        id: 'cleared_history',
+                        title: tl(
+                            trans.cleared_activity_history
+                        ),
+                        type: 'success'
+                    });
+                }}
                                 >
                                     ${tl(trans.clear)}
                                 </button>
@@ -1861,19 +1733,22 @@ export async function render_setting_page(page_id) {
     } else if (page_id == 'accessibility') {
         register_skip_to([]);
 
-        render(
-            page.structure.main,
-            html`
-                <section class="bleh--panel">
-                    <h4>${tl(trans.accessibility)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: 'reduced_motion' })}
-                        ${setting({ id: 'accessible_name_colours' })}
-                        ${setting({ id: 'underline_links' })}
-                    </div>
-                </section>
-                ${ff('static_gifs') ?
-                    html.node`
+        render(page.structure.main, html`
+            <section class="bleh--panel">
+                <h4>${tl(trans.accessibility)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: 'reduced_motion' })}
+                    ${setting({ id: 'underline_links' })}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl(trans.display_name.name)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: 'display_name_styles' })}
+                    ${setting({ id: 'accessible_name_colours' })}
+                </div>
+            </section>
+            ${ff('static_gifs') ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.images)}</h4>
                 <div class="setting-group">
@@ -1890,38 +1765,32 @@ export async function render_setting_page(page_id) {
                     ${setting({ id: 'static_banners' })}
                 </div>
             </section>
-            `
-                :   ''}
-            `
-        );
+            ` : ''}
+        `);
     } else if (page_id == 'sku') {
         register_skip_to([]);
 
-        render(
-            page.structure.main,
-            html`
-                <div class="bleh--panel">
-                    <div class="panel-intro">
-                        <div class="sub-text">
-                            ${version.build}.${version.sku}
-                        </div>
-                        <h1>☆⌒(>w<)</h1>
+        render(page.structure.main, html`
+            <div class="bleh--panel">
+                <div class="panel-intro">
+                    <div class="sub-text">
+                        ${version.build}.${version.sku}
                     </div>
-                    <div class="sep" />
-                    <h4>${tl(trans.manage_feature_flags)}</h4>
-                    <div class="alert alert-danger">
-                        ${tl(trans.beware_notice)}
-                    </div>
-                    <div class="setting-group">
-                        ${Object.entries(version.feature_flags)
-                            .reverse()
-                            .map(([flag, details]) => {
-                                let value = ff(flag);
+                    <h1>☆⌒(>w<)</h1>
+                </div>
+                <div class="sep" />
+                <h4>${tl(trans.manage_feature_flags)}</h4>
+                <div class="alert alert-danger">
+                    ${tl(trans.beware_notice)}
+                </div>
+                <div class="setting-group">
+                    ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
+                        let value = ff(flag);
 
-                                let checkbox;
-                                let state;
+                        let checkbox;
+                        let state;
 
-                                return html.node`
+                        return html.node`
                             <div class="setting" data-type="toggle" onclick=${() => {
                                 let current = checkbox.checked;
 
@@ -1950,11 +1819,10 @@ export async function render_setting_page(page_id) {
                                 </div>
                             </div>
                         `;
-                            })}
-                    </div>
+                    })}
                 </div>
-            `
-        );
+            </div>
+        `);
     } else if (page_id == 'music') {
         register_skip_to([
             {
@@ -2055,16 +1923,16 @@ export async function render_setting_page(page_id) {
                     <div class="inner-preview pad">
                         <div class="bars" ref=${(el) => (bars = el)}>
                             ${() => {
-                                let max = 30_000;
+                    let max = 30_000;
 
-                                for (
-                                    let value = 1_000;
-                                    value <= max;
-                                    value += 1_000
-                                ) {
-                                    bars.appendChild(chartlist_bar(value, max));
-                                }
-                            }}
+                    for (
+                        let value = 1_000;
+                        value <= max;
+                        value += 1_000
+                    ) {
+                        bars.appendChild(chartlist_bar(value, max));
+                    }
+                }}
                         </div>
                     </div>
                     <div class="setting-group">
@@ -2159,14 +2027,14 @@ export function change_settings_page(page_id, setting = null) {
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">
                             ${tl(trans.value_failed_to_load).replace(
-                                '{v}',
-                                tl(trans.settings)
-                            )}
+                '{v}',
+                tl(trans.settings)
+            )}
                         </div>
                         <pre class="error-info">
-${e ?
-                                html.node`<span class="error-type">${e.name}</span>: ${e.message}`
-                            :   ''}</pre
+${e
+                    ? html.node`<span class="error-type">${e.name}</span>: ${e.message}`
+                    : ''}</pre
                         >
                     </div>
                 </div>
@@ -2204,9 +2072,9 @@ ${e ?
                 stored_season.next_start
                     .replace(
                         'y0',
-                        stored_season.next_is_new_year ?
-                            stored_season.year + 1
-                        :   stored_season.year
+                        stored_season.next_is_new_year
+                            ? stored_season.year + 1
+                            : stored_season.year
                     )
                     .replace('{offset}', stored_season.offset)
             ).toLocaleString(lang)
@@ -2385,7 +2253,7 @@ export function display_colour_presets() {
         christmas: [
             {
                 type: 'season',
-                name: tl(trans.seasonal.presets.nonsense),
+                label: trans.seasonal.presets.nonsense,
                 sets: {
                     hue: 352,
                     sat: 1.8,
@@ -2394,7 +2262,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: tl(trans.seasonal.presets.fruitcake),
+                label: trans.seasonal.presets.fruitcake,
                 sets: {
                     hue: 24,
                     sat: 0.93,
@@ -2403,7 +2271,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: tl(trans.seasonal.presets.mistletoe),
+                label: trans.seasonal.presets.mistletoe,
                 sets: {
                     hue: 130,
                     sat: 0.45,
@@ -2412,7 +2280,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: tl(trans.seasonal.presets.festival),
+                label: trans.seasonal.presets.festival,
                 sets: {
                     hue: 240,
                     sat: 1.4,
@@ -2428,188 +2296,129 @@ export function display_colour_presets() {
     let lit_range;
 
     for (let type in colours) {
-        const swatch_group = page.structure.main.querySelector(
-            `#colour_${type}`
-        );
+        const swatch_group = page.structure.main.querySelector(`#colour_${type}`);
         if (!swatch_group) return;
 
-        colours[type].forEach((colour) => {
-            if (
-                colour.requires_flag &&
-                version.feature_flags.hasOwnProperty(colour.requires_flag)
-            ) {
-                if (!ff(colour.requires_flag)) return;
-            }
+        colours[type].forEach(colour => {
+            if (colour.type == 'default' && stored_season.id != 'none' && exclusives[stored_season.id]) {
+                swatch_group.appendChild(create_swatch(type, colour));
 
-            if (colour.type == 'avatar' && !auth.name) return;
-
-            let text;
-            if (colour.label) text = tl(colour.label);
-
-            if (!colour.type) colour.type = 'colour';
-
-            if (!colour.displays && colour.sets) colour.displays = colour.sets;
-
-            let blob;
-            let text_elem;
-            let swatch = html.node`
-                <button class="swatch-container" onclick=${() => {
-                    if (!colour.sets) return;
-
-                    hue_range.set(colour.sets.hue);
-                    sat_range.set(colour.sets.sat);
-                    lit_range.set(colour.sets.lit);
-                }}>
-                    <div class="swatch colourful" ref=${(el) => (blob = el)} data-swatch-type=${colour.type} />
-                    <strong ref=${(el) => (text_elem = el)} />
-                </button>
-            `;
-
-            if (type == 'custom') text = tl(trans[colour.type]);
-
-            if (colour.type == 'customise') {
-                text = tl(trans.edit);
-
-                let colour;
-
-                tippy(swatch, {
-                    theme: 'window',
-                    content: html.node`
-                        <div class="dialog-settings">
-                            <div class="setting-group blend">
-                                ${
-                                    ff('colour_based_on_hex') ?
-                                        html.node`
-                                <div class="setting" data-type="text">
-                                    <div class="heading">
-                                        <h5>${tl(trans.convert_from_hex)}</h5>
-                                    </div>
-                                    <div class="input-container content-form">
-                                        ${(colour = input({
-                                            type: 'colour',
-                                            value: '#999999',
-                                            maxlength: 7,
-                                            warn_if_empty: true
-                                        }))}
-                                        <button class="btn primary icon convert" onclick=${() => {
-                                            const value = colour.value();
-                                            const hsl = hex_to_hsl(value);
-
-                                            hue_range.set(hsl.h);
-                                            sat_range.set(
-                                                clamp_sat((hsl.s / 100) * 3)
-                                            );
-                                            lit_range.set(hsl.l / 100 + 0.35);
-                                        }}>${tl(trans.convert)}</button>
-                                    </div>
-                                </div>
-                                `
-                                    :   ''
-                                }
-                                ${(hue_range = setting({ id: 'hue', func: update_colour_swatches }))}
-                                ${(sat_range = setting({ id: 'sat', func: update_colour_swatches }))}
-                                ${(lit_range = setting({ id: 'lit', func: update_colour_swatches }))}
-                            </div>
-                        </div>
-                    `,
-                    placement: 'bottom',
-                    interactive: true,
-                    interactiveBorder: 10,
-                    trigger: 'click',
-                    appendTo: document.body
+                exclusives[stored_season.id].forEach(exclusive => {
+                    swatch_group.appendChild(create_swatch(type, exclusive));
                 });
+
+                return;
             }
 
-            if (colour.sets) {
-                colour.sets.accent_type = colour.type;
+            swatch_group.appendChild(create_swatch(type, colour));
+        });
+    }
 
-                blob.style.setProperty('--hue-over', colour.displays.hue);
-                blob.style.setProperty('--sat-over', colour.displays.sat);
-                blob.style.setProperty('--lit-over', colour.displays.lit);
-            }
+    function create_swatch(type, colour) {
+        if (
+            colour.requires_flag &&
+            version.feature_flags.hasOwnProperty(colour.requires_flag)
+        ) {
+            if (!ff(colour.requires_flag)) return html.node``;
+        }
 
-            if (colour.type == 'default' && stored_season.id != 'none') {
-                text = tl(trans.seasonal.name);
+        if (colour.type == 'avatar' && !auth.name) return html.node``;
 
-                if (exclusives.hasOwnProperty(stored_season.id)) {
-                    delete colour.sets;
+        let text;
+        if (colour.label) text = tl(colour.label);
 
-                    exclusives[stored_season.id] = [
-                        {
-                            type: 'default',
-                            name: tl(trans.default),
-                            sets: {
-                                hue: 255,
-                                sat: 1,
-                                lit: 1
-                            },
-                            displays: {
-                                hue: 'var(--hue-seasonal, 255)',
-                                sat: 'var(--sat-seasonal, 1)',
-                                lit: 'var(--lit-seasonal, 1)'
-                            }
-                        },
-                        ...exclusives[stored_season.id]
-                    ];
+        if (!colour.type) colour.type = 'colour';
 
-                    tippy(swatch, {
-                        theme: 'menu',
-                        content: '',
-                        allowHTML: true,
-                        placement: 'bottom',
-                        interactive: true,
-                        interactiveBorder: 10,
-                        trigger: 'click',
+        if (!colour.displays && colour.sets) colour.displays = colour.sets;
 
-                        onShow(instance) {
-                            const content =
-                                instance.popper.querySelector('.tippy-content');
+        let blob;
+        let text_elem;
+        const swatch = html.node`
+            <button class="swatch-container" onclick=${() => {
+                if (!colour.sets) return;
 
-                            render(
-                                content,
-                                html`
-                                    ${exclusives[stored_season.id].forEach(
-                                        (colour) => {
-                                            colour.sets = {
-                                                accent_type: colour.type,
-                                                ...colour.sets
-                                            };
+                hue_range.set(colour.sets.hue);
+                sat_range.set(colour.sets.sat);
+                lit_range.set(colour.sets.lit);
+            }}>
+                <div class="swatch colourful" ref=${(el) => (blob = el)} data-swatch-type=${colour.type} />
+                <strong ref=${(el) => (text_elem = el)} />
+            </button>
+        `;
 
-                                            if (!colour.displays)
-                                                colour.displays = colour.sets;
+        if (type == 'custom' && !colour.label) text = tl(trans[colour.type]);
 
-                                            return html.node`
-                                        <button class="dropdown-menu-clickable-item" aria-checked=${colour.displays.hue == settings.hue && colour.displays.sat == settings.sat && colour.displays.lit} onclick=${() => {
-                                            hue_range.set(colour.displays.hue);
-                                            sat_range.set(colour.displays.sat);
-                                            lit_range.set(colour.displays.lit);
-                                        }} style="--hue-over: ${colour.displays.hue}; --sat-over: ${colour.displays.sat}; --lit-over: ${colour.displays.lit}">
-                                            ${colour.name}
-                                        </button>
-                                    `;
-                                        }
-                                    )}
-                                `
-                            );
+        if (colour.type == 'customise') {
+            text = tl(trans.edit);
 
-                            display_seasonal_exclusives(
-                                content,
-                                colours,
-                                exclusives
-                            );
-                        }
-                    });
-                }
-            }
-
-            text_elem.textContent = text;
+            let colour;
 
             tippy(swatch, {
-                content: text
-            });
+                theme: 'window',
+                content: html.node`
+                    <div class="dialog-settings">
+                        <div class="setting-group blend">
+                            ${ff('colour_based_on_hex')
+                        ? html.node`
+                            <div class="setting" data-type="text">
+                                <div class="heading">
+                                    <h5>${tl(trans.convert_from_hex)}</h5>
+                                </div>
+                                <div class="input-container content-form">
+                                    ${(colour = input({
+                            type: 'colour',
+                            value: '#999999',
+                            maxlength: 7,
+                            warn_if_empty: true
+                        }))}
+                                    <button class="btn primary icon convert" onclick=${() => {
+                                const value = colour.value();
+                                const hsl = hex_to_hsl(value);
 
-            swatch_group.appendChild(swatch);
+                                hue_range.set(hsl.h);
+                                sat_range.set(
+                                    clamp_sat((hsl.s / 100) * 3)
+                                );
+                                lit_range.set(hsl.l / 100 + 0.35);
+                            }}>${tl(trans.convert)}</button>
+                                </div>
+                            </div>
+                            `
+                        : ''
+                    }
+                            ${(hue_range = setting({ id: 'hue', func: update_colour_swatches }))}
+                            ${(sat_range = setting({ id: 'sat', func: update_colour_swatches }))}
+                            ${(lit_range = setting({ id: 'lit', func: update_colour_swatches }))}
+                        </div>
+                    </div>
+                `,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click',
+                appendTo: document.body
+            });
+        }
+
+        if (colour.sets) {
+            colour.sets.accent_type = colour.type;
+
+            blob.style.setProperty('--hue-over', colour.displays.hue);
+            blob.style.setProperty('--sat-over', colour.displays.sat);
+            blob.style.setProperty('--lit-over', colour.displays.lit);
+        }
+
+        if (colour.type == 'default' && stored_season.id != 'none') {
+            text = tl(trans.seasonal.name);
+        }
+
+        text_elem.textContent = text;
+
+        tippy(swatch, {
+            content: text
         });
+
+        return swatch;
     }
 }
 
@@ -2767,23 +2576,23 @@ function import_settings() {
                 </button>
                 <div class="fill"></div>
                 <button class="btn primary download" onclick=${() => {
-                    try {
-                        const parsed = JSON.parse(text.value);
+                try {
+                    const parsed = JSON.parse(text.value);
 
-                        // safe to continue
-                        set_storage('bleh', text.value);
-                        Object.assign(settings, parsed);
-                        load_settings();
+                    // safe to continue
+                    set_storage('bleh', text.value);
+                    Object.assign(settings, parsed);
+                    load_settings();
 
-                        dialog_rm({
-                            id: 'import_settings'
-                        });
-                    } catch (e) {
-                        // halt
-                        dialog({
-                            id: 'import_failed',
-                            title: tl(trans.import_failed),
-                            body: html.node`
+                    dialog_rm({
+                        id: 'import_settings'
+                    });
+                } catch (e) {
+                    // halt
+                    dialog({
+                        id: 'import_failed',
+                        title: tl(trans.import_failed),
+                        body: html.node`
                                 <p class="big-modal-alert alert-error">${tl(trans.import_failed.notice)}</p>
                                 <div class="modal-footer">
                                     <div class="fill"></div>
@@ -2792,11 +2601,11 @@ function import_settings() {
                                     </button>
                                 </div>
                             `
-                        });
-                        console.error(e);
-                    } finally {
-                    }
-                }}>
+                    });
+                    console.error(e);
+                } finally {
+                }
+            }}>
                     ${tl(trans.import)}
                 </button>
             </div>
@@ -2810,7 +2619,7 @@ function export_settings() {
 }
 
 // reset settings
-unsafeWindow._reset_settings = function () {
+function reset_settings() {
     dialog({
         id: 'reset_settings',
         title: tl(trans.reset_settings),
@@ -2820,26 +2629,26 @@ unsafeWindow._reset_settings = function () {
                 <a class="see-more" onclick=${() => export_settings()}>${tl(trans.make_a_backup)}</a>
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick="_dialog_rm({id: 'reset_settings'})">
+                <button class="see-more cancel" onclick=${() => dialog_rm({id: 'reset_settings'})}>
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill"></div>
-                <button class="btn primary icon" data-type="reset" onclick="_confirm_reset()">
+                <button class="btn primary icon" data-type="reset" onclick=${() => confirm_reset()}>
                     ${tl(trans.reset)}
                 </button>
             </div>
         `
     });
-};
+}
 
-unsafeWindow._confirm_reset = function () {
+function confirm_reset() {
     for (var member in settings) delete settings[member];
     load_settings(true);
 
     dialog_rm({
         id: 'reset_settings'
     });
-};
+}
 
 function activity_preview() {
     let preview = page.structure.main.querySelector('.activity-preview');
@@ -3074,7 +2883,7 @@ function make_random_activity(preview, random_types, random_involved) {
         date: new Date(),
         involved: [
             structuredClone(random_involved)[
-                Math.floor(Math.random() * random_involved.length)
+            Math.floor(Math.random() * random_involved.length)
             ]
         ]
     });
@@ -3144,22 +2953,21 @@ export function theme_bubbles(func = null) {
     const bubbles = html.node`
         <div class="theme-bubbles">
             ${themes.map((theme) => {
-                if (theme.hide) return html.node``;
+        if (theme.hide) return html.node``;
 
-                if (theme.type == 'sep') {
-                    return html.node`
+        if (theme.type == 'sep') {
+            return html.node`
                         <div class="sep theme-bubble-sep" />
                     `;
-                }
+        }
 
-                if (!theme.formal) theme.formal = theme.id;
+        if (!theme.formal) theme.formal = theme.id;
 
-                const bubble = html.node`
+        const bubble = html.node`
                     <button class="theme-bubble" data-theme-id=${theme.id} onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
-                            ${
-                                theme.id == 'adaptive' ?
-                                    html.node`
+                            ${theme.id == 'adaptive'
+                ? html.node`
                             <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type=${['light', 'ink'].includes(settings.theme_day) ? 'light' : 'dark'}>
                                 ${theme_preview()}
                             </div>
@@ -3167,12 +2975,12 @@ export function theme_bubbles(func = null) {
                                 ${theme_preview()}
                             </div>
                             `
-                                :   html.node`
+                : html.node`
                             <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
                                 ${theme_preview()}
                             </div>
                             `
-                            }
+            }
                         </div>
                         <strong>
                             ${theme.name}
@@ -3181,10 +2989,10 @@ export function theme_bubbles(func = null) {
                     </button>
                 `;
 
-                buttons.push(bubble);
+        buttons.push(bubble);
 
-                return bubble;
-            })}
+        return bubble;
+    })}
         </div>
     `;
 
@@ -3201,22 +3009,22 @@ export function theme_bubbles(func = null) {
                 <div
                     class="inner theme-preview"
                     data-bleh--theme=${settings.theme_day}
-                    data-bleh--theme_type=${(
-                        ['light', 'ink'].includes(settings.theme_day)
-                    ) ?
-                        'light'
-                    :   'dark'}
+                    data-bleh--theme_type=${['light', 'ink'].includes(
+                settings.theme_day
+            )
+                    ? 'light'
+                    : 'dark'}
                 >
                     ${theme_preview()}
                 </div>
                 <div
                     class="inner theme-preview"
                     data-bleh--theme=${settings.theme_night}
-                    data-bleh--theme_type=${(
-                        ['light', 'ink'].includes(settings.theme_night)
-                    ) ?
-                        'light'
-                    :   'dark'}
+                    data-bleh--theme_type=${['light', 'ink'].includes(
+                        settings.theme_night
+                    )
+                    ? 'light'
+                    : 'dark'}
                 >
                     ${theme_preview()}
                 </div>

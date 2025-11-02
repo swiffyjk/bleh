@@ -32,6 +32,7 @@ export function markdown(
         in_dialog = false,
         allow_icons = false,
         allow_hue = false,
+        allow_fonts = false,
         take_effect = false,
         cache = false,
         allow_socials = false,
@@ -89,22 +90,20 @@ export function markdown(
             type: 'lang',
             regex: /\[banner=([^\]]+)\]/g,
             replace: (_, url) => {
+                delete cache.banner;
+                delete cache.banner_orig;
+
                 try {
                     const safe = new URL(url);
-                    if (!['http:', 'https:'].includes(safe.protocol))
-                        return `<img alt="banner" loading="lazy">`;
+                    if (!['http:', 'https:'].includes(safe.protocol)) return '';
 
-                    const escaped = safe.href.replace(/"/g, '&quot;');
-
-                    const image = `<img src="${escaped}" alt="banner" loading="lazy">`;
-
-                    return DOMPurify.sanitize(image, {
-                        ALLOWED_TAGS: ['img'],
-                        ALLOWED_ATTR: ['src', 'alt', 'loading']
-                    });
+                    cache.banner = `https://images.weserv.nl/?url=${encodeURIComponent(url)}&output=webp&n=-1`;
+                    if (name == auth.name) cache.banner_orig = url;
                 } catch {
-                    return `<img alt="banner" loading="lazy">`;
+                    cache.banner = 'accent';
                 }
+
+                return '';
             }
         }
     ];
@@ -166,6 +165,44 @@ export function markdown(
                     settings_store.lit.max,
                     Math.max(settings_store.lit.min, parseFloat(l))
                 );
+
+                return '';
+            }
+        }
+    ];
+
+    // sets a profile's font
+    const font = () => [
+        {
+            type: 'lang',
+            regex: /\[font=([^\]]+)\]/g,
+            replace: (_, family) => {
+                delete cache.font;
+                delete cache.font_style;
+
+                if (sponsor_list && sponsor_list.sponsors.includes(name)) {
+                    const split = family.split(',');
+
+                    cache.font = split[0];
+                    cache.font_style = split[1] || 'solid';
+                }
+
+                return '';
+            }
+        }
+    ];
+
+    // sets a profile's display name
+    const display_name = () => [
+        {
+            type: 'lang',
+            regex: /\[name=([^\]]+)\]/g,
+            replace: (_, username) => {
+                delete cache.username;
+
+                if (sponsor_list && sponsor_list.sponsors.includes(name)) {
+                    cache.username = username;
+                }
 
                 return '';
             }
@@ -263,10 +300,22 @@ export function markdown(
     if (line_breaks) extensions.push(blockquotes());
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
-    if (allow_hue) extensions.push(accent());
+    if (allow_hue) extensions.push(accent(), display_name());
+    if (allow_fonts) extensions.push(font());
     if (allow_socials) extensions.push(social_links());
     if (!allow_headers) extensions.push(header_minify());
     extensions.push(mentions());
+
+    let profile_cache;
+
+    const will_cache = cache === true;
+    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', { cache });
+
+    if ((allow_banners || allow_hue) && will_cache) {
+        profile_cache =
+            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+        cache = profile_cache[name] || {};
+    }
 
     const converter = new showdown.Converter({
         extensions,
@@ -319,11 +368,6 @@ export function markdown(
 
     const body = html.node([parsed]);
     log('rendered', 'markdown', 'info', { body });
-
-    let profile_cache;
-
-    const will_cache = cache === true;
-    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', { cache });
 
     const link_strings = {
         'open.spotify.com': 'Spotify',
@@ -399,34 +443,27 @@ export function markdown(
             allow_hue = false;
     }
 
-    if ((allow_banners || allow_hue) && will_cache) {
-        profile_cache =
-            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-        cache = profile_cache[page.name] || {};
-    }
-
-    if (allow_banners) {
-        const banner = body.querySelector('img[alt="banner"]');
-
-        if (banner) {
-            const src = banner.src;
-
-            if (src) {
-                cache.banner = src;
-            } else {
-                cache.banner = 'accent';
-            }
-        } else {
-            delete cache.banner;
-        }
-    }
-
     // add lazy-loading to images
     if (body.nodeName != '#text') {
         body.querySelectorAll('img').forEach((image) => {
             if (!line_breaks) {
                 image.remove();
                 return;
+            }
+
+            // for counter-like sites
+            const proxy_free = [
+                'count.getloli.com',
+                'i.imgur.com',
+                'media1.tenor.com'
+            ];
+
+            try {
+                const url = new URL(image.src);
+
+                if (!proxy_free.includes(url.hostname)) image.src = `https://images.weserv.nl/?url=${encodeURIComponent(image.src)}&output=webp&n=-1`;
+            } catch(e) {
+                image.src = `https://images.weserv.nl/?url=${encodeURIComponent(image.src)}&output=webp&n=-1`;
             }
 
             image.setAttribute('loading', 'lazy');

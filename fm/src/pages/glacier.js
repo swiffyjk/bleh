@@ -861,17 +861,8 @@ export function bleh_glacier_insights(insights = null) {
 function bleh_glacier_insights_generate(type, item) {
     if (item.highest.value == 0) return;
 
-    log(
-        `requesting insights generator for ${type}`,
-        'glacier library',
-        'info',
-        item
-    );
-
     let new_run = false;
-    let scrobble_insights_panel = page.structure.side.querySelector(
-        `.scrobble-insights-panel[data-type="${type}"]`
-    );
+    let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
     if (!scrobble_insights_panel) {
         scrobble_insights_panel = html.node`
             <section class="scrobble-insights-panel" data-type=${type} />
@@ -879,8 +870,18 @@ function bleh_glacier_insights_generate(type, item) {
         new_run = true;
     }
 
+    log(
+        `requesting insights generator for ${type}`,
+        'glacier library',
+        'info',
+        {item, new_run}
+    );
+
     // converts to plural
-    render(scrobble_insights_panel, html` <h2>${tl(trans[`${type}s`])}</h2> `);
+    render(scrobble_insights_panel, html``);
+    render(scrobble_insights_panel, html`
+        <h2>${tl(trans[`${type}s`])}</h2>
+    `);
 
     let scrobble_canvas_container = document.createElement('div');
     scrobble_canvas_container.classList.add(

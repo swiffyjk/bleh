@@ -690,13 +690,15 @@ export let settings_store = {
         title: trans.theme_loading.name,
         body: trans.theme_loading.body
     },
-    profile_header_expand: {
-        default: true
-    },
     accessible_name_colours: {
         default: false,
         title: trans.accessible_name_colours.name,
         body: trans.accessible_name_colours.body
+    },
+    display_name_styles: {
+        default: true,
+        title: trans.display_name_styles.name,
+        body: trans.display_name_styles.body
     },
     reduced_motion: {
         default: false,
@@ -878,7 +880,8 @@ export let settings_store = {
             none: {
                 name: trans.no_particles
             }
-        }
+        },
+        require_reload: true
     },
     seasonal_particles_fps: {
         default: false,
@@ -1326,5 +1329,13 @@ export let settings_store = {
         title: trans.branch.name,
         body: trans.branch.body,
         warn_if_empty: true
+    },
+    tracklist_source: {
+        default: 'oracle',
+        type: 'select',
+        title: trans.tracklist_source.name,
+        body: trans.tracklist_source.body,
+        new_release: true,
+        incompatible: { oracle_beta: false }
     }
 };

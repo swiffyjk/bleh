@@ -33,12 +33,8 @@ let cropper;
 
 // patch last.fm settings
 export function bleh_native_settings() {
-    let no_data = page.structure.container.querySelector(
-        ':scope > .no-data-message'
-    );
-    if (no_data) {
-        page.structure.main.appendChild(no_data);
-    }
+    const no_data = page.structure.container.querySelector(':scope > .no-data-message');
+    if (no_data) page.structure.main.appendChild(no_data);
 
     if (page.subpage == 'overview') {
         patch_settings_profile_tab();
@@ -91,29 +87,6 @@ export function bleh_native_settings() {
     } else if (page.subpage == 'applications_overview') {
         bleh_applications();
     }
-
-    if (ff('katsune')) return;
-
-    let edit_header = document.createElement('section');
-    edit_header.classList.add(
-        'redesigned-header',
-        'edit-header',
-        'no-background'
-    );
-    edit_header.innerHTML = `
-        <div class="tag-side">
-            <div class="tag-icon cog-icon"></div>
-        </div>
-        <div class="info-side">
-            <div class="sub-text">${tl(trans.settings)}</div>
-            <h1>${header_text}</h1>
-        </div>
-    `;
-
-    page.structure.container.insertBefore(
-        edit_header,
-        page.structure.container.firstElementChild
-    );
 }
 
 function patch_settings_profile_tab() {
@@ -524,6 +497,9 @@ function patch_settings_charts_panel(token) {
 }
 
 function patch_settings_profile_panel(token, update_picture) {
+    // some testing, probably not accurate
+    const bio_max_length = 485;
+
     update_picture.classList.add('bleh--panel');
 
     const upload_form = update_picture.querySelector('.avatar-upload-form');
@@ -551,6 +527,7 @@ function patch_settings_profile_panel(token, update_picture) {
         allow_banners: true,
         allow_icons: true,
         allow_hue: true,
+        allow_fonts: true,
         cache: true,
         take_effect: false,
         allow_socials: true,
@@ -559,184 +536,207 @@ function patch_settings_profile_panel(token, update_picture) {
 
     let banner_setting;
     let accent_setting;
+    let font_setting;
+
+    render(page.structure.side, html`
+        <section>
+            <h2>${tl(trans.about_me_preview)}</h2>
+            <span class="bleh--about-me-preview markdown-body" ref=${(el) => (preview = el)} />
+        </section>
+    `);
+
+    let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    let cache = profile_cache[auth.name];
 
     render(
         update_picture,
         html`
             <h4>${tl(trans.profile)}</h4>
-            <div class="banner-preview"></div>
-            <div class="profile-container">
-                <div class="avatar-side">
+            <form
+                class="dont-move"
+                action="${root}settings#update-profile"
+                name="profile-form"
+                data-form-type="identity"
+                method="post"
+            >
+                <input
+                    type="hidden"
+                    name="csrfmiddlewaretoken"
+                    value="${token}"
+                />
+                <div class="setting-group">
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.avatar)}</h5>
+                        </div>
+                        <div class="info">
+                            <div class="avatar image-uploader" onclick=${() => avatar(token)}>
+                                <img
+                                    src=${avatar_url}
+                                    alt=${tl(trans.your_avatar)}
+                                    loading="lazy"
+                                />
+                                <div class="avatar-overlay" />
+                            </div>
+                        </div>
+                    </div>
+                    ${() => {
+                        const username_regex = /\[name=([^\]]+)\]/;
+
+                        const elem = html.node`
+                            <div class="setting" data-type="text" disabled=${!auth.sponsor}>
+                                <div class="heading">
+                                    <h5>${tl(trans.display_name.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span><span class="new-badge new">${tl(trans.new)}</span></h5>
+                                    <p>${tl(trans.display_name.body)}</p>
+                                </div>
+                                ${input({
+                                    value: cache.username,
+                                    placeholder: auth.name,
+                                    func: (val) => {
+                                        const match = about.value.match(username_regex);
+
+                                        const new_name = `[name=${val}]`;
+
+                                        if (match) {
+                                            about.value = about.value.replace(username_regex, new_name);
+                                        } else {
+                                            const trimmed = about.value.trimEnd();
+
+                                            if (trimmed.length == 0) {
+                                                about.value = new_name;
+                                            } else {
+                                                about.value =
+                                                    trimmed +
+                                                    '\n\n' +
+                                                    new_name;
+                                            }
+                                        }
+
+                                        about.dispatchEvent(
+                                            new InputEvent('input', {
+                                                bubbles: true,
+                                                cancelable: true
+                                            })
+                                        );
+                                    }
+                                })}
+                            </div>
+                        `;
+
+                        return elem;
+                    }}
+                    ${ff('profile_fonts') ? html.node`
                     <div
-                        class="avatar image-upload-preview"
-                        onclick=${() => avatar(token)}
-                    >
-                        <img
-                            src=${avatar_url}
-                            alt=${tl(trans.your_avatar)}
-                            loading="lazy"
-                        />
-                        <div class="avatar-overlay"></div>
-                    </div>
-                </div>
-                <div class="info-side">
-                    <div class="header-info">
-                        <div class="header">
-                            <h1>${auth.name}</h1>
+                        class="setting"
+                        data-type="info"
+                        disabled=${!auth.sponsor}
+                        ref=${(el) => (font_setting = el)}
+                    />
+                    ` : ''}
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.subtitle)}</h5>
+                            <p>${tl(trans.pronoun_tip)}</p>
                         </div>
-                        <div class="header-title-secondary">
-                            <span
-                                class="header-title-secondary--pre"
-                                id="header-title-display-name--pre"
-                            ></span>
-                            <span
-                                class="header-title-display-name"
-                                id="header-title-display-name"
-                            ></span>
-                            <!--<span class="header-title-secondary--pre" id="header-scrobble-since--pre">created</span>
-                        <span class="header-scrobble-since" id="header-scrobble-since"></span>-->
-                        </div>
-                    </div>
-                    <div class="sub-info">
-                        <form
-                            action="${root}settings#update-profile"
-                            name="profile-form"
-                            data-form-type="identity"
-                            method="post"
-                        >
+                        <div class="input-container content-form">
                             <input
-                                type="hidden"
-                                name="csrfmiddlewaretoken"
-                                value="${token}"
+                                type="text"
+                                name="full_name"
+                                value=${form_display_name}
+                                maxlength="36"
+                                id="id_full_name"
+                                data-form-type="other"
                             />
-                            <div class="info-grid">
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl(trans.subtitle)}
-                                    </div>
-                                    <div class="input">
-                                        <input
-                                            type="text"
-                                            name="full_name"
-                                            value=${form_display_name}
-                                            maxlength="36"
-                                            id="id_full_name"
-                                            oninput="_update_display_name(this.value)"
-                                            data-form-type="other"
-                                        />
-                                        <div class="tip">
-                                            ${tl(trans.pronoun_tip)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl(trans.country)}
-                                    </div>
-                                    ${select(
-                                        select_prepare(form_country),
-                                        form_country.value,
-                                        'country'
-                                    )}
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">${tl(trans.about)}</div>
-                                    <div class="input about-me" id="about_me">
-                                        <textarea
-                                            name="about_me"
-                                            placeholder=${tl(
-                                                trans.anything_you_can_imagine
-                                            )}
-                                            cols="40"
-                                            rows="10"
-                                            class="textarea--s"
-                                            maxlength="500"
-                                            id="id_about_me"
-                                            oninput=${() => update_about()}
-                                            ref=${(el) => (about = el)}
-                                            data-form-type="other"
-                                        >
-                                            ${form_about_me}
-                                        </textarea
-                                        >
-                                        <div class="dual-tip">
-                                            <div
-                                                class="tip markdown-enabled"
-                                                onclick=${() =>
-                                                    markdown_prompt(
-                                                        markdown_settings
-                                                    )}
-                                            >
-                                                ${tl(trans.supports_markdown)}
-                                            </div>
-                                            <div
-                                                class="tip characters"
-                                                ref=${(el) => (chars = el)}
-                                            >
-                                                ${tl(
-                                                    trans.value_characters_max,
-                                                    { v: '500' }
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="info-row">
-                                    <div class="title">
-                                        ${tl(trans.about_me_preview)}
-                                    </div>
-                                    <span
-                                        class="bleh--about-me-preview markdown-body"
-                                        ref=${(el) => (preview = el)}
-                                    ></span>
-                                </div>
-                                <div class="info-row" style="display: none">
-                                    <div class="title">
-                                        ${tl(trans.website)}
-                                    </div>
-                                    <div class="input">
-                                        <input
-                                            type="url"
-                                            name="homepage"
-                                            value="${form_website}"
-                                            id="id_homepage"
-                                            data-form-type="website"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="save-row">
-                                <div class="form-submit">
-                                    <button
-                                        type="submit"
-                                        class="btn-primary save"
-                                        data-form-type="action"
-                                    >
-                                        ${tl(trans.save)}
-                                    </button>
-                                    <input
-                                        type="hidden"
-                                        value="profile"
-                                        name="submit"
-                                    />
-                                </div>
-                            </div>
-                        </form>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.website)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input
+                                type="url"
+                                name="homepage"
+                                value=${form_website}
+                                id="id_homepage"
+                                data-form-type="website"
+                            />
+                        </div>
+                    </div>
+                    <div class="setting" data-type="select">
+                        <div class="heading">
+                            <h5>${tl(trans.country)}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector">
+                            ${select(
+                                select_prepare(form_country),
+                                form_country.value,
+                                'country'
+                            )}
+                        </div>
+                    </div>
+                    <div
+                        class="setting"
+                        data-type="info"
+                        ref=${(el) => (banner_setting = el)}
+                    />
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!auth.sponsor}
+                        ref=${(el) => (accent_setting = el)}
+                    />
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.about)}</h5>
+                            <p class="tip markdown-enabled" onclick=${() => {
+                                markdown_prompt(markdown_settings);
+                            }}>
+                                ${tl(trans.supports_markdown)}
+                            </p>
+                            <p class="tip characters" ref=${(el) => (chars = el)}>
+                                ${tl(
+                                    trans.value_characters_max,
+                                    { v: bio_max_length }
+                                )}
+                            </p>
+                        </div>
+                        <div class="input-container content-form textarea">
+                            <textarea
+                                name="about_me"
+                                placeholder=${tl(
+                                    trans.anything_you_can_imagine
+                                )}
+                                cols="40"
+                                rows="10"
+                                class="textarea--s"
+                                maxlength=${bio_max_length}
+                                id="id_about_me"
+                                oninput=${() => update_about()}
+                                ref=${(el) => (about = el)}
+                                data-form-type="other"
+                            >
+                                ${form_about_me}
+                            </textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="settings-footer end">
+                    <button
+                        type="submit"
+                        class="btn-primary save"
+                        data-form-type="action"
+                    >
+                        ${tl(trans.save)}
+                    </button>
+                    <input
+                        type="hidden"
+                        value="profile"
+                        name="submit"
+                    />
+                </div>
+            </form>
             <div class="setting-group">
-                <div
-                    class="setting"
-                    data-type="info"
-                    ref=${(el) => (banner_setting = el)}
-                />
-                <div
-                    class="setting"
-                    data-type="info"
-                    disabled=${!auth.sponsor}
-                    ref=${(el) => (accent_setting = el)}
-                />
                 ${setting({ id: 'avatar_radius' })}
             </div>
         `
@@ -749,19 +749,28 @@ function patch_settings_profile_panel(token, update_picture) {
     // about me
     update_about();
 
+    function len(text) {
+        return text.length;
+
+        // utf-8 or something i dont know
+        const normalised = text.replace(/\r\n/g, '\n');
+
+        return new TextEncoder().encode(normalised).length;
+    }
+
     function update_about() {
         log('re-rendering', 'about', 'log');
 
         const value = about.value;
+        const length = len(value);
         chars.textContent = tl(trans.value_characters_max, {
-            v: `${value.length}/500`
+            v: `${length}/${bio_max_length}`
         });
-        chars.setAttribute('data-exceeded', value.length >= 500);
+        chars.setAttribute('data-exceeded', length > bio_max_length);
 
         render(preview, markdown(value, markdown_settings));
 
-        let profile_cache =
-            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+        let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
         let cache = profile_cache[auth.name];
 
         console.info('cache', cache);
@@ -772,14 +781,12 @@ function patch_settings_profile_panel(token, update_picture) {
                 <div class="heading">
                     <h5>${tl(trans.profile_banner.name)}</h5>
                     <p>${tl(trans.profile_banner.body)}</p>
-                    ${cache.banner ?
-                        html.node`
-                <p>${tl(trans.current_banner_value).replace('{v}', cache.banner)}</p>
-                `
-                    :   ''}
+                    ${cache.banner_orig ? html.node`
+                        <p>${tl(trans.current_banner_value).replace('{v}', cache.banner_orig)}</p>
+                    ` : ''}
                 </div>
                 ${() => {
-                    if (!cache.banner)
+                    if (!cache.banner_orig)
                         return html.node`
                         <div class="info">
                             <p>${tl(trans.none)}</p>
@@ -787,11 +794,11 @@ function patch_settings_profile_panel(token, update_picture) {
                     `;
 
                     let banner_image = html.node`
-                    <div class="banner-image" style="background-image: url(${cache.banner})" />
-                `;
+                        <div class="banner-image" style="background-image: url(${cache.banner})" />
+                    `;
 
                     tippy(banner_image, {
-                        content: cache.banner
+                        content: cache.banner_orig
                     });
 
                     return banner_image;
@@ -799,8 +806,8 @@ function patch_settings_profile_panel(token, update_picture) {
             `
         );
 
-        const accent_regex =
-            /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
+        const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
+        const font_regex = /\[font=([^\]]+)\]/;
 
         console.info(
             'cache update',
@@ -810,36 +817,182 @@ function patch_settings_profile_panel(token, update_picture) {
             cache.lit
         );
 
-        let edit;
-        render(
-            accent_setting,
-            html`
+        let accent_edit;
+        render(accent_setting, html`
+            <div class="heading">
+                <h5>${tl(trans.profile_accent.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span></h5>
+                <p>${tl(trans.profile_accent.body)}</p>
+            </div>
+            <div class="info">
+                <div
+                    class="colour-tile colourful"
+                    style="--hue-over: ${cache.hue}; --sat-over: ${cache.sat}; --lit-over: ${cache.lit}"
+                />
+                <div class="swatch-group palette">
+                    <button
+                        class="swatch-container"
+                        ref=${(el) => (accent_edit = el)}
+                        type="button"
+                        onclick=${() => {
+                            let hue_range;
+                            let sat_range;
+                            let lit_range;
+
+                            settings_store.profile_hue.default = settings.hue;
+                            settings_store.profile_sat.default = settings.sat;
+                            settings_store.profile_lit.default = settings.lit;
+
+                            const match = about.value.match(accent_regex);
+
+                            if (match) {
+                                save_setting(
+                                    'profile_hue',
+                                    parseInt(match[1], 10)
+                                );
+                                save_setting(
+                                    'profile_sat',
+                                    parseFloat(match[2])
+                                );
+                                save_setting(
+                                    'profile_lit',
+                                    parseFloat(match[3])
+                                );
+                            }
+
+                            let accent_preview;
+
+                            dialog({
+                                id: 'profile_accent',
+                                title: tl(trans.profile_accent.name),
+                                body: html.node`
+                                    <div class="setting-group">
+                                        <div class="setting" data-type="info">
+                                            <div class="heading">
+                                                <h5>${tl(trans.preview)}</h5>
+                                            </div>
+                                            <div class="info">
+                                                <div class="colour-tile colourful" ref=${(el) => (accent_preview = el)} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
+                                            </div>
+                                        </div>
+                                        ${
+                                            ff('colour_based_on_hex') ?
+                                                html.node`
+                                        <div class="setting" data-type="text">
+                                            <div class="heading">
+                                                <h5>${tl(trans.convert_from_hex)}</h5>
+                                            </div>
+                                            <div class="input-container content-form">
+                                                ${(colour = input({
+                                                    type: 'colour',
+                                                    value: '#999999',
+                                                    maxlength: 7,
+                                                    warn_if_empty: true
+                                                }))}
+                                                <button class="btn primary icon convert" onclick=${() => {
+                                                    const value = colour.value();
+                                                    const hsl = hex_to_hsl(value);
+
+                                                    hue_range.set(hsl.h);
+                                                    sat_range.set(
+                                                        clamp_sat((hsl.s / 100) * 3)
+                                                    );
+                                                    lit_range.set(
+                                                        hsl.l / 100 + 0.35
+                                                    );
+                                                }}>${tl(trans.convert)}</button>
+                                            </div>
+                                        </div>
+                                        `
+                                            :   ''
+                                        }
+                                        ${(hue_range = setting({ id: 'profile_hue', func: update_colour_preview }))}
+                                        ${(sat_range = setting({ id: 'profile_sat', func: update_colour_preview }))}
+                                        ${(lit_range = setting({ id: 'profile_lit', func: update_colour_preview }))}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="see-more cancel" onclick=${() => dialog_rm({ id: 'profile_accent' })}>
+                                            ${tl(trans.back)}
+                                        </button>
+                                        <div class="fill"></div>
+                                        <button class="btn primary continue" onclick=${() => {
+                                            const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
+
+                                            if (match) {
+                                                about.value = about.value.replace(
+                                                    accent_regex,
+                                                    new_accent
+                                                );
+                                            } else {
+                                                const trimmed = about.value.trimEnd();
+
+                                                if (trimmed.length == 0) {
+                                                    about.value = new_accent;
+                                                } else {
+                                                    about.value =
+                                                        trimmed +
+                                                        '\n\n' +
+                                                        new_accent;
+                                                }
+                                            }
+
+                                            about.dispatchEvent(
+                                                new InputEvent('input', {
+                                                    bubbles: true,
+                                                    cancelable: true
+                                                })
+                                            );
+
+                                            dialog_rm({ id: 'profile_accent' });
+                                            status({
+                                                title: tl(
+                                                    trans.profile_accent.reminder
+                                                )
+                                            });
+                                        }}>
+                                            ${tl(trans.change)}
+                                        </button>
+                                    </div>
+                                `
+                                    });
+
+                                    function update_colour_preview() {
+                                        accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+                                    }
+                                }}
+                        >
+                            <div
+                                class="swatch colourful"
+                                data-swatch-type="customise"
+                            />
+                        </button>
+                    </div>
+                </div>
+            `);
+
+        tippy(accent_edit, {
+            content: tl(trans.edit)
+        });
+
+        if (font_setting) {
+            let font_edit;
+            let font_tile;
+            render(font_setting, html`
                 <div class="heading">
-                    <h5>
-                        ${tl(trans.profile_accent.name)}<span
-                            class="new-badge sponsor-related"
-                            >${tl(trans.sponsors_only)}</span
-                        ><span class="new-badge beta">${tl(trans.new)}</span>
-                    </h5>
-                    <p>${tl(trans.profile_accent.body)}</p>
+                    <h5>${tl(trans.profile_font.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span><span class="new-badge new">${tl(trans.new)}</span></h5>
+                    <p>${tl(trans.profile_font.body)}</p>
                 </div>
                 <div class="info">
-                    <div
-                        class="colour-tile colourful"
-                        style="--hue-over: ${cache.hue}; --sat-over: ${cache.sat}; --lit-over: ${cache.lit}"
-                    />
+                    <div class="font-tile">
+                        <span class="preview-style" data-font=${cache.font} data-font-style=${cache.font_style} ref=${el => font_tile = el}>Aa</span>
+                    </div>
                     <div class="swatch-group palette">
                         <button
                             class="swatch-container"
-                            ref=${(el) => (edit = el)}
+                            ref=${(el) => (font_edit = el)}
+                            type="button"
                             onclick=${() => {
-                                let hue_range;
-                                let sat_range;
-                                let lit_range;
+                                const match = about.value.match(font_regex);
 
-                                const match = about.value.match(accent_regex);
-
-                                console.info(match);
                                 if (match) {
                                     save_setting(
                                         'profile_hue',
@@ -853,147 +1006,135 @@ function patch_settings_profile_panel(token, update_picture) {
                                         'profile_lit',
                                         parseFloat(match[3])
                                     );
-
-                                    settings_store.profile_hue.default =
-                                        settings.hue;
-                                    settings_store.profile_sat.default =
-                                        settings.sat;
-                                    settings_store.profile_lit.default =
-                                        settings.lit;
                                 }
 
-                                let accent_preview;
+                                let font_name = cache.font;
+                                let font_style = cache.font_style;
+
+                                let font_preview;
+                                let font_buttons = [];
+                                let font_style_buttons = [];
 
                                 dialog({
-                                    id: 'profile_accent',
-                                    title: tl(trans.profile_accent.name),
+                                    id: 'profile_font',
+                                    title: tl(trans.profile_font.name),
                                     body: html.node`
-                                <div class="setting-group">
-                                    <div class="setting" data-type="info">
-                                        <div class="heading">
-                                            <h5>${tl(trans.preview)}</h5>
+                                        <div class="font-name-preview">
+                                            <span data-font=${font_name} data-font-style=${font_style} ref=${el => font_preview = el}>${cache.username ? cache.username : auth.name}</span>
                                         </div>
-                                        <div class="info">
-                                            <div class="colour-tile colourful" ref=${(el) => (accent_preview = el)} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
-                                        </div>
-                                    </div>
-                                    ${
-                                        ff('colour_based_on_hex') ?
-                                            html.node`
-                                    <div class="setting" data-type="text">
-                                        <div class="heading">
-                                            <h5>${tl(trans.convert_from_hex)}</h5>
-                                        </div>
-                                        <div class="input-container content-form">
-                                            ${(colour = input({
-                                                type: 'colour',
-                                                value: '#999999',
-                                                maxlength: 7,
-                                                warn_if_empty: true
-                                            }))}
-                                            <button class="btn primary icon convert" onclick=${() => {
-                                                const value = colour.value();
-                                                const hsl = hex_to_hsl(value);
+                                        <h4 class="font-options-header">${tl(trans.font.name)}</h4>
+                                        <div class="font-options">
+                                            ${Object.entries(page.state.fonts).map(([font, family]) => {
+                                                if (family == '') family = tl(trans.none);
 
-                                                hue_range.set(hsl.h);
-                                                sat_range.set(
-                                                    clamp_sat((hsl.s / 100) * 3)
-                                                );
-                                                lit_range.set(
-                                                    hsl.l / 100 + 0.35
-                                                );
-                                            }}>${tl(trans.convert)}</button>
+                                                const elem = html.node`
+                                                    <button class="font-selection" data-font=${font} aria-checked=${font == font_name} onclick=${() => {
+                                                        font_name = font;
+
+                                                        font_preview.setAttribute('data-font', font);
+                                                        font_tile.setAttribute('data-font', font);
+                                                        font_buttons.forEach(btn => {
+                                                            btn.setAttribute('aria-checked', btn.getAttribute('data-font') == font)
+                                                        });
+                                                    }}>
+                                                        <span data-font=${font}>Aa</span>
+                                                    </button>
+                                                `;
+
+                                                tippy(elem, {
+                                                    content: family
+                                                });
+
+                                                font_buttons.push(elem);
+                                                return elem;
+                                            })}
                                         </div>
-                                    </div>
+                                        <h4 class="font-options-header">${tl(trans.font_style)}</h4>
+                                        <div class="font-options">
+                                            ${['solid', 'pop', 'glow'].map(style => {
+                                                const elem = html.node`
+                                                    <button class="font-selection font-style" data-font-style=${style} aria-checked=${style == font_style} onclick=${() => {
+                                                        font_style = style;
+
+                                                        font_preview.setAttribute('data-font-style', style);
+                                                        font_tile.setAttribute('data-font-style', style);
+                                                        font_style_buttons.forEach(btn => {
+                                                            btn.setAttribute('aria-checked', btn.getAttribute('data-font-style') == style)
+                                                        });
+                                                    }}>
+                                                        <span class="preview-style" data-font-style=${style}>${tl(trans.font_style[style])}</span>
+                                                    </button>
+                                                `;
+
+                                                font_style_buttons.push(elem);
+                                                return elem;
+                                            })}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="see-more cancel" onclick=${() => dialog_rm({ id: 'profile_font' })}>
+                                                ${tl(trans.back)}
+                                            </button>
+                                            <div class="fill"></div>
+                                            <button class="btn primary continue" onclick=${() => {
+                                                const new_font = `[font=${font_name}${font_style != 'solid' ? `,${font_style}` : ''}]`;
+
+                                                if (match) {
+                                                    about.value = about.value.replace(
+                                                        font_regex,
+                                                        new_font
+                                                    );
+                                                } else {
+                                                    const trimmed = about.value.trimEnd();
+
+                                                    if (trimmed.length == 0) {
+                                                        about.value = new_font;
+                                                    } else {
+                                                        about.value =
+                                                            trimmed +
+                                                            '\n\n' +
+                                                            new_font;
+                                                    }
+                                                }
+
+                                                about.dispatchEvent(
+                                                    new InputEvent('input', {
+                                                        bubbles: true,
+                                                        cancelable: true
+                                                    })
+                                                );
+
+                                                dialog_rm({ id: 'profile_font' });
+                                                status({
+                                                    title: tl(
+                                                        trans.profile_font.reminder
+                                                    )
+                                                });
+                                            }}>
+                                                ${tl(trans.change)}
+                                            </button>
+                                        </div>
                                     `
-                                        :   ''
-                                    }
-                                    ${(hue_range = setting({ id: 'profile_hue', func: update_colour_preview }))}
-                                    ${(sat_range = setting({ id: 'profile_sat', func: update_colour_preview }))}
-                                    ${(lit_range = setting({ id: 'profile_lit', func: update_colour_preview }))}
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="see-more cancel" onclick=${() => dialog_rm({ id: 'profile_accent' })}>
-                                        ${tl(trans.back)}
-                                    </button>
-                                    <div class="fill"></div>
-                                    <button class="btn primary continue" onclick=${() => {
-                                        const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
-
-                                        if (match) {
-                                            about.value = about.value.replace(
-                                                accent_regex,
-                                                new_accent
-                                            );
-                                        } else {
-                                            const trimmed =
-                                                about.value.trimEnd();
-
-                                            if (trimmed.length == 0) {
-                                                about.value = new_accent;
-                                            } else {
-                                                about.value =
-                                                    trimmed +
-                                                    '\n\n' +
-                                                    new_accent;
-                                            }
-                                        }
-
-                                        about.dispatchEvent(
-                                            new InputEvent('input', {
-                                                bubbles: true,
-                                                cancelable: true
-                                            })
-                                        );
-
-                                        dialog_rm({ id: 'profile_accent' });
-                                        status({
-                                            title: tl(
-                                                trans.profile_accent.reminder
-                                            )
                                         });
-                                    }}>
-                                        ${tl(trans.change)}
-                                    </button>
-                                </div>
-                            `
-                                });
 
-                                function update_colour_preview() {
-                                    accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
-                                }
-                            }}
-                        >
-                            <div
-                                class="swatch colourful"
-                                data-swatch-type="customise"
-                            />
-                        </button>
+                                        function update_colour_preview() {
+                                            accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+                                        }
+                                    }}
+                            >
+                                <div
+                                    class="swatch colourful"
+                                    data-swatch-type="customise"
+                                />
+                            </button>
+                        </div>
                     </div>
-                </div>
-            `
-        );
+                `);
 
-        tippy(edit, {
-            content: tl(trans.edit)
-        });
+            tippy(font_edit, {
+                content: tl(trans.edit)
+            });
+        }
     }
-
-    // subtitle
-    update_display_name(form_display_name);
-}
-
-unsafeWindow._update_display_name = function (value) {
-    update_display_name(value);
-};
-function update_display_name(value) {
-    document.getElementById('header-title-display-name').textContent = value;
-
-    // pronouns?
-    let pronouns = use_pronouns(value);
-
-    document.getElementById('header-title-display-name--pre').textContent =
-        pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
 }
 
 export function use_pronouns(value) {

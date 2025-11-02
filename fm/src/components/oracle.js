@@ -7,6 +7,7 @@
 import { html, render } from 'lighterhtml';
 import { log } from '../build/log';
 import {
+    auth,
     oracle_albums,
     oracle_artists,
     oracle_tracks,
@@ -35,6 +36,8 @@ import {
 } from './hoshino';
 import { create_avatar } from '../pages/track';
 import { DateTime } from 'luxon';
+import { select } from './select';
+import { save_setting, setting } from './settings';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -44,9 +47,9 @@ export function oracle_process() {
     if (ff('oracle_album_reordering') && page.type == 'track') {
     }
 
-    if (!ff('oracle_connect') || page.type == 'artist') return;
+    if (!ff('oracle_connect') || page.type == 'artist' || (!['overview', 'albums'].includes(page.subpage) && page.type == 'album')) return;
 
-    let tries = 2;
+    let tries = 3;
     const item = page.name.toLowerCase();
     const artist = page.sister.toLowerCase();
     let artist_data;
@@ -55,41 +58,53 @@ export function oracle_process() {
 
     const info_panel = page.structure.main.firstElementChild;
 
-    let oracle_cache =
-        JSON.parse(localStorage.getItem('bleh_oracle_cache')) || {};
+    const mb_delay = 1600;
+
+    const split = window.location.pathname.split('/');
+
+    let oracle_cache = JSON.parse(localStorage.getItem('bleh_oracle_cache')) || {};
+
+    const now = Date.now();
+
+    for (const artist in oracle_cache) {
+        for (const item in oracle_cache[artist]) {
+            const entry = oracle_cache[artist][item];
+
+            if (!entry.track?.expire || now > entry.track.expire) {
+                log('track cache expired', 'oracle', 'info', {
+                    artist,
+                    item,
+                    entry,
+                    expire: entry.track?.expire,
+                    now
+                });
+                delete oracle_cache[artist][item];
+            }
+        }
+
+        if (Object.keys(oracle_cache[artist]).length == 0) {
+            delete oracle_cache[artist];
+            log('deleted artist as empty', 'oracle', 'info', { artist });
+        }
+    }
+
+    set_storage('bleh_oracle_cache', JSON.stringify(oracle_cache));
+
+    log('cleaned cache', 'oracle', 'info', { oracle_cache });
+
     if (!oracle_cache[artist]) oracle_cache[artist] = {};
 
     let cache = oracle_cache[artist][item] || {
-        album: {},
         track: {}
     };
 
-    log('loaded cache', 'oracle', 'info', {
-        oracle_cache,
-        cache
-    });
-
-    if (!cache.album?.expire || Date.now() > cache.album.expire) {
-        log('album cache expired', 'oracle', 'info', {
-            expire: cache.album?.expire,
-            now: Date.now()
-        });
-        cache.album = {};
-    }
-
-    if (!cache.track?.expire || Date.now() > cache.track.expire) {
-        log('track cache expired', 'oracle', 'info', {
-            expire: cache.track?.expire,
-            now: Date.now()
-        });
-        cache.track = {};
-    }
+    log('loaded cache', 'oracle', 'info', { oracle_cache, cache });
 
     function oracle_save_cache(type, bump = true) {
         if (bump) {
             const day = 24 * 60 * 60 * 1000;
 
-            cache[type].expire = Date.now() + day * 7;
+            cache[type].expire = Date.now() + day * 2;
             cache[type].date = Date.now();
         }
 
@@ -124,6 +139,15 @@ export function oracle_process() {
 
     const header = page.structure.container.querySelector('.redesigned-header');
     let releases_panel;
+
+    let tracklist_panel;
+    let tracklist_oracle;
+    let tracklist_own;
+    let tracklist_own_loaded = false;
+    let tracklist_lfm;
+
+    let label_panel;
+
     if (page.type == 'track' && page.subpage == 'overview') {
         releases_panel = html.node`
             <section class="oracle-releases">
@@ -157,13 +181,127 @@ export function oracle_process() {
             </section>
         `;
         info_panel.after(releases_panel);
+    } else if (page.type == 'album' && page.subpage == 'overview') {
+        let tracklist_view_panel;
+        tracklist_panel = html.node`
+            <section class="oracle-tracks">
+                <div class="top-container">
+                    <h2>${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h2>
+                    <div class="accompany view-buttons blend blend-v2">
+                        ${select(page.state.tracklist_sources, settings.tracklist_source, '', (val) => {
+                            save_setting('tracklist_source', val);
+                            tracklist_view_panel.setAttribute('data-view', val);
+
+                            if (!tracklist_own_loaded) source_own_tracklist();
+                        }, true)}
+                    </div>
+                    <div class="view-buttons blend blend-v2">
+                        ${() => {
+                            const btn = html.node`
+                                <button class="left-icon blend-v2-btn" data-type="settings">
+                                    ${tl(trans.settings)}
+                                </button>
+                            `;
+
+                            tippy(btn, {
+                                theme: 'window',
+                                content: html.node`
+                                    <div class="dialog-settings">
+                                        <div class="setting-group blend">
+                                            ${setting({ id: 'format_guest_features' })}
+                                            ${setting({ id: 'show_guest_features' })}
+                                        </div>
+                                    </div>
+                                `,
+                                placement: 'bottom',
+                                interactive: true,
+                                interactiveBorder: 10,
+                                trigger: 'click'
+                            });
+
+                            return btn;
+                        }}
+                    </div>
+                </div>
+                <div class="oracle-tracklist-view" data-view=${settings.tracklist_source} ref=${el => tracklist_view_panel = el}>
+                    <div class="oracle-tracklist" ref=${el => tracklist_oracle = el} data-type="oracle">
+                        <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
+                            <tbody>
+                                ${Array.from({length: 14}, track_placeholder)}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="oracle-tracklist" ref=${el => tracklist_own = el} data-type="own">
+                        <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
+                            <tbody>
+                                ${Array.from({length: 14}, track_placeholder)}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="oracle-tracklist" ref=${el => tracklist_lfm = el} data-type="lfm" />
+                </div>
+            </section>
+        `;
+        info_panel.after(tracklist_panel);
+
+        label_panel = html.node`
+            <div class="card-tip copyright">
+                © <span>...</span>
+            </div>
+        `;
+        info_panel.appendChild(label_panel);
+
+        function source_own_tracklist() {
+            fetch(`${root}user/${auth.name}/library/music/${page.sister}/${page.name}`)
+                .then(res => {
+                    if (!res.ok) {
+                        log('error fetching own plays', 'oracle', 'error', { res });
+                        throw new Error();
+                    }
+
+                    return res.text();
+                })
+                .then(dom => {
+                    const doc = new DOMParser().parseFromString(dom, 'text/html');
+
+                    const tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
+
+                    if (!tracklist) return;
+
+                    tracklist.classList.remove('chartlist--with-image');
+
+                    render(tracklist_own, html`
+                        ${tracklist}
+                    `);
+                });
+        }
     }
 
-    const albums_and_lyrics_row = page.structure.main.querySelector(
-        '.album-and-lyrics-row'
-    );
-    if (albums_and_lyrics_row)
-        albums_and_lyrics_row.classList.add('oracle-hidden');
+    function track_placeholder() {
+        return html.node`
+            <tr class="chartlist-row chartlist__placeholder-row">
+                <td class="chartlist-image chartlist__placeholder-image" />
+                <td class="chartlist-name chartlist__placeholder-name">
+                    <div class="chartlist__placeholder-loading" />
+                </td>
+            </tr>
+        `;
+    }
+
+    const albums_and_lyrics_row = page.structure.main.querySelector('.album-and-lyrics-row');
+    if (albums_and_lyrics_row) albums_and_lyrics_row.classList.add('oracle-hidden');
+
+    const old_tracklist = page.structure.main.querySelector('#tracklist');
+    if (old_tracklist) {
+        const buffer = old_tracklist.querySelector('.buffer-standard');
+
+        if (buffer) {
+            buffer.classList.remove('buffer-standard');
+            tracklist_lfm.appendChild(buffer);
+        }
+
+        old_tracklist.remove();
+    }
 
     function oracle_aliases(artist, desired) {
         log('alias request', 'oracle', 'log', {
@@ -205,7 +343,7 @@ export function oracle_process() {
         if (tries < 1) return;
         tries--;
 
-        const url = `http://musicbrainz.org/ws/2/artist?query=${sanitise(artist, ' ')}`;
+        const url = `https://musicbrainz.org/ws/2/artist?query=${sanitise(artist, ' ')}`;
 
         log(
             `using url ${encodeURI(url)} with ${tries} tries available`,
@@ -244,7 +382,7 @@ export function oracle_process() {
 
                 set_storage('oracle_artist_ids', JSON.stringify(cache));
 
-                tries = 2;
+                tries = 3;
                 oracle_connect();
             },
             onerror: function (err) {
@@ -252,7 +390,7 @@ export function oracle_process() {
 
                 setTimeout(() => {
                     oracle_get_artist();
-                }, 1000);
+                }, mb_delay);
             }
         });
     }
@@ -269,7 +407,7 @@ export function oracle_process() {
         if (page.type == 'track')
             url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND ${artist_template} AND status:Official`;
         else if (page.type == 'album')
-            url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND ${artist_template}`;
+            url = `https://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND ${artist_template}`;
 
         if (page.type == 'album') {
             const local =
@@ -277,7 +415,7 @@ export function oracle_process() {
                 oracle_cache[artist]?.[item]?.album;
 
             if (local?.fetch || local?.id) {
-                tries = 2;
+                tries = 3;
 
                 if (local.id) {
                     log(
@@ -359,7 +497,7 @@ export function oracle_process() {
 
                 setTimeout(() => {
                     oracle_connect();
-                }, 1000);
+                }, mb_delay);
             }
         });
     }
@@ -368,7 +506,7 @@ export function oracle_process() {
         if (page.type == 'track') {
             oracle_track_releases_process(data);
         } else if (page.type == 'album') {
-            tries = 2;
+            tries = 3;
 
             const release = oracle_pick_release(data);
 
@@ -378,8 +516,8 @@ export function oracle_process() {
                     release
                 });
 
-                cache.album.fetch = data;
-                oracle_save_cache('album');
+                //cache.album.fetch = data;
+                //oracle_save_cache('album');
 
                 return;
             }
@@ -392,7 +530,7 @@ export function oracle_process() {
 
             setTimeout(() => {
                 oracle_album_fetch(release);
-            }, 400);
+            }, mb_delay);
         }
     }
 
@@ -400,7 +538,7 @@ export function oracle_process() {
         if (!data || !data.recordings) return null;
 
         const filtered = data.recordings.filter((recording) => {
-            if (!recording.releases || recording.releases.length === 0)
+            if (!recording.releases || recording.releases.length == 0)
                 return false;
 
             return recording.releases.some((release) => {
@@ -414,12 +552,12 @@ export function oracle_process() {
             });
         });
 
-        if (filtered.length === 0) return null;
+        if (filtered.length == 0) return null;
 
         // prefer explicit
         let best = filtered.find(
             (recording) =>
-                recording.disambiguation?.toLowerCase() === 'explicit'
+                recording.disambiguation?.toLowerCase() == 'explicit'
         );
         if (best) return best;
 
@@ -430,7 +568,7 @@ export function oracle_process() {
 
         // then clean
         best = filtered.find(
-            (recording) => recording.disambiguation?.toLowerCase() === 'clean'
+            (recording) => recording.disambiguation?.toLowerCase() == 'clean'
         );
         if (best) return best;
 
@@ -476,17 +614,55 @@ export function oracle_process() {
     function oracle_pick_release(data) {
         if (!data || !data.releases) return null;
 
-        const filtered = data.releases.filter((release) => {
+        const filtered = data.releases.filter(release => {
             const artists = release['artist-credit'] || [];
             const various = artists.some(
                 (artist) => artist.name == 'Various Artists'
             );
             const official = release.status == 'Official';
+            const fake = release.title?.toLowerCase().includes('(spotify)');
 
-            return !various && official;
+            return !various && official && !fake;
         });
 
+        const similarity = (title) => {
+            const name = page.name.toLowerCase();
+
+            if (title == name) return 1;
+
+            const longer = title.length > name.length ? title : name;
+            const shorter = title.length > name.length ? name : title;
+
+            const same = [...shorter].filter((character, index) => longer[index] == character).length;
+            return same / longer.length;
+        };
+
         filtered.sort((a, b) => {
+            const rank = (release) => {
+                const type = release['release-group']?.['primary-type']?.toLowerCase();
+                const digital = release.media?.[0]?.format == 'Digital Media';
+
+                const similar = similarity(release.title.toLowerCase());
+
+                let rank = 4;
+                if (type == 'album') rank = 0;
+                else if (type == 'ep') rank = 1;
+                else if (type == 'single') rank = 3;
+                else rank = 2;
+
+                if (digital) rank -= 0.2;
+
+                const weight = 2 * (1 - similar);
+
+                // boost priority for digital media
+                return rank + weight;
+            };
+
+            const a_rank = rank(a);
+            const b_rank = rank(b);
+
+            if (a_rank != b_rank) return a_rank - b_rank;
+
             // parse dates
             const parse_date = (release) => {
                 if (!release.date) return null;
@@ -586,7 +762,7 @@ export function oracle_process() {
         if (tries < 1) return;
         tries--;
 
-        const url = `http://musicbrainz.org/ws/2/release/${data.id}?inc=recordings+labels+artist-credits`;
+        const url = `https://musicbrainz.org/ws/2/release/${data.id}?inc=recordings+labels+artist-credits`;
 
         const local = oracle_cache[artist]?.[item];
         if (local && local.album?.fetch) {
@@ -630,8 +806,8 @@ export function oracle_process() {
                 log('received connect album data', 'oracle', 'info', { data });
                 page.state.oracle = data;
 
-                cache.album.fetch = data;
-                oracle_save_cache('album');
+                //cache.album.fetch = data;
+                //oracle_save_cache('album');
 
                 oracle_album(data);
             },
@@ -648,6 +824,15 @@ export function oracle_process() {
     function oracle_album(data) {
         if (data.offset != null) {
             log('detected no results', 'oracle');
+
+            render(tracklist_oracle, html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">
+                        ${tl(trans.nothing_matches_your_search)}
+                    </div>
+                </div>
+            `);
+
             return;
         }
 
@@ -656,6 +841,8 @@ export function oracle_process() {
             // filter out visually duplicates
             const seen = new Set();
             labels = labels.filter((label) => {
+                if (!label.label) return;
+
                 const name = label.label.name;
                 if (seen.has(name)) return false;
 
@@ -663,24 +850,22 @@ export function oracle_process() {
                 return true;
             });
 
-            info_panel.appendChild(html.node`
-                <div class="card-tip copyright">
-                    ©
-                    ${labels.map((label, index) => {
-                        let label_elem;
-                        const elem = html.node`
-                            <span class="music-label" ref=${(el) => (label_elem = el)}>${label.label.name}</span>${index < labels.length - 1 ? ', ' : ''}
-                        `;
+            render(label_panel, html`
+                ©
+                ${labels.map((label, index) => {
+                    let label_elem;
+                    const elem = html.node`
+                        <span class="music-label" ref=${(el) => (label_elem = el)}>${label.label.name}</span>${index < labels.length - 1 ? ', ' : ''}
+                    `;
 
-                        if (label.label.disambiguation != '') {
-                            tippy(label_elem, {
-                                content: label.label.disambiguation
-                            });
-                        }
+                    if (label.label.disambiguation != '') {
+                        tippy(label_elem, {
+                            content: label.label.disambiguation
+                        });
+                    }
 
-                        return elem;
-                    })}
-                </div>
+                    return elem;
+                })}
             `);
         }
 
@@ -707,14 +892,9 @@ export function oracle_process() {
         const media = data.media;
         const discs = media.filter((item) => item.tracks != null);
 
-        const track_panel = html.node`
-            <section class="oracle-tracks">
-                <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
-                ${discs.map((disc) => render_tracklist(disc, discs.length, artist))}
-            </section>
-        `;
-
-        info_panel.after(track_panel);
+        render(tracklist_oracle, html`
+            ${discs.map((disc) => render_tracklist(disc, discs.length, artist))}
+        `);
 
         function render_tracklist(disc, length, retrieved_artist) {
             return html.node`
@@ -767,14 +947,12 @@ export function oracle_process() {
 
                             for (let i = 1; i < artists.length; i++) {
                                 const artist = artists[i];
-                                const joinphrase = (
-                                    artists[i - 1].joinphrase || ''
-                                )
+                                const joinphrase = (artists[i - 1].joinphrase || '')
                                     .trim()
                                     .toLowerCase();
 
                                 if (!found_feature) {
-                                    if (['feat', 'with'].includes(joinphrase)) {
+                                    if (['feat', 'with'].some(phrase => joinphrase.includes(phrase))) {
                                         found_feature = true;
                                         first_joinphrase = joinphrase;
 
@@ -878,7 +1056,7 @@ export function oracle_process() {
                         </h3>
                         <div class="loading-data-container">
                             <div class="loading-data-text failed">
-                                No releases found
+                                ${tl(trans.no_releases_found)}
                             </div>
                         </div>
                     `
@@ -1011,8 +1189,8 @@ export function oracle_process() {
                 // find duplicates
                 const duplicates = self.filter(
                     (r) =>
-                        r.title == title &&
-                        r['artist-credit']?.[0]?.name == artist
+                        r.title.toLowerCase() == title.toLowerCase() &&
+                        r['artist-credit']?.[0]?.name?.toLowerCase() == artist?.toLowerCase()
                 );
 
                 // if multiple, prefer digital media pressing
@@ -1042,15 +1220,18 @@ export function oracle_process() {
             });
 
             releases.sort((a, b) => {
-                const rank = (type) => {
-                    if (!type) return 4;
+                const rank = (release) => {
+                    const type = release['release-group']?.['primary-type']?.toLowerCase();
+                    const digital = release.media?.[0]?.format == 'Digital Media';
 
-                    type = type.toLowerCase();
+                    let rank = 4;
+                    if (type == 'single') rank = 0;
+                    else if (type == 'ep') rank = 1;
+                    else if (type == 'album') rank = 3;
+                    else rank = 2;
 
-                    if (type == 'single') return 0;
-                    if (type == 'album') return 1;
-                    if (type == 'ep') return 2;
-                    return 3;
+                    // boost priority for digital media
+                    return (digital ? 0 : 10) + rank;
                 };
 
                 const artist_matches = (release) => {
@@ -1066,9 +1247,7 @@ export function oracle_process() {
                 if (a_artist_match && !b_artist_match) return -1;
                 if (!a_artist_match && b_artist_match) return 1;
 
-                const type_diff =
-                    rank(a['release-group']['primary-type']) -
-                    rank(b['release-group']['primary-type']);
+                const type_diff = rank(a) - rank(b);
                 if (type_diff != 0) return type_diff;
 
                 function parse_date(release) {
@@ -1104,10 +1283,7 @@ export function oracle_process() {
                             >
                         </h3>
                         <div class="source-albums-container">
-                            <div
-                                class="source-albums"
-                                ref=${(el) => (source_albums = el)}
-                            >
+                            <div class="source-albums">
                                 ${releases.map((release, index) => {
                                     if (index > 1) return html.node``;
 
@@ -1252,37 +1428,6 @@ export function oracle_process() {
                     `
                 );
                 oracle_save_cache('track', false);
-
-                if (releases.length > 2 && allow_overflow) {
-                    if (settings.simulate_scroll) {
-                        source_albums.addEventListener('wheel', (e) => {
-                            console.info('scroll', e, e.deltaY);
-                            e.preventDefault();
-
-                            if (e.deltaY > 0) {
-                                source_albums.scrollBy({
-                                    top: 0,
-                                    left: +400,
-                                    behavior: 'smooth'
-                                });
-                            } else {
-                                source_albums.scrollBy({
-                                    top: 0,
-                                    left: -400,
-                                    behavior: 'smooth'
-                                });
-                            }
-                        });
-                    } else {
-                        source_albums.classList.add('no-scroll-simulation');
-                    }
-                } else {
-                    source_albums.addEventListener('wheel', (e) => {
-                        e.preventDefault();
-
-                        e.scrollTop = 0;
-                    });
-                }
             }
 
             const artist_elem = header.querySelector('h2');
@@ -1296,21 +1441,18 @@ export function oracle_process() {
             }
         } else {
             if (releases_panel) {
-                render(
-                    releases_panel,
-                    html`
-                        <h3 class="text-18">
-                            ${tl(trans.releases)}<span class="new-badge beta"
-                                >${tl(trans.beta)}</span
-                            >
-                        </h3>
-                        <div class="loading-data-container">
-                            <div class="loading-data-text failed">
-                                No releases found
-                            </div>
+                render(releases_panel, html`
+                    <h3 class="text-18">
+                        ${tl(trans.releases)}<span class="new-badge beta"
+                            >${tl(trans.beta)}</span
+                        >
+                    </h3>
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">
+                            ${tl(trans.no_releases_found)}
                         </div>
-                    `
-                );
+                    </div>
+                `);
             }
         }
     }
@@ -1576,10 +1718,9 @@ function oracle_request(type = 'albums') {
 export function oracle_credits() {
     dialog({
         id: 'oracle_credits',
-        title: tl(trans.credits),
+        title: {html: tl(trans.credits_for_value, {v: `<i>${correct_item_by_artist(page.name, page.sister)}</i>`})},
         body: html.node`
             <div class="oracle-credits">
-                <h3>${correct_item_by_artist(page.name, page.sister)}</h3>
                 <div class="credit">
                     <h4>${tl(trans.performed_by)}</h4>
                     <span>${correct_artist(page.sister)}</span>
