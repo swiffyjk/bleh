@@ -4597,6 +4597,14 @@ export const trans = {
             ru: 'Заменяет цвета имен значков и ссылок цветом заголовка вашей темы'
         }
     },
+    display_name_styles: {
+        name: {
+            en: 'Show display name styles'
+        },
+        body: {
+            en: 'Sponsors can choose a custom font and shadow style for their profile name'
+        }
+    },
     underline_links: {
         name: {
             en: 'Always underline links',

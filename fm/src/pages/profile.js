@@ -170,8 +170,9 @@ export async function bleh_profiles() {
 
     const badge_elements = Array.from(title_wrap.querySelectorAll('.label'));
 
-    if (ff('profile_fonts')) {
-        profile_name.classList.add('profile-name');
+    profile_name.classList.add('profile-name');
+
+    if (ff('profile_fonts') && settings.display_name_styles) {
         profile_name.setAttribute('data-font', cache.font);
         profile_name.setAttribute('data-font-style', cache.font_style);
     }

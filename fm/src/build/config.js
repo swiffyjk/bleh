@@ -695,6 +695,11 @@ export let settings_store = {
         title: trans.accessible_name_colours.name,
         body: trans.accessible_name_colours.body
     },
+    display_name_styles: {
+        default: true,
+        title: trans.display_name_styles.name,
+        body: trans.display_name_styles.body
+    },
     reduced_motion: {
         default: false,
         title: trans.reduced_motion.name,

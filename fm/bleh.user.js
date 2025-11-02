@@ -37386,8 +37386,8 @@
       });
     }
     const badge_elements = Array.from(title_wrap.querySelectorAll(".label"));
-    if (ff("profile_fonts")) {
-      profile_name.classList.add("profile-name");
+    profile_name.classList.add("profile-name");
+    if (ff("profile_fonts") && settings.display_name_styles) {
       profile_name.setAttribute("data-font", cache2.font);
       profile_name.setAttribute("data-font-style", cache2.font_style);
     }
@@ -50736,18 +50736,22 @@
       activity_preview();
     } else if (page_id == "accessibility") {
       register_skip_to([]);
-      render(
-        page.structure.main,
-        html`
-                <section class="bleh--panel">
-                    <h4>${tl2(trans.accessibility)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: "reduced_motion" })}
-                        ${setting({ id: "accessible_name_colours" })}
-                        ${setting({ id: "underline_links" })}
-                    </div>
-                </section>
-                ${ff("static_gifs") ? html.node`
+      render(page.structure.main, html`
+            <section class="bleh--panel">
+                <h4>${tl2(trans.accessibility)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: "reduced_motion" })}
+                    ${setting({ id: "underline_links" })}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl2(trans.display_name.name)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: "display_name_styles" })}
+                    ${setting({ id: "accessible_name_colours" })}
+                </div>
+            </section>
+            ${ff("static_gifs") ? html.node`
             <section class="bleh--panel">
                 <h4>${tl2(trans.images)}</h4>
                 <div class="setting-group">
@@ -50765,8 +50769,7 @@
                 </div>
             </section>
             ` : ""}
-            `
-      );
+        `);
     } else if (page_id == "sku") {
       register_skip_to([]);
       render(page.structure.main, html`
@@ -62463,6 +62466,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         ru: "\u0417\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0446\u0432\u0435\u0442\u0430 \u0438\u043C\u0435\u043D \u0437\u043D\u0430\u0447\u043A\u043E\u0432 \u0438 \u0441\u0441\u044B\u043B\u043E\u043A \u0446\u0432\u0435\u0442\u043E\u043C \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0430 \u0432\u0430\u0448\u0435\u0439 \u0442\u0435\u043C\u044B"
       }
     },
+    display_name_styles: {
+      name: {
+        en: "Show display name styles"
+      },
+      body: {
+        en: "Sponsors can choose a custom font and shadow style for their profile name"
+      }
+    },
     underline_links: {
       name: {
         en: "Always underline links",
@@ -65100,6 +65111,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       default: false,
       title: trans.accessible_name_colours.name,
       body: trans.accessible_name_colours.body
+    },
+    display_name_styles: {
+      default: true,
+      title: trans.display_name_styles.name,
+      body: trans.display_name_styles.body
     },
     reduced_motion: {
       default: false,

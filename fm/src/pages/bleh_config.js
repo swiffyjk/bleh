@@ -1733,19 +1733,22 @@ export async function render_setting_page(page_id) {
     } else if (page_id == 'accessibility') {
         register_skip_to([]);
 
-        render(
-            page.structure.main,
-            html`
-                <section class="bleh--panel">
-                    <h4>${tl(trans.accessibility)}</h4>
-                    <div class="setting-group">
-                        ${setting({ id: 'reduced_motion' })}
-                        ${setting({ id: 'accessible_name_colours' })}
-                        ${setting({ id: 'underline_links' })}
-                    </div>
-                </section>
-                ${ff('static_gifs')
-                    ? html.node`
+        render(page.structure.main, html`
+            <section class="bleh--panel">
+                <h4>${tl(trans.accessibility)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: 'reduced_motion' })}
+                    ${setting({ id: 'underline_links' })}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl(trans.display_name.name)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: 'display_name_styles' })}
+                    ${setting({ id: 'accessible_name_colours' })}
+                </div>
+            </section>
+            ${ff('static_gifs') ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.images)}</h4>
                 <div class="setting-group">
@@ -1762,10 +1765,8 @@ export async function render_setting_page(page_id) {
                     ${setting({ id: 'static_banners' })}
                 </div>
             </section>
-            `
-                    : ''}
-            `
-        );
+            ` : ''}
+        `);
     } else if (page_id == 'sku') {
         register_skip_to([]);
 
