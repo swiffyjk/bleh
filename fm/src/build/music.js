@@ -194,6 +194,9 @@ export let includes = {
         ': the live',
         '( the live',
         '- the live',
+        '- online live',
+        'online live',
+        '(online live',
         '- ao vivo',
         '(ao vivo',
         '[ao vivo',
@@ -542,6 +545,7 @@ export let includes = {
         '(mtv unplugged',
         '- unplugged',
         '(unplugged',
+        '-unplugged', // no space intentionally, soma saito tracks
         '- acústico',
         '- ácustico',
         '(acústico',
@@ -574,6 +578,9 @@ export let includes = {
         '(bonus',
         '[bonus',
         'the bonus tracks', // beyonce i am sasha fierce
+        '- secret track', // track added for clarity
+        ': secret track',
+        '(secret track',
         '- edit',
         '(edit',
         '[edit',
@@ -736,6 +743,7 @@ export let includes = {
         '[highlights from',
         '- track by track',
         ': track by track',
+        '(track by track',
         '- disc ',
         '(disc ',
         '[disc ',
@@ -746,6 +754,11 @@ export let includes = {
         '(20',
         '[19',
         '[20',
+        '- 1st',
+        '- 2nd',
+        '- 3rd',
+        '- 4th',
+        '- 5th',
         '- 10th',
         '- 25th',
         '- 30th',
@@ -753,6 +766,11 @@ export let includes = {
         '- 40th',
         '- 50th',
         '- 60th',
+        '(1st', // soma saito track
+        '(2nd',
+        '(3rd',
+        '(4th',
+        '(5th',
         '(10th',
         '(25th',
         '(30th',
@@ -762,6 +780,7 @@ export let includes = {
         '(60th',
         '- tenth anniversary',
         'fifth anniversary',
+        '5th anniversary',
         '(tenth anniversary',
         '(fifth anniversary',
         ': the tenth anniversary',
@@ -786,7 +805,9 @@ export let includes = {
         '- reprise',
         '(reprise',
         '[reprise',
-        '(director'
+        '(director',
+        "(soma saito's",
+        "- soma saito's"
     ],
     form: ['(clean', '[clean', '(explicit', '[explicit', '(spotify)', '🅴']
 };
