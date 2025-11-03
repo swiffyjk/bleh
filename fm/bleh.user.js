@@ -48827,7 +48827,7 @@
     }
   }
   function fetch_new_style(delete_old_style = false, reload_on_finish = false, allow_incompatible = false) {
-    const url = `https://github.com/katelyynn/bleh/raw/refs/heads/${settings.branch}/fm/bleh.css?${Math.random()}`;
+    const url = `https://github.com/katelyynn/bleh/raw/refs/heads/${settings.branch ? settings.branch : "uwu"}/fm/bleh.css?${Math.random()}`;
     log(`making request ${url}`, "style");
     GM_xmlhttpRequest({
       method: "GET",
@@ -48967,7 +48967,7 @@
   }
   function start_update() {
     open(
-      `https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`
+      `https://github.com/katelyynn/bleh/raw/${settings.branch ? settings.branch : "uwu"}/fm/bleh.user.js`
     );
     dialog({
       id: "bleh_update",
