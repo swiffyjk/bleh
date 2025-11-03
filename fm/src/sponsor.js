@@ -14,7 +14,7 @@ import { ff } from './sku';
 import { status } from './components/status';
 import { set_storage } from './build/tools';
 
-export function sponsors(force = false) {
+export function sponsors(force = false, func = null) {
     if (!ff('sponsor')) return;
 
     let sponsor_data = localStorage.getItem('kat_sponsors');
@@ -24,7 +24,7 @@ export function sponsors(force = false) {
 
     if (!sponsor_data) {
         log('not cached, fetching', 'sponsor');
-        sponsor_request(true);
+        sponsor_request(true, func);
     } else {
         // we prefer to load the current cache before waiting for a new response
         for (var member in sponsor_list) delete sponsor_list[member];
@@ -39,14 +39,14 @@ export function sponsors(force = false) {
 
         // is it valid?
         if (sponsor_expire < current_time && !force) {
-            sponsor_request();
+            sponsor_request(false, func);
         } else if (force) {
-            sponsor_request(true);
+            sponsor_request(true, func);
         }
     }
 }
 
-function sponsor_request(notify = false) {
+function sponsor_request(notify = false, func = null) {
     let button = document.body.querySelector('[onclick="_sponsor_check()"]');
     if (button) button.setAttribute('disabled', '');
 
@@ -94,6 +94,7 @@ function sponsor_request(notify = false) {
 
                 // save to cache for next page load
                 set_storage('kat_sponsors', this.response);
+                if (func) func();
             }
 
             api_expire.setHours(api_expire.getHours() + 4);
@@ -125,7 +126,7 @@ export function sponsor(replace = false) {
                     <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
-                <h1>${tl(trans.support_future_development)}</h1>
+                <h1 class="colourful">${tl(trans.support_future_development)}</h1>
                 <p>${html.node([
                     tl(trans.why_sponsor).replace(
                         'katelyn',

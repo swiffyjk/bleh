@@ -312,7 +312,7 @@ function album_missing_a_tracklist() {
                 </button>
             </div>
         `);
-    } else {
+    } else if (!ff('oracle') || !settings.oracle_beta) {
         let top_overview = page.structure.main.querySelector(
             '.top-overview-panel'
         );
@@ -352,20 +352,17 @@ function album_missing_a_tracklist() {
                 `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`
             );
 
-            render(
-                tracklist,
-                html`
-                    ${top}
-                    <div class="loading-data-container">
-                        <p class="loading-data-text failed">
-                            ${tl(trans.failed_to_find_tracks)}
-                        </p>
-                        <a class="see-more" href="${album_as_track_url}"
-                            >${tl(trans.open_album_as_track)}</a
-                        >
-                    </div>
-                `
-            );
+            render(tracklist, html`
+                ${top}
+                <div class="loading-data-container">
+                    <p class="loading-data-text failed">
+                        ${tl(trans.failed_to_find_tracks)}
+                    </p>
+                    <a class="see-more" href="${album_as_track_url}">
+                        ${tl(trans.open_album_as_track)}
+                    </a>
+                </div>
+            `);
             return;
         }
         url = url.getAttribute('href');
@@ -394,35 +391,29 @@ function album_missing_a_tracklist() {
                         `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`
                     );
 
-                    render(
-                        tracklist,
-                        html`
-                            ${top}
-                            <div class="loading-data-container">
-                                <p class="loading-data-text failed">
-                                    ${tl(trans.failed_to_find_tracks)}
-                                </p>
-                                <a class="see-more" href=${album_as_track_url}
-                                    >${tl(trans.open_album_as_track)}</a
-                                >
-                            </div>
-                        `
-                    );
+                    render(tracklist, html`
+                        ${top}
+                        <div class="loading-data-container">
+                            <p class="loading-data-text failed">
+                                ${tl(trans.failed_to_find_tracks)}
+                            </p>
+                            <a class="see-more" href=${album_as_track_url}>
+                                ${tl(trans.open_album_as_track)}
+                            </a>
+                        </div>
+                    `);
                     return;
                 }
 
                 inner_tracklist.classList.remove('chartlist--with-image');
 
-                render(
-                    tracklist,
-                    html`
-                        ${top}
-                        <div class="alert alert-info">
-                            ${tl(trans.sourced_from_own_plays)}
-                        </div>
-                        ${inner_tracklist}
-                    `
-                );
+                render(tracklist, html`
+                    ${top}
+                    <div class="alert alert-info">
+                        ${tl(trans.sourced_from_own_plays)}
+                    </div>
+                    ${inner_tracklist}
+                `);
             });
     }
 

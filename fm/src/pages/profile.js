@@ -64,7 +64,8 @@ export async function bleh_profiles() {
     let profile_header = document.body.querySelector('.header--user');
     if (!profile_header) return;
 
-    page.name = profile_header.querySelector('.header-title a').textContent;
+    const profile_name = profile_header.querySelector('.header-title a');
+    page.name = profile_name.textContent;
 
     // are we on the overview page?
     let is_subpage = page.subpage != 'overview';
@@ -102,6 +103,9 @@ export async function bleh_profiles() {
             delete cache.hue;
             delete cache.sat;
             delete cache.lit;
+            delete cache.font;
+            delete cache.font_style;
+            delete cache.username;
 
             about_me_sidebar = html.node`
                 <section class="about-me-sidebar">
@@ -135,6 +139,44 @@ export async function bleh_profiles() {
     let title_wrap = profile_header.querySelector('.header-title-label-wrap');
     let sub_wrap = profile_header.querySelector('.header-title-secondary');
 
+    // badges
+    log(`querying badges for ${page.name}`, 'profile');
+
+    if (ff('badges')) {
+        let stock_badges = title_wrap.querySelectorAll('.label');
+        stock_badges.forEach((badge) => {
+            if (badge.classList[1] == 'user-status-None') return;
+
+            badge.classList.add('expand');
+
+            tippy(badge, {
+                theme: 'badge',
+                placement: 'bottom',
+                content: html.node`
+                    <div class="badge-name">${badge.textContent}</div>
+                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
+                `
+            });
+        });
+    }
+
+    let badges = load_badges(page.name);
+
+    if (badges) {
+        badges.forEach((badge) => {
+            title_wrap.appendChild(create_badge(badge, false, true));
+        });
+    }
+
+    const badge_elements = Array.from(title_wrap.querySelectorAll('.label'));
+
+    profile_name.classList.add('profile-name');
+
+    if (ff('profile_fonts') && settings.display_name_styles) {
+        profile_name.setAttribute('data-font', cache.font);
+        profile_name.setAttribute('data-font-style', cache.font_style);
+    }
+
     // new account
     if (!avatar) {
         avatar = profile_header.querySelector('.header-avatar-add');
@@ -155,6 +197,21 @@ export async function bleh_profiles() {
     let pronouns;
     if (cache.aka) pronouns = use_pronouns(cache.aka);
 
+    if (cache.username) {
+        profile_name.textContent = cache.username;
+        tippy(profile_name, {
+            content: `@${page.name}`
+        });
+
+        if (sub_wrap) {
+            sub_wrap.insertBefore(html.node`
+                <span class="header-username">
+                    <a href="${root}user/${page.name}">@${page.name}</a>
+                </span>
+            `, sub_wrap.firstElementChild);
+        }
+    }
+
     let expander;
     let redesigned_profile_header = html.node`
         <section class="redesigned-header redesigned-profile-header no-background">
@@ -163,41 +220,37 @@ export async function bleh_profiles() {
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.profile)}</div>
-                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ''}
-                ${
-                    sub_wrap ? sub_wrap
-                    : cache.aka || cache.created ?
-                        html.node`
-                <p class="header-title-secondary">
-                    ${
-                        cache.aka ?
-                            html.node`
-                    <span class="header-title-secondary--pre">
-                        ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
-                    </span>
-                    <span class="header-title-display-name">
-                        ${cache.aka}
-                    </span>
-                    `
-                        :   ''
-                    }
-                    <span class="header-title-secondary--pre">
-                        ${tl(trans.account_created)}
-                    </span>
-                    <span class="header-scrobble-since">
-                        ${cache.created}
-                    </span>
-                </p>
-                `
-                    :   ''
-                }
-            </div>
-            <div class="expand-side">
-                <button class="header-expand-button icon" ref=${(el) => (expander = el)} onclick=${() => {
-                    let current = settings.profile_header_expand;
-                    expander.setAttribute('aria-expanded', !current);
-                    save_setting('profile_header_expand', !current);
-                }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
+                <div class="title-container">${title_wrap}</div>
+                ${sub_wrap ? sub_wrap : cache.aka || cache.created ? html.node`
+                    <p class="header-title-secondary">
+                        ${cache.username ? html.node`
+                        <span class="header-username">
+                            <a href="${root}user/${page.name}">@${page.name}</a>
+                        </span>
+                        ` : ''}
+                        ${cache.aka ? html.node`
+                        <span class="header-title-secondary--pre">
+                            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+                        </span>
+                        <span class="header-title-display-name">
+                            ${cache.aka}
+                        </span>
+                        ` : ''}
+                        <span class="header-title-secondary--pre">
+                            ${tl(trans.account_created)}
+                        </span>
+                        <span class="header-scrobble-since">
+                            ${cache.created}
+                        </span>
+                    </p>
+                ` : ''}
+                ${badge_elements.length > 0 ? html.node`
+                <div class="badges">
+                    ${badge_elements.map(badge => html.node`
+                        ${badge}
+                    `)}
+                </div>
+                ` : ''}
             </div>
         </section>
     `;
@@ -865,48 +918,6 @@ export async function bleh_profiles() {
 
     patch_profile_following();
 
-    // badges
-    log(`querying badges for ${page.name}`, 'profile');
-
-    let profile_name_obj;
-    profile_name_obj = page.structure.container.querySelector(
-        '.redesigned-profile-header .title-container'
-    );
-
-    if (ff('badges')) {
-        let stock_badges = profile_name_obj.querySelectorAll('.label');
-        stock_badges.forEach((badge) => {
-            if (badge.classList[1] == 'user-status-None') return;
-
-            badge.classList.add('expand');
-
-            tippy(badge, {
-                theme: 'badge',
-                placement: 'bottom',
-                content: html.node`
-                    <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `
-            });
-        });
-    }
-
-    let badges = load_badges(page.name);
-
-    if (badges) {
-        badges.forEach((badge) => {
-            profile_name_obj.appendChild(create_badge(badge, false, true));
-        });
-    }
-
-    let badge_elements = profile_name_obj.querySelectorAll('.label');
-    let label_container = document.createElement('div');
-    label_container.classList.add('badges');
-    badge_elements.forEach((badge) => {
-        label_container.appendChild(badge);
-    });
-    profile_name_obj.appendChild(label_container);
-
     save_profile_cache(cache, profile_cache, page.name);
 }
 
@@ -1399,7 +1410,6 @@ function profile_recents() {
                     </div>
                 </div>
                 ${setting({ id: 'format_guest_features' })}
-                ${setting({ id: 'stacked_chartlist_info' })}
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
                         ${tl(trans.save)}
@@ -1900,6 +1910,7 @@ function bio_parse(text, cache = true, take_effect = true) {
             allow_banners: true,
             allow_icons: true,
             allow_hue: true,
+            allow_fonts: true,
             cache,
             take_effect,
             allow_socials: true,
@@ -2047,7 +2058,7 @@ export function bleh_profile_chart_render(
 }
 
 export function save_profile_cache(
-    { avatar, banner, hue, sat, lit, aka, created } = {},
+    { avatar, banner, banner_orig, hue, sat, lit, aka, created, font, font_style, username } = {},
     profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) ||
         {},
     name = page.name
@@ -2073,11 +2084,15 @@ export function save_profile_cache(
     profile_cache[name] = {
         avatar,
         banner,
+        banner_orig,
         hue,
         sat,
         lit,
         aka,
-        created
+        created,
+        font,
+        font_style,
+        username
     };
 
     log('saved to cache', 'profile', 'info', {
@@ -2122,10 +2137,7 @@ export async function load_profile_cache_externally(name = page.name) {
 
     if (cache) {
         if (cache.hue || cache.sat || cache.lit) {
-            if (
-                !sponsor_list ||
-                (sponsor_list && !sponsor_list.sponsors.includes(name))
-            ) {
+            if (!sponsor_list || (sponsor_list && !sponsor_list.sponsors.includes(name))) {
                 delete cache.hue;
                 delete cache.sat;
                 delete cache.lit;

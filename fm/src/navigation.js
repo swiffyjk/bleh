@@ -192,7 +192,6 @@ export function append_nav() {
                 <div class="loader-bar">
                     <div class="loader-bar-fill" />
                 </div>
-                <div class="bleh-icon" />
             </div>
         `;
         document.body.appendChild(loader);
@@ -203,6 +202,11 @@ export function append_nav() {
         const style_warning = html.node`
             <div class="style-warning" style="position: fixed; top: 0; left: 0; right: 0; padding: 20px; background: #fff; z-index: 1000000000; display: flex; align-items: center; gap: 30px">
                 <strong>${tl(trans.style_warning)}</strong>
+                <button class="btn primary" onclick=${() => {
+                    save_setting('branch', 'uwu');
+                }}>
+                    Reset branch to release (uwu)
+                </button>
                 <button class="btn-primary" onclick=${() => {
                     save_setting('dev', false);
                     window.location.reload();
@@ -324,6 +328,21 @@ export function append_nav() {
                 }}
             `
         );
+
+        masthead.appendChild(html.node`
+            <div class="mobile-controls">
+                <a class="btn mobile-control" data-type="register" href="${root}join">
+                    ${tl(trans.sign_up)}
+                </a>
+                <a class="btn mobile-control" aria-checked=${page.type == 'settings' || page.type == 'bleh_settings'} data-menu-item="settings" href="${root}bleh">
+                    ${tl(trans.settings)}
+                </a>
+                <a class="btn mobile-control" data-type="login" href="${root}login">
+                    ${tl(trans.log_in)}
+                </a>
+            </div>
+        `);
+
         return;
     }
 
@@ -761,22 +780,12 @@ export function append_nav() {
                             <div class="avatar">
                                 <img src="${auth.avatar.replace('avatar42s', 'avatar170s')}" alt="${auth.name}" />
                             </div>
-                            ${
-                                cache.banner ?
-                                    html.node`
+                            ${cache.banner ? html.node`
                             <div class="bg" style="background-image: url(${cache.banner})" />
-                            `
-                                : (
-                                    !auth.avatar.endsWith(
-                                        '818148bf682d429dc215c1705eb27b98.png'
-                                    )
-                                ) ?
-                                    html.node`
+                            ` : !auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png') ? html.node`
                             <div class="bg" style="background-image: url(${auth.avatar.replace('avatar42s', 'avatar170s')})" />
-                            `
-                                :   ''
-                            }
-                            <div class="name">${auth.name}</div>
+                            ` : ''}
+                            <div class="name">${cache.username ? cache.username : `@${auth.name}`}</div>
                             ${
                                 badges || auth.pro ?
                                     html.node`
@@ -938,19 +947,10 @@ export function append_nav() {
                                                     if (
                                                         theme.id != 'adaptive'
                                                     ) {
-                                                        save_setting(
-                                                            'theme_schedule',
-                                                            false
-                                                        );
-                                                        save_setting(
-                                                            'theme',
-                                                            theme.id
-                                                        );
+                                                        save_setting('theme_schedule', false);
+                                                        save_setting('theme', theme.id);
                                                     } else {
-                                                        save_setting(
-                                                            'theme_schedule',
-                                                            true
-                                                        );
+                                                        save_setting('theme_schedule', true);
                                                         match();
                                                     }
 

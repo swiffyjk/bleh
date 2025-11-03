@@ -416,43 +416,33 @@ export function name_includes(
         original_artist = correct_artist(artist_corrections[original_artist]);
     }
 
-    // no tags found
-    if (matches.length == 0) {
-        const result = [
-            formatted_title,
-            [],
-            original_artist,
-            [],
-            original_title_corrected
-        ];
-
-        log('finalised', 'lotus', 'log', { result });
-        return result;
-    }
-
     // everything before the first tag
-    const cleaned_title = formatted_title
-        .slice(0, matches[0].idx)
-        .trim()
-        .replace(/[\(\[\{]+$/, '')
-        .trim();
-
-    // extract each tag block
-    const extras = matches.map((match, i) => {
-        const start = match.idx;
-        const end =
-            i + 1 < matches.length ?
-                matches[i + 1].idx
-            :   formatted_title.length;
-        const tag_text = formatted_title
-            .slice(start, end)
-            .replace(/^[\(\[\{\)\]\}\-\:\s]+|[\(\[\{\)\]\}\-\:\s]+$/g, '')
+    let cleaned_title = formatted_title;
+    let extras = [];
+    if (matches.length > 0) {
+        cleaned_title = formatted_title
+            .slice(0, matches[0].idx)
+            .trim()
+            .replace(/[\(\[\{]+$/, '')
             .trim();
-        return {
-            group: match.group,
-            text: tag_text
-        };
-    });
+
+        // extract each tag block
+        extras = matches.map((match, i) => {
+            const start = match.idx;
+            const end =
+                i + 1 < matches.length ?
+                    matches[i + 1].idx
+                :   formatted_title.length;
+            const tag_text = formatted_title
+                .slice(start, end)
+                .replace(/^[\(\[\{\)\]\}\-\:\s]+|[\(\[\{\)\]\}\-\:\s]+$/g, '')
+                .trim();
+            return {
+                group: match.group,
+                text: tag_text
+            };
+        });
+    }
 
     // collect all guest artists
     let song_guests = [];
@@ -524,14 +514,10 @@ export function smart_title(song_title, song_tags) {
 
 export function smart_artists(song_artist, song_guests) {
     return html`
-        <a href="${root}music/${redirect()}${sanitise(song_artist)}"
-            >${romanise(song_artist)}</a
-        >
+        <a href="${root}music/${redirect()}${sanitise(song_artist)}">${romanise(song_artist)}</a>
         ${song_guests.map(
             (guest) => html.node`
-                ,<a href="${root}music/${redirect()}${sanitise(guest)}"
-                    >${romanise(guest)}</a
-                >
+                ,<a href="${root}music/${redirect()}${sanitise(guest)}">${romanise(guest)}</a>
             `
         )}
     `;
@@ -709,7 +695,7 @@ export function create_correction(
     sister = page.sister
 ) {
     let title;
-    let current = page.name;
+    let current = name;
     let link = window.location.href;
 
     let correction;
@@ -718,10 +704,10 @@ export function create_correction(
     let template;
 
     if (type == 'artist') {
-        title = page.sister;
+        title = sister;
         template = '1-artist.yml';
     } else {
-        title = `${page.sister} - ${page.name}`;
+        title = `${sister} - ${name}`;
         template = '2-album_track.yml';
     }
 
@@ -758,7 +744,6 @@ export function create_correction(
                 </button>
                 <div class="fill" />
                 <button class="btn primary continue" onclick=${() => {
-                    console.info('sources', sources.value());
                     open(
                         `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${sanitise(title, ' ')}&current=${sanitise(current, ' ')}&correction=${sanitise(correction.value(), ' ')}&link=${link}&sources=${sanitise(sources.value(), ' ')}`
                     );

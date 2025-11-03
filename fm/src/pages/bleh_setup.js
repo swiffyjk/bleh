@@ -105,33 +105,29 @@ export function bleh_setup() {
     bleh_setup_start();
 }
 
-unsafeWindow._setup = function () {
-    bleh_setup_start();
-};
 function bleh_setup_start() {
     page.structure.setup.setAttribute('data-page', 'start');
     page.structure.setup.setAttribute('data-animating', 'true');
     setTimeout(function () {
         page.structure.setup.setAttribute('data-animating', 'false');
-        render(
-            page.structure.setup_content,
-            html` <p>${{ html: tl(trans.welcome_to_bleh) }}</p> `
-        );
-        page.structure.setup_footer.innerHTML = `
+        render(page.structure.setup_content, html`
+            <p>${{ html: tl(trans.welcome_to_bleh) }}</p>
+        `);
+        render(page.structure.setup_footer, html`
             <a class="see-more cancel" href="${root}user/${auth.name}">
                 ${tl(trans.skip)}
             </a>
             <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_accessibility()">
+            <button class="btn primary continue" onclick=${() => setup_accessibility()}>
                 ${tl(trans.next)}
             </button>
-        `;
+        `);
     }, page.state.trans);
 
     page.state.trans = 200;
 }
 
-unsafeWindow._setup_themes = function () {
+function setup_themes() {
     page.structure.setup.setAttribute('data-page', 'themes');
     page.structure.setup.setAttribute('data-animating', 'true');
 
@@ -273,15 +269,15 @@ unsafeWindow._setup_themes = function () {
                 </div>
             `
         );
-        page.structure.setup_footer.innerHTML = `
-            <button class="see-more cancel" onclick="_setup_accessibility()">
+        render(page.structure.setup_footer, html`
+            <button class="see-more cancel" onclick=${() => setup_accessibility()}>
                 ${tl(trans.back)}
             </button>
             <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_music()">
+            <button class="btn primary continue" onclick=${() => setup_music()}>
                 ${tl(trans.next)}
             </button>
-        `;
+        `);
 
         render_tip();
 
@@ -290,7 +286,7 @@ unsafeWindow._setup_themes = function () {
     }, page.state.trans);
 };
 
-unsafeWindow._setup_accessibility = function () {
+function setup_accessibility() {
     page.structure.setup.setAttribute('data-page', 'accessibility');
     page.structure.setup.setAttribute('data-animating', 'true');
     setTimeout(function () {
@@ -307,107 +303,207 @@ unsafeWindow._setup_accessibility = function () {
                 </div>
             `
         );
-        page.structure.setup_footer.innerHTML = `
-            <button class="see-more cancel" onclick="_setup()">
+        render(page.structure.setup_footer, html`
+            <button class="see-more cancel" onclick=${() => setup()}>
                 ${tl(trans.back)}
             </button>
             <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_themes()">
+            <button class="btn primary continue" onclick=${() => setup_themes()}>
                 ${tl(trans.next)}
             </button>
-        `;
-
-        refresh_all(page.structure.setup_content);
+        `);
     }, page.state.trans);
 };
 
-unsafeWindow._setup_music = function () {
+function setup_music() {
     page.structure.setup.setAttribute('data-page', 'music');
     page.structure.setup.setAttribute('data-animating', 'true');
     setTimeout(function () {
         page.structure.setup.setAttribute('data-animating', 'false');
-        render(
-            page.structure.setup_content,
-            html`
-                <p>${tl(trans.music_explain)}</p>
-                <div class="settings">
-                    <div class="inner-preview pad flex">
-                        <section
-                            class="redesigned-header mockup redesigned-track-header no-top-margin"
-                        >
-                            <div class="avatar-side">
-                                <img
-                                    src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg"
-                                />
-                            </div>
-                            <div class="info-side">
-                                <div class="sub-text">${tl(trans.track)}</div>
-                                <div class="title-container">
-                                    <h1 class="bleh--name-with-features">
-                                        <div class="title">California Love</div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="ft."
-                                            data-bleh--tag-group="guests"
-                                        >
-                                            ft. Dr. Dre, Roger Troutman
-                                        </div>
-                                        <div
-                                            class="feat"
-                                            data-bleh--tag-type="- remix"
-                                            data-bleh--tag-group="mixes"
-                                        >
-                                            Remix
-                                        </div>
-                                    </h1>
-                                    <h1 class="bleh--name-without-features">
-                                        California Love (ft. Dr. Dre, Roger
-                                        Troutman) - Remix
-                                    </h1>
-                                </div>
-                                <h2>
-                                    <a class="header-new-crumb">2Pac</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Dr. Dre</a
-                                    ><span class="bleh--name-with-features"
-                                        >,
-                                    </span>
-                                    <a
-                                        class="header-new-crumb bleh--name-with-features"
-                                        >Roger Troutman</a
+
+        render(page.structure.setup_content, html`
+            <p>${tl(trans.music_explain)}</p>
+            <div class="settings">
+                <div class="inner-preview pad flex">
+                    <section class="redesigned-header mockup redesigned-track-header no-top-margin">
+                        <div class="avatar-side">
+                            <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg">
+                        </div>
+                        <div class="info-side">
+                            <div class="sub-text">${tl(trans.track)}</div>
+                            <div class="title-container">
+                                <h1 class="bleh--name-with-features">
+                                    <div class="title">California Love</div>
+                                    <div
+                                        class="feat"
+                                        data-bleh--tag-type="ft."
+                                        data-bleh--tag-group="guests"
                                     >
-                                </h2>
+                                        ft. Dr. Dre, Roger Troutman
+                                    </div>
+                                    <div
+                                        class="feat"
+                                        data-bleh--tag-type="- remix"
+                                        data-bleh--tag-group="mixes"
+                                    >
+                                        Remix
+                                    </div>
+                                </h1>
+                                <h1 class="bleh--name-without-features">
+                                    California Love (ft. Dr. Dre, Roger
+                                    Troutman) - Remix
+                                </h1>
                             </div>
-                        </section>
-                    </div>
-                    <div class="setting-group">
-                        ${setting({ id: 'corrections' })}
-                        ${setting({ id: 'format_guest_features' })}
-                        ${setting({ id: 'stacked_chartlist_info' })}
-                    </div>
+                            <h2>
+                                <a class="header-new-crumb">2Pac</a
+                                ><span class="bleh--name-with-features"
+                                    >,
+                                </span>
+                                <a
+                                    class="header-new-crumb bleh--name-with-features"
+                                    >Dr. Dre</a
+                                ><span class="bleh--name-with-features"
+                                    >,
+                                </span>
+                                <a
+                                    class="header-new-crumb bleh--name-with-features"
+                                    >Roger Troutman</a
+                                >
+                            </h2>
+                        </div>
+                    </section>
                 </div>
-            `
-        );
-        page.structure.setup_footer.innerHTML = `
-            <button class="see-more cancel" onclick="_setup_themes()">
+                <div class="setting-group">
+                    ${setting({ id: 'corrections' })}
+                    ${setting({ id: 'format_guest_features' })}
+                </div>
+            </div>
+        `);
+        render(page.structure.setup_footer, html`
+            <button class="see-more cancel" onclick=${() => setup_themes()}>
                 ${tl(trans.back)}
             </button>
             <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_end()">
+            <button class="btn primary continue" onclick=${() => setup_layout()}>
                 ${tl(trans.next)}
             </button>
-        `;
-
-        display_colour_presets();
-        refresh_all(page.structure.setup_content);
+        `);
     }, page.state.trans);
 };
 
-unsafeWindow._setup_end = function () {
+function setup_layout() {
+    page.structure.setup.setAttribute('data-page', 'music');
+    page.structure.setup.setAttribute('data-animating', 'true');
+    setTimeout(function () {
+        page.structure.setup.setAttribute('data-animating', 'false');
+
+        let track_layout;
+        let expand_tracks;
+        let track_album_name_location;
+
+        let preview;
+
+        function render_track_preview() {
+            const avi = auth.avatar.replace('/avatar42s/', '/avatar170s/');
+
+            render(preview, html`
+                <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist chartlist--with-more">
+                    <tbody>
+                        <tr
+                            class="chartlist-row chartlist-row--with-artist chartlist-row--now-scrobbling"
+                            data-has-bar="false"
+                            data-show-album-text=${settings.expand_tracks != 'never' && settings.track_layout == 'column'}
+                        >
+                            <td class="chartlist-image">
+                                <a class="cover-art">
+                                    <img src=${avi} loading="lazy" />
+                                </a>
+                            </td>
+                            <td class="kate-placeholder" />
+                            <td class="track-info" data-has-bar="false">
+                                <span class="chartlist-name">
+                                    <a>Track name</a>
+                                </span>
+                                <span class="chartlist-artist">
+                                    <a>Artist name</a>
+                                </span>
+                                ${settings.expand_tracks != 'never' && settings.track_layout == 'column' ? html.node`
+                                    <span class="chartlist-album custom-album-text">
+                                        <a>Album name</a>
+                                    </span>
+                                ` : ''}
+                            </td>
+                        </tr>
+                        <tr
+                            class="chartlist-row chartlist-row--with-artist"
+                            data-has-bar="false"
+                            data-show-album-text=${settings.expand_tracks == 'always' && settings.expand_tracks != 'never' && settings.track_layout == 'column'}
+                        >
+                            <td class="chartlist-image">
+                                <a class="cover-art">
+                                    <img src=${avi} loading="lazy" />
+                                </a>
+                            </td>
+                            <td class="kate-placeholder" />
+                            <td class="track-info" data-has-bar="false">
+                                <span class="chartlist-name">
+                                    <a>Track name</a>
+                                </span>
+                                <span class="chartlist-artist">
+                                    <a>Artist name</a>
+                                </span>
+                                ${settings.expand_tracks == 'always' && settings.expand_tracks != 'never' &&settings.track_layout == 'column' ? html.node`
+                                    <span class="chartlist-album custom-album-text">
+                                        <a>Album name</a>
+                                    </span>
+                                ` : ''}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            `);
+        }
+
+        render(page.structure.setup_content, html`
+            <p>${tl(trans.music_explain)}</p>
+            <div class="settings">
+                <div class="inner-preview pad" ref=${(el) => (preview = el)} />
+                <div class="setting-group">
+                    ${(track_layout = setting({
+                        id: 'track_layout',
+                        func: () => {
+                            expand_tracks.compat();
+                            track_album_name_location.compat();
+                            render_track_preview();
+                        }
+                    }))}
+                    ${(expand_tracks = setting({
+                        id: 'expand_tracks',
+                        func: () => {
+                            render_track_preview();
+                        }
+                    }))}
+                    ${(track_album_name_location = setting({
+                        id: 'track_album_name_location'
+                    }))}
+                </div>
+            </div>
+        `);
+        render(page.structure.setup_footer, html`
+            <button class="see-more cancel" onclick=${() => setup_music()}>
+                ${tl(trans.back)}
+            </button>
+            <div class="fill"></div>
+            <button class="btn primary continue" onclick=${() => setup_end()}>
+                ${tl(trans.next)}
+            </button>
+        `);
+
+        render_track_preview();
+    }, page.state.trans);
+};
+
+function setup_end() {
     page.structure.setup.setAttribute('data-page', 'end');
     page.structure.setup.setAttribute('data-animating', 'true');
     setTimeout(function () {
@@ -458,25 +554,25 @@ unsafeWindow._setup_end = function () {
         );
 
         if (auth.name) {
-            page.structure.setup_footer.innerHTML = `
-                <button class="see-more cancel" onclick="_setup_music()">
+            render(page.structure.setup_footer, html`
+                <button class="see-more cancel" onclick=${() => setup_layout()}>
                     ${tl(trans.back)}
                 </button>
                 <div class="fill"></div>
                 <a class="btn primary continue" href="${root}user/${auth.name}">
                     ${tl(trans.finish)}
                 </a>
-            `;
+            `);
         } else {
-            page.structure.setup_footer.innerHTML = `
-                <button class="see-more cancel" onclick="_setup_music()">
+            render(page.structure.setup_footer, html`
+                <button class="see-more cancel" onclick=${() => setup_layout()}>
                     ${tl(trans.back)}
                 </button>
                 <div class="fill"></div>
                 <a class="btn primary continue" href="${root}dashboard">
                     ${tl(trans.finish)}
                 </a>
-            `;
+            `);
         }
     }, page.state.trans);
 };

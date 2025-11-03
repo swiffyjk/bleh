@@ -157,7 +157,13 @@ export let includes = {
         '[version',
         '(s.a.d. version',
         '- s.a.d.',
-        '- vocoded'
+        '- vocoded',
+        '- pa version',
+        '(pa version',
+        '[pa version',
+        '- u.s. pa version',
+        '(u.s. pa version',
+        '[u.s. pa version'
     ],
     remasters: [
         '- remaster',
@@ -171,7 +177,8 @@ export let includes = {
         '(high resolution remasters',
         ': the high resolution remasters',
         '- the high resolution remasters',
-        '(the high resolution remasters' // Pink Floyd bootleg remaster boxsets
+        '(the high resolution remasters', // Pink Floyd bootleg remaster boxsets
+        '- 2012 - remaster' // black sabbath
     ],
     mixes: [
         '- devonshire mix',
@@ -187,6 +194,9 @@ export let includes = {
         ': the live',
         '( the live',
         '- the live',
+        '- online live',
+        'online live',
+        '(online live',
         '- ao vivo',
         '(ao vivo',
         '[ao vivo',
@@ -210,6 +220,8 @@ export let includes = {
         '(solo acoustic',
         '- acoustic',
         '(acoustic',
+        ': self-serenade',
+        '- self-serenade',
         '- alt',
         '(alt',
         '[alt',
@@ -227,6 +239,9 @@ export let includes = {
         '- slow',
         '(slow',
         '[slow',
+        '- nightcore',
+        '(nightcore',
+        '[nightcore',
         'a. g. cook remix',
         '- charli xcx & a.g. cook remix',
         '- rina sawayama & clarence clarity remix',
@@ -377,6 +392,9 @@ export let includes = {
         '(english cover',
         '[english cover',
         '- english cover',
+        ': twin ver',
+        '(twin ver',
+        '- twin ver',
         '- soundtrack',
         '(soundtrack',
         '[soundtrack',
@@ -406,6 +424,9 @@ export let includes = {
         '- full length',
         '(full length',
         '[full length',
+        '- electronic mix',
+        '(electronic mix',
+        '[electronic mix',
         '[over now', // billie eilish l'amour de ma vie
         '- the remix',
         '(the remix',
@@ -423,8 +444,8 @@ export let includes = {
         '(moonlit witch version',
         '- cabin in candlelight version',
         '(cabin in candelight version',
-        '- 90\'s trend remix',
-        '(90\'s trend remix',
+        "- 90's trend remix",
+        "(90's trend remix",
         '- triple j',
         '(triple j',
         '(unfinished original recordings of de-loused in the comatorium',
@@ -471,7 +492,13 @@ export let includes = {
         '[mono',
         '- stereo',
         '(stereo',
-        '[stereo'
+        '[stereo',
+        '- anime',
+        '(anime',
+        '[anime',
+        '- game edit',
+        '(game edit',
+        '[game edit'
     ],
     mixes_numbers: [
         '(v1',
@@ -493,24 +520,8 @@ export let includes = {
         '[v8',
         '[v9',
         '- mixed',
-        '- mix 1',
-        '- mix 2',
-        '- mix 3',
-        '- mix 4',
-        '- mix 5',
-        '- mix 6',
-        '- mix 7',
-        '- mix 8',
-        '- mix 9',
-        '(mix 1',
-        '(mix 2',
-        '(mix 3',
-        '(mix 4',
-        '(mix 5',
-        '(mix 6',
-        '(mix 7',
-        '(mix 8',
-        '(mix 9'
+        '- mix ',
+        '(mix '
     ],
     stems: [
         '- acapella',
@@ -540,6 +551,7 @@ export let includes = {
         '(mtv unplugged',
         '- unplugged',
         '(unplugged',
+        '-unplugged', // no space intentionally, soma saito tracks
         '- acústico',
         '- ácustico',
         '(acústico',
@@ -572,6 +584,9 @@ export let includes = {
         '(bonus',
         '[bonus',
         'the bonus tracks', // beyonce i am sasha fierce
+        '- secret track', // track added for clarity
+        ': secret track',
+        '(secret track',
         '- edit',
         '(edit',
         '[edit',
@@ -664,12 +679,12 @@ export let includes = {
         '- platinum',
         '(platinum',
         '[platinum',
-        'platinum edition',  // added edition to the end because 'platinum' can have some false positives
+        'platinum edition', // added edition to the end because 'platinum' can have some false positives
         'platinum version', // same as above
         '- international',
         '(international',
         '[international', // taylor swift
-        '(int\'l', // think i escaped this character correctly? 
+        "(int'l", // think i escaped this character correctly?
         '- uk deluxe',
         '(uk deluxe',
         '[uk deluxe',
@@ -716,6 +731,9 @@ export let includes = {
         '- double disc',
         '(double disc',
         '[double disc',
+        '- re-issue',
+        '(re-issue',
+        '[re-issue',
         '- reissue',
         '(reissue',
         '[reissue',
@@ -731,33 +749,10 @@ export let includes = {
         '[highlights from',
         '- track by track',
         ': track by track',
-        '- disc 1',
-        '- disc 2',
-        '- disc 3',
-        '- disc 4',
-        '- disc 5',
-        '- disc 6',
-        '- disc 7',
-        '- disc 8',
-        '- disc 9',
-        '(disc 1',
-        '(disc 2',
-        '(disc 3',
-        '(disc 4',
-        '(disc 5',
-        '(disc 6',
-        '(disc 7',
-        '(disc 8',
-        '(disc 9',
-        '[disc 1',
-        '[disc 2',
-        '[disc 3',
-        '[disc 4',
-        '[disc 5',
-        '[disc 6',
-        '[disc 7',
-        '[disc 8',
-        '[disc 9',
+        '(track by track',
+        '- disc ',
+        '(disc ',
+        '[disc ',
         //,
         '- 19',
         '- 20',
@@ -765,6 +760,11 @@ export let includes = {
         '(20',
         '[19',
         '[20',
+        '- 1st',
+        '- 2nd',
+        '- 3rd',
+        '- 4th',
+        '- 5th',
         '- 10th',
         '- 25th',
         '- 30th',
@@ -772,6 +772,11 @@ export let includes = {
         '- 40th',
         '- 50th',
         '- 60th',
+        '(1st', // soma saito track
+        '(2nd',
+        '(3rd',
+        '(4th',
+        '(5th',
         '(10th',
         '(25th',
         '(30th',
@@ -781,6 +786,7 @@ export let includes = {
         '(60th',
         '- tenth anniversary',
         'fifth anniversary',
+        '5th anniversary',
         '(tenth anniversary',
         '(fifth anniversary',
         ': the tenth anniversary',
@@ -805,9 +811,11 @@ export let includes = {
         '- reprise',
         '(reprise',
         '[reprise',
-        '(director'
+        '(director',
+        "(soma saito's",
+        "- soma saito's"
     ],
-    form: ['(clean', '[clean', '(explicit', '[explicit', '(spotify)']
+    form: ['(clean', '[clean', '(explicit', '[explicit', '(spotify)', '🅴']
 };
 
 // converts titles like 'something [explicit]' to 'something'

@@ -690,13 +690,15 @@ export let settings_store = {
         title: trans.theme_loading.name,
         body: trans.theme_loading.body
     },
-    profile_header_expand: {
-        default: true
-    },
     accessible_name_colours: {
         default: false,
         title: trans.accessible_name_colours.name,
         body: trans.accessible_name_colours.body
+    },
+    display_name_styles: {
+        default: true,
+        title: trans.display_name_styles.name,
+        body: trans.display_name_styles.body
     },
     reduced_motion: {
         default: false,
@@ -719,9 +721,52 @@ export let settings_store = {
         title: trans.show_guest_features.name,
         body: trans.show_guest_features.body
     },
-    stacked_chartlist_info: {
-        default: true,
-        title: trans.track_column_view
+    track_layout: {
+        default: 'column',
+        type: 'radio',
+        title: trans.track_layout.name,
+        body: trans.track_layout.body,
+        values: {
+            column: {
+                name: trans.track_layout.column
+            },
+            row: {
+                name: trans.track_layout.row
+            }
+        }
+    },
+    expand_tracks: {
+        default: 'active',
+        type: 'radio',
+        title: trans.expand_tracks.name,
+        body: trans.expand_tracks.body,
+        values: {
+            always: {
+                name: trans.expand_tracks_always
+            },
+            active: {
+                name: trans.expand_tracks_when_active
+            },
+            never: {
+                name: trans.never
+            }
+        },
+        incompatible: { track_layout: 'row' }
+    },
+    track_album_name_location: {
+        default: 'column',
+        type: 'radio',
+        title: trans.track_album_name_location.name,
+        body: trans.track_album_name_location.body,
+        values: {
+            column: {
+                name: trans.track_album_name_location.column
+            },
+            row: {
+                name: trans.track_album_name_location.row
+            }
+        },
+        incompatible: { track_layout: 'row' }
     },
     glacier_library_graphs: {
         default: true,
@@ -835,7 +880,8 @@ export let settings_store = {
             none: {
                 name: trans.no_particles
             }
-        }
+        },
+        require_reload: true
     },
     seasonal_particles_fps: {
         default: false,
@@ -1133,24 +1179,6 @@ export let settings_store = {
             }
         }
     },
-    expand_tracks: {
-        default: 'active',
-        type: 'radio',
-        title: trans.expand_tracks.name,
-        body: trans.expand_tracks.body,
-        values: {
-            always: {
-                name: trans.expand_tracks_always
-            },
-            active: {
-                name: trans.expand_tracks_when_active
-            },
-            never: {
-                name: trans.never
-            }
-        },
-        incompatible: { stacked_chartlist_info: false }
-    },
     rain: {
         default: false,
         title: trans.rain.name,
@@ -1293,5 +1321,21 @@ export let settings_store = {
         title: trans.inverse_compare.name,
         body: trans.inverse_compare.body,
         new_release: true
+    },
+    branch: {
+        default: 'uwu',
+        type: 'text',
+        max: 20,
+        title: trans.branch.name,
+        body: trans.branch.body,
+        warn_if_empty: true
+    },
+    tracklist_source: {
+        default: 'oracle',
+        type: 'select',
+        title: trans.tracklist_source.name,
+        body: trans.tracklist_source.body,
+        new_release: true,
+        incompatible: { oracle_beta: false }
     }
 };

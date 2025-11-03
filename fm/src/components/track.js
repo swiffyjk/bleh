@@ -110,26 +110,11 @@ export function patch_titles(search = page.structure.main) {
             ':is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)'
         );
 
-        let track_index = 0;
+        tracks.forEach((track, index) => {
+            smart_track(track, index);
+        });
 
-        function batch() {
-            const batch_size = 20;
-            const end_index = Math.min(track_index + batch_size, tracks.length);
-
-            for (let i = track_index; i < end_index; i++) {
-                track(tracks[i], i);
-            }
-
-            track_index = end_index;
-
-            if (track_index < tracks.length) {
-                setTimeout(batch, 0);
-            }
-        }
-
-        batch();
-
-        function track(track, index) {
+        function smart_track(track, index) {
             console.log('track', track);
             if (track.getAttribute('data-track-type')) return;
 
@@ -156,6 +141,20 @@ export function patch_titles(search = page.structure.main) {
                 );
                 track_title.removeAttribute('title');
             }
+
+            let track_info = track.querySelector(':scope > .track-info');
+            if (!track_info) {
+                track_info = html.node`
+                    <div class="track-info" data-has-bar=${tracklist.classList.contains('chartlist--with-bar')}>
+                        ${track_title.parentElement}
+                    </div>
+                `;
+                track.appendChild(track_info);
+            }
+            track.setAttribute(
+                'data-has-bar',
+                tracklist.classList.contains('chartlist--with-bar')
+            );
 
             // for albums and tracks 'avatar' is replaced with 'cover-art'
             // we can use this to detect if the item is either a user or an artist
@@ -285,8 +284,7 @@ export function patch_titles(search = page.structure.main) {
                     track_timestamp.setAttribute('title', '');
 
                     tippy(track_timestamp, {
-                        content: track_timestamp_contents,
-                        appendTo: document.body
+                        content: track_timestamp_contents
                     });
                 }
             }
@@ -303,7 +301,7 @@ export function patch_titles(search = page.structure.main) {
             const show_album_text =
                 (is_active || settings.expand_tracks == 'always') &&
                 settings.expand_tracks != 'never' &&
-                settings.stacked_chartlist_info;
+                settings.track_layout == 'column';
             track.setAttribute('data-show-album-text', show_album_text);
 
             const image_wrap = track.querySelector('.chartlist-image');
@@ -321,6 +319,11 @@ export function patch_titles(search = page.structure.main) {
                         link
                     );
                 }
+            }
+
+            let song_artist_element = track.querySelector('.chartlist-artist');
+            if (song_artist_element) {
+                track_info.appendChild(song_artist_element);
             }
 
             if (settings.format_guest_features) {
@@ -349,12 +352,10 @@ export function patch_titles(search = page.structure.main) {
                 // parse tags into text
                 render(track_title, smart_title(song_title, song_tags));
 
-                let song_artist_element =
-                    track.querySelector('.chartlist-artist');
                 if (!song_artist_element && !is_user) {
                     song_artist_element = document.createElement('td');
                     song_artist_element.classList.add('chartlist-artist');
-                    track.appendChild(song_artist_element);
+                    track_info.appendChild(song_artist_element);
                 }
 
                 // if artist matches OR artist is blank
@@ -380,10 +381,7 @@ export function patch_titles(search = page.structure.main) {
                         'log'
                     );
                     // replaces with corrected artist if applicable
-                    render(
-                        song_artist_element,
-                        smart_artists(formatted_title[2], formatted_title[3])
-                    );
+                    render(song_artist_element, smart_artists(formatted_title[2], formatted_title[3]));
                 }
 
                 if (track.getAttribute('data-disambig') == 'explicit') {
@@ -728,8 +726,7 @@ export function patch_titles(search = page.structure.main) {
                                         );
 
                                         tippy(button, {
-                                            content: tl(trans.bulk_edit),
-                                            appendTo: document.body
+                                            content: tl(trans.bulk_edit)
                                         });
 
                                         return button;
@@ -782,8 +779,7 @@ export function patch_titles(search = page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0],
-                                        appendTo: document.body
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -813,8 +809,7 @@ export function patch_titles(search = page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0],
-                                        appendTo: document.body
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -841,8 +836,7 @@ export function patch_titles(search = page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0],
-                                        appendTo: document.body
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -869,8 +863,7 @@ export function patch_titles(search = page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0],
-                                        appendTo: document.body
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -995,31 +988,13 @@ export function patch_titles(search = page.structure.main) {
                         appendTo: document.body,
 
                         onCreate(instance) {
-                            instance.popper.addEventListener(
-                                'click',
-                                (event) => {
-                                    instance.hide();
-                                }
-                            );
-                        },
-
-                        onShow(instance) {
-                            track.setAttribute('data-has-menu', true);
-
-                            /*let menu_items = track_legacy_menu.querySelectorAll('li > *');
-                            let content = instance.popper.querySelector('.tippy-content');
-
-                            menu_items.forEach((item) => {
-                                content.appendChild(item);
-                            });*/
+                            instance.popper.addEventListener('click', () => {
+                                instance.hide();
+                            });
                         },
 
                         onClickOutside(instance) {
                             instance.hide();
-                        },
-
-                        onHide(instance) {
-                            track.setAttribute('data-has-menu', false);
                         }
                     });
 
@@ -1047,13 +1022,12 @@ export function patch_titles(search = page.structure.main) {
                 );
             }
 
+            let album_text = track.querySelector(
+                '.chartlist-album.custom-album-text'
+            );
+
             if (image_wrap) {
-                if (
-                    !is_album &&
-                    show_album_text &&
-                    !has_bar &&
-                    !settings.album_text
-                ) {
+                if (!is_album && show_album_text && !has_bar && !album_text) {
                     let alt = romanise(
                         correct_item_by_artist(
                             image.getAttribute('alt'),
@@ -1061,7 +1035,7 @@ export function patch_titles(search = page.structure.main) {
                         )
                     );
 
-                    track.appendChild(html.node`
+                    track_info.appendChild(html.node`
                         <td class="chartlist-album custom-album-text">
                             <a href="${link.getAttribute('href')}">${alt}</a>
                         </td>

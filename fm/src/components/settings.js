@@ -639,8 +639,6 @@ export function setting({
 
             return tabs;
         } else if (type == 'radio') {
-            if (func) func(value);
-
             let buttons = [];
 
             let reset_btn;

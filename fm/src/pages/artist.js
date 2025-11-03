@@ -99,63 +99,45 @@ export function bleh_artists() {
     checkup_page_structure(is_subpage, artist_header);
 
     let katsune = ff('katsune');
-    let featured_items = artist_header.querySelector(
-        '.artist-header-featured-items'
-    );
+    let featured_items = artist_header.querySelector('.artist-header-featured-items');
 
     if (ff('refreshed_music_nav')) {
-        let avatar = artist_header.querySelector(
-            '.header-new-background-image'
-        );
+        let avatar = artist_header.querySelector('.header-new-background-image');
         let title = artist_header.querySelector('.header-new-title');
         let on_tour = artist_header.querySelector('.header-new-on-tour');
-        let position = artist_header.querySelector(
-            '.header-new-chart-position-number'
-        );
+        let position = artist_header.querySelector('.header-new-chart-position-number');
 
-        if (on_tour) on_tour.classList.add('label', 'no-hover');
+        if (on_tour) on_tour.classList.add('label', 'no-hover', 'expand');
 
         let multi_info_box;
         let redesigned_artist_header = html.node`
             <section class="redesigned-header redesigned-artist-header no-background">
                 <div class="avatar-side">
-                    ${
-                        avatar ?
-                            html.node`
+                    ${avatar ? html.node`
                     <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar300s/')}">
                     <a class="bleh--avatar-clickable-link"></a>
-                    `
-                        :   html.node`<img class="missing-artist">`
-                    }
+                    ` : html.node`<img class="missing-artist">`}
                 </div>
                 <div class="info-side">
-                    ${
-                        page.multi ?
-                            html.node`
+                    ${page.multi ? html.node`
                     <div class="sub-text">
                         ${tl(trans.artists)}
                         <div class="info-tip" ref=${(el) => (multi_info_box = el)}>
                             <div class="bleh-icon bleh-info-icon"></div>
                         </div>
                     </div>
-                    `
-                        :   html.node`
+                    ` : html.node`
                     <div class="sub-text">${tl(trans.artist)}</div>
-                    `
-                    }
+                    `}
                     <div class="title-container" data-multi=${page.multi}>
                         ${title}
                         ${position}
-                        ${
-                            on_tour ?
-                                html.node`
-                        <div class="badges">
-                            ${on_tour}
-                        </div>
-                        `
-                            :   ''
-                        }
                     </div>
+                    ${on_tour ? html.node`
+                    <div class="badges">
+                        ${on_tour}
+                    </div>
+                    ` : ''}
                 </div>
             </section>
         `;
@@ -172,10 +154,8 @@ export function bleh_artists() {
             });
         }
 
-        let bg;
-
-        if (avatar) bg = register_background(avatar.getAttribute('content'));
-        else bg = register_background(null);
+        if (avatar) register_background(avatar.getAttribute('content'));
+        else register_background(null);
 
         page.structure.container.insertBefore(
             redesigned_artist_header,
@@ -183,8 +163,7 @@ export function bleh_artists() {
         );
         artist_header.classList.add('legacy-header');
 
-        let avatar_side =
-            redesigned_artist_header.querySelector('.avatar-side');
+        let avatar_side = redesigned_artist_header.querySelector('.avatar-side');
         let avatar_link = avatar_side.querySelector('a');
 
         if (avatar != null && avatar_link != null) {
@@ -230,35 +209,6 @@ export function bleh_artists() {
             });
 
             register_menu(avatar_side, menu);
-        }
-
-        if (!is_subpage) {
-            let view_button =
-                redesigned_artist_header.querySelector('.view-all-button');
-
-            if (view_button) {
-                let view_menu = tippy(view_button, {
-                    theme: 'context-menu',
-                    content: html.node`
-                        <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
-                            ${tl(trans.settings)}
-                        </a>
-                    `,
-                    placement: 'right-start',
-                    trigger: 'manual',
-                    interactive: true,
-                    interactiveBorder: 10,
-                    offset: [0, 0],
-
-                    onShow(instance) {
-                        instance.popper.addEventListener('click', (event) => {
-                            instance.hide();
-                        });
-                    }
-                });
-
-                register_menu(view_button, view_menu);
-            }
         }
     }
 

@@ -33,7 +33,7 @@ export let lang_info = {
     pt: {
         name: 'Português',
         by: ['ArthRMH', 'auwora', 'fr0r'],
-        last_updated: '2025-08-10'
+        last_updated: '2025-10-28'
     },
     sv: {
         name: 'Svenska',
@@ -43,7 +43,7 @@ export let lang_info = {
     ru: {
         name: 'Русский',
         by: ['crawqxx'],
-        last_updated: '2025-27-10'
+        last_updated: '2025-10-27'
     }
 };
 
@@ -699,6 +699,9 @@ export const trans = {
         sv: 'Skrobbla',
         ru: 'Скроббл'
     },
+    scrobble_value: {
+        en: 'Scrobble {v}'
+    },
     average: {
         // scrobble average
         en: 'Average',
@@ -756,7 +759,7 @@ export const trans = {
     },
     scrobble_failed: {
         en: 'Scrobble could not be sent',
-        pt: 'Scrobble não pôde ser enviado.',
+        pt: 'Scrobble não pôde ser enviado',
         de: 'Scrobble konnte nicht gesendet werden',
         sv: 'Skrobblingen kunde inte skickas',
         ru: 'Не удалось отправить скроббл'
@@ -989,11 +992,12 @@ export const trans = {
         ru: 'Адаптивный'
     },
     adaptive_tip: {
+        // the space on the end is intentional
         en: 'Your theme preference will be either {day} or {night}, based on your system. ',
         de: 'Dein bevorzugtes Farbschema wird entweder {day} oder {night} sein, basierend auf deinem System. ',
         pt: 'Sua preferência de tema será {day} ou {night}, com base no seu sistema. ',
         sv: 'Ditt föredragna tema blir antigen {day} eller {night}, beroende på ditt system. ',
-        ru: 'Предпочтительная тема будет {day} или {night} в зависимости от настроек вашей системы.'
+        ru: 'Предпочтительная тема будет {day} или {night} в зависимости от настроек вашей системы. '
     },
     change_schedule: {
         en: 'Change schedule',
@@ -1195,18 +1199,14 @@ export const trans = {
                 ru: 'Хэллоуин'
             },
             pre_fall: {
-                en: 'Early autumn',
-                de: 'Früher Herbst',
-                pt: 'Pré-outono',
-                sv: 'Tidig höst',
-                ru: 'Ранняя осень'
-            },
-            fall: {
                 en: 'Autumn',
                 de: 'Herbst',
                 pt: 'Outono',
                 sv: 'Höst',
                 ru: 'Осень'
+            },
+            fall: {
+                en: 'Winter'
             },
             christmas: {
                 en: 'Christmas',
@@ -1234,11 +1234,6 @@ export const trans = {
             sv: 'Nedräkningen uppdateras live',
             ru: 'Открыть счетчик в реальном времени'
         },
-        live: {
-            en: 'Counter is updating live',
-            pt: 'O contador está sendo atualizado em tempo real',
-            ru: 'Счетчик обновляется в реальном времени'
-        },
         presets: {
             // these are seasonal exclusive colour presets
             nonsense: {
@@ -1251,27 +1246,19 @@ export const trans = {
             fruitcake: {
                 // reference to https://open.spotify.com/album/7EisdwWcodpmHxgpGVE5Pg
                 en: 'fruitcake',
+                sv: 'fruitcake',
                 pt: 'bolo de frutas',
-                sv: 'fruitcake'
-            },
-            mistletoe: {
-                en: 'Mistletoe',
-                pt: 'Visco',
-                sv: 'Mistel'
-            },
-            festival: {
-                en: 'Christmas Eve',
-                pt: 'Véspera de Natal',
-                sv: 'Julafton',
                 ru: 'фруктовый кекс'
             },
             mistletoe: {
                 en: 'Mistletoe',
+                sv: 'Mistel',
                 pt: 'Visco',
                 ru: 'Омела'
             },
             festival: {
                 en: 'Christmas Eve',
+                sv: 'Julafton',
                 pt: 'Véspera de Natal',
                 ru: 'Сочельник'
             }
@@ -1285,11 +1272,8 @@ export const trans = {
         ru: 'Новый сезон!'
     },
     value_for_time: {
-        // e.g. Halloween for 3 days
-        en: '{v} for {time}',
-        pt: '{v} por {time}',
-        sv: '{v} till {time}',
-        ru: '{v} на {time}'
+        // e.g. (Halloween) ends (in 3 days)
+        en: '{v} ends {time}'
     },
     seasonal_timeline: {
         en: 'Seasonal timeline',
@@ -1339,14 +1323,9 @@ export const trans = {
         },
         body: {
             en: 'During winter seasons this applies a coat of ice to panels, otherwise mainly gradients',
-            pt: 'Durante o inverno, isso aplica uma camada de gelo aos painéis; fora dessa época, aplica principalmente gradientes.',
+            pt: 'Durante o inverno, isso aplica uma camada de gelo aos painéis; fora dessa época, aplica principalmente gradientes',
             sv: 'Under vintersäsongen läggs ett lager is på paneler, annars mest bildgradienter',
             ru: 'Отображать дополнительные сезонные эффекты'
-        },
-        body: {
-            en: 'During winter seasons this applies a coat of ice to panels, otherwise mainly gradients',
-            pt: 'Durante o inverno, isso aplica uma camada de gelo aos painéis; fora dessa época, aplica principalmente gradientes.',
-            ru: 'В зимние сезоны это добавляет эффект наледи на панели, в остальное время - в основном градиенты'
         }
     },
     seasonal_offset: {
@@ -1422,6 +1401,17 @@ export const trans = {
         pt: 'Lançamentos',
         sv: 'Skivsläpp',
         ru: 'Релизы'
+    },
+    no_releases_found: {
+        en: 'No releases found here'
+    },
+    tracklist_source: {
+        name: {
+            en: 'Preferred tracklist source'
+        },
+        body: {
+            en: 'Choose which service to display for album tracklists'
+        }
     },
     bookmarks: {
         en: 'Bookmarks',
@@ -1593,12 +1583,7 @@ export const trans = {
             },
             minor: {
                 en: 'Minor release',
-                pt: 'Lançamento secundario',
                 sv: 'Mindre utgåva',
-                ru: 'Крупный релиз'
-            },
-            minor: {
-                en: 'Minor release',
                 pt: 'Lançamento secundario',
                 ru: 'Мелкий релиз'
             }
@@ -1719,15 +1704,12 @@ export const trans = {
     noise: {
         name: {
             en: 'Noise overlay opacity',
-            sv: 'Brusöverläggsopacitet'
-        },
-        body: {
-            en: 'Apply a coat of subtle noise to add variation to solid backgrounds',
-            sv: 'Tillämpa ett brusöverlägg för lite variation på enfärgade bakgrunder',
+            sv: 'Brusöverläggsopacitet',
             ru: 'Непрозрачность наложения шума'
         },
         body: {
             en: 'Apply a coat of subtle noise to add variation to solid backgrounds',
+            sv: 'Tillämpa ett brusöverlägg för lite variation på enfärgade bakgrunder',
             ru: 'Наложить тонкий слой шума, чтобы добавить разнообразия однотонным фонам'
         }
     },
@@ -1957,15 +1939,12 @@ export const trans = {
     },
     gallery_sum: {
         en: 'This is the sum of votes for ordering',
-        sv: 'Det här är summan röster för bildordning'
-    },
-    view_saved: {
-        en: 'View all saved photos',
-        sv: 'Visa alla sparade foton',
+        sv: 'Det här är summan röster för bildordning',
         ru: 'Это сумма голосов для сортировки'
     },
     view_saved: {
         en: 'View all saved photos',
+        sv: 'Visa alla sparade foton',
         ru: 'Посмотреть все сохраненные фотографии'
     },
     dropzone: {
@@ -2300,9 +2279,9 @@ export const trans = {
     },
     sponsor_no_badge: {
         en: 'A custom badge is only available with a monthly sponsorship.',
-        de: 'Ein individuelles Abzeichen ist nur mit einem monatlichen Sponsoring erhältlich',
-        pt: 'Um emblema personalizado só está disponível com um apoio mensal',
-        sv: 'Ett eget anpassat emblem finns bara tillgängligt med månatligt sponsorskap',
+        de: 'Ein individuelles Abzeichen ist nur mit einem monatlichen Sponsoring erhältlich.',
+        pt: 'Um emblema personalizado só está disponível com um apoio mensal.',
+        sv: 'Ett eget anpassat emblem finns bara tillgängligt med månatligt sponsorskap.',
         ru: 'Персонализированный значок доступен только при ежемесячном спонсорстве.'
     },
     manage_sponsor: {
@@ -2504,15 +2483,12 @@ export const trans = {
     default_avatar_action: {
         name: {
             en: 'Default avatar action',
-            sv: 'Standard bildbetéende'
-        },
-        body: {
-            en: 'Which action should be performed when you click an avatar',
-            sv: 'Hur ska sidan beté sig när du trycker på en profilbild',
+            sv: 'Standard bildbetéende',
             ru: 'Действие по умолчанию при нажатии на аватар'
         },
         body: {
             en: 'Which action should be performed when you click an avatar',
+            sv: 'Hur ska sidan beté sig när du trycker på en profilbild',
             ru: 'Какое действие должно быть выполнено при нажатии на аватар'
         }
     },
@@ -2566,14 +2542,14 @@ export const trans = {
     wiki_standard_artists: {
         en: 'Album and artist names are left without quotes',
         de: 'Namen von Alben und Künstler:innen werden ohne Anführungszeichen geschrieben',
-        pt: 'Os nomes dos álbuns e artistas não devem ser colocados entre aspas.',
+        pt: 'Os nomes dos álbuns e artistas não devem ser colocados entre aspas',
         sv: 'Album och artistnamn ska skrivas utan citattecken',
         ru: 'Названия альбомов и исполнителей пишутся без кавычек'
     },
     wiki_standard_quotations: {
         en: 'Use ‘ ’ for quotations from the artist or elsewhere',
         de: 'Verwende ‘ ’ für Zitate des Künstlers oder aus anderen Quellen',
-        pt: 'Use ‘ ’ para citações do artista ou de outras fontes.',
+        pt: 'Use ‘ ’ para citações do artista ou de outras fontes',
         sv: 'Använd ‘ ’ för citat från artisten eller från annanstans',
         ru: 'Используйте ‘ ’ для цитат исполнителя или из других источников'
     },
@@ -2860,6 +2836,9 @@ export const trans = {
         sv: 'Älska',
         ru: 'Понравилось'
     },
+    love_track: {
+        en: 'Love track'
+    },
     loved: {
         // as in loved tracks, this can be seen
         // in the native last.fm ui
@@ -3103,12 +3082,51 @@ export const trans = {
             ru: 'В противном случае приглашенные артисты аккуратно размещаются рядом с основным исполнителем'
         }
     },
-    track_column_view: {
-        en: 'Use column view for tracklist information',
-        de: 'Verwende die Spaltenansicht für Titellisteninformationen',
-        pt: 'Use a visualização em colunas para as informações das faixas',
-        sv: 'Använd kolumnvy för låtlistsinformation',
-        ru: 'Использовать табличный вид для информации о списке треков'
+    track_layout: {
+        name: {
+            en: 'Track layout'
+        },
+        body: {
+            en: 'Choose which axis to display track information on'
+        },
+        column: {
+            en: 'Place title and artist vertically'
+        },
+        row: {
+            en: 'Place title and artist horizontally'
+        }
+    },
+    track_album_name_location: {
+        name: {
+            en: 'Album name location'
+        },
+        body: {
+            en: 'Choose which axis to display said album name on'
+        },
+        column: {
+            en: 'Place below title and artist'
+        },
+        row: {
+            en: 'Place to the side of title and artist'
+        }
+    },
+    expand_tracks: {
+        name: {
+            en: 'Show associated album for tracks'
+        },
+        body: {
+            en: 'Places the track’s associated album name if there’s room'
+        }
+    },
+    expand_tracks_when_active: {
+        en: 'Only when actively scrobbling',
+        de: 'Nur während des aktiven Scrobbelns',
+        sv: 'Endast när du skrobblar'
+    },
+    expand_tracks_always: {
+        en: 'Always when possible',
+        de: 'Immer, wenn möglich',
+        sv: 'Alltid, när det är möjligt'
     },
     show_remaster_tags: {
         en: 'Show remaster tags',
@@ -3199,6 +3217,14 @@ export const trans = {
         sv: 'Land',
         ru: 'Страна'
     },
+    display_name: {
+        name: {
+            en: 'Display name'
+        },
+        body: {
+            en: 'Changes your name on your profile, with your real @username shown below'
+        }
+    },
     subtitle: {
         en: 'Subtitle',
         de: 'Untertitel',
@@ -3264,7 +3290,7 @@ export const trans = {
     },
     blocked_user_message: {
         en: 'Cannot direct message you',
-        de: 'Kann dir keine Direktnachrichten senden.',
+        de: 'Kann dir keine Direktnachrichten senden',
         pt: 'Não podem lhe enviar mensagens diretas',
         sv: 'Kan inte skicka privat meddelande till dig',
         ru: 'Не могут отправлять вам личные сообщения'
@@ -3677,6 +3703,18 @@ export const trans = {
             ru: 'Выберите пользовательский набор шрифтов, который вам подходит'
         }
     },
+    font_style: {
+        en: 'Font style',
+        solid: {
+            en: 'Solid'
+        },
+        pop: {
+            en: 'Pop'
+        },
+        glow: {
+            en: 'Glow'
+        }
+    },
     font_weight: {
         name: {
             en: 'Font weight',
@@ -3734,14 +3772,21 @@ export const trans = {
             ru: 'Совместимость с эмодзи'
         },
         body: {
-            // the trans flag is used to demonstrate the improper
-            // emoji font found in windows 10, whether people like it or not
-            en: 'Required to render emoji properly before Windows 11 🏳️‍⚧️',
-            de: 'Erforderlich, um Emojis vor Windows 11 richtig darzustellen 🏳️‍⚧️',
-            pt: 'Necessário para renderizar emojis corretamente antes do Windows 11 🏳️‍⚧️',
-            sv: 'Krävs för att visa emojis korrekt innan Windows 11 🏳️‍⚧️',
-            ru: 'Требуется для правильного отображения эмодзи до Windows 11 🏳️‍⚧️'
+            en: 'Required to render emoji properly before Windows 11',
+            de: 'Erforderlich, um Emojis vor Windows 11 richtig darzustellen',
+            pt: 'Necessário para renderizar emojis corretamente antes do Windows 11',
+            sv: 'Krävs för att visa emojis korrekt innan Windows 11',
+            ru: 'Требуется для правильного отображения эмодзи до Windows 11'
         }
+    },
+    font_example: {
+        // the trans flag is used to demonstrate the improper
+        // emoji font found in windows 10, whether people like it or not
+        //
+        // this text is common sample text used in english,
+        // if there's something more fitting for your language,
+        // then feel free to adjust it
+        en: 'The quick brown fox jumps over the lazy dog 🏳️‍⚧️'
     },
     enter_font_names: {
         en: 'Enter installed font name(s), separated by commas',
@@ -3797,7 +3842,7 @@ export const trans = {
         },
         body: {
             en: 'These notifications can let you undo redirections Last.fm forced upon you, but can also be annoying',
-            de: 'Mit diesen Benachrichtigungen kannst du die von Last.fm erzwungenen Weiterleitungen rückgängig machen, sie können aber auch lästig sein.',
+            de: 'Mit diesen Benachrichtigungen kannst du die von Last.fm erzwungenen Weiterleitungen rückgängig machen, sie können aber auch lästig sein',
             pt: 'Essas notificações podem permitir que você desfaça redirecionamentos que a Last.fm impôs a você, mas também podem ser irritantes',
             sv: 'Dessa notiser låter dig ångra omdirigeringar Last.fm tvingade på dig, men dem kan också vara störande',
             ru: 'Эти уведомления могут позволить вам отменить перенаправления, навязанные Last.fm, но также могут быть раздражающими'
@@ -3814,7 +3859,7 @@ export const trans = {
         body: {
             en: 'Assigns a colour based on an artist’s all-time ranking in your library',
             de: 'Weist eine Farbe basierend auf dem Allzeit-Ranking eines Künstlers in deiner Bibliothek zu',
-            pt: 'Define uma cor pela colocação do artista no ranking geral da sua biblioteca.',
+            pt: 'Define uma cor pela colocação do artista no ranking geral da sua biblioteca',
             sv: 'Tillämpar en färg baserad på en artists alltidsranking i ditt bibliotek',
             ru: 'Назначает цвет в зависимости от общего рейтинга артиста в вашей библиотеке'
         }
@@ -3916,7 +3961,7 @@ export const trans = {
         body: {
             en: 'To change your username hit the button to send an email. Having problems? {a}contact support{/a}.',
             de: 'Um deinen Benutzernamen zu ändern, klicke auf die Schaltfläche „E-Mail senden“. Gibt es Probleme? {a}Kontaktiere den Support{/a}.',
-            pt: 'Para alterar seu nome de usuário, clique no botão para enviar um e-mail. Está com problemas?',
+            pt: 'Para alterar seu nome de usuário, clique no botão para enviar um e-mail. Está com problemas? {a}contact support{/a}.',
             sv: 'För att ändra ditt användarnamn, tryck på knappen för att skicka mejl. Har du ett problem? {a}Kontakta support{/a}.',
             ru: 'Чтобы изменить имя пользователя, нажмите кнопку для отправки электронного письма. Возникли проблемы? {a}Свяжитесь со службой поддержки{/a}.'
         }
@@ -3967,7 +4012,7 @@ export const trans = {
         body: {
             en: 'Last.fm can optionally send promotional emails from time to time',
             de: 'Last.fm kann optional gelegentlich Werbe-E-Mails senden',
-            pt: 'A Last.fm pode, opcionalmente, enviar e-mails promocionais de tempos em tempos.',
+            pt: 'A Last.fm pode, opcionalmente, enviar e-mails promocionais de tempos em tempos',
             sv: 'Last.fm kan valfritt skicka reklammejl då och då',
             ru: 'Last.fm может по желанию время от времени отправлять рекламные электронные письма'
         }
@@ -4202,6 +4247,10 @@ export const trans = {
         sv: 'Du har inga spelningar',
         ru: 'У вас нет прослушиваний'
     },
+    own_plays: {
+        // tracklist source menu option that enables the thing below
+        en: 'Own plays'
+    },
     sourced_from_own_plays: {
         // tracklist from your own album plays
         en: 'Sourced from your own plays as an official tracklist is unavailable',
@@ -4251,7 +4300,7 @@ export const trans = {
     accessibility_explain: {
         en: 'Before we continue, let’s assess your accessibility settings.',
         de: 'Lass uns kurz deine Barrierefreiheitseinstellungen überprüfen, bevor wir weitermachen.',
-        pt: 'Antes de continuarmos, vamos acessar suas configurações de acessibilidade',
+        pt: 'Antes de continuarmos, vamos acessar suas configurações de acessibilidade.',
         sv: 'Innan vi fortsätter ska vi kontrollera dina tillgänglighetsinställningar.',
         ru: 'Прежде чем продолжить, давайте оценим ваши настройки доступности.'
     },
@@ -4542,6 +4591,14 @@ export const trans = {
             pt: 'Substitui os nomes coloridos dos emblemas e links pela cor do cabeçalho do seu tema',
             sv: 'Ersätter emblem och länkfärgade namn med ditt temas rubrikfärg',
             ru: 'Заменяет цвета имен значков и ссылок цветом заголовка вашей темы'
+        }
+    },
+    display_name_styles: {
+        name: {
+            en: 'Show display name styles'
+        },
+        body: {
+            en: 'Sponsors can choose a custom font and shadow style for their profile name'
         }
     },
     underline_links: {
@@ -5616,6 +5673,17 @@ export const trans = {
             ru: 'Вы изменили акцент, не забудьте сохранить!'
         }
     },
+    profile_font: {
+        name: {
+            en: 'Profile name font'
+        },
+        body: {
+            en: 'Customise the font family used for your username, only visible on your profile'
+        },
+        reminder: {
+            en: 'Changed your name font, don’t forget to save!'
+        }
+    },
     none: {
         en: 'None',
         de: 'Keins',
@@ -6082,7 +6150,7 @@ export const trans = {
     no_mutual_listeners_explain: {
         en: 'This can be due to either simply lacking mutuals who listen or the page being subject to a broken redirect.',
         de: 'Dies kann entweder an fehlenden Mutuals oder einer fehlerhaften Seitenweiterleitung liegen.',
-        sv: 'Det kan innebära att du antingen inte har ömsesidiga följare som lyssnar eller att sidan har en gammal omdirigering',
+        sv: 'Det kan innebära att du antingen inte har ömsesidiga följare som lyssnar eller att sidan har en gammal omdirigering.',
         ru: 'Это может быть связано либо с отсутствием взаимных слушателей, либо с неисправным перенаправлением страницы.'
     },
     navigation_items: {
@@ -6129,32 +6197,6 @@ export const trans = {
             sv: 'Välj vilken sorts branding för att använda på sidhuvudet',
             ru: 'Выберите, какой источник брендинга использовать для заголовка'
         }
-    },
-    expand_tracks: {
-        name: {
-            en: 'Extend track height to show album title',
-            de: 'Titelhöhe erweitern, um den Albumtitel anzuzeigen',
-            sv: 'Öka låtstorleken för att visa albumtiteln',
-            ru: 'Увеличить высоту трека для отображения названия альбома'
-        },
-        body: {
-            en: 'Increases the size of the track’s cover art to make room for it’s accompanying album',
-            de: 'Erhöht die Größe des Songcovers, um Platz für das zugehörige Album zu schaffen',
-            sv: 'Ökar på storleken på låtens albumkonst för att få plats med albumtiteln',
-            ru: 'Увеличивает размер обложки трека, чтобы освободить место для сопутствующего альбома'
-        }
-    },
-    expand_tracks_when_active: {
-        en: 'Only when actively scrobbling',
-        de: 'Nur während des aktiven Scrobbelns',
-        sv: 'Endast när du skrobblar',
-        ru: 'Только при активном скробблинге'
-    },
-    expand_tracks_always: {
-        en: 'Always when possible',
-        de: 'Immer, wenn möglich',
-        sv: 'Alltid, när det är möjligt',
-        ru: 'Всегда, когда это возможно'
     },
     rain: {
         name: {
@@ -6292,30 +6334,24 @@ export const trans = {
         },
         false: {
             en: 'Do not apply corrections (recommended)',
-            sv: 'Tillämpa inte korrigeringar (rekommenderat)'
-        },
-        true: {
-            en: 'Auto correct my scrobbles (legacy)',
-            sv: 'Autokorrigera mina skrobblingar (gammal)',
+            sv: 'Tillämpa inte korrigeringar (rekommenderat)',
             ru: 'Не применять исправления (рекомендуется)'
         },
         true: {
             en: 'Auto correct my scrobbles (legacy)',
+            sv: 'Autokorrigera mina skrobblingar (gammal)',
             ru: 'Автоматически исправлять мои скробблы (устаревшее)'
         }
     },
     preferred_affiliate: {
         name: {
             en: 'Preferred playback source',
-            sv: 'Föredragen uppspelningskälla'
-        },
-        body: {
-            en: 'Choose which service to use when interacting with playables across the site',
-            sv: 'Välj vilken service att använda när du spelar upp låtar',
+            sv: 'Föredragen uppspelningskälla',
             ru: 'Предпочитаемый источник воспроизведения'
         },
         body: {
             en: 'Choose which service to use when interacting with playables across the site',
+            sv: 'Välj vilken service att använda när du spelar upp låtar',
             ru: 'Выберите, какой сервис использовать при взаимодействии с воспроизводимым контентом на сайте'
         }
     },
@@ -6354,15 +6390,12 @@ export const trans = {
     oracle_notice: {
         en: 'You are currently testing ‘oracle’, a redesigned album and track view',
         de: 'Du testest gerade „oracle“, eine neu gestaltete Album- und Titelseite',
-        sv: 'Du testar just no ‘oracle’, ett omdesignat sätt att visa album och låtsidor'
-    },
-    debug: {
-        en: 'Debug',
-        sv: 'Debug',
+        sv: 'Du testar just no ‘oracle’, ett omdesignat sätt att visa album och låtsidor',
         ru: 'В настоящее время вы тестируете «oracle», обновленный вид альбомов и треков'
     },
     debug: {
         en: 'Debug',
+        sv: 'Debug',
         ru: 'Отладка'
     },
     send_feedback: {
@@ -6387,7 +6420,7 @@ export const trans = {
         body: {
             en: 'A redesigned album and track view sourcing data from MusicBrainz. May be released in the future or scrapped. Please send feedback from usage.',
             de: 'Eine neu gestaltete Album- und Titelseite, die Daten von MusicBrainz bezieht. Kann in Zukunft veröffentlicht oder verworfen werden. Bitte sende Feedback basierend auf deiner Nutzung.',
-            sv: 'Omdesignade album och låtsidor med data från MusicBrainz. Kan släppas eller skräpas i framtiden. Skicka gärna feedback från användning',
+            sv: 'Omdesignade album och låtsidor med data från MusicBrainz. Kan släppas eller skräpas i framtiden. Skicka gärna feedback från användning.',
             ru: 'Обновленный вид альбомов и треков, получающий данные из MusicBrainz. Может быть выпущен в будущем или отменен. Пожалуйста, отправляйте отзывы об использовании.'
         }
     },
@@ -6479,16 +6512,40 @@ export const trans = {
             en: 'Only recommended for desktop devices',
             sv: 'Rekommenderas endast för desktop-enheter',
             ru: 'Имитировать горизонтальную прокрутку'
-        },
-        body: {
-            en: 'Only recommended for desktop devices',
-            ru: 'Рекомендуется только для настольных устройств'
         }
     },
     credits: {
         en: 'Credits',
         sv: 'Erkännanden',
         ru: 'Кредиты'
+    },
+    view_credits: {
+        en: 'View credits'
+    },
+    credits_for_value: {
+        en: 'Credits for {v}'
+    },
+    branch: {
+        name: {
+            en: 'Choose branch'
+        },
+        body: {
+            en: 'Default release branch is ‘uwu’, do not change unless you know what you’re doing'
+        }
+    },
+    log_in: {
+        en: 'Log in'
+    },
+    sign_up: {
+        en: 'Sign up'
+    },
+    plot: {
+        name: {
+            en: 'Plot'
+        },
+        body: {
+            en: 'Create graphs from user libraries'
+        }
     }
 };
 

@@ -101,15 +101,7 @@ export function bleh_tracks() {
         if (source_album)
             album_avatar = source_album.querySelector('.source-album-art img');
 
-        const should_expand =
-            settings.default_avatar_action == 'expand' &&
-            (album_avatar || artist_avatar);
-        page.state.avatar_side_override =
-            should_expand ? 'expand' : (
-                source_album
-                    .querySelector('.link-block-cover-link')
-                    .getAttribute('href')
-            );
+        page.state.avatar_side_override = settings.default_avatar_action == 'expand' ? 'expand' : source_album ? source_album.querySelector('.link-block-cover-link').getAttribute('href') : '';
 
         let redesigned_track_header = html.node`
             <section class="redesigned-header redesigned-track-header no-background">
@@ -200,14 +192,11 @@ export function create_avatar(parent, src, override = 'expand') {
     if (src.endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg') || src == '') {
         register_background(null);
 
-        render(
-            parent,
-            html`
-                <div class="media">
-                    <img class="missing-track" />
-                </div>
-            `
-        );
+        render(parent, html`
+            <div class="media">
+                <img class="missing-track" />
+            </div>
+        `);
     }
 
     const full = src
@@ -220,17 +209,13 @@ export function create_avatar(parent, src, override = 'expand') {
     const media = html.node`
         <div class="media">
             <img src=${src}>
-            ${
-                override == 'expand' ?
-                    html.node`
+            ${override == 'expand' ? html.node`
                 <a class="bleh--avatar-clickable-link" onclick=${() => {
                     expand_avatar(full);
                 }} />
-            `
-                :   html.node`
+            ` : html.node`
                 <a class="bleh--avatar-clickable-link" href=${override} />
-            `
-            }
+            `}
         </div>
     `;
 

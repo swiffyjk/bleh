@@ -32,6 +32,7 @@ import {
     load_profile_cache_externally,
     open_starred_friend_window
 } from '../pages/profile.js';
+import { oracle_credits } from './oracle.js';
 
 unsafeWindow._other_listener = function (id) {
     other_listener(id);
@@ -452,9 +453,9 @@ export async function show_your_scrobbles() {
 
         if (button.classList[1] == 'header-new-love-button') {
             button.setAttribute('data-type', 'love');
-            let new_text = document.createElement('span');
-            new_text.textContent = tl(trans.love);
-            button.appendChild(new_text);
+            button.appendChild(html.node`
+                <span>${tl(trans.love_track)}</span>
+            `);
         }
     });
     let links = interact_container.querySelectorAll('a');
@@ -519,7 +520,7 @@ export async function show_your_scrobbles() {
 
         const scrobble_btn = html.node`
             <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble(props)}>
-                ${tl(trans.scrobble)}
+                ${tl(trans.scrobble_value, {v: tl(trans[`${page.type}_lower`])})}
             </button>
         `;
 
@@ -539,8 +540,8 @@ export async function show_your_scrobbles() {
         ['album', 'track'].includes(page.type)
     ) {
         interact_container.appendChild(html.node`
-            <button class="btn side-action" data-type="credits">
-                ${tl(trans.credits)}
+            <button class="btn side-action" data-type="credits" onclick=${() => oracle_credits()}>
+                ${tl(trans.view_credits)}
             </button>
         `);
     }
@@ -1681,7 +1682,7 @@ export function convert_top_listener(listener, index, key = 'top-listeners') {
                 </span>
                 <h4 class="user-list-name">
                     <a class="user-list-link link-block-target" href=${name_wrap.getAttribute('href')} ref=${(el) => (name_link = el)}>
-                        ${name}
+                        @${name}
                     </a>
                 </h4>
                 <span class="avatar user-list-avatar" ref=${(el) => (user_list_avatar = el)}>
@@ -1813,5 +1814,32 @@ export function prepare_music() {
             icon: '',
             host: 'instagram.com'
         }
+    };
+
+    page.state.tracklist_sources = [
+        {
+            value: 'oracle',
+            text: 'oracle'
+        },
+        {
+            value: 'own',
+            text: tl(trans.own_plays)
+        },
+        {
+            value: 'lastfm',
+            text: 'Last.fm'
+        }
+    ];
+
+    page.state.fonts = {
+        none: '',
+        uni: 'UnifrakturCook',
+        lilita: 'Lilita One',
+        single: 'Single Day',
+        cherry: 'Cherry Bomb One',
+        balsamiq: 'Balsamiq Sans',
+        crimson: 'Crimson Text',
+        rokkitt: 'Rokkitt',
+        code: 'Google Sans Code'
     };
 }
