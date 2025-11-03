@@ -218,32 +218,34 @@ export async function bleh_profiles() {
             <div class="avatar-side">
                 ${avatar}
             </div>
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.profile)}</div>
-                <div class="title-container">${title_wrap}</div>
-                ${sub_wrap ? sub_wrap : cache.aka || cache.created ? html.node`
-                    <p class="header-title-secondary">
-                        ${cache.username ? html.node`
-                        <span class="header-username">
-                            <a href="${root}user/${page.name}">@${page.name}</a>
-                        </span>
-                        ` : ''}
-                        ${cache.aka ? html.node`
-                        <span class="header-title-secondary--pre">
-                            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
-                        </span>
-                        <span class="header-title-display-name">
-                            ${cache.aka}
-                        </span>
-                        ` : ''}
-                        <span class="header-title-secondary--pre">
-                            ${tl(trans.account_created)}
-                        </span>
-                        <span class="header-scrobble-since">
-                            ${cache.created}
-                        </span>
-                    </p>
-                ` : ''}
+            <div class="info-side has-main-info">
+                <div class="main-info">
+                    <div class="sub-text">${tl(trans.profile)}</div>
+                    <div class="title-container">${title_wrap}</div>
+                    ${sub_wrap ? sub_wrap : cache.aka || cache.created ? html.node`
+                        <p class="header-title-secondary">
+                            ${cache.username ? html.node`
+                            <span class="header-username">
+                                <a href="${root}user/${page.name}">@${page.name}</a>
+                            </span>
+                            ` : ''}
+                            ${cache.aka ? html.node`
+                            <span class="header-title-secondary--pre">
+                                ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+                            </span>
+                            <span class="header-title-display-name">
+                                ${cache.aka}
+                            </span>
+                            ` : ''}
+                            <span class="header-title-secondary--pre">
+                                ${tl(trans.account_created)}
+                            </span>
+                            <span class="header-scrobble-since">
+                                ${cache.created}
+                            </span>
+                        </p>
+                    ` : ''}
+                </div>
                 ${badge_elements.length > 0 ? html.node`
                 <div class="badges">
                     ${badge_elements.map(badge => html.node`

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    https://last.fm/
-// @version      2025.1103
+// @version      2025.1103.1
 // @description  bleh!!! ^-^
 // @author       katelyn
 // @match        https://www.last.fm/*
@@ -37460,32 +37460,34 @@
             <div class="avatar-side">
                 ${avatar2}
             </div>
-            <div class="info-side">
-                <div class="sub-text">${tl2(trans.profile)}</div>
-                <div class="title-container">${title_wrap}</div>
-                ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
-                    <p class="header-title-secondary">
-                        ${cache2.username ? html.node`
-                        <span class="header-username">
-                            <a href="${root}user/${page.name}">@${page.name}</a>
-                        </span>
-                        ` : ""}
-                        ${cache2.aka ? html.node`
-                        <span class="header-title-secondary--pre">
-                            ${pronouns ? tl2(trans.account_pronouns) : tl2(trans.aka)}
-                        </span>
-                        <span class="header-title-display-name">
-                            ${cache2.aka}
-                        </span>
-                        ` : ""}
-                        <span class="header-title-secondary--pre">
-                            ${tl2(trans.account_created)}
-                        </span>
-                        <span class="header-scrobble-since">
-                            ${cache2.created}
-                        </span>
-                    </p>
-                ` : ""}
+            <div class="info-side has-main-info">
+                <div class="main-info">
+                    <div class="sub-text">${tl2(trans.profile)}</div>
+                    <div class="title-container">${title_wrap}</div>
+                    ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
+                        <p class="header-title-secondary">
+                            ${cache2.username ? html.node`
+                            <span class="header-username">
+                                <a href="${root}user/${page.name}">@${page.name}</a>
+                            </span>
+                            ` : ""}
+                            ${cache2.aka ? html.node`
+                            <span class="header-title-secondary--pre">
+                                ${pronouns ? tl2(trans.account_pronouns) : tl2(trans.aka)}
+                            </span>
+                            <span class="header-title-display-name">
+                                ${cache2.aka}
+                            </span>
+                            ` : ""}
+                            <span class="header-title-secondary--pre">
+                                ${tl2(trans.account_created)}
+                            </span>
+                            <span class="header-scrobble-since">
+                                ${cache2.created}
+                            </span>
+                        </p>
+                    ` : ""}
+                </div>
                 ${badge_elements.length > 0 ? html.node`
                 <div class="badges">
                     ${badge_elements.map((badge) => html.node`
@@ -65857,7 +65859,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.1103",
+    build: "2025.1103.1",
     sku: "parfait",
     bio: "bleh!!! ^-^",
     author: "katelyn",
