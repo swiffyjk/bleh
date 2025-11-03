@@ -43825,8 +43825,7 @@
       let album_avatar;
       if (source_album)
         album_avatar = source_album.querySelector(".source-album-art img");
-      const should_expand = settings.default_avatar_action == "expand" && (album_avatar || artist_avatar);
-      page.state.avatar_side_override = should_expand ? "expand" : source_album ? source_album.querySelector(".link-block-cover-link").getAttribute("href") : "";
+      page.state.avatar_side_override = settings.default_avatar_action == "expand" ? "expand" : source_album ? source_album.querySelector(".link-block-cover-link").getAttribute("href") : "";
       let redesigned_track_header = html.node`
             <section class="redesigned-header redesigned-track-header no-background">
                 <div class="avatar-side" ref=${(el) => page.state.avatar_side = el} />
@@ -43900,14 +43899,11 @@
     log(`creating avatar for ${src} with override ${override}`, "track");
     if (src.endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || src == "") {
       register_background(null);
-      render(
-        parent,
-        html`
-                <div class="media">
-                    <img class="missing-track" />
-                </div>
-            `
-      );
+      render(parent, html`
+            <div class="media">
+                <img class="missing-track" />
+            </div>
+        `);
     }
     const full = src.replace("/300x300/", "/ar0/").replace("/avatar300s/", "/ar0/").replace("/avatar170s/", "/ar0/");
     register_background(full);

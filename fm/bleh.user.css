@@ -22530,6 +22530,17 @@
         }
     }
 
+    .media {
+        position: relative;
+
+        & > .bleh--avatar-clickable-link {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            cursor: pointer;
+        }
+    }
+
     .legacy-section-controls,
     .content-top.legacy-content-top,
     .legacy-header {
@@ -22983,21 +22994,17 @@
         }
 
         .info-side {
-            padding: var(--card-padding);
-            margin: calc(-1 * var(--card-padding));
-            overflow: hidden;
-
-            .sub-text {
+            & > .sub-text {
                 justify-content: unset;
                 align-items: center;
                 gap: 4px;
 
-                .info-tip {
+                & > .info-tip {
                     --icon-size: 14px;
                 }
             }
 
-            h1 {
+            & > h1 {
                 margin: unset;
                 font-size: 26px;
                 line-height: 40px;
@@ -23014,17 +23021,17 @@
                 }
             }
 
-            h2 {
+            & > h2 {
                 margin: unset !important;
             }
 
-            .title-container {
+            & > .title-container {
                 display: flex;
                 align-items: center;
                 gap: 6px;
                 cursor: default;
 
-                h1 {
+                & > h1 {
                     color: hsl(var(--c1));
 
                     .staff-profile & {
@@ -23044,7 +23051,7 @@
                     display: flex;
                     gap: var(--item-list-gap);
 
-                    .feat {
+                    & > .feat {
                         font-size: 18px;
                         color: hsl(var(--c2), 70%);
                     }
@@ -23055,7 +23062,7 @@
                 }
 
                 &[data-multi="true"] {
-                    h1 {
+                    & > h1 {
                         color: hsl(var(--c2), 80%);
                         gap: unset;
 
@@ -23089,7 +23096,7 @@
                 }
             }
 
-            h2 {
+            & > h2 {
                 font-size: 18px;
                 line-height: 22px;
                 color: hsla(var(--c2), 80%);
