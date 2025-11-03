@@ -357,6 +357,9 @@ export let includes = {
         '- album version',
         '(album version',
         '[album version',
+        '- album edition',
+        '(album edition',
+        '[album edition',
         '- us album version',
         '(us album version',
         '[us album version',
@@ -774,6 +777,7 @@ export let includes = {
         '- 50th',
         '- 60th',
         '(1st', // soma saito track
+        '（1st', // thats not a space thats a stupid alternate bracket
         '(2nd',
         '(3rd',
         '(4th',
