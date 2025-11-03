@@ -22847,6 +22847,7 @@
             box-shadow: var(--subtle-shadow);
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
 
             &:before {
                 content: "";
@@ -22982,7 +22983,6 @@
         }
 
         .info-side {
-            flex: 1;
             padding: var(--card-padding);
             margin: calc(-1 * var(--card-padding));
             overflow: hidden;
