@@ -695,7 +695,7 @@ export function create_correction(
     sister = page.sister
 ) {
     let title;
-    let current = page.name;
+    let current = name;
     let link = window.location.href;
 
     let correction;
@@ -704,10 +704,10 @@ export function create_correction(
     let template;
 
     if (type == 'artist') {
-        title = page.sister;
+        title = sister;
         template = '1-artist.yml';
     } else {
-        title = `${page.sister} - ${page.name}`;
+        title = `${sister} - ${name}`;
         template = '2-album_track.yml';
     }
 
@@ -744,7 +744,6 @@ export function create_correction(
                 </button>
                 <div class="fill" />
                 <button class="btn primary continue" onclick=${() => {
-                    console.info('sources', sources.value());
                     open(
                         `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${sanitise(title, ' ')}&current=${sanitise(current, ' ')}&correction=${sanitise(correction.value(), ' ')}&link=${link}&sources=${sanitise(sources.value(), ' ')}`
                     );

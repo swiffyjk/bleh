@@ -52353,16 +52353,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   }
   function create_correction(type, name = page.name, sister = page.sister) {
     let title;
-    let current = page.name;
+    let current = name;
     let link = window.location.href;
     let correction;
     let sources;
     let template;
     if (type == "artist") {
-      title = page.sister;
+      title = sister;
       template = "1-artist.yml";
     } else {
-      title = `${page.sister} - ${page.name}`;
+      title = `${sister} - ${name}`;
       template = "2-album_track.yml";
     }
     dialog({
@@ -52398,7 +52398,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </button>
                 <div class="fill" />
                 <button class="btn primary continue" onclick=${() => {
-        console.info("sources", sources.value());
         open(
           `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${sanitise(title, " ")}&current=${sanitise(current, " ")}&correction=${sanitise(correction.value(), " ")}&link=${link}&sources=${sanitise(sources.value(), " ")}`
         );
