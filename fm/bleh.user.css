@@ -21328,7 +21328,6 @@
         }
 
         .name {
-            width: fit-content;
             font-weight: var(--font-weight-medium);
 
             .involved--track,

@@ -1,5 +1,5 @@
 {
-    "latest": "2025.1022",
+    "latest": "2025.1028",
     "sponsors": [
         "clairedoll", "kateshapedbox", "evangelicgirl",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
@@ -320,6 +320,14 @@
         },
         "fourohclok": {
             "type": "sponsor"
+        },
+        "crawqxx": {
+            "type": "translation",
+            "reason": "Русский"
+        },
+        "auwora": {
+            "type": "translation",
+            "reason": "Português"
         }
     }
 }
