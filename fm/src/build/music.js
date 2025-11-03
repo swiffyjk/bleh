@@ -395,6 +395,7 @@ export let includes = {
         ': twin ver',
         '(twin ver',
         '- twin ver',
+        '– twin ver',
         '- soundtrack',
         '(soundtrack',
         '[soundtrack',
