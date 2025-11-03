@@ -91,7 +91,7 @@ function fetch_new_style(
     reload_on_finish = false,
     allow_incompatible = false
 ) {
-    const url = `https://github.com/katelyynn/bleh/raw/refs/heads/${settings.branch ? settings.branch : 'uwu'}/fm/bleh.css?${Math.random()}`;
+    const url = `https://github.com/katelyynn/bleh/raw/refs/heads/uwu/fm/bleh.css?${Math.random()}`;
     log(`making request ${url}`, 'style');
 
     GM_xmlhttpRequest({
