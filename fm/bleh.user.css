@@ -23004,7 +23004,7 @@
                 }
             }
 
-            & > h1 {
+            h1 {
                 margin: unset;
                 font-size: 26px;
                 line-height: 40px;
