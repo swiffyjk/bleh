@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    https://last.fm/
-// @version      2025.1016
+// @version      2025.1103
 // @description  bleh!!! ^-^
 // @author       katelyn
 // @match        https://www.last.fm/*
@@ -28253,6 +28253,9 @@
       ": the live",
       "( the live",
       "- the live",
+      "- online live",
+      "online live",
+      "(online live",
       "- ao vivo",
       "(ao vivo",
       "[ao vivo",
@@ -28276,6 +28279,8 @@
       "(solo acoustic",
       "- acoustic",
       "(acoustic",
+      ": self-serenade",
+      "- self-serenade",
       "- alt",
       "(alt",
       "[alt",
@@ -28449,6 +28454,9 @@
       "(english cover",
       "[english cover",
       "- english cover",
+      ": twin ver",
+      "(twin ver",
+      "- twin ver",
       "- soundtrack",
       "(soundtrack",
       "[soundtrack",
@@ -28478,6 +28486,9 @@
       "- full length",
       "(full length",
       "[full length",
+      "- electronic mix",
+      "(electronic mix",
+      "[electronic mix",
       "[over now",
       // billie eilish l'amour de ma vie
       "- the remix",
@@ -28604,6 +28615,8 @@
       "(mtv unplugged",
       "- unplugged",
       "(unplugged",
+      "-unplugged",
+      // no space intentionally, soma saito tracks
       "- ac\xFAstico",
       "- \xE1custico",
       "(ac\xFAstico",
@@ -28637,6 +28650,10 @@
       "[bonus",
       "the bonus tracks",
       // beyonce i am sasha fierce
+      "- secret track",
+      // track added for clarity
+      ": secret track",
+      "(secret track",
       "- edit",
       "(edit",
       "[edit",
@@ -28815,6 +28832,7 @@
       "[highlights from",
       "- track by track",
       ": track by track",
+      "(track by track",
       "- disc ",
       "(disc ",
       "[disc ",
@@ -28825,6 +28843,11 @@
       "(20",
       "[19",
       "[20",
+      "- 1st",
+      "- 2nd",
+      "- 3rd",
+      "- 4th",
+      "- 5th",
       "- 10th",
       "- 25th",
       "- 30th",
@@ -28832,6 +28855,12 @@
       "- 40th",
       "- 50th",
       "- 60th",
+      "(1st",
+      // soma saito track
+      "(2nd",
+      "(3rd",
+      "(4th",
+      "(5th",
       "(10th",
       "(25th",
       "(30th",
@@ -28841,6 +28870,7 @@
       "(60th",
       "- tenth anniversary",
       "fifth anniversary",
+      "5th anniversary",
       "(tenth anniversary",
       "(fifth anniversary",
       ": the tenth anniversary",
@@ -28866,7 +28896,9 @@
       "- reprise",
       "(reprise",
       "[reprise",
-      "(director"
+      "(director",
+      "(soma saito's",
+      "- soma saito's"
     ],
     form: ["(clean", "[clean", "(explicit", "[explicit", "(spotify)", "\u{1F174}"]
   };
@@ -65825,7 +65857,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.1016",
+    build: "2025.1103",
     sku: "parfait",
     bio: "bleh!!! ^-^",
     author: "katelyn",
