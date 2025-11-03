@@ -818,7 +818,12 @@ export let includes = {
         '[reprise',
         '(director',
         "(soma saito's",
-        "- soma saito's"
+        "- soma saito's",
+        '- so punk on the internet ver', // taylor swift showgirl variants :(
+        '(so punk on the internet ver',
+        '[so punk on the internet ver',
+        '- including',
+        '(including'
     ],
     form: ['(clean', '[clean', '(explicit', '[explicit', '(spotify)', '🅴']
 };
