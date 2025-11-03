@@ -23319,7 +23319,7 @@
 
             [data-bleh--theme_type="light"] & {
                 &:before {
-                    background: hsl(var(--b5), 60%);
+                    background: hsl(var(--b5), 50%);
                     mix-blend-mode: lighten;
                 }
             }
