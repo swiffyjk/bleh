@@ -22830,23 +22830,10 @@
             }
 
             & > .info-side {
-                & > .title-container > h1,
+                filter: var(--header-filter-shadow) !important;
+
                 & > h2 {
-                    padding: var(--card-padding) !important;
-                    margin: calc(-1 * var(--card-padding)) !important;
-
-                    &:has(> .track-explicit) {
-                        position: relative;
-                        padding-left: calc(var(--card-padding) + 20px + 6px) !important;
-                    }
-                }
-
-                & > .sub-text,
-                & > .title-container > .header-title-label-wrap,
-                & > .title-container > h1,
-                & > .header-title-secondary,
-                & > h2 > [itemprop="byArtist"] {
-                    filter: var(--header-filter-shadow) !important;
+                    position: relative;
                 }
             }
         }
@@ -22943,7 +22930,7 @@
 
             .tag-icon {
                 display: flex;
-                width: 48px;
+                width: 56px;
                 aspect-ratio: 1 / 1;
                 cursor: default;
 
@@ -22953,9 +22940,8 @@
 
                 background: hsl(var(--b5));
                 border-radius: var(--item-big-radius);
-                box-shadow:
-                    0 0 0 1px var(--card-border-base) inset,
-                    var(--card-shadow);
+                box-shadow: var(--card-shadow);
+                border: 1px solid var(--card-border-base);
 
                 position: relative;
                 --left: 50%;
@@ -22969,26 +22955,28 @@
                 background-repeat: repeat-x;
                 background-position: unset;
 
+                margin-right: calc(-1 * var(--card-gap)) !important;
+
                 &.cog-icon {
-                    --mask: var(--icon-settings);
+                    --mask: var(--icon-16-settings);
                 }
                 &.search-icon {
-                    --mask: var(--icon-search);
+                    --mask: var(--icon-16-search);
                 }
                 &.charts-icon {
-                    --mask: var(--icon-charts);
+                    --mask: var(--icon-16-charts);
                 }
                 &.notifications-icon {
-                    --mask: var(--icon-notifications);
+                    --mask: var(--icon-16-notifications);
                 }
                 &.inbox-icon {
-                    --mask: var(--icon-mail);
+                    --mask: var(--icon-16-mail);
                 }
                 &.event-icon {
-                    --mask: var(--icon-event);
+                    --mask: var(--icon-16-event);
                 }
                 &.bookmarks-icon {
-                    --mask: var(--icon-bookmark);
+                    --mask: var(--icon-16-bookmark);
                 }
             }
         }
@@ -28632,8 +28620,13 @@
             --mask-size: 22px;
 
             position: absolute;
-            top: calc(((28px - 20px) / 2) + var(--card-padding));
-            left: var(--card-padding);
+            top: calc((28px - 20px) / 2);
+            left: 0;
+        }
+
+        h2:has(> &) {
+            position: relative;
+            padding-left: calc(20px + 6px);
         }
     }
 
