@@ -716,6 +716,7 @@ export let includes = {
         '- platinum',
         '(platinum',
         '[platinum',
+        ': the platinum',
         'platinum edition', // added edition to the end because 'platinum' can have some false positives
         'platinum version', // same as above
         '- international',
