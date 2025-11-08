@@ -549,7 +549,7 @@ export let includes = {
         '[anime',
         '- game edit',
         '(game edit',
-        '[game edit'.
+        '[game edit'
     ],
     mixes_numbers: [
         '(v1',
